@@ -1,0 +1,107 @@
+
+<button id="typhoonAdvanceButton"
+	class="btn btn-default no-shadow pos-abt" ui-toggle-class="active"
+	target=".settings">
+	<i class="fa fa-spin fa-gear"></i>
+</button>
+<div class="panel-heading">
+	{{"weatherService.typhoonAdvanceSelect" | translate}}</div>
+<div class="panel-body">
+	<form class="">
+		<div class="form-group">
+
+			<label class="col-sm-2 control-label">{{"weatherService.timeSelect"
+				| translate}}</label>
+
+			<div class="w-m m-b-sm" style="display: inline-table">
+				<input type="text" class="form-control"
+					value="{{typhoonObj.dataTimeStart}}" name="issue_date" tabindex="0"
+					data-toggle="popover" data-trigger="focus" data-placement="bottom"
+					title="" data-content="时间不能超过3年"
+					onclick="isVip_begin('start','end', '%y/%M/%d', 'yyyy/MM/dd')"
+					id="start" required> <span class="input-group-btn"><button
+						type="button" class="btn btn-default" tabindex="0"
+						data-toggle="popover" data-trigger="focus" title=""
+						data-content="时间不能超过3年"
+						onclick="isVip_begin('start','end', '%y/%M/%d', 'yyyy/MM/dd')">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</button> </span>
+			</div>
+			&nbsp;&nbsp;
+			<div class="w-m m-b-sm" style="display: inline-table">
+				<input type="text" class="form-control"
+					value="{{typhoonObj.dataTimeEnd}}" name="issue_date"
+					onclick="isVip_end('start','end', '%y/%M/%d', 'yyyy/MM/dd')"
+					id="end" required> <span class="input-group-btn"><button
+						type="button" class="btn btn-default"
+						onclick="isVip_end('start','end', '%y/%M/%d', 'yyyy/MM/dd')">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</button> </span>
+			</div>
+		</div>
+		<div class="line line-dashed b-b"></div>
+		<div class="form-group">
+			<label class="col-lg-2 control-label">{{"weatherService.landPlace"
+				| translate}}</label>
+			<div class="col-lg-10 m-b-sm m-l-n w-xxl-4"
+				style="display: inline-table">
+				<ui-select ng-model="typhoonObj.region.selected"
+					ng-change="typhoonObj.getXy(typhoonObj.region.selected)"
+					theme="bootstrap"> <ui-select-match
+					placeholder="{{'common.selectPlaceholder' | translate}}">{{$select.selected.fullname}}
+				</ui-select-match> <!--<ui-select-choices group-by="'group'" repeat="item in typhoonObj.regionItems | filter: $select.search">-->
+				<ui-select-choices group-by="'group'"
+					repeat="{{'item in typhoonObj.regionItems | filter: $select.search' | translate}}">
+				<span ng-bind-html="item.fullname | highlight: $select.search"></span>
+				</ui-select-choices> </ui-select>
+			</div>
+		</div>
+		<div class="line line-dashed b-b"></div>
+		<div class="form-group">
+			<label class="col-lg-2 control-label">{{"weatherService.power"
+				| translate}}</label>
+			<div class="col-lg-4 m-b-sm m-l-n w-mx" style="display: inline-table">
+				<ui-select ng-model="typhoonObj.powerMin.selected" theme="bootstrap"
+					id="powerMin"> <ui-select-match
+					placeholder="{{'weatherService.powerLevel' | translate}}">{{$select.selected}}
+				</ui-select-match> <ui-select-choices
+					repeat="item in typhoonObj.powerItems | filter: $select.search">
+				<span ng-bind-html="item | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+			</div>
+			<div class="col-lg-4 m-b-sm m-l-n w-mx" style="display: inline-table">
+				<ui-select ng-model="typhoonObj.powerMax.selected" theme="bootstrap"
+					id="powerMax"> <ui-select-match
+					placeholder="{{'weatherService.powerLevel' | translate}}">{{$select.selected}}
+				</ui-select-match> <ui-select-choices
+					repeat="item in typhoonObj.powerItems | filter: $select.search">
+				<span ng-bind-html="item | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+			</div>
+		</div>
+		<div class="line line-dashed b-b"></div>
+		<div class="form-group">
+			<label class="col-lg-2 control-label">{{"weatherService.speed"
+				| translate}}</label>
+
+			<div class="col-lg-4 m-b-sm m-l-n w-mx" style="display: inline-table">
+				<input class="form-control" id="speedMin"
+					ng-model="typhoonObj.speedMin"
+					placeholder="{{'weatherService.speedUnit' | translate}}" />
+			</div>
+
+			<div class="col-lg-4 m-b-sm m-l-n w-mx" style="display: inline-table">
+				<input class="form-control" id="speedMax"
+					ng-model="typhoonObj.speedMax"
+					placeholder="{{'weatherService.speedUnit' | translate}}" />
+			</div>
+
+		</div>
+		<div class="line line-dashed b-b"></div>
+		<div class="form-group">
+			<div class="col-lg-2">
+				<button id="analysis" type="submit" class="btn btn-default"
+					ng-click="typhoonObj.searchTyphoon()">{{"common.btn.analysis"
+					| translate}}</button>
+			</div>
+		</div>
+	</form>
+</div>

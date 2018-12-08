@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- 导入相关js -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/bootstrap.js"></script>
+<script src="vendor/bootstrap/bootstrap-tour-0.11.0/bootstrap-tour.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet"
+	href="css/bootstrap-tour-0.11.0/bootstrap-tour.css">
+<script type="text/javascript">
+    $(function () {
+        var tour = new Tour({
+            storage: false, //相关可选项目值：window.localStorage(缺省), window.sessionStorage ，false　或者自定义obj
+
+            steps: [
+                {backdrop: true, element: '#btn1', title: '按钮一', content: '网格模式'},
+                {element: '#btn2', title: '按钮二', content: '列表模式'}
+            ]
+        });
+        // Initialize the tour
+        tour.init();
+        // Start the tour
+        tour.start();
+    })
+
+</script>
+<head>
+<meta charset="UTF-8">
+<title>Title</title>
+</head>
+<body>
+	<button class="btn btn-primary btn-lg" id="btn1">
+		<i class="glyphicon glyphicon-th-large"></i>
+	</button>
+	<button class="btn btn-primary btn-lg" id="btn2">
+		<i class="glyphicon glyphicon-th-list"></i>
+	</button>
+</body>
+</html>
+
+
+<!--
+<script src="http://cdn.gbtags.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.gbtags.com/twitter-bootstrap/3.2.0/js/bootstrap.js"></script>
+<script src="http://cdn.gbtags.com/bootstrap-tour/0.9.0/js/bootstrap-tour.min.js"></script>
+
+<link rel="stylesheet"  href="css/bootstrap.css">
+<link rel="stylesheet"  href="css/bootstrap-tour-0.11.0/bootstrap-tour.css">
+
+<script type="text/javascript">
+    $(function(){
+        /* 创建用户向导 */
+        var tour = new Tour({
+            storage: false, //相关可选项目值：window.localStorage(缺省), window.sessionStorage ，false　或者自定义obj
+            steps:[
+                {element:'#btn1',title:'按钮一',content:'网格模式'},
+                {element:'#btn2',title:'按钮二',content:'列表模式'}
+            ]
+        });
+        tour.init(); //初始化这个向导，这个必须滴
+        tour.start(); //开始运行向导
+    })
+
+</script>
+
+<div class="btn-group">
+    <button class="btn btn-primary btn-lg" id="btn1">
+        <i class="glyphicon glyphicon-th-large"></i>
+    </button>
+    <button class="btn btn-primary btn-lg" id="btn2">
+        <i class="glyphicon glyphicon-th-list"></i>
+    </button>
+</div>
+-->

@@ -1,0 +1,77 @@
+<div style="margin: 10px 15px">
+	<h3 class="m-n font-thin h5" ng-bind="listObj.navigationMsg"></h3>
+</div>
+
+<!--进程-->
+<div class="clearfix m-b-md"
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px; margin-top: 0px">
+	<div style="margin-left:20px"><h4>进程查询：</h4></div>
+	<form class="form-horizontal" name="searchuserForm"
+		style="margin-top: 5px">
+		<div class="" style="margin-top: 20px;">
+			<div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">进程名</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<input type="text" class="form-control"
+						ng-model="listObj.integrationQuery.int_name">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">版本</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<input type="text" class="form-control"
+						ng-model="listObj.integrationQuery.int_version">
+				</div>
+			</div>
+			<!--..产品，下拉列表框-->
+			<div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md"
+				 style="margin: 0px 15px 0px 0px;">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">产品</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<ui-select ng-change="listObj.getTypeSelect(listObj.integrationQuery.int_project_type)" ng-model="listObj.integrationQuery.int_project_type" theme="bootstrap">
+						<ui-select-match placeholder="请选择产品">
+							{{$select.selected.name}} </ui-select-match>
+						<ui-select-choices group-by="'group'" repeat="item in listObj.projectData | filter: $select.search">
+						<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices> </ui-select>
+				</div>
+			</div>
+			<!--..类型，下拉列表框-->
+			<div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">类型</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<ui-select ng-model="listObj.integrationQuery.int_type" theme="bootstrap">
+					<ui-select-match placeholder="请选择类型">
+					{{$select.selected.name}} </ui-select-match>
+						<ui-select-choices group-by="'group'" repeat="item in listObj.typeData | filter: $select.search">
+					<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices> </ui-select>
+				</div>
+			</div>
+
+			<div class="row-row pull-right-xs text-center padder-l-0">
+				<button class="btn m-b-xs w-xs btn-default"
+					ng-disabled="searchuserForm.$invalid"
+					ng-click="listObj.searchPolicyBtn()"
+					style="position: relative; left: -15px; top: 53px">查询</button>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="clearfix m-b-md" style="padding: 20px 20px 0px 20px;">
+	<button route-flag="addPolicy" btn-flag="button"
+		class="btn btn-default pull-left" ng-click="listObj.addIntegration()">
+		<i class="fa fa-plus"></i>&#12288;新建进程
+	</button>
+	<button route-flag="delAllPolicy" btn-flag="button"
+		class="btn btn-default pull-right"
+		ng-click="listObj.deleteIntegration()">
+		<i class="fa fa-minus"></i>&#12288;批量删除
+	</button>
+</div>
+<div>
+	<div style="background: #fff; padding: 0px 20px 20px 20px;">
+		<table table-directive tableoption="integrationTable" id="policytable"
+			instance="listObj.integrationTableInstance"></table>
+	</div>
+</div>

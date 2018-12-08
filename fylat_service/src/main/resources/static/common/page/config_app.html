@@ -1,0 +1,50 @@
+<div style="padding: 0px 20px;">
+	<div data-ng-include="'common/page/blocks/title.html'" class="">
+	</div>
+
+	<div class="b-a wrapper-md clearfix m-b-md padder-b-0 padder-r-0">
+		<form class="form-horizontal">
+			<div class="">
+				<div btn-common route-flag="mcInput" btn-flag="div"
+					class="col-md-3 col-sm-12 padder-l-0 m-b-md">
+					<label class="col-md-3 col-sm-2 control-label padder-l-0">名称</label>
+					<div class="col-md-9 col-sm-10 padder-l-0">
+						<input type="text" class="form-control" ng-model="name">
+					</div>
+				</div>
+				<div btn-common route-flag="ymInput" btn-flag="div"
+					class="col-md-3 col-sm-12 padder-l-0 m-b-md">
+					<label class="col-md-3 col-sm-2 control-label padder-l-0">域名</label>
+					<div class="col-md-9 col-sm-10 padder-l-0">
+						<input type="text" class="form-control" ng-model="domain">
+					</div>
+				</div>
+				<div btn-common route-flag="cuState" btn-flag="div"
+					class="col-md-3 col-sm-12 padder-l-0 m-b-md">
+					<label class="col-md-3 col-sm-2 control-label padder-l-0">状态</label>
+					<div class="col-md-9 col-sm-10 padder-l-0">
+						<select ui-jq="chosen" class="form-control"
+							ng-model="chosen_state">
+							<option value="{{state.id}}" ng-repeat="state in states">
+								{{state.name}}</option>
+						</select>
+					</div>
+				</div>
+				<div btn-common route-flag="cuCx" btn-flag="div"
+					class="col-md-2 col-sm-12 text-center padder-l-0 m-b">
+					<button class="btn m-b-xs btn-default" ng-click="filterQuery()">查&#12288;询</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div>
+		<table table-directive tableoption="tableoption" instance='tdInstance'></table>
+		<script type="text/ng-template" id="config_app_edit_template">
+                            <div ng-include="'common/page/modal/config_app_edit.html'"></div>
+                        </script>
+		<script type="text/ng-template" id="action_template">
+                            <div ng-include="'common/page/modal/mgr_action.html'"></div>
+                        </script>
+	</div>
+</div>

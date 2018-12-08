@@ -1,0 +1,22 @@
+<div class="modal-header">
+	<h3 class="modal-title">{{title | translate}}</h3>
+</div>
+<div style="margin-top: 10px; margin-left: 16px;">
+	{{"当前正在给" | translate}} <span style="color: red;">"{{optdescript
+		| translate}}"</span> {{"进行角色授权" | translate}}
+</div>
+<div class="modal-body">
+	<!--<form name="formValidate" class="form-horizontal" novalidate>
+
+
+	</form>-->
+	<table id="role_accredit_tab" table-directive tableoption="dtOpt"
+		instance="roleaccredit.tdInstance" class="fixh"></table>
+</div>
+<div class="modal-footer">
+	<span class="_color_red pull-left">{{error_msg}}</span>
+	<button class="btn btn-default" ng-click="cancel()">{{"取消" |
+		translate}}</button>
+	<button class="btn btn-blue" ng-disabled="formValidate.$invalid"
+		ng-click="ok($event)">{{"确定" | translate}}</button>
+</div>

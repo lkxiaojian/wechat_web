@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>邮件注册认证</title>
+<style>
+.app-header-fixed {
+	padding-top: 1px;
+}
+
+.b-b {
+	border-bottom: 2px solid #1F89AD;
+}
+
+.sp {
+	font-size: 28px;
+	color: rgba(32, 27, 22, 0.59);
+	padding-left: 15px;
+	font-weight: bold;
+}
+
+.sp_sp {
+	font-size: 20px;
+	color: rgba(32, 27, 22, 0.59);
+	/*padding-left: 15px;*/
+	font-weight: bold;
+}
+
+.sp_sp_sp {
+	font-size: 14px;
+	color: rgba(32, 27, 22, 0.59);
+	font-weight: bold;
+}
+
+img {
+	height: 30px;
+	vertical-align: text-bottom;
+	padding-left: 20%;
+	padding-right: 3%;
+	padding-top: 5px;
+}
+
+.b-b {
+	border-bottom: 2px solid rgba(81, 92, 92, 0.28);
+}
+
+.col-sm-12 {
+	padding-right: 22%;
+	padding-left: 22%;
+}
+
+.stg {
+	padding-left: 20%;
+}
+
+.txt_info {
+	font-size: 15px;
+}
+</style>
+</head>
+<body ng-controller="globalCtrl" style="" class="ng-scope">
+	<div class="app ng-scope app-header-fixed app-aside-fixed" id="app">
+		<div class="fade-in-up ng-scope" ui-view="">
+			<div ui-view="" class="fade-in-up ng-scope">
+				<div class="bg-light lter b-b wrapper-md ng-scope">
+					<img style="height: 45px; padding-top: 10px;"
+						src="img/regist/sky_logo.png"> <span class="sp">账号注册成功</span>
+					<span style="padding-left: 25%"> </span>
+				</div>
+			</div>
+		</div>
+		<div class="send-email-infobox">
+			<div class="col-sm-12 send-email-infocontent">
+				<div class="b-a b-2x b-dashed wrapper-lg bg-white text-left">
+					<img src="img/regist/ok.jpg"> <strong class="sp_sp">恭喜您，
+						{{register_accounts}} 账号注册成功</strong> <br /> <br />
+
+					<div class="stg">
+						<strong class="txt_info">您，现在可以点击马上登录按钮, 快速体验聚宝云平台。</strong> <br />
+						<br />
+						<button type="button" class="btn btn-sm btn-info"
+							ng-click="loginOut()">&nbsp;马上登录&nbsp;</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

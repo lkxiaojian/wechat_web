@@ -1,0 +1,113 @@
+<div style="padding: 0px 20px;">
+	<div data-ng-include="'common/page/blocks/title.html'" class="">
+	</div>
+</div>
+<!--公司查询-->
+<div btn-common route-flag="userTypeList" btn-flag="remove"
+	class="clearfix m-b-md"
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px;">
+	<form class="form-horizontal" name="searchgroupForm">
+		<div class="" style="margin-top: 20px;">
+			<div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0"
+					style="width: 95px;">{{"userRightManage.searchGroupForm.userGroupName"
+					| translate}}</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<input type="text" class="form-control"
+						ng-model="groupListObj.gName">
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-12 text-right padder-l-0 m-b"
+				style="position: relative; left: 505px;">
+				<button class="btn m-b-xs w-xs btn-default"
+					ng-disabled="searchgroupForm.$invalid" ng-click="searchgroupBtn()">{{"common.btn.searchBtn"
+					| translate}}</button>
+			</div>
+		</div>
+	</form>
+</div>
+<div btn-common route-flag="userTypeList" btn-flag="remove"
+	class="clearfix m-b-md" style="padding: 0px 20px 0px 20px;">
+	<button route-flag="addUserGroup" btn-flag="button"
+		class="btn btn-default pull-left" ng-click="addUserGroup()">
+		<i class="fa fa-plus"></i>&#12288;{{"common.btn.addUserGroupBtn" |
+		translate}}
+	</button>
+</div>
+<!-- 公司列表 -->
+<div btn-common route-flag="userTypeList" btn-flag="remove"
+	route-flag="userTypeList">
+	<div style="background: #fff; padding: 0px 20px 20px 20px;">
+		<table table-directive tableoption="userTypeDtOpt" id="usergrouptable"
+			instance="groupInstance"></table>
+	</div>
+</div>
+<!-- 用户查询 -->
+<div class="clearfix m-b-md"
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px;">
+	<form class="form-horizontal" name="searchuserForm">
+		<div class="" style="margin-top: 20px;">
+			<div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0"
+					style="width: 95px;">{{"userRightManage.searchUserForm.userName"
+					| translate}}</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<input type="text" class="form-control"
+						ng-model="userListObj.uName">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">{{"userRightManage.searchUserForm.email"
+					| translate}}</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<input type="text" class="form-control"
+						ng-model="userListObj.uEmail">
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-12 text-right padder-l-0 m-b"
+				style="padding-right: 22px">
+				<button class="btn m-b-xs w-xs btn-default"
+					ng-disabled="searchuserForm.$invalid" ng-click="searchUserBtn()">{{"common.btn.searchBtn"
+					| translate}}</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="clearfix m-b-md" style="padding: 0px 20px;">
+	<button btn-common route-flag="delAllUser" btn-flag="button"
+		class="btn btn-default pull-right" ng-click="deleteUser()">
+		<i class="fa fa-minus"></i>&#12288;批量删除
+	</button>
+	<button btn-common route-flag="addUser" btn-flag="button"
+		class="btn btn-default pull-left" ng-click="addUser()">
+		<i class="fa fa-plus"></i>&#12288;{{"common.btn.addUserBtn" |
+		translate}}
+	</button>
+	<button route-flag="delAllUser" btn-flag="button"
+		class="btn btn-default pull-right" ng-click="deleteUser()">
+		<i class="fa fa-minus"></i>&#12288;{{"common.btn.batchDelBtn" |
+		translate}}
+	</button>
+</div>
+<div style="padding: 0px 20px;">
+	<div>
+		<!--<div class="col-title">用户列表</div>-->
+		<div style="background: #fff;">
+			<table table-directive tableoption="userListDtOpt" id="userrmgtable"
+				instance="tdInstance"></table>
+		</div>
+	</div>
+</div>
+<script type="text/ng-template" id="myModalContent.html">
+    <div ng-include="'common/page/modal/add_user_model.html'"></div>
+</script>
+<script type="text/ng-template" id="myModalContent2.html">
+    <div ng-include="'common/page/modal/role_accredit_model.html'"></div>
+</script>
+<script type="text/ng-template" id="myModalContent3.html">
+    <div ng-include="'common/page/modal/menu_accredit_model.html'"></div>
+</script>
+<script type="text/ng-template" id="myModalContent4.html">
+    <div ng-include="'common/page/modal/add_usergroup_model.html'"></div><!--暂时没用上-->
+</script>

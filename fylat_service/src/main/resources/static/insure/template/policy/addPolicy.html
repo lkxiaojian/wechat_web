@@ -1,0 +1,402 @@
+<div class="modal-header">
+
+	<div class="btn pull-right m-t-n-xs m-l-n list-icon">
+		<a ui-sref="app.insure.insureService_policyManage"
+			href="#/app/insure/insureService_policyManage"> <i
+			class="fa fa-mail-reply-all"></i>
+		</a>
+	</div>
+	<!--<h3 class="modal-title">{{pageTitle}}</h3>-->
+	<h3 class="modal-title" translate="{{pageTitle}}"></h3>
+</div>
+
+<div class="modal-body">
+	<form class="form-horizontal m-b-md" id="add_policy"
+		name="addPolicyFormValidate" novalidate>
+
+		<div class="form-group" ng-if="isVisible">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.policyCompany"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control" name="p_c_name"
+					ng-model="addPolicyParam.p_c_name"
+					placeholder="{{'policyManage.policyCompanyPlaceholder' | translate}}"
+					id="policy_company_name" required />
+				<div class="error"
+					ng-show="addPolicyFormValidate.p_c_name.$dirty && addPolicyFormValidate.p_c_name.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.p_c_name.$error.required">
+						{{"policyManage.policyCompanyPlaceholder" | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<hr class="b-l-light" ng-if="isVisible">
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.policyName"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control" name="pName"
+					ng-model="addPolicyParam.pName"
+					placeholder="{{'policyManage.policyNamePlaceholder' | translate}}"
+					ng-maxlength="50" id="policy_name" required />
+				<div class="error"
+					ng-show="addPolicyFormValidate.pName.$dirty && addPolicyFormValidate.pName.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.pName.$error.required">
+						{{'policyManage.policyNamePlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.policyCode"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control" name="pCode"
+					ng-maxlength="50" id="policy_code"
+					placeholder="{{'policyManage.policyCodePlaceholder' | translate}}"
+					ng-model="addPolicyParam.pCode" required />
+				<div class="error"
+					ng-show="addPolicyFormValidate.pCode.$dirty && addPolicyFormValidate.pCode.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.pCode.$error.required">
+						{{'policyManage.policyCodePlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.paymentDate"
+				| translate}}</label>
+			<div class="col-lg-2 col-md-10 col-sm-10">
+				<input type="text" class="form-control" value="2017/03/11 00:00:00"
+					name="payment_date"
+					onfocus="WdatePicker({maxDate:'%y-%M-%d', dateFmt:'yyyy/MM/dd HH:mm:ss'})"
+					id="payment_date" required>
+				<div class="error" ng-if="isShow" name="isShow">
+					<small class="error a-red" ng-show="isShow"> 缴费日期不能晚于签发日期 </small>
+				</div>
+			</div>
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.issueDate"
+				| translate}}</label>
+			<div class="col-lg-2 col-md-10 col-sm-10">
+				<input type="text" class="form-control" value="2017/03/16 00:00:00"
+					name="issue_date"
+					onfocus="WdatePicker({maxDate:'%y-%M-%d', dateFmt:'yyyy/MM/dd HH:mm:ss'})"
+					id="issue_date" required>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star"></span>{{"policyManage.note"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<textarea type="text" class="form-control" rows="3"
+					name="policy_description" id="policy_description"
+					ng-model="addPolicyParam.policy_description"
+					placeholder="{{'policyManage.notePlaceholder' | translate}}"></textarea>
+			</div>
+		</div>
+		<hr class="b-l-light">
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.policyHolder"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.policy_holder"
+					placeholder="{{'policyManage.policyHolderPlaceholder' | translate}}"
+					name="policy_holder" id="policy_holder" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.policy_holder.$dirty && addPolicyFormValidate.policy_holder.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.policy_holder.$error.required">
+						{{'policyManage.policyHolderPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.insurant"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.insurant"
+					placeholder="{{'policyManage.insurantPlaceholder' | translate}}"
+					name="insurant" id="insurant" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.insurant.$dirty && addPolicyFormValidate.insurant.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.insurant.$error.required">
+						{{'policyManage.insurantPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.insurant_address"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.insurant_address"
+					placeholder="{{'policyManage.insurant_addressPlaceholder' | translate}}"
+					name="insurant_address" id="insurant_address" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.insurant_address.$dirty && addPolicyFormValidate.insurant_address.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.insurant_address.$error.required">
+						{{'policyManage.insurant_addressPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.insurantPhone"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-pattern="/^1[3|5|7|8|][0-9]{9}$/"
+					ng-model="addPolicyParam.insurant_phone"
+					placeholder="{{'policyManage.insurantPhonePlaceholder' | translate}}"
+					name="insurant_phone" id="insurant_phone" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.insurant_phone.$dirty && addPolicyFormValidate.insurant_phone.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.insurant_phone.$error.pattern">
+						{{"policyManage.wrongPhoneNum" | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.insurant_idNum"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.insurant_idNum"
+					placeholder="{{'policyManage.insurant_idNumPlaceholder' | translate}}"
+					name="insurant_idNum" id="insurant_idNum" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.insurant_idNum.$dirty && addPolicyFormValidate.insurant_idNum.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.insurant_idNum.$error.required">
+						{{'policyManage.insurant_idNumPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.objectSite"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input value="{{addPolicyParam.obj_siteAndOri}}" type="text"
+					ng-readonly="true" ng-click="moduleOpen()" class="form-control"
+					placeholder="{{'policyManage.objectSitePlaceholder' | translate}}"
+					name="obj_siteAndOri" id="obj_siteAndOri" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.obj_siteAndOri.$dirty && addPolicyFormValidate.obj_siteAndOri.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.obj_siteAndOri.$error.required">
+						{{'policyManage.objectSitePlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<hr class="b-l-light">
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star"></span>{{"policyManage.objProject"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.obj_project"
+					placeholder="{{'policyManage.objProjectPlaceholder' | translate}}"
+					name="obj_project" id="obj_project">
+				<div class="error"
+					ng-show="addPolicyFormValidate.obj_project.$dirty && addPolicyFormValidate.obj_project.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.obj_project.$error.required">
+						{{'policyManage.objProjectPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.underwritingLiability"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.underwriting_liability"
+					placeholder="{{'policyManage.underwritingLiabilityPlaceholder' | translate}}"
+					name="underwriting_liability" id="underwriting_liability" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.underwriting_liability.$dirty && addPolicyFormValidate.underwriting_liability.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.underwriting_liability.$error.required">
+						{{'policyManage.underwritingLiabilityPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.unitInsuranceAmount"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.unit_insurance_money"
+					placeholder="{{'policyManage.unitInsuranceAmountPlaceholder' | translate}}"
+					name="unit_insurance_money" id="unit_insurance_money" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.unit_insurance_money.$dirty && addPolicyFormValidate.unit_insurance_money.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.unit_insurance_money.$error.required">
+						{{'policyManage.unitInsuranceAmountPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.insuranceQuantity"
+				| translate}}</label>
+			<div class="col-lg-2 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.insurance_quantity"
+					placeholder="{{'policyManage.insuranceQuantityPlaceholder' | translate}}"
+					name="insurance_quantity" id="insurance_quantity" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.insurance_quantity.$dirty && addPolicyFormValidate.insurance_quantity.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.insurance_quantity.$error.required">
+						{{'policyManage.insuranceQuantityPlaceholder' | translate}} </small>
+				</div>
+			</div>
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.unit"
+				| translate}}</label>
+			<div class="col-lg-2 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.obj_unit"
+					placeholder="{{'policyManage.unitPlaceholder' | translate}}"
+					name="obj_unit" id="obj_unit" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.obj_unit.$dirty && addPolicyFormValidate.obj_unit.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.obj_unit.$error.required">
+						{{'policyManage.unitPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.totalInsuranceAmount"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.sum_insurance_money"
+					placeholder="{{'policyManage.totalInsuranceAmountPlaceholder' | translate}}"
+					name="sum_insurance_money" id="sum_insurance_money" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.sum_insurance_money.$dirty && addPolicyFormValidate.sum_insurance_money.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.sum_insurance_money.$error.required">
+						{{'policyManage.totalInsuranceAmountPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.insuranceRate"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.premium_rate"
+					placeholder="{{'policyManage.insuranceRatePlaceholder' | translate}}"
+					name="premium_rate" id="premium_rate" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.premium_rate.$dirty && addPolicyFormValidate.premium_rate.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.premium_rate.$error.required">
+						{{'policyManage.insuranceRatePlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.insurance"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.sum_premium"
+					placeholder="{{'policyManage.insurancePlaceholder' | translate}}"
+					name="sum_premium" id="sum_premium" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.sum_premium.$dirty && addPolicyFormValidate.sum_premium.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.sum_premium.$error.required">
+						{{'policyManage.insurancePlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.attachmentPoint"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.attachment_point"
+					placeholder="{{'policyManage.attachmentPointPlaceholder' | translate}}"
+					name="attachment_point" id="attachment_point" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.attachment_point.$dirty && addPolicyFormValidate.attachment_point.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.attachment_point.$error.required">
+						{{'policyManage.attachmentPointPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star">*</span>{{"policyManage.policyTerm"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<input type="text" class="form-control"
+					ng-model="addPolicyParam.policy_term"
+					placeholder="{{'policyManage.policyTermPlaceholder' | translate}}"
+					name="policy_term" id="policy_term" required>
+				<div class="error"
+					ng-show="addPolicyFormValidate.policy_term.$dirty && addPolicyFormValidate.policy_term.$invalid">
+					<small class="error a-red"
+						ng-show="addPolicyFormValidate.policy_term.$error.required">
+						{{'policyManage.policyTermPlaceholder' | translate}} </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star"></span>{{"policyManage.specialAppointment"
+				| translate}}</label>
+			<div class="col-lg-10 col-md-10 col-sm-10">
+				<textarea class="form-control" rows="3"
+					ng-model="addPolicyParam.special_appointment"
+					placeholder="{{'policyManage.specialAppointmentPlaceholder' | translate}}"
+					name="special_appointment" id="special_appointment"></textarea>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="modal-footer">
+	<span class="_color_red pull-left">{{error_msg}}</span>
+	<button class="btn btn-default" ng-click="reset()">{{"common.btn.resetBtn"
+		| translate}}</button>
+	<button class="btn btn-dark"
+		ng-disabled="addPolicyFormValidate.$invalid" ng-click="ok($event)">{{"common.btn.okBtn"
+		| translate}}</button>
+</div>
+<script type="text/ng-template" id="myModalContent.html">
+    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
+</script>
+

@@ -1,0 +1,62 @@
+<div class="modal-header">
+	<div style="margin: 0px 15px">
+		<h3 class="m-n font-thin h5">{{listObj.navigationMsg}} > 质检信息</h3>
+	</div>
+</div>
+
+<div class="modal-body">
+	<form class="form-horizontal m-b-md" id="add_integration"
+		name="addIntegrationFormValidate" novalidate>
+		<div class="form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star"></span>质检报告文件名</label>
+			<div class="col-lg-9 col-md-9 col-sm-9">
+				<input type="text" class="form-control" name="itName"
+					ng-model="addIntegrationParam.itName" placeholder="请输入进程名称"
+					ng-maxlength="50" id="policy_name" required />
+				<div class="error"
+					ng-show="addIntegrationFormValidate.itName.$dirty && addIntegrationFormValidate.itName.$invalid">
+					<small class="error a-red"
+						ng-show="addIntegrationFormValidate.itName.$error.required">
+						质检报告文件名 </small>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star"></span>质检员</label>
+			<div class="col-lg-9 col-md-9 col-sm-9">
+				<input type="text" class="form-control" name="itVersion"
+					ng-maxlength="50" id="policy_code" placeholder="请输入版本"
+					ng-model="addIntegrationParam.itVersion" required />
+				<div class="error"
+					ng-show="addIntegrationFormValidate.itVersion.$dirty && addIntegrationFormValidate.itVersion.$invalid">
+					<small class="error a-red"
+						ng-show="addIntegrationFormValidate.itVersion.$error.required">
+						请输入质检员 </small>
+				</div>
+			</div>
+		</div>
+
+
+		<hr class="b-l-light">
+
+		<div class="form-group">
+			<label class="col-lg-3 col-md-3 col-sm-3 control-label padder-l-0"><span
+				class="text-danger m-r-xs font-bold as-star"></span>质检描述信息</label>
+			<div class="col-lg-9 col-md-9 col-sm-9">
+				<textarea class="form-control" rows="3"
+					ng-model="addPolicyParam.special_appointment"
+					placeholder="请输入质检描述信息" name="special_appointment"
+					id="special_appointment"></textarea>
+			</div>
+		</div>
+
+	</form>
+</div>
+<div class="modal-footer">
+	<span class="_color_red pull-left">{{error_msg}}</span>
+	<button class="btn btn-dark"
+		ng-disabled="addPolicyFormValidate.$invalid" ng-click="ok($event)">下载报告
+	</button>
+</div>

@@ -1,0 +1,66 @@
+<div style="padding: 0px 20px;">
+	<div data-ng-include="'common/page/blocks/title.html'" class="">
+	</div>
+</div>
+
+<div class="clearfix m-b-md"
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px;">
+	<form class="form-horizontal" name="searchappForm">
+		<div class="" style="margin-top: 20px;">
+
+			<div btn-common route-flag="appInput" btn-flag="div"
+				class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">应用名称</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<input type="text" class="form-control" ng-model="name">
+				</div>
+			</div>
+
+			<div btn-common route-flag="appState" btn-flag="div"
+				class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">状态</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<select ui-jq="chosen" class="form-control" ng-model="chosen_state">
+						<option value="{{state.id}}" ng-repeat="state in states">
+							{{state.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div btn-common route-flag="appCx" btn-flag="div"
+				class="col-md-2 col-sm-12 text-center padder-l-0 m-b">
+				<button class="btn m-b-xs w-xs btn-default"
+					ng-disabled="searchappForm.$invalid" ng-click="filterQuery()">查&#12288;询</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div style="padding: 0px 20px;">
+	<div class="clearfix m-b-md">
+		<button btn-common route-flag="addApp" btn-flag="button"
+			class="btn btn-default pull-left" ng-click="mgr_app_add()">
+			<i class="fa fa-plus"></i>&#12288;新增应用
+		</button>
+	</div>
+
+	<!-- <div class="row m-b">  btn-common route-flag="urlAdd"
+		<div class="col-md-12">
+			<a href class="btn btn-sm btn-ss btn-blue " ng-click="mgr_app_add()">新增应用</a>
+		</div>
+	</div>-->
+
+	<div>
+
+		<table class="crtlh" table-directive tableoption="tableoption"
+			instance='tdInstance'></table>
+		<script type="text/ng-template" id="mgr_app_config_template">
+						<div ng-include="'common/page/modal/mgr_app_config.html'"></div>
+					</script>
+		<script type="text/ng-template" id="action_template">
+						<div ng-include="'common/page/modal/mgr_action.html'"></div>
+					</script>
+		<script type="text/ng-template" id="mgr_app_add_template">
+						<div ng-include="'common/page/modal/mgr_app_add.html'"></div>
+					</script>
+	</div>
+</div>

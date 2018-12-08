@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Simple Map</title>
+<link rel="stylesheet" type="text/css"
+	href="http://127.0.0.1:8888/cloud_insure/arcgis_js_api/3.9/js/dojo/dijit/themes/tundra/tundra.css" />
+<link rel="stylesheet" type="text/css"
+	href="http://127.0.0.1:8888/cloud_insure/arcgis_js_api/3.9/js/esri/css/esri.css" />
+<script type="text/javascript"
+	src="http://127.0.0.1:8888/cloud_insure/arcgis_js_api/3.9/init.js"></script>
+<script type="text/javascript">
+        dojo.require("esri.map");
+        function init() {
+            var myMap = new esri.Map("mapDiv");
+            var myTiledMapServiceLayer = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/NGS_Topo_US_2D/MapServer");
+            myMap.addLayer(myTiledMapServiceLayer);
+        }
+        dojo.addOnLoad(init);
+    </script>
+</head>
+<body class="tundra">
+	<div id="mapDiv"
+		style="width: 900px; height: 600px; border: 1px solid #000;"></div>
+</body>
+
+</html>

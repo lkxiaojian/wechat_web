@@ -1,0 +1,17 @@
+/**表格样式*/
+.hdc-btn {
+	margin: 5px;
+}
+
+.hdc-quality tr td {
+	height: 50px;
+}
+
+.hdc-title, .hdc-title .btn-info {
+	font-size: 25px;
+}
+
+.hdc-title .btn-info {
+	width: 40px;
+	height: 40px;
+}

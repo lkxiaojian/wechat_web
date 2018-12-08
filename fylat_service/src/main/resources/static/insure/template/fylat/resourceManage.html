@@ -1,0 +1,77 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm">
+	<!-- main -->
+	<div class="col">
+		<!-- main header -->
+		<div style="margin: 10px 15px">
+			<h3 class="m-n font-thin h5" ng-bind="listObj.navigationMsg"></h3>
+		</div>
+		<!-- / main header -->
+
+		<div class="wrapper-md" style="background-color: #eee">
+			<div class="panel b-a">
+				<div class="panel-heading bg-info dk no-border wrapper-lg hdc-title">
+					<button class="btn btn-sm btn-icon btn-rounded btn-info m-l">
+						<i class="fa  fa-th-large"></i>
+					</button>
+					资源使用情况
+				</div>
+
+				<div
+					class="padder-v b-t b-light bg-light lter row text-center no-gutter">
+					<div class="col-xs-12">
+						<div class="inline m-t-sm col-xs-12">
+							<div echarts pie-hollow-data="pieHollowData"></div>
+						</div>
+
+					</div>
+
+				</div>
+				<div class="hbox text-center b-t b-light">
+					<a class="col padder-v text-muted b-r b-light">
+						<div class="h4">60%</div> <span>CPU使用率</span>
+					</a> <a class="col padder-v text-muted">
+						<div class="h4">40%（4096M/8192M）</div> <span>内存使用率</span>
+					</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!-- / main -->
+
+
+	<!-- right col:显示系统信息 -->
+	<div class="col w-md bg-white-only b-l bg-auto no-border-xs">
+		<div class="col-md-1" style="margin-top: 20px"></div>
+		<div class="col-md-10">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<div class="clearfix">
+						<a href class="pull-left thumb-md avatar b-3x m-r"> </a>
+						<div class="clear">
+							<div class="h3 m-t-xs m-b-xs">
+								<i class="fa fa-desktop" style="font-size: 25px"></i> 计算机信息 <i
+									class="fa fa-circle text-success pull-right text-xs m-t-sm"></i>
+							</div>
+							<small class="text-muted">Art director</small>
+						</div>
+					</div>
+				</div>
+				<div class="list-group no-radius alt">
+					<a class="list-group-item" href> <span class="badge bg-success">centos
+							6.5</span> <i class="fa fa-codepen fa-fw text-muted"></i> 操作系统
+					</a> <a class="list-group-item" href> <span class="badge bg-info">6.5</span>
+						<i class="fa fa-pagelines fa-fw text-muted"></i> 系统版本
+					</a> <a class="list-group-item" href> <span class="badge bg-info">x64</span>
+						<i class="fa fa-bullseye fa-fw text-muted"></i> 系统架构
+					</a> <a class="list-group-item" href> <span class="badge bg-info">Administrator</span>
+						<i class="fa fa-eye fa-fw text-muted"></i> 计算机名
+					</a> <a class="list-group-item" href> <span class="badge bg-light">Root</span>
+						<i class="fa  fa-user fa-fw text-muted"></i> 当前用户
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- / 显示系统信息 -->
+</div>

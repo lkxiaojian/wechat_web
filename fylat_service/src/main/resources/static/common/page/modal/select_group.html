@@ -1,0 +1,18 @@
+<div class="modal-header">
+	<h3 class="modal-title">{{title | translate}}</h3>
+</div>
+<div class="modal-body">
+	<div route-flag="selectGroupList">
+		<div style="background: #fff; padding: 0px 20px 20px 20px;">
+			<table table-directive tableoption="selectGroupDtOpt"
+				id="selectgrouptable" instance="selectGroupInstance"></table>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<span class="_color_red pull-left">{{error_msg}}</span>
+	<button class="btn btn-default" ng-click="cancel()">{{"取消" |
+		translate}}</button>
+	<button class="btn btn-blue" ng-click="ok($event)">{{"确定" |
+		translate}}</button>
+</div>

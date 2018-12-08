@@ -1,0 +1,19 @@
+<div style="width: 100%;">
+    <div class="modal-header" style="color: #555;line-height: 20px">
+        <span ng-bind="listObj.runModalTitle"></span>
+        <i class="glyphicon glyphicon-remove-circle" ng-disable="listObj.requestResult.code" style="float: right" ng-click="ok()"></i>
+    </div>
+    <div scroll-bottom run-message="listObj.runMessage" class="modal-body scrollable hover" style="height: 500px;color: #221133;">
+        <div class="row" ng-repeat="line in listObj.runMessage">
+            <div class="col-lg-3">
+                &nbsp;&nbsp;
+                {{line.date}}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span ng-class="{ 'ERROR': 'fylat-message-error', 'INFO': 'fylat-message-true'}[line.state]">&nbsp;&nbsp; {{line.state}} </span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---&nbsp;&nbsp;
+            </div>
+            <div class="col-lg-2">[{{listObj.title}}]</div>
+            <div class="col-lg-6">:&nbsp;&nbsp;{{line.message}}</div>
+        </div>
+    </div>
+</div>

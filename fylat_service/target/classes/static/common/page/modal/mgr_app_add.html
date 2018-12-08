@@ -1,0 +1,60 @@
+<div class="modal-header">
+	<h3 class="modal-title">{{title}}</h3>
+</div>
+<div class="modal-body">
+	<div class="row m-t">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-sm-3">
+					<span class="pull-right"><span class="_color_red font-bold">*</span>应用名称：</span>
+				</div>
+				<div class="col-sm-6">
+					<input type="text" ng-model="appName" class="form-control"
+						placeholder="如：百度" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row m-t">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-sm-3">
+					<span class="pull-right"><span class="_color_red font-bold">*</span>应用域名：</span>
+				</div>
+				<div class="col-sm-6">
+					<input type="text" ng-model="domain" ng-blur="domain_conf()"
+						class="form-control" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row m-t">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-sm-3">
+					<span class="pull-right"><span class="_color_red font-bold">*</span>应用服务器IP：</span>
+				</div>
+				<div class="col-sm-6">
+					<input type="text" ng-model="ip" class="form-control" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row m-t">
+		<div class="col-sm-12">
+			<div class="row">
+				<div class="col-sm-3">
+					<span class="pull-right">备注信息：</span>
+				</div>
+				<div class="col-sm-6">
+					<textarea class="form-control" ng-model="remark" />
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<span class="_color_red pull-left">{{error_msg}}</span>
+	<button class="btn btn-default" ng-click="cancel()">取消</button>
+	<button class="btn btn-blue" ng-click="ok()">确定</button>
+</div>

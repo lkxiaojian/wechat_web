@@ -1,0 +1,526 @@
+<div class="modal-header">
+	<!--<div class="btn  pull-right m-t-n-xs m-l-n list-icon"><a ui-sref="app.insure.insureService_policyManage"><i
+            class="fa fa-mail-reply-all"></i></a></div>-->
+	<h3 class="m-n font-thin h3">{{pageTitle}}</h3>
+</div>
+<!-- tab -->
+<div class="wrapper-md">
+	<tabset class="tab-container"> <tab heading="数据使用规定"
+		active="steps.step1" select="steps.percent=10"> <progressbar
+		value="steps.percent" class="progress-xs" type="success"></progressbar>
+	<form name="step1" class="form-validation">
+		<div class="clearfix">
+			<h3 class="m-t-xl font-bold m-b-none">保密条款</h3>
+			<div id="node-req" class="wrapper"></div>
+			<div class="line b-b"></div>
+			<pre>
+1.乙方在获得甲方气象数据后，不能将相关数据出租、出售、发表、出版或者向任何第三方分发、销售或再授权。
+2.甲乙双方应对其通过工作接触和通过其他渠道得知的有关对方的商业秘密严格保密，未经对方事先书面通知，不得向其他人披露。
+3.未经对方事先书面同意，不得擅自使用、复制对方商标、商业信息、人员团队、技术及其他资料。
+4.除非下列情况，甲方在未经乙方书面同意不得将获得的来自乙方的任何客户信息和保密信息泄露给第三方，且对客户信息永久保密：
+  a)应甲方的转再保人要求提供；
+  b)应外部审计、财务、损失理算人要求提供；
+  c)应法律或司法管辖或监管规定要求而提供给第三方。
+5.除非下列情况，乙方在未经甲方书面同意不得将获得的来自甲方的任何客户信息和保密信息泄露给第三方，且对客户信息永久保密：
+  a)应甲方要求提供给为协助本协议及具体项目所必需的外聘专家或顾问；
+  b)应甲方要求提供给具体项目中相关的保险服务的承保人；
+  c)应法律或司法管辖或监管规定要求而提供给第三方。
+6.如有下述情况，则信息不视为保密信息：
+  a) 非因违反本协议而已成为公开信息的信息；
+  b) 在一方披露前接收方已获知或了解的、非受保密义务限制的信息；
+  c) 接收方独立于披露方信息而自行开发的信息；
+  d) 接收方从第三方已获知或了解的信息，只要接收方无理由知悉该第三方受其与披露方的保密协议的约束；或
+  e)经由法庭禁令或任何有权政府机关要求而披露的信息，只要接收方立即通知披露方此种禁令或要求，在披露方负责费用时协助向签发法院或政府机关申请保护令以限制披露和使用信息。
+                    </pre>
+			<div class="line b-b"></div>
+			<h3 class="m-t-xl font-bold m-b-none">违约条款</h3>
+			<div id="node-req2" class="wrapper"></div>
+			<div class="line b-b"></div>
+			<pre>
+1. 注册会员资格时，所提交的资料必须真实有效，否则甲方有权拒绝其申请或者撤销其会员资格，并不予任何赔偿或者退还任何已缴纳的收费服务费用。
+会员资料发生变化时，应及时修改注册的个人资料，否则由此造成的会员权利不能全面有效地行使的责任由会员自己承担。
+2. 本网站会员资格只限本用户名使用，不得转让到其他用户名上。
+3. 若会员违反本服务条款的规定，甲方将有权取消该会员的会员资格而无须给与任何补偿，也不予退还任何已缴纳的收费服务费用。
+4. 会员对本服务条款的修改有任何异议，可自动放弃会员资格，但不退还任何已缴纳的收费服务费用。
+5.甲方如违反协议规定条款，按以下规定处理：
+  a）由于乙方违反协议导致任何法律后果的发生，由乙方独立承担相应的法律责任；
+  b）乙方不按服务协议约定支付甲方服务费，弄虚作假，乙方需向甲方支付协议约定服务费用的5倍作为赔偿；
+  c）视乙方违规情节轻重，甲方有权采取适当的形式追究乙方的法律责任。
+                    </pre>
+		</div>
+		<div class="line b-b"></div>
+		<input type="radio" name="isAgree" value="1" ng-model="formObj.agree"
+			ng-click="steps.percent=30">&nbsp; &nbsp;我同意 </br> <input
+			type="radio" name="isAgree" value="2" ng-model="formObj.agree"
+			ng-click="steps.percent=10">&nbsp; &nbsp;我不同意
+		<div class="m-t m-b">
+			<button type="submit" ng-disabled="formObj.agree != 1"
+				class="btn btn-default btn-rounded" ng-click="steps.step2=true">下一步
+			</button>
+		</div>
+	</form>
+	</tab> <tab heading="数据申请表" disable="formObj.agree != 1" active="steps.step2"
+		select="steps.percent=30">
+	<form name="step2" class="form-validation">
+		<progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
+		<div class="panel-default">
+			<div class="panel-heading font-bold">表单内容</div>
+			<div class="panel-body">
+				<!--<div class="form-group">
+                            <label class="col-sm-2 control-label">Placeholder</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="placeholder">
+                            </div>
+                        </div>
+                        <div class="line line-dashed b-b line-lg pull-in"></div>-->
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label m-t-sm"><span
+						class="text-danger m-r-xs font-bold as-star">*</span>数据类型</label>
+					<div class="col-sm-10">
+						<div class="nav-tabs-alt">
+							<ul class="nav nav-tabs nav-justified">
+								<li ng-class="{'active': tabs[0]}"><a class="text-sm" href
+									ng-click="tab(0);formObj.category='grid'"><i
+										class="glyphicon glyphicon-film" /> &nbsp;&nbsp; 网格</a></li>
+								<li ng-class="{'active': tabs[1]}"><a class="text-sm" href
+									ng-click="tab(1);formObj.category='satellite'"><i
+										class="glyphicon glyphicon-screenshot" /> &nbsp;&nbsp;卫星</a></li>
+								<li ng-class="{'active': tabs[2]}"><a class="text-sm" href
+									ng-click="tab(2);formObj.category='site'"><i
+										class="icon-globe" /> &nbsp;&nbsp;站点</a></li>
+							</ul>
+						</div>
+						<div class="row-row">
+							<div class="cell scrollable-none">
+								<div class="cell-inner">
+									<div class="tab-content" style="border: none">
+										<div class="tab-pane" ng-class="{'active': tabs[0]}">
+											<label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="relative_humidity"> 相对湿度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="visibility"> 能见度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="snow_depth"> 雪深
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="storm_total_snow_accumulation" checked> 暴雨积雪
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="icing_severity_index"> 结冰严重程度指数
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="critical_fire_weather_index"> 临界火险天气指数
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="precipitation_type"> 降水类型
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="precipitation_ice_content"> 冰雨量
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="rain_content"> 雨量
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="snow_content"> 雪量
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="MAX_temperature"> 最高温
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="MIN_temperature"> 最低温
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="AVG_temperature"> 平均温
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="severe_storm_index"> 强风暴指数
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="solar_radiation"> 太阳辐射
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="soil_moisture"> 土壤湿度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="snow_melting"> 融雪
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="wind_speed"> 风速
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="dew_point_temperature"> 露点温度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="evaporation_data"> 蒸发量
+											</label>
+										</div>
+										<div class="tab-pane" ng-class="{'active': tabs[1]}">
+											<label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="precipitation"> 降水估计
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="snow_cover"> 积雪覆盖
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Regional_fog_monitoring"> 区域大雾监测
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Fire_point_identification"> 火点判识
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Sea_ice_monitoring"> 海冰监测
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Dust_monitoring"> 沙尘监测
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Land_surface_reflectance"> 陆表反射率
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Land_surface_temperature"> 陆表温度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="vegetation_index"> 植被指数
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Sea_surface_temperature"> 海表温度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Drought_index"> 干旱指数
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Flood_index"> 洪涝指数
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Ice_thickness_index"> 冰水厚度指数
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="solar_radiation"> 太阳辐射
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Typhoon_monitoring"> 台风监测
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Ocean_aerosol"> 海洋气溶胶
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Land_aerosol"> 陆地气溶胶
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="leaf_area_index"> 叶面积指数
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="soil_moisture"> 土壤水分
+											</label>
+										</div>
+										<div class="tab-pane" ng-class="{'active': tabs[2]}">
+											<label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="PRS_Avg"> 平均气压
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="PRS_Max"> 最高气压
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="PRS_Min"> 最低气压
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="TEM_Avg"> 平均气温
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="TEM_Max"> 最高气温
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="TEM_Min"> 最低气温
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="RHU_Avg"> 平均相对湿度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="RHU_Min"> 最小相对湿度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="VIS_Min"> 最小水平能见度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="PRE_24h"> 24小时降水量
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="Snow_Depth"> 积雪深度
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType"
+												value="WIN_S"> 风速
+											</label> <label class="col-lg-3"> <input type="radio"
+												name="optionsRadios" ng-model="formObj.dataType" value="SSH">
+												日照时数
+											</label>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><span
+						class="text-danger m-r-xs font-bold as-star">*</span>选择区域</label>
+					<div class="col-sm-10 ">
+						<label class="col-lg-2 m-l-n"> <input type="radio"
+							name="regionRadios" ng-model="formObj.regionType" value="region"
+							ng-click="formObj.inputLonlat=undefined;formObj.mapValue = undefined;">
+							省市县
+						</label> <label class="col-lg-2"> <input type="radio"
+							name="regionRadios" ng-model="formObj.regionType" value="loglat"
+							ng-click="formObj.region.selected= undefined; formObj.city.selected= undefined; formObj.country.selected = undefined;formObj.mapValue = undefined;">
+							经纬度
+						</label> <label class="col-lg-2"> <input type="radio"
+							name="regionRadios" ng-model="formObj.regionType" value="map"
+							ng-click="formObj.region.selected= undefined; formObj.city.selected= undefined; formObj.country.selected = undefined;formObj.inputLonlat=undefined;">
+							地图截取
+						</label>
+						<div class="col-lg-4"
+							ng-show="formObj.submitTag && formObj.regionType=='region' && (!formObj.region.selected ) ">
+							<small class="bg-warning"> 必填项 </small>
+						</div>
+
+					</div>
+				</div>
+
+				<div ng-show="formObj.regionType=='region'" class="form-group">
+					<label class="col-sm-2 control-label"></label>
+					<div class="col-sm-10">
+						<div class="col-lg-4 m-b-sm m-l-n">
+							<ui-select ng-model="formObj.region.selected" theme="bootstrap"
+								ng-change="selectCity(formObj.region.selected.id)">
+							<ui-select-match placeholder="选择省">{{$select.selected.name99}}
+							</ui-select-match> <ui-select-choices group-by="'group'"
+								repeat="item in formObj.regionItems | filter: $select.search">
+							<span ng-bind-html="item.name99 | highlight: $select.search"></span>
+							</ui-select-choices> </ui-select>
+						</div>
+						<div class="col-lg-4 m-b-sm m-l-n">
+							<ui-select ng-model="formObj.city.selected" theme="bootstrap"
+								ng-disabled="!formObj.region.selected"
+								ng-change="selectCounty(formObj.city.selected.id)">
+							<ui-select-match placeholder="选择市">{{$select.selected.name99}}
+							</ui-select-match> <ui-select-choices group-by="'group'"
+								repeat="item in formObj.cityItems | filter: $select.search">
+							<span ng-bind-html="item.name99 | highlight: $select.search"></span>
+							</ui-select-choices> </ui-select>
+						</div>
+						<div class="col-lg-4 m-b-sm m-l-n">
+							<ui-select ng-model="formObj.country.selected" theme="bootstrap"
+								ng-disabled="!formObj.city.selected"> <ui-select-match
+								placeholder="选择县">{{$select.selected.name99}}
+							</ui-select-match> <ui-select-choices group-by="'group'"
+								repeat="item in formObj.countryItems | filter: $select.search">
+							<span ng-bind-html="item.name99 | highlight: $select.search"></span>
+							</ui-select-choices> </ui-select>
+						</div>
+
+					</div>
+				</div>
+				<!--
+                        <div ng-show="formObj.regionType=='loglat'" class="form-group">
+                            <label class="col-sm-2 control-label"></label>
+                            <div class="col-sm-10 m-b-sm">
+                                <input type="text" ng-model="formObj.inputLonlat" class="form-control"
+                                       placeholder='{"xmin":117.0763,"ymin":24.8346,"xmax":117.0854,"ymax":24.8416}'>
+                            </div>
+                        </div>-->
+				<div ng-show="formObj.regionType=='loglat'" class="form-group">
+					<label class="col-sm-2 control-label"></label>
+					<div class="col-sm-10">
+						<div class="w-xls" style="display: inline-table">
+							最小经度： <input type="number" ng-model="formObj.inputLonlat.ymin"
+								class="form-control" name="ymin" placeholder='最小经度'
+								step="0.000001">
+							<div class="col-lg-4"
+								ng-show="formObj.submitTag && (!formObj.inputLonlat.ymin)">
+								<small class="bg-warning"> 必填项 </small>
+							</div>
+						</div>
+						&nbsp;&nbsp;
+						<div class="w-xls" style="display: inline-table">
+							最大经度： <input type="number" ng-model="formObj.inputLonlat.ymax"
+								class="form-control" name="ymax" placeholder='最大经度'
+								step="0.000001">
+							<div class="col-lg-4"
+								ng-show="formObj.submitTag && (!formObj.inputLonlat.ymax)">
+								<small class="bg-warning"> 必填项 </small>
+							</div>
+						</div>
+					</div>
+					<label class="col-sm-2 control-label"></label>
+					<div class="col-sm-10">
+						<div class="w-xls" style="display: inline-table">
+							最小纬度： <input type="number" ng-model="formObj.inputLonlat.xmin"
+								class="form-control" name="xmin" placeholder='最小经度'
+								step="0.000001">
+							<div class="col-lg-4"
+								ng-show="formObj.submitTag && (!formObj.inputLonlat.xmin)">
+								<small class="bg-warning"> 必填项 </small>
+							</div>
+						</div>
+						&nbsp;&nbsp;
+						<div class="w-xls" style="display: inline-table">
+							最大纬度： <input type="number" ng-model="formObj.inputLonlat.xmax"
+								class="form-control" name="xmax" placeholder='最大经度'
+								step="0.000001">
+							<div class="col-lg-4"
+								ng-show="formObj.submitTag && (!formObj.inputLonlat.xmax)">
+								<small class="bg-warning"> 必填项 </small>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div ng-show="formObj.regionType=='map'" class="form-group">
+					<label class="col-sm-2 control-label"></label>
+					<div class="col-sm-10  m-b-sm">
+						<input value="{{formObj.mapValue}}" type="text" name="mapModel"
+							ng-readonly="true" ng-click="formObj.moduleOpen()"
+							class="form-control" placeholder="请点击输入框" required>
+						<div class="col-lg-4"
+							ng-show="formObj.submitTag && (!formObj.mapValue)">
+							<small class="bg-warning"> 必填项 </small>
+						</div>
+					</div>
+				</div>
+
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><span
+						class="text-danger m-r-xs font-bold as-star">*</span>选择时间</label>
+					<div class="col-sm-10">
+						<div class="w-xls m-b-sm" style="display: inline-table">
+							<input type="text" class="form-control"
+								value="{{formObj.dataTimeStart}}" name="issue_date"
+								onfocus="WdatePicker({maxDate:'%y/%M/%d', dateFmt:'yyyy/MM/dd'})"
+								id="dataTimeStart" required> <span
+								class="input-group-btn"><button type="button"
+									class="btn btn-default"
+									onclick="WdatePicker({el:'dataTimeStart',maxDate:'%y/%M/%d', dateFmt:'yyyy/MM/dd'})">
+									<i class="glyphicon glyphicon-calendar"></i>
+								</button> </span>
+						</div>
+						&nbsp;&nbsp;
+						<div class="w-xls m-b-sm" style="display: inline-table">
+							<input type="text" class="form-control"
+								value="{{formObj.dataTimeEnd}}" name="issue_date"
+								onfocus="WdatePicker({maxDate:'%y/%M/%d', dateFmt:'yyyy/MM/dd'})"
+								id="dataTimeEnd" required> <span class="input-group-btn"><button
+									type="button" class="btn btn-default"
+									onclick="WdatePicker({el:'dataTimeEnd',maxDate:'%y/%M/%d', dateFmt:'yyyy/MM/dd'})">
+									<i class="glyphicon glyphicon-calendar"></i>
+								</button> </span>
+						</div>
+					</div>
+				</div>
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><span
+						class="text-danger m-r-xs font-bold as-star">*</span>数据用途</label>
+					<div class="col-sm-10 ">
+						<label class="col-lg-2 m-l-n"> <input type="radio"
+							name="dataUsage" ng-model="formObj.dataUsage" value="indexInsure"
+							ng-click="formObj.dataUsageInput='indexInsure';"> 指数化
+						</label> <label class="col-lg-2"> <input type="radio"
+							name="dataUsage" ng-model="formObj.dataUsage" value="otherInsure"
+							ng-click=""> 其它
+						</label>
+						<div class="col-lg-4"
+							ng-show="formObj.submitTag && formObj.dataUsage=='otherInsure' && !formObj.dataUsageInput">
+							<small class="bg-warning"> 必填项 </small>
+						</div>
+					</div>
+				</div>
+				<div ng-show="formObj.dataUsage == 'otherInsure'"
+					class="form-group ">
+					<label class="col-sm-2 control-label"></label>
+					<div class="col-sm-10 m-b-sm">
+						<input type="text" ng-model="formObj.dataUsageInput"
+							class="form-control" placeholder="其它用途">
+					</div>
+				</div>
+
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><span
+						class="text-danger m-r-xs font-bold as-star">*</span>作物种类</label>
+					<div class="col-sm-10  m-b-sm ">
+						<input type="text" ng-model="formObj.crop" class="form-control"
+							placeholder="作物种类"> <span class="bg-warning"
+							ng-show="formObj.submitTag && !formObj.crop"> 必填项 </span>
+					</div>
+				</div>
+
+				<div class="line line-dashed b-b line-lg pull-in"></div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"><span
+						class="text-danger m-r-xs font-bold as-star">*</span>预计保单出单时间</label>
+					<div class="col-sm-10">
+						<div class="w-xls m-b-sm" style="display: inline-table">
+							<input type="text" class="form-control"
+								value="{{formObj.produceTime}}" name="produceTime"
+								onfocus="WdatePicker({ dateFmt:'yyyy/MM/dd'})" id="produceTime">
+							<span class="input-group-btn"><button type="button"
+									class="btn btn-default"
+									onclick="WdatePicker({el:'produceTime', dateFmt:'yyyy/MM/dd'})">
+									<i class="glyphicon glyphicon-calendar"></i>
+								</button> </span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="m-t m-b">
+			<button type="button" class="btn btn-default btn-rounded"
+				ng-click="steps.step1=true">上一步</button>
+			<button type="submit" ng-disabled="step2.$invalid"
+				class="btn btn-default btn-rounded" ng-click="formObj.submit()">下一步
+			</button>
+		</div>
+	</form>
+	</tab> <tab heading="订单审核" disable="!steps.step3" active="steps.step3"
+		select="steps.percent=60"> <progressbar value="steps.percent"
+		class="progress-xs" type="success"></progressbar>
+	<p>我们将按您订单的要求，为您做数据准备，若数据准备完成，我们会以邮件的形势告知您.</p>
+	<form name="step3" class="form-validation">
+		<div class="line line-dashed b-b line-lg pull-in"></div>
+		<div class="panel-default">
+			<div class="form-group">
+				<label class="col-sm-2 control-label"><span
+					class="text-danger m-r-xs font-bold as-star">*</span>邮箱</label>
+				<div class="col-sm-10  m-b-sm">
+					<input type="email" name="email" class="form-control"
+						ng-model="formObj.email" required> <small
+						class="bg-warning"
+						ng-show="formObj.formFinish && step3.email.$error.required">
+						必填项 </small> <small class="bg-warning" ng-show="step3.email.$error.email">
+						请输入有效的邮箱地址 </small>
+
+				</div>
+			</div>
+			<div class="line line-dashed b-b line-lg pull-in"></div>
+		</div>
+	</form>
+	<div class="m-t m-b">
+		<button type="button" class="btn btn-default btn-rounded"
+			ng-click="steps.step2=true">上一步</button>
+		<button type="submit" ng-disabled="step3.$invalid"
+			class="btn btn-default btn-rounded"
+			ng-click="formObj.formFinishFun()">加入购物车</button>
+	</div>
+	</tab> </tabset>
+</div>
+<!-- / tab -->
+<script type="text/ng-template" id="myModalContent.html">
+    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
+</script>

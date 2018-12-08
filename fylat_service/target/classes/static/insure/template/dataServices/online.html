@@ -1,0 +1,541 @@
+<!-- hbox layout -->
+<div class="hbox hbox-auto-xs bg-light "
+	ng-init="isCollapsed=!isCollapsed;">
+	<!-- column -->
+	<div class="col item">
+		<div esri-map zoom="3" id="mapID">
+			<div
+				ng-if="mapOnlineObj.searchFilter=='satellite' && mapOnlineObj.satelliteOption == 'typhoon'"
+				class="wrapper bg-black background-transparent-half"
+				style="position: absolute; bottom: 40px; left: 20px; z-index: 30;">
+				<div>
+					<span>-</span> <small class="font-bold">{{"weatherService.typhoonLegend"
+						| translate}}</small>
+				</div>
+				<div class="list-group">
+					<i class="fa fa-circle text-info text-xs"></i><span>&nbsp;&nbsp;{{"weatherService.tropicalDepression"
+						| translate}}</span>
+					</li> <br> <i class="fa fa-circle text-success text-xs "></i><span>&nbsp;&nbsp;{{"weatherService.tropicalStorm"
+						| translate}}</span><br> <i
+						class="fa fa-circle text-warning-lter text-xs"></i><span>&nbsp;&nbsp;{{"weatherService.strongTropicalStorm"
+						| translate}}</span><br> <i
+						class="fa fa-circle text-warning-dker text-xs "></i><span>&nbsp;&nbsp;{{"weatherService.typhoon"
+						| translate}}</span><br> <i
+						class="fa fa-circle text-danger-dker text-xs "></i><span>&nbsp;&nbsp;{{"weatherService.strongTyphoon"
+						| translate}}</span><br> <i
+						class="fa fa-circle text-blue-dk text-xs "></i><span>&nbsp;&nbsp;{{"weatherService.superTyphoon"
+						| translate}}</span><br>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col w-md lter b-l">
+		<div id="beginBtn" class="right"
+			style="position: absolute; top: 80px; right: 30px; z-index: 30;">
+			<div class="panel no-border w-md">
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon input-sm" ng-click="queryTask()">
+							<i class="fa fa-search" popover-placement="bottom"
+							popover="{{'common.btn.searchBtn' | translate}}"
+							popover-trigger="mouseenter"></i>
+						</span> <input ng-click="isCollapsed = !isCollapsed" ui-toggle-class
+							type="text" class="form-control input-sm"
+							placeholder="{{'online.queryValuePlaceholder' | translate}}"
+							ng-model="queryValue">
+					</div>
+				</div>
+				<div collapse="isCollapsed">
+					<div class="bg-light lter">
+						<div class="scrollable">
+							<!--                    <div class="scrollable" style="max-height:560px">
+                                                            <div class="form-group">
+                                                            <label class="col-md-3 col-sm-2 m-t-xs padder-l-0">{{"分辨率" | translate}}</label>
+                                                            <div class="col-md-9 col-sm-10 padder-l-0">
+                                                                <select class="form-control m-b" ng-model="mapOnlineObj.resolution">
+                                                                    <option value="">请选择...</option>
+                                                                    <option value="20KM" ng-selected="'20KM'==mapOnlineObj.resolution">20KM </option>
+                                                                    <option value="10KM" ng-selected="'10KM'==mapOnlineObj.resolution">10KM </option>
+                                                                    <option value="5KM" ng-selected="'5KM'==mapOnlineObj.resolution">5KM </option>
+                                                                    <option value="1KM" ng-selected="'1KM'==mapOnlineObj.resolution">1KM </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="line line-dashed b-b line-lg pull-in"></div>-->
+							<div class="nav-tabs-alt">
+								<ul class="nav nav-tabs nav-justified">
+									<li ng-class="{'active': tabs[0]}"><a class="text-sm" href
+										ng-click="tab(0)"><i class="fa fa-bank" />
+											&nbsp;&nbsp;{{"site.station" | translate}}</a></li>
+									<li id="satellite" ng-class="{'active': tabs[1]}">
+										<!-- icon-globe --> <a class="text-sm" href ng-click="tab(1)"><i
+											class="glyphicon glyphicon-screenshot" />
+											&nbsp;&nbsp;{{"satellite.satellite" | translate}}</a>
+									</li>
+									<li ng-class="{'active': tabs[2]}">
+										<!-- glyphicon glyphicon-film --> <a class="text-sm" href
+										ng-click="tab(2)"> <i class="icon-globe" /> &nbsp;&nbsp;
+											{{"grid.grid" | translate}}
+									</a>
+									</li>
+								</ul>
+							</div>
+							<div class="row-row">
+								<div class="cell scrollable-none">
+									<div class="cell-inner">
+										<div class="tab-content">
+											<div class="panel-body tab-pane"
+												ng-class="{'active': tabs[0]}">
+												<div class="form-group">
+													<label class="col-md-3 col-sm-2 m-t-none padder-l-0">{{"weatherService.selectType"
+														| translate}}</label>
+													<div class="col-md-9 col-sm-10 padder-l-0 m-b-sm ">
+														<label class="col-lg-6"> <input type="radio"
+															name="selectType" ng-model="mapOnlineObj.selectType"
+															value="region"> {{"weatherService.region" |
+															translate}}
+														</label> <label class="col-lg-6"> <input type="radio"
+															name="selectType" ng-model="mapOnlineObj.selectType"
+															value="stationID"> {{"weatherService.stationID" |
+															translate}}
+														</label>
+													</div>
+												</div>
+												<div class="line line-dashed b-b line-lg pull-in"></div>
+												<div ng-show="mapOnlineObj.selectType == 'region'">
+													<div class="form-group">
+														<label class="col-md-3 col-sm-2 m-t-xs padder-l-0">{{"weatherService.region"
+															| translate}}</label>
+														<div class="col-md-9 col-sm-10 padder-l-0  m-b">
+															<ui-select ng-model="mapOnlineObj.region.selected"
+																on-select="mapOnlineObj.resizeMap($item)"
+																theme="bootstrap"> <ui-select-match
+																placeholder="{{'common.selectPlaceholder' | translate}}">
+															{{$select.selected.name99}} </ui-select-match> <ui-select-choices
+																group-by="'group'"
+																repeat="item in mapOnlineObj.regionItems | filter: $select.search">
+															<span
+																ng-bind-html="item.name99 | highlight: $select.search"></span>
+															</ui-select-choices> </ui-select>
+														</div>
+														<!--<div class="col-md-9 col-sm-10 padder-l-0  m-b">
+                                                            <ui-select ng-model="mapOnlineObj.region.selected"
+                                                                       ng-change="mapOnlineObj.resizeMap(mapOnlineObj.region.selected)"
+                                                                       theme="bootstrap">
+                                                                <ui-select-match
+                                                                        placeholder="{{'common.selectPlaceholder' | translate}}">
+                                                                    {{$select.selected.fullname}}
+                                                                </ui-select-match>
+                                                                <ui-select-choices group-by="'group'"
+                                                                                   repeat="item in mapOnlineObj.regionItems | filter: $select.search">
+                                                                    <span ng-bind-html="item.fullname | highlight: $select.search"></span>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                        </div>-->
+														<div class="col-lg-4"
+															ng-show="mapOnlineObj.stationType && !mapOnlineObj.region.selected">
+															<small class="bg-warning">
+																{{"common.tips.required" | translate}} </small>
+														</div>
+													</div>
+													<div class="line line-dashed b-b line-lg pull-in"></div>
+													<!--为了使上面的区域下拉框可以完全展开这边加了一个高度，后面要有内容了，要把这个高度去掉，因为tab高度是auto的才对-->
+													<div class="form-group" style="height: 160px">
+														<label class="col-md-3 col-sm-2 m-t-xs padder-l-0">{{"weatherService.stationType"
+															| translate}}</label>
+														<div class="col-md-9 col-sm-10 padder-l-0">
+															<label class="col-lg-6"> <input type="radio"
+																name="stationType" ng-model="mapOnlineObj.stationType"
+																value="stateStation"
+																ng-change="mapOnlineObj.stationSelectChange()">
+																{{"weatherService.level1Station" | translate}}
+															</label> <label class="col-lg-6"> <input type="radio"
+																name="stationType" ng-model="mapOnlineObj.stationType"
+																value="autoStation"
+																ng-change="mapOnlineObj.stationSelectChange()">
+																{{"weatherService.level2Station" | translate}}
+															</label>
+														</div>
+													</div>
+												</div>
+												<div ng-show="mapOnlineObj.selectType == 'stationID'">
+													<div class="form-group" style="height: 230px">
+														<label class="col-md-3 col-sm-2 m-t-xs padder-l-0">{{"weatherService.stationID"
+															| translate}}</label>
+														<div class="col-md-9 col-sm-10 padder-l-0  m-b">
+															<input type="text" id="selectPage" select-page
+																select-page-data="stationsInfo" name="inputStationId"
+																class="form-control input-block-level"
+																ng-model="mapOnlineObj.inputStationId"
+																ng-change="mapOnlineObj.selectStationById()"
+																placeholder="{{'weatherService.stationIdInputPlaceholder' | translate}}">
+														</div>
+														<div class="col-lg-4"
+															ng-show="mapOnlineObj.stationType && !mapOnlineObj.inputStationId">
+															<small class="bg-warning">
+																{{"common.tips.required" | translate}} </small>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="tab-pane" ng-class="{'active': tabs[1]}">
+												<div class="panel-body row">
+													<label class="col-lg-4"> <input type="radio"
+														name="satelliteOption"
+														ng-model="mapOnlineObj.satelliteOption" value="fire"
+														ng-change="mapOnlineObj.satelliteSelectChange()">
+														{{"satellite.Fire_point_identification" | translate}}
+													</label> <label class="col-lg-4"> <input type="radio"
+														name="satelliteOption"
+														ng-model="mapOnlineObj.satelliteOption" value="typhoon"
+														ng-change="mapOnlineObj.satelliteSelectChange()">
+														{{"satellite.Typhoon_monitoring" | translate}}
+													</label> <label class="col-lg-4"> <input type="radio"
+														name="satelliteOption"
+														ng-model="mapOnlineObj.satelliteOption" value="seaTem"
+														ng-change="mapOnlineObj.satelliteSelectChange()">
+														{{"satellite.Sea_surface_temperature" | translate}}
+													</label>
+												</div>
+												<div ng-show="mapOnlineObj.satelliteOption=='typhoon'">
+													<div class="panel panel-default">
+														<div id="typhoonInfoTable" class="panel-heading"
+															style="background-color: #a6a8b1">
+															{{'weatherService.typhoonList' | translate}}</div>
+														<table ng-if="mapOnlineObj.typhoonInfoTable"
+															table-directive
+															tableoption="mapOnlineObj.typhoonInfoTable"
+															instance="mapOnlineObj.typhoonInfoInstance"></table>
+
+
+													</div>
+													<div class="panel panel-default">
+														<div class="panel-heading"
+															style="background-color: #a6a8b1">
+															{{'weatherService.typhoonPath' | translate}}</div>
+														<table ng-if="mapOnlineObj.typhoonPathTable"
+															table-directive
+															tableoption="mapOnlineObj.typhoonPathTable"
+															instance="mapOnlineObj.typhoonPathTableInstance"></table>
+													</div>
+												</div>
+
+												<!--<div class="line line-dashed b-b line-lg pull-in"></div>
+                                                <div class="panel-heading">
+                                                    <span class="label bg-danger pull-right m-t-xs">4 left</span>
+                                                    Tasks
+                                                </div>
+                                                <div class="form-group" >
+                                                    <div class="wrapper-md">
+                                                        <table table-directive tableoption="satelliteTableOpt"  instance="satelliteTableInstance"></table>
+                                                    </div>
+                                                </div>-->
+												<!--<label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option1">
+                                                    {{"satellite.precipitation" | translate}} </label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option2">
+                                                    {{"satellite.snow_cover" | translate}}</label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option3">
+                                                    {{"satellite.Regional_fog_monitoring" | translate}}</label>
+
+
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option2">
+                                                    {{"satellite.Sea_ice_monitoring" | translate}} </label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option3">
+                                                    {{"satellite.Dust_monitoring" | translate}} </label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option1">
+                                                    {{"satellite.Land_surface_reflectance" | translate}} </label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option2">
+                                                    {{"satellite.Land_surface_temperature" | translate}}</label>
+
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option3">
+                                                    {{"satellite.vegetation_index" | translate}} </label>
+
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option2">
+                                                    {{"satellite.Drought_index" | translate}} </label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option3">
+                                                    {{"satellite.Flood_index" | translate}} </label>
+
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option1">
+                                                    {{"satellite.Ice_thickness_index" | translate}} </label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option2">
+                                                    {{"satellite.solar_radiation" | translate}} </label>
+
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option1">
+                                                    {{"satellite.Ocean_aerosol" | translate}} </label>
+
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option2">
+                                                    {{"satellite.Land_aerosol" | translate}} </label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option3">
+                                                    {{"satellite.leaf_area_index" | translate}} </label>
+                                                <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                value="option2">
+                                                    {{"satellite.soil_moisture" | translate}} </label>-->
+											</div>
+											<div class="panel-body tab-pane"
+												ng-class="{'active': tabs[2]}">
+												<div ng-if="false">
+													<div class="form-group">
+														<label class="col-md-3 col-sm-2 m-t-xs padder-l-0">{{"分辨率"
+															| translate}}</label>
+														<div class="col-md-9 col-sm-10 padder-l-0">
+															<select class="form-control m-b"
+																ng-model="mapOnlineObj.resolution">
+																<option value="">{{'common.selectPlaceholder' |
+																	translate}}</option>
+																<option value="20KM"
+																	ng-selected="'20KM'==mapOnlineObj.resolution">
+																	20KM</option>
+																<option value="10KM"
+																	ng-selected="'10KM'==mapOnlineObj.resolution">
+																	10KM</option>
+																<option value="5KM"
+																	ng-selected="'5KM'==mapOnlineObj.resolution">5KM
+																</option>
+																<option value="1KM"
+																	ng-selected="'1KM'==mapOnlineObj.resolution">1KM
+																</option>
+															</select>
+														</div>
+													</div>
+													<div class="line line-dashed b-b line-lg pull-in"></div>
+													<div class="form-group">
+														<label class="col-md-3 col-sm-2 m-t-xs padder-l-0">{{"监测类型"
+															| translate}}</label>
+														<div class="col-md-9 col-sm-10 padder-l-0">
+															<label class="col-lg-6"> <input type="radio"
+																name="optionsRadios" value="option1">
+																{{"grid.relative_humidity" | translate}}
+															</label> <label class="col-lg-6"> <input type="radio"
+																name="optionsRadios" value="option2">
+																{{"grid.visibility" | translate}}
+															</label> <label class="col-lg-6"> <input type="radio"
+																name="optionsRadios" value="option2">
+																{{"grid.MAX_temperature" | translate}}
+															</label> <label class="col-lg-6"> <input type="radio"
+																name="optionsRadios" value="option3">
+																{{"grid.MIN_temperature" | translate}}
+															</label> <label class="col-lg-6"> <input type="radio"
+																name="optionsRadios" value="option1" checked>
+																{{"grid.AVG_temperature" | translate}}
+															</label> <label class="col-lg-6"> <input type="radio"
+																name="optionsRadios" value="option2">
+																{{"grid.severe_storm_index" | translate}}
+															</label> <label class="col-lg-6"> <input type="radio"
+																name="optionsRadios" value="option3">
+																{{"grid.wind_speed" | translate}}
+															</label>
+															<!--<label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option3"> {{"grid.snow_depth"
+                                                                | translate}}</label>
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option1">
+                                                                {{"grid.storm_total_snow_accumulation" | translate}}</label>
+
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option2">
+                                                                {{"grid.icing_severity_index" | translate}} </label>
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option3">
+                                                                {{"grid.critical_fire_weather_index" | translate}} </label>
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option1">
+                                                                {{"grid.precipitation_type" | translate}} </label>
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option2">
+                                                                {{"grid.precipitation_ice_content" | translate}}</label>
+
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option3">
+                                                                {{"grid.rain_content" | translate}} </label>
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option1">
+                                                                {{"grid.snow_content" | translate}} </label>-->
+
+															<!--<label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option3">
+                                                                {{"grid.solar_radiation" | translate}} </label>
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option1">
+                                                                {{"grid.soil_moisture" | translate}} </label>
+
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option2">
+                                                                {{"grid.snow_melting" | translate}} </label>-->
+
+															<!--<label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option1">
+                                                                {{"grid.dew_point_temperature" | translate}} </label>
+                                                            <label class="col-lg-6"> <input type="radio" name="optionsRadios"
+                                                                                            value="option2">
+                                                                {{"grid.evaporation_data" | translate}} </label>
+                                                            -->
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- 站点折线图 -->
+
+<div id="stationDialog_online" title="">
+	<div id="stationLatestHour">
+		<div>
+			<label class="row col-sm-6 control-label font-bold">{{"site.TEM"
+				| translate}}</label> <label class="col-sm-6 control-label font-bold">{{"site.WIN"
+				| translate}}</label>
+		</div>
+		<div class="col-sm-6">
+			<div>
+				{{"site.TEM_Avg" | translate}}
+				<!-- 指标帮助信息-平均温度 -->
+				<a class="text-info ng-binding" tooltip-placement=right-bottom
+					tooltip="{{targetHelpMsg.TEM_Avg}}"><i
+					class="icon-question icon"></i></a>
+				：{{mapOnlineObj.stationFeature.tem}}°C
+			</div>
+			<div>
+				{{"site.TEM_Max" | translate}}
+				<!-- 指标帮助信息-最大温度 -->
+				<a class="text-info ng-binding" tooltip-placement="right-bottom"
+					tooltip="{{targetHelpMsg.TEM_Max}}"><i
+					class="icon-question icon"></i></a>
+				：{{mapOnlineObj.stationFeature.tem_max}}°C
+			</div>
+			<div>
+				{{"site.TEM_MIN" | translate}}
+				<!-- 指标帮助信息-最小温度 -->
+				<a class="text-info ng-binding" tooltip-placement="right-bottom"
+					tooltip="{{targetHelpMsg.TEM_MIN}}"><i
+					class="icon-question icon"></i></a>
+				：{{mapOnlineObj.stationFeature.tem_min}}°C
+			</div>
+		</div>
+
+		<div class="col-sm-6">
+			<div>
+				{{"site.WIN_S_2MI_AVG" | translate}}
+				<!-- 指标帮助信息-俩分钟平均风速 -->
+				<a class="text-info ng-binding" tooltip-placement="right-bottom"
+					tooltip="{{targetHelpMsg.WIN_S_2MI_AVG}}"><i
+					class="icon-question icon"></i></a>
+				：{{mapOnlineObj.stationFeature.win_s_2mi_avg}} {{"common.unit.wind"
+				| translate}}
+			</div>
+			<div>
+				{{"site.WIN_S_MAX" | translate}}
+				<!-- 指标帮助信息-最大风速风速 -->
+				<a class="text-info ng-binding" tooltip-placement="right-bottom"
+					tooltip="{{targetHelpMsg.WIN_S_MAX}}"><i
+					class="icon-question icon"></i></a>
+				：{{mapOnlineObj.stationFeature.win_s_max}} {{"common.unit.wind" |
+				translate}}
+			</div>
+		</div>
+		<div class="line line-dashed b-b"></div>
+		<div>
+			<label class="row col-sm-6 control-label font-bold">{{"site.RHU"
+				| translate}}</label> <label class="col-sm-6 control-label font-bold">{{"site.PRE"
+				| translate}}</label>
+		</div>
+		<div class="col-sm-6">
+			<div>
+				{{"site.RHU_AVG" | translate}}
+				<!-- 指标帮助信息-平均湿度 -->
+				<a class="text-info ng-binding" tooltip-placement="right-bottom"
+					tooltip="{{targetHelpMsg.RHU_AVG}}"><i
+					class="icon-question icon"></i></a>
+				：{{mapOnlineObj.stationFeature.rhu}}%
+			</div>
+			<div>
+				{{"site.RHU_MIN" | translate}}
+				<!-- 指标帮助信息-最小湿度-->
+				<a class="text-info ng-binding" tooltip-placement="right-bottom"
+					tooltip="{{targetHelpMsg.RHU_MIN}}"><i
+					class="icon-question icon"></i></a>
+				：{{mapOnlineObj.stationFeature.rhu_min}}%
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div>
+				{{"site.PRE_1H" | translate}}
+				<!-- 指标帮助信息-降水量 -->
+				<a class="text-info ng-binding" tooltip-placement="right-bottom"
+					tooltip="{{targetHelpMsg.PRE_1H}}"><i
+					class="icon-question icon"></i></a>
+				：{{mapOnlineObj.stationFeature.pre}}mm
+			</div>
+		</div>
+	</div>
+	<div class="line line-dashed b-b"></div>
+	<tabset class="tab-container"
+		ng-init="steps={ step1:true, step2:false, step3:false,step4:false}">
+	<tab heading="{{'site.WIN' | translate }}" active="steps.step1"
+		ng-click="mapOnlineObj.tabClick_station('win')">
+	<div echarts linedata="winData_station_online" style="height: 220px;"></div>
+	</tab> <tab heading="{{'site.TEM' | translate }}" active="steps.step2"
+		ng-click="mapOnlineObj.tabClick_station('tem')">
+	<div echarts linedata="temData_station_online" style="height: 220px;"></div>
+	</tab> <tab heading="{{'site.PRE' | translate }}" active="steps.step3"
+		ng-click="mapOnlineObj.tabClick_station('pre')">
+	<div echarts linedata="preData_station_online" style="height: 220px;"></div>
+	</tab> <tab heading="{{'site.RHU' | translate }}" active="steps.step4"
+		ng-click="mapOnlineObj.tabClick_station('rhu')">
+	<div echarts linedata="rhuData_station_online" style="height: 220px;"></div>
+	</tab> </tabset>
+</div>
+
+
+<!-- 台风站点折线图 -->
+<div id="dialog" title="">
+	<tabset class="tab-container"
+		ng-init="steps={ step1:true, step2:false, step3:false,step4:false}">
+	<tab heading="{{'site.WIN' | translate }}" active="steps.step1"
+		ng-click="mapOnlineObj.tabClick('win')">
+	<div echarts linedata="winData" style="height: 300px;"></div>
+	</tab> <tab heading="{{'site.TEM' | translate }}" active="steps.step2"
+		ng-click="mapOnlineObj.tabClick('tem')">
+	<div echarts linedata="temData" style="height: 300px;"></div>
+	</tab> <tab heading="{{'site.PRE' | translate }}" active="steps.step3"
+		ng-click="mapOnlineObj.tabClick('pre')">
+	<div echarts linedata="preData" style="height: 300px;"></div>
+	</tab> <tab heading="{{'site.RHU' | translate }}" active="steps.step4"
+		ng-click="mapOnlineObj.tabClick('rhu')">
+	<div echarts linedata="rhuData" style="height: 300px;"></div>
+	</tab> </tabset>
+</div>
+
+<!-- /hbox layout -->
+
+
+
+
+
+

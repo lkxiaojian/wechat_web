@@ -1,0 +1,38 @@
+<div style="margin: 10px 15px">
+	<h3 class="m-n font-thin h5" ng-bind="listObj.navigationMsg"></h3>
+</div>
+<!--运行-->
+<div class="clearfix m-b-md"
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px; margin-top: 0px">
+	<form class="form-horizontal" name="searchuserForm"
+		style="margin-top: 5px">
+		<div class="" style="margin-top: 20px;">
+			<!--..类型，下拉列表框-->
+			<div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md"
+				style="margin: 0px 10px 0px 0px;">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">类型</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<ui-select ng-model="dataParam.itType" theme="bootstrap">
+					<ui-select-match placeholder="请选择类型">
+					{{$select.selected.name}} </ui-select-match> <ui-select-choices group-by="'group'"
+						repeat="item in listObj.typeData | filter: $select.search">
+					<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices> </ui-select>
+				</div>
+			</div>
+			<div class="row-row pull-right-xs text-center padder-l-0">
+				<button class="btn m-b-xs w-xs btn-default"
+					ng-disabled="searchuserForm.$invalid"
+					ng-click="listObj.searchPolicyBtn()"
+					style="position: relative; left: -15px; top: 0px">查询</button>
+			</div>
+		</div>
+	</form>
+</div>
+<!--表格-->
+<div>
+	<div style="background: #fff; padding: 0px 20px 20px 20px;">
+		<table table-directive tableoption="dataTable" id="datatable"
+			instance="listObj.dataTableInstance"></table>
+	</div>
+</div>

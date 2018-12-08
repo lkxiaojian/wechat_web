@@ -1,0 +1,129 @@
+ul, ul li {
+	list-style: none;
+}
+
+.con_bg {
+	background: #fff;
+}
+
+.a_detail {
+	color: #fff;
+	background-color: #23ad44;
+	border-color: #20a03f;
+	display: inline-block;
+	width: 80px;
+	height: 36px;
+	text-align: center;
+	line-height: 36px;
+	float: right;
+}
+
+.a_detail:hover {
+	color: #fff;
+}
+
+.a_pointer {
+	cursor: pointer;
+}
+
+/*总访问量，异常访问量...顶部样式*/
+.hbox {
+	background: #fff;
+	padding-bottom: 12px;
+}
+
+/*button样式*/
+.re_btn {
+	padding: 0px;
+}
+
+.re_btn a {
+	color: #fff;
+	display: inline-block;
+	padding: 6px 12px;
+}
+
+.re_btn a:hover {
+	color: #fff;
+}
+
+/*概览应用样式*/
+.pt_app {
+	padding-right: 2px;
+	padding-top: 8px;
+}
+
+.pt_app .dropdown-toggle {
+	padding: 7px 12px;
+}
+
+._panel_left {
+	padding-left: 30px;
+	padding-top: 2px;
+}
+
+/*pageTitle样式*/
+.pt_title {
+	float: left;
+}
+
+.pt_time {
+	float: left;
+	font-size: 12px;
+	font-weight: normal;
+	font-size: 11px;
+	font-family: "SimHei" !important;
+	color: #98a6ad;
+	padding-top: 10px;
+	padding-left: 5px;
+}
+
+/*汇总指标样式*/
+.ct_index {
+	padding-top: 12px;
+}
+
+/*分隔线样式*/
+.evrd-h5 {
+	position: relative;
+	margin-top: 0;
+	font-size: 14px;
+	z-index: 1;
+	text-align: center;
+}
+
+.evrd-h5>span {
+	padding: 0 50px;
+	color: #333;
+	background-color: #fff;
+	font-weight: bold;
+}
+
+.evrd-h5 .line {
+	position: absolute;
+	top: 6px;
+	left: 0;
+	right: 0;
+	height: 1px;
+	width: 100%;
+	margin: 0px;
+	background-color: #dee5e7;
+	z-index: -1;
+}
+
+.link {
+	fill: none;
+	stroke: #666;
+	stroke-width: 1.5px;
+	opacity: .7;
+	marker-end: url(#end);
+	transition: opacity 250ms;
+	-webkit-transition: opacity 250ms;
+	-moz-transition: opacity 250ms;
+}
+
+marker#end {
+	fill: #666;
+	stroke: #666;
+	stroke-width: 1.5px;
+}

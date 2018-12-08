@@ -1,0 +1,29 @@
+<!-- list -->
+<ul class="nav {{navStyle}}" ng-controller="NavCtrl">
+	<li ng-if="insure.menus" ng-repeat="menu in insure.menus"><a
+		ng-if="menu.isLeaf==1" ui-sref="{{menu.href}}" class="auto"> <i
+			class="{{menu.icon}} icon text-info-dker"></i> <span
+			class="font-bold" translate="{{menu.name}}"></span>
+	</a> <a ng-if="menu.isLeaf !=1" href class="auto"
+		title="{{menu.name | translate}}"> <span
+			class="pull-right text-muted"> <i
+				class="fa fa-fw fa-angle-right text"></i> <i
+				class="fa fa-fw fa-angle-down text-active"></i>
+		</span> <i class="{{menu.icon}} icon"></i> <span class="font-bold"
+			translate="{{menu.name}}"></span>
+	</a>
+		<ul class="nav nav-sub dk">
+			<li ng-repeat="submenu in menu.submenus" ui-sref-active="active">
+				<a ui-sref="{{submenu.href}}"> <span
+					translate="{{submenu.name}}"></span>
+			</a>
+			</li>
+		</ul></li>
+	<li ng-if="demos" ui-sref-active="active" ng-repeat="demo in demos">
+		<a ui-sref="{{demo.href}}"> <i
+			class="{{demo.icon}} icon text-info-dker"></i> <span
+			class="font-bold" translate="{{demo.name}}"></span>
+	</a>
+	</li>
+</ul>
+<!-- / list -->

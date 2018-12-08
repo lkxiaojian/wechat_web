@@ -1,0 +1,89 @@
+<div style="padding: 0px 20px;">
+	<div data-ng-include="'common/page/blocks/title.html'" class="">
+	</div>
+</div>
+
+<!-- btn-common route-flag="urlCx" -->
+<div class="clearfix m-b-md "
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px;">
+	<form class="form-horizontal" name="searchForm"
+		style="padding: 0px 0px 0px 40px;">
+		<div class="" style="margin-top: 20px;">
+			<div btn-common route-flag="uInput" btn-flag="div"
+				class="col-md-4 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">用户</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<input type="text" class="form-control" ng-model="account">
+				</div>
+			</div>
+			<div btn-common route-flag="czmSet" btn-flag="div"
+				class="col-md-4 col-sm-12 padder-l-0">
+				<label class="col-md-3 control-label col-sm-2 padder-l-0">操作名</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<select ui-jq="chosen" class="form-control"
+						ng-model="chosen_operation">
+						<option value="{{operation.id}}"
+							ng-repeat="operation in operations">{{operation.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div btn-common route-flag="jgSet" btn-flag="div"
+				class="col-md-4 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">结果</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<select ui-jq="chosen" class="w" ng-model="chosen_result">
+						<option value="{{result.id}}" ng-repeat="result in results">
+							{{result.name}}</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="">
+
+			<div btn-common route-flag="sTime" btn-flag="div"
+				class="col-md-4 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">开始时间</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<div class="input-group date" data-date-format="yyyy/mm/dd hh:ii"
+						bootstrap-datetime-picker id="custom_start_time">
+						<input class="form-control form-control-modify" type="text"
+							value="" readonly> <span
+							class="input-group-addon form-control-modify"><span
+							class="glyphicon glyphicon-remove"></span></span> <span
+							class="input-group-addon form-control-modify"><span
+							class="glyphicon glyphicon-th"></span></span>
+					</div>
+				</div>
+			</div>
+
+			<div btn-common route-flag="eTime" btn-flag="div"
+				class="col-md-4 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">结束时间</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<div class="input-group date" data-date-format="yyyy/mm/dd hh:ii"
+						bootstrap-datetime-picker id="custom_end_time">
+						<input class="form-control form-control-modify" type="text"
+							value="" readonly> <span
+							class="input-group-addon form-control-modify"><span
+							class="glyphicon glyphicon-remove"></span></span> <span
+							class="input-group-addon form-control-modify"><span
+							class="glyphicon glyphicon-th"></span></span>
+					</div>
+				</div>
+			</div>
+
+			<div btn-common route-flag="logCx" btn-flag="div"
+				class="col-md-2 col-sm-12 text-center padder-l-0 m-b">
+				<button class="btn m-b-xs w-xs btn-default"
+					ng-disabled="searchForm.$invalid" ng-click="filterQuery()">查&#12288;询</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div style="padding: 0px 20px;">
+	<div>
+		<table class="crtlh" table-directive instance='tdInstance'
+			tableoption="tableoption"></table>
+	</div>
+</div>

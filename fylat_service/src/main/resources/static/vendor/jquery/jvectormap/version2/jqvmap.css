@@ -1,0 +1,102 @@
+/*!
+ * jQVMap Version 1.0 
+ *
+ * http://jqvmap.com
+ *
+ * Copyright 2012, Peter Schmalfeldt <manifestinteractive@gmail.com>
+ * Licensed under the MIT license.
+ *
+ * Fork Me @ https://github.com/manifestinteractive/jqvmap
+ */
+.jqvmap-label {
+	position: absolute;
+	display: none;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #292929;
+	color: white;
+	font-family: sans-serif, Verdana;
+	font-size: smaller;
+	padding: 3px;
+}
+
+.jqvmap-zoomin, .jqvmap-zoomout {
+	position: absolute;
+	left: 10px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #000000;
+	padding: 3px;
+	color: white;
+	width: 10px;
+	height: 10px;
+	cursor: pointer;
+	line-height: 10px;
+	text-align: center;
+}
+
+.jqvmap-zoomin {
+	top: 10px;
+}
+
+.jqvmap-zoomout {
+	top: 30px;
+}
+
+.jqvmap-region {
+	cursor: pointer;
+}
+
+.jqvmap-ajax_response {
+	width: 100%;
+	height: 500px;
+}
+
+.jqvmap-label {
+	position: absolute;
+	display: none;
+	background-color: #fffefa;
+	color: #000000;
+	font-size: 12px;
+	padding: 4px 10px;
+	border: 1px solid #dee5e7;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 2px;
+	-webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.jqvmap-zoomin, .jqvmap-zoomout {
+	position: absolute;
+	left: 15px;
+	background: #ffffff;
+	border: 1px solid #f0f0f0;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	padding: 0px;
+	font-weight: bold;
+	font-size: 20px;
+	color: #aaa;
+	width: 25px;
+	height: 25px;
+	line-height: 23px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.jqvmap-zoomin {
+	top: 15px;
+}
+
+.jqvmap-zoomout {
+	top: 39px;
+}
+
+.jqvmap-legend-tick {
+	padding: 0px;
+	width: 25px;
+	height: 16px;
+	line-height: 23px;
+	cursor: pointer;
+}

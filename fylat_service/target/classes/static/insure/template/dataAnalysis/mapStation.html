@@ -1,0 +1,35 @@
+<div class="modal-header">
+	<h3 class="modal-title">所选区域站点展示</h3>
+</div>
+<div class="modal-body" style="padding-left: 0px">
+	<div class="col-sm-9">
+		<div esri-map zoom="5" id="mapID"></div>
+	</div>
+
+	<div class="col-sm-3" style="padding: 5px;">
+		<div class="form-group padder">
+			<label class="control-label">站点类型</label>
+			<div class="col-sm-12">
+				<label class="col-lg-6"> <input type="checkbox"
+					name="stationType" ng-model="listObj.stationType.stateStation"
+					value="stateStation" ng-change="listObj.stationTypeChange()">
+					{{"weatherService.level1Station" | translate}}
+				</label> <label class="col-lg-6"> <input type="checkbox"
+					name="stationType" ng-model="listObj.stationType.autoStation"
+					value="autoStation" ng-change="listObj.stationTypeChange()">
+					{{"weatherService.level2Station" | translate}}
+				</label>
+			</div>
+		</div>
+		<div style="background-color: #fff; padding: 0 0 0 10px">
+			<table table-directive="" tableoption="listObj.stationListTable"
+				id="stationTbl" instance="listObj.stationListInstance"></table>
+		</div>
+	</div>
+</div>
+<div class="modal-footer item-th">
+	<button class="btn btn-default" ng-click="clipExtent()"
+		ng-show="extentTag">截取</button>
+	<button class="btn btn-default" ng-click="cancel()" ng-show="extentTag">重置</button>
+	<button class="btn btn-primary" ng-click="ok()">确定</button>
+</div>

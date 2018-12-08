@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="app">
+<head>
+<meta charset="utf-8" />
+<meta name="description"
+	content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1" />
+<link href="css/login/login_style.css" rel="stylesheet" type="text/css" />
+<!--<link rel="stylesheet"  href="css/bootstrap-tour-0.11.0/bootstrap-tour.css">-->
+<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="css/animate.css" type="text/css" />
+<link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="css/simple-line-icons.css" type="text/css" />
+<link rel="stylesheet" href="css/font.css" type="text/css" />
+
+<!--<link rel="stylesheet"  href="vendor/modules/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">-->
+<!--<link rel="stylesheet" href="vendor/modules/angular-ui-select/select.css">-->
+<!--<link rel="stylesheet"  href="css/bootstrap-table.css" type="text/css"/>-->
+<!--<link rel="stylesheet"  href="css/app.css" type="text/css"/>-->
+<link href="css/insure/insure_global.css" rel="stylesheet"
+	type="text/css" />
+<!--<link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css" />-->
+<!--<link rel="stylesheet" href="./css/jquery-ui.css">-->
+<!-- <link rel="stylesheet" href="arcgis_js_api/3.9/js/dojo/dijit/themes/tundra/tundra.css" />
+     <link rel="stylesheet" href="arcgis_js_api/3.9/js/esri/css/esri.css" />-->
+</head>
+<body ng-controller="AppCtrl">
+
+	<div class="app" id="app"
+		ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}"
+		ui-view></div>
+
+
+	<!-- jQuery -->
+	<script src="./vendor/jquery/jquery.min.js"></script>
+	<script src="./vendor/jquery/jquery-ui.js"></script>
+
+	<!-- Angular -->
+
+	<script src="./vendor/angular/angular.min.js"></script>
+	<script src="./vendor/angular/angular-animate/angular-animate.js"></script>
+	<script src="./vendor/angular/angular-cookies/angular-cookies.js"></script>
+	<script src="./vendor/angular/angular-resource/angular-resource.js"></script>
+	<script src="./vendor/angular/angular-sanitize/angular-sanitize.js"></script>
+	<script src="./vendor/angular/angular-touch/angular-touch.js"></script>
+	<script src="./vendor/angular/angular-ui-router/angular-ui-router.js"></script>
+	<script src="./vendor/angular/ngstorage/ngStorage.js"></script>
+	<script
+		src="./vendor/modules/angular-file-upload/angular-file-upload.min.js"></script>
+
+	<!-- bootstrap -->
+	<script src="./vendor/angular/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<!-- lazyload -->
+	<script src="./vendor/angular/oclazyload/ocLazyLoad.js"></script>
+	<!-- translate -->
+	<script src="./vendor/angular/angular-translate/angular-translate.js"></script>
+	<script src="./vendor/angular/angular-translate/loader-static-files.js"></script>
+	<script src="./vendor/angular/angular-translate/storage-cookie.js"></script>
+	<script src="./vendor/angular/angular-translate/storage-local.js"></script>
+
+	<!--<script src="./vendor/modules/angular-ui-select/select.js"></script>-->
+	<!--</script><script src="./js/jquery.dataTables.js"></script>-->
+
+
+	<!-- App -->
+	<script src="./js/app.js"></script>
+	<script src="./js/config.js"></script>
+	<script src="./js/config.lazyload.js"></script>
+	<script src="./js/config.router.js"></script>
+	<script src="./js/config.router_insure.js"></script>
+	<script src="./js/main.js"></script>
+	<script src="./js/services/ui-load.js"></script>
+	<!--<script src="./vendor/angular/angular-ui-utils/ui-utils.js"></script>-->
+	<!--<script src="./js/filters/fromNow.js"></script>-->
+	<script src="./js/directives/setnganimate.js"></script>
+	<script src="./js/directives/ui-butterbar.js"></script>
+	<script src="./js/directives/ui-focus.js"></script>
+	<script src="./js/directives/ui-fullscreen.js"></script>
+	<script src="./js/directives/ui-jq.js"></script>
+	<script src="./js/directives/ui-module.js"></script>
+	<script src="./js/directives/ui-nav.js"></script>
+	<script src="./js/directives/ui-scroll.js"></script>
+	<script src="./js/directives/ui-shift.js"></script>
+	<script src="./js/directives/ui-toggleclass.js"></script>
+	<script src="./js/directives/ui-validate.js"></script>
+	<script src="./vendor/bootstrap/bootstrap.js"></script>
+	<script src="./vendor/bootstrap/bootstrap-table.js"></script>
+	<!--<script src="./vendor/bootstrap/bootstrap-tour-0.11.0/bootstrap-tour.js"></script>-->
+	<!--<script src="./vendor/jquery/jvectormap/version2/jquery.vmap.js"></script>-->
+	<script src="./l10n/bootstrap-table-zh-CN.js"></script>
+	<script src="./l10n/bootstrap-table-en-US.js"></script>
+
+
+	<!--<script src="./common/directives/custom_directives.js"></script>-->
+	<script src="./common/directives/node_control_directives.js"></script>
+	<script src="./common/service/appPlatformService.js"></script>
+	<!--<script src="./vendor/modules/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="./vendor/modules/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>-->
+	<!--<script src="./common/kingtansin/utils.js"></script>-->
+	<!--<script src="./vendor/echarts/echarts-all.js"></script>-->
+
+	<script src="./vendor/leaflet/leaflet.js"></script>
+	<!--<script src="./common/controllers/common_global.js"></script>-->
+	<!--<script src="./insure/service/insure_config_service.js"></script>-->
+	<script src="./common/controllers/system_manage.js"></script>
+	<!--arcgisSelf http://js.arcgis.com/3.9/-->
+	<!--<script src="./arcgis_js_api/3.9/init.js"></script>
+	<script src="./js/mapCore.js"></script>-->
+
+
+	<!-- Lazy loading
+<div class="hm_legend_box">
+    <span class="hm_legend_l"></span><span
+        class="hm_legend_r"></span>
+    <img
+            class="hm_legend"
+            src=""
+            width=""
+            height=""/>
+</div>-->
+</body>
+</html>

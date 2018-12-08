@@ -1,0 +1,13 @@
+<!--..类型，下拉列表框-->
+<div class="form-group">
+	<label class="col-md-3 col-sm-2 m-t-xs padder-l-0"
+		style="margin-top: 20px">类型</label>
+	<div class="col-md-9 col-sm-10 padder-l-0 m-b" style="margin-top: 15px">
+		<ui-select ng-model="defaultImg.eleSelected" theme="bootstrap">
+		<ui-select-match placeholder="请选择类型">
+		{{$select.selected.name}} </ui-select-match> <ui-select-choices group-by="'group'"
+			repeat="item in eleSelectData | filter: $select.search">
+		<span ng-bind-html="item.name | highlight: $select.search"></span> </ui-select-choices> </ui-select>
+	</div>
+	<div class="line line-dashed b-b line-lg pull-in"></div>
+</div>

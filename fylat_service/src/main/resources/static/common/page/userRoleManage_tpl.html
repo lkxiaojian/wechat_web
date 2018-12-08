@@ -1,0 +1,61 @@
+<div style="padding: 0px 20px;">
+	<div data-ng-include="'common/page/blocks/title.html'" class="">
+	</div>
+</div>
+
+<div class="clearfix m-b-md"
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px;">
+	<form class="form-horizontal" name="searchroleForm">
+		<div class="" style="margin-top: 20px;">
+			<div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">{{"roleManage.roleName"
+					| translate}}</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<input type="text" class="form-control" ng-model="rName">
+				</div>
+			</div>
+			<div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">{{"roleManage.state"
+					| translate}}</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<select ui-jq="chosen" class="form-control" ng-model="chosen_state">
+						<option value="{{state.id}}" ng-repeat="state in states">
+							{{state.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-md-2 col-sm-12 text-center padder-l-0 m-b">
+				<button class="btn m-b-xs w-xs btn-default"
+					ng-disabled="searchroleForm.$invalid" ng-click="searchRoleBtn()">{{"common.btn.searchBtn"
+					| translate}}</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="clearfix m-b-md" style="padding: 0px 20px;">
+	<button route-flag="addRole" btn-flag="button"
+		class="btn btn-default pull-left" ng-click="addRole()">
+		<i class="fa fa-plus"></i>&#12288;{{"common.btn.addRoleBtn" |
+		translate}}
+	</button>
+	<button route-flag="roleAllDel" btn-flag="button"
+		class="btn btn-default pull-right" ng-click="deleteRole()">
+		<i class="fa fa-minus"></i>&#12288;{{"common.btn.batchDelBtn" |
+		translate}}
+	</button>
+</div>
+
+<script type="text/ng-template" id="myModalContent.html">
+        <div ng-include="'common/page/modal/add_role_model.html'"></div>
+    </script>
+<script type="text/ng-template" id="myModalContent3.html">
+        <div ng-include="'common/page/modal/menu_accredit_model.html'"></div>
+    </script>
+
+<div style="padding: 0px 20px;">
+	<div>
+		<table table-directive tableoption="dtOpt" id="userrletable"
+			instance="tdInstance" class="crtlh"></table>
+	</div>
+</div>

@@ -1,0 +1,231 @@
+<div style="margin: 10px 15px">
+	<h3 class="m-n font-thin h5" ng-bind="listObj.navigationMsg"></h3>
+</div>
+<!--运行-->
+<div class="clearfix m-b-md"
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px; margin-top: 0px">
+	<form class="form-horizontal" name="searchuserForm">
+		<div class="" style="margin-top: 30px;">
+
+			<!--..检测源，下拉列表框-->
+			<div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">待分析数据</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<ui-select ng-model="qualityParam.qtSource" theme="bootstrap">
+					<ui-select-match placeholder="请选择待分析数据">
+					{{$select.selected.name}} </ui-select-match> <ui-select-choices group-by="'group'"
+						repeat="item in listObj.sourceData | filter: $select.search">
+					<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices> </ui-select>
+				</div>
+			</div>
+			<!--..配置文件目录，下拉列表框-->
+			<div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">配置文件目录</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<ui-select ng-model="qualityParam.dir" theme="bootstrap">
+					<ui-select-match placeholder="请选择配置文件目录">
+					{{$select.selected.name}} </ui-select-match> <ui-select-choices group-by="'group'"
+						repeat="item in listObj.sourceDirData | filter: $select.search">
+					<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices> </ui-select>
+				</div>
+			</div>
+			<!--..开始时间-->
+			<div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">开始时间</label>
+				<div class="col-md-9 col-sm-10 padder-l-0"
+					style="display: inline-table">
+					<input id="stationStart" class="m-b form-control" type="text"
+						onclick="WdatePicker({lang:'zh-cn',vel:'dateDefault'})" />
+				</div>
+
+			</div>
+			<!--END..开始时间-->
+			<!--..结束时间-->
+			<div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">结束时间</label>
+				<div class="col-md-9 col-sm-10 padder-l-0"
+					style="display: inline-table">
+					<input id="stationEnd" class="m-b form-control" type="text"
+						onclick="WdatePicker({lang:'zh-cn',vel:'dateDefault'})" />
+				</div>
+			</div>
+			<!--END..结束时间-->
+			<!--..类型，下拉列表框-->
+			<div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md">
+				<label class="col-md-3 col-sm-2 control-label padder-l-0">类型</label>
+				<div class="col-md-9 col-sm-10 padder-l-0">
+					<ui-select ng-model="qualityParam.qtType" theme="bootstrap">
+					<ui-select-match placeholder="请选择类型">
+					{{$select.selected.name}} </ui-select-match> <ui-select-choices group-by="'group'"
+						repeat="item in listObj.typeData | filter: $select.search">
+					<span ng-bind-html="item.name | highlight: $select.search"></span>
+					</ui-select-choices> </ui-select>
+				</div>
+			</div>
+
+
+			<div class="row-row pull-right-xs text-center padder-l-0">
+				<button class="btn m-b-xs w-xs btn-default"
+					ng-disabled="searchuserForm.$invalid"
+					ng-click="listObj.searchPolicyBtn()"
+					style="position: relative; left: 0px; top: 120px">查询</button>
+			</div>
+		</div>
+	</form>
+</div>
+<!--表格-->
+<div class="row hdc-quality">
+	<!-- 图片滚动 -->
+	<div class="col-md-5" style="margin-left: 3%;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="label bg-dark">风云3D</span> 数据展示
+			</div>
+			<div class="panel-body" ui-jq="slimScroll"
+				ui-options="{height:'350px', size:'5px'}">
+				<img src="quality_images/p1.png"
+					style="width: 165%; margin-left: -33%">
+			</div>
+		</div>
+
+	</div>
+	<div class="col-md-3"
+		style="background: #fff; padding: 0px 0px 20px 20px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="label bg-dark">风云3D</span> 基本统计量
+			</div>
+			<div class="panel-body">
+				<table class="table" style="width: 130%;">
+					<tr>
+						<td style="width: 50%;">时间</td>
+						<td>{{visualData.datetime}}</td>
+
+					</tr>
+					<tr>
+						<td>算数均值</td>
+						<td>{{visualData.mean_value}}</td>
+
+					</tr>
+					<tr>
+						<td>中位数</td>
+						<td>{{visualData.median}}</td>
+
+					</tr>
+					<tr>
+						<td>标准差</td>
+						<td>{{visualData.standard_variance}}</td>
+
+					</tr>
+					<tr>
+						<td>变异系数</td>
+						<td>{{visualData. coefficient_of_Variation}}</td>
+
+					</tr>
+					<tr>
+						<td>异常</td>
+						<td>{{visualData.abnormal_value}}</td>
+
+					</tr>
+
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3"
+		style="background: #fff; padding: 0px 0px 20px 20px;">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<span class="label bg-dark">风云3D</span> 精度统计量
+			</div>
+			<div class="panel-body">
+				<table class="table" style="width: 130%;">
+					<tr>
+						<td style="width: 60%;">准确度</td>
+						<td>{{visualData.accuracy}}</td>
+
+					</tr>
+					<tr>
+						<td>整体有效率</td>
+						<td>{{visualData.valid_ratio}}</td>
+
+					</tr>
+					<tr>
+						<td>平均偏差</td>
+						<td>{{visualData.mean_bias}}</td>
+
+					</tr>
+					<tr>
+						<td>均方根误差</td>
+						<td>{{visualData.root-mean-square_error}}</td>
+
+					</tr>
+					<tr>
+						<td>决定系数</td>
+						<td>{{visualData.r2}}</td>
+
+					</tr>
+					<tr>
+						<td>线性回归方程</td>
+						<td>{{visualData.linear_regression_equation}}</td>
+
+					</tr>
+
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<!--质检报告-->
+<div class="clearfix m-b-md"
+	style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px; margin-top: 0px;">
+	<div style="background: #fff; padding: 20px;">
+		<table table-directive tableoption="qualityReportTable"
+			id="qualityReportTable" instance="listObj.qualityReportTableInstance"></table>
+	</div>
+</div>
+
+
+
+
+<!--备份
+<table class="table" style="width: 130%;">
+    <tr>
+        <td style="width: 50%;">时间</td>
+        <td >{{visualData.datetime}}</td>
+
+    </tr>
+    <tr>
+        <td>数量</td>
+        <td>{{visualData.count}}</td>
+
+    </tr>
+    <tr>
+        <td>倾斜</td>
+        <td>{{visualData.slope}}</td>
+
+    </tr>
+    <tr>
+        <td>截距</td>
+        <td>{{visualData.Intercept}}</td>
+
+    </tr>
+    <tr>
+        <td>标准误差</td>
+        <td>{{visualData. standarError}}</td>
+
+    </tr>
+    <tr>
+        <td>绝对误差</td>
+        <td>{{visualData.absoluteError}}</td>
+
+    </tr>
+    <tr>
+        <td>相对误差</td>
+        <td>{{visualData.relativeError}}</td>
+
+    </tr>
+
+</table>-->
