@@ -246,7 +246,7 @@ app.controller('globalCtrl', ['$scope', '$http', '$stateParams', '$state', '$mod
                         facade = data.result.item[0].userdata[0].content;
                     }
 
-                    $state.go('app.insure.integrationManage_addIntegration');
+                    $state.go(facade);
 
                 }else {
                     $scope.sessionError = data.message;
@@ -349,7 +349,7 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
             //设置logo和web名称
             if ($cookieStore.get('user')) {
                 $scope.app.src = 'img/insure/logo.png';
-                $scope.app.name = '风云极轨卫星管理平台';
+                $scope.app.name = '专知管理平台';
                 $scope.app.src2 = 'img/insure/copyright.png';
             }
         })

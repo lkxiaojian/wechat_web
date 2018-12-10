@@ -1,5 +1,6 @@
 package com.kingweather.we_chat.dao.iml;
 
+import com.kingweather.common.util.DateUtil;
 import com.kingweather.we_chat.dao.ArticleDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -341,6 +342,45 @@ public class ArticleDaoIml implements ArticleDao {
         resultMap.put("message", "查询成功");
 
         return resultMap;
+    }
+
+    /**
+     * 添加领域
+     *
+     * @param name
+     * @param keyword
+     * @return
+     */
+    @Override
+    public boolean insertDomain(Object name, Object keyword, String path) {
+        String doNameSql = "select count(*) as count from zz_wechat.article_type where article_type_name=? and parentid=?";
+        Map<String, Object> countMap = jdbcTemplate.queryForMap(doNameSql, new Object[]{
+                name.toString(),
+                0
+        });
+
+        //没有查找到
+        if (countMap == null || countMap.get("count") == null || "0".equals(countMap.get("count").toString())) {
+
+            String key = "";
+            if (keyword != null) {
+                key = keyword.toString();
+            }
+            String sysTime = DateUtil.getCurrentTimeString();
+            String insertSql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid) values(?,?,date_format(?,'%Y-%d-%m %H:%i:%s'),?,?)";
+
+            int update = jdbcTemplate.update(insertSql, new Object[]{
+                    name.toString(),
+                    key,
+                    sysTime,
+                    path,
+                    0
+            });
+            if (update == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

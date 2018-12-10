@@ -35,11 +35,29 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
                             'insure/controllers/fylat/integrationManageController.js',
+                            "ui.select",
+                            'angularFileUpload'
+                        ]);
+                    }]
+            }
+        })
+
+        .state('app.insure.domain_Manage', {
+            url: '/domainManage',
+            templateUrl: 'insure/template/zz_wechat/domainManage.html',
+            pageTitle: '领域管理',
+            controller: 'domainManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'insure/controllers/zz_wechat/domainManageController.js',
                             "ui.select"
                         ]);
                     }]
             }
         })
+
         .state('app.insure.integrationManage_addIntegration', {
             url: '/addIntegration',
             params: {param: null, data: null},

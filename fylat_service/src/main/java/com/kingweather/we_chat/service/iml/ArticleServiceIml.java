@@ -36,4 +36,9 @@ public class ArticleServiceIml implements ArticleService {
     public Map<String, Object> articleSearch(String wechatid,String message, int page) {
         return articleDao.articleSearch(wechatid,message,page);
     }
+
+    @Override
+    public boolean insertDomain(Object name, Object keyword,String path) {
+        return articleDao.insertDomain(name,keyword,path);
+    }
 }

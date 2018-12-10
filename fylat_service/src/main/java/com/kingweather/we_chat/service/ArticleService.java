@@ -12,4 +12,6 @@ public interface ArticleService {
     Map<String,Object> getAllArticleType(String wechatid);
 
     Map<String,Object> articleSearch(String wechatid, String message, int page);
+
+    boolean insertDomain(Object name, Object keyword,String path);
 }

@@ -10,7 +10,7 @@ app.controller('integrationManageController', ['$scope', '$modal', '$http', 'fyl
          * @type {{navigationMsg: string, typeData: Array, addIntegration: addIntegration}}
          */
         $scope.listObj = {
-            navigationMsg: '管理平台 > 集成管理',   //导航栏显示信息
+            navigationMsg: '管理平台 > 领域管理',   //导航栏显示信息
             projectData: fylatService.projectSelect,   //产品选择框数据
             /**
              * 选择产品后，级联显示类型
@@ -1139,7 +1139,7 @@ app.controller('FileUploadCtrl', ['$scope', 'FileUploader', function ($scope, Fi
         }
     }
     var uploader = $scope.uploader = new FileUploader({
-        url: 'orderData/fileUpload',
+        url: 'article/fileUploadDomain',
         method: 'POST'
     });
 
@@ -1150,6 +1150,7 @@ app.controller('FileUploadCtrl', ['$scope', 'FileUploader', function ($scope, Fi
         fn: function (item /*{File|FileLikeObject}*/, options) {
             return this.queue.length < 5;
         }
+
 
     });
     uploader.filters.push({

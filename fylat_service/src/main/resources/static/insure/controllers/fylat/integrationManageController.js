@@ -10,7 +10,7 @@ app.controller('integrationManageController', ['$scope', '$modal', '$http', 'fyl
          * @type {{navigationMsg: string, typeData: Array, addIntegration: addIntegration}}
          */
         $scope.listObj = {
-            navigationMsg: '管理平台 > 集成管理',   //导航栏显示信息
+            navigationMsg: '管理平台 >领域管理',   //导航栏显示信息
             projectData: fylatService.projectSelect,   //产品选择框数据
             languageData: [
                 'shell',

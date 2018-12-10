@@ -3,10 +3,7 @@ package com.kingweather.fylat_service.controller.other;
 import com.kingweather.common.util.DateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FileUtils;
 
@@ -40,7 +37,6 @@ public class UploadController {
     public Map<String, Object> add(@RequestParam MultipartFile file, HttpServletRequest req) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file.getOriginalFilename();
-
         File f = new File(realpath + savePath);
 
         try {
