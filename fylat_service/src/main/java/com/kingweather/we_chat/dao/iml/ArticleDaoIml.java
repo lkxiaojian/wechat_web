@@ -391,7 +391,7 @@ public class ArticleDaoIml implements ArticleDao {
     }
 
     @Override
-    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String path) {
+    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String pathICon,String pathback) {
 
 
         String doNameSql = "select count(*) as count from zz_wechat.article_type where article_type_name=? and parentid=?";
@@ -402,37 +402,21 @@ public class ArticleDaoIml implements ArticleDao {
         //没有查找到
         if (countMap == null || countMap.get("count") == null || "0".equals(countMap.get("count").toString())) {
 
-            if ("1".equals(num)) {
                 String sysTime = DateUtil.getCurrentTimeString();
                 //插入
-                String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid) values (?,?,date_format(?,'%Y-%d-%m %H:%i:%s'),?,?)";
+                String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back) values (?,?,date_format(?,'%Y-%d-%m %H:%i:%s'),?,?,?)";
                 int update = jdbcTemplate.update(sql, new Object[]{
                         name,
                         keyword,
                         sysTime,
-                        path,
-                        Integer.parseInt(artcicle_type_id)
+                        pathICon,
+                        Integer.parseInt(artcicle_type_id),
+                        pathback
                 });
                 if (update == 1) {
                     return true;
                 }
 
-
-            } else if ("2".equals(num)) {
-                //更新
-
-                String sql = "update zz_wechat.article_type set iamge_back=? where article_type_name=? and article_type_keyword=? and parentid=?";
-
-                int update = jdbcTemplate.update(sql, new Object[]{
-                        path,
-                        name,
-                        keyword,
-                        Integer.parseInt(artcicle_type_id)
-                });
-                if (update == 1) {
-                    return true;
-                }
-            }
         }
         return false;
     }

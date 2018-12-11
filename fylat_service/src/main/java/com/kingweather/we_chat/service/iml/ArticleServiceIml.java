@@ -49,7 +49,7 @@ public class ArticleServiceIml implements ArticleService {
     }
 
     @Override
-    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String path) {
-        return articleDao.insertArticleType(name,keyword,artcicle_type_id,num,path);
+    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String path,String pathBack) {
+        return articleDao.insertArticleType(name,keyword,artcicle_type_id,num,path,pathBack);
     }
 }

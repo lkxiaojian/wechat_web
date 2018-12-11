@@ -18,5 +18,5 @@ public interface ArticleDao {
 
     List<Map<String, Object>> getAllDomain();
 
-    boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String path);
+    boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String path,String pathBack);
 }

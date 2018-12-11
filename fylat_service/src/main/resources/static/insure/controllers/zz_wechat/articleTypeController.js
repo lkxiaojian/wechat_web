@@ -30,36 +30,50 @@ app.controller('articleTypeManageController', ['$scope', '$modal', '$http', 'fyl
                 return;
             }
 
-            var url = 'article/fileUploadDomain';
+            var url = 'article/addArticleType';
+            var data = angular.copy({
+                int_type: $scope.listObj.integrationQuery.int_type,
+                name: $scope.listObj.integrationQuery.domain_name,
+                keyword: $scope.listObj.integrationQuery.domain_keyword,
+                artcicle_type_id: $scope.listObj.region.selected.article_type_id,
+                num_id: 0
+            });
             $scope.mulImages.push($scope.data.file_icon);
             $scope.mulImages.push($scope.data.file_back);
-            // data.file = $scope.mulImages;
+            data.file = $scope.mulImages;
             // data.file=$scope.data.file_icon;
 
 
-            for (var i = 0; i < $scope.mulImages.length; i++) {
-                var data = angular.copy({
-                    int_type: $scope.listObj.integrationQuery.int_type,
-                    name: $scope.listObj.integrationQuery.domain_name,
-                    keyword: $scope.listObj.integrationQuery.domain_keyword,
-                    artcicle_type_id: $scope.listObj.region.selected.article_type_id,
-                    num_id: 0
-                });
 
-                data.file = $scope.mulImages[i];
-                data.num_id = i;
 
-                Upload.upload({
-                    url: url,
-                    data: data
-                }).success(function (data) {
-                    // $window.location.reload();
-                }).error(function () {
-                    $scope.mulImages = [];
-                    alert("上传失败！！！")
-                });
+            Upload.upload({
+                url: url,
+                data: data
+            }).success(function (data) {
+                $window.location.reload();
+            }).error(function () {
+                $scope.mulImages = [];
+                alert("上传失败！！！")
+            });
 
-            }
+
+            // for (var i = 0; i < $scope.mulImages.length; i++) {
+            //
+            //
+            //     data.file = $scope.mulImages[i];
+            //     data.num_id = i;
+            //
+            //     Upload.upload({
+            //         url: url,
+            //         data: data
+            //     }).success(function (data) {
+            //         // $window.location.reload();
+            //     }).error(function () {
+            //         $scope.mulImages = [];
+            //         alert("上传失败！！！")
+            //     });
+            //
+            // }
         };
 
 
