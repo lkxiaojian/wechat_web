@@ -1,7 +1,7 @@
 #webpath  /home/huxq/NETDISK/web/
 ########################shell variable################################
 upload:
-  realpath: /home/iamges/home/iamges/articleTypeImages/
+  realpath: /home/iamges/articleTypeImages/
 liunx:
   ipAddress: 10.24.34.185
   username: huxq
