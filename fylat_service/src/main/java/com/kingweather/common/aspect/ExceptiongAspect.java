@@ -11,6 +11,7 @@ import com.kingweather.system.manager.domain.OperateState;
 import com.kingweather.system.manager.domain.OperateType;
 import com.kingweather.system.manager.domain.User;
 import com.kingweather.system.service.manager.LogManagerService;
+import com.kingweather.we_chat.controller.UserManage.UserManageController;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
@@ -63,11 +64,14 @@ public class ExceptiongAspect {
 
 	@Before("cutController()")
 	public void doBeforeController(JoinPoint joinPoint) throws Throwable {
-//		String method = joinPoint.getSignature().getName();
-//		if(session.getAttribute("user") == null && !method.equals("userLogin")){
-//			logger.error("session失效");
-//			throw new UserException("请重新登录!");
-//		}
+		if(!joinPoint.toString().contains("UserManage.UserManageController")&&!joinPoint.toString().contains("ArticleManage.ArticleManageController")){
+			String method = joinPoint.getSignature().getName();
+			if(session.getAttribute("user") == null && !method.equals("userLogin")){
+				logger.error("session失效");
+				throw new UserException("请重新登录!");
+			}
+		}
+
 	}
 
 
