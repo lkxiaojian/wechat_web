@@ -383,6 +383,60 @@ public class ArticleDaoIml implements ArticleDao {
         return false;
     }
 
+    @Override
+    public List<Map<String, Object>> getAllDomain() {
+        String sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid='0' ORDER BY create_time DESC";
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        return maps;
+    }
+
+    @Override
+    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String path) {
+
+
+        String doNameSql = "select count(*) as count from zz_wechat.article_type where article_type_name=? and parentid=?";
+        Map<String, Object> countMap = jdbcTemplate.queryForMap(doNameSql, new Object[]{
+                name.toString(),
+                Integer.parseInt(artcicle_type_id)
+        });
+        //没有查找到
+        if (countMap == null || countMap.get("count") == null || "0".equals(countMap.get("count").toString())) {
+
+            if ("1".equals(num)) {
+                String sysTime = DateUtil.getCurrentTimeString();
+                //插入
+                String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid) values (?,?,date_format(?,'%Y-%d-%m %H:%i:%s'),?,?)";
+                int update = jdbcTemplate.update(sql, new Object[]{
+                        name,
+                        keyword,
+                        sysTime,
+                        path,
+                        Integer.parseInt(artcicle_type_id)
+                });
+                if (update == 1) {
+                    return true;
+                }
+
+
+            } else if ("2".equals(num)) {
+                //更新
+
+                String sql = "update zz_wechat.article_type set iamge_back=? where article_type_name=? and article_type_keyword=? and parentid=?";
+
+                int update = jdbcTemplate.update(sql, new Object[]{
+                        path,
+                        name,
+                        keyword,
+                        Integer.parseInt(artcicle_type_id)
+                });
+                if (update == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     /**
      * 传参错误

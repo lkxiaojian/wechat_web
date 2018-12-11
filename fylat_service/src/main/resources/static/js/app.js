@@ -16,7 +16,7 @@ angular.module('app', [
     //'ui.select',
     'ui.validate',
     'oc.lazyLoad',
-    'pascalprecht.translate'
+    'pascalprecht.translate',
     //'ngWebSocket',
     //'map'
 

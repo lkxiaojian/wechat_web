@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -97,7 +98,7 @@ public class ArticleManageController extends BaseController {
 
 
     /**
-     * 上传图片-信息
+     * 上传图片-领域信息
      *
      * @param file
      * @param req
@@ -127,14 +128,28 @@ public class ArticleManageController extends BaseController {
                 map.put("message", "传参错误");
                 return map;
             }
+            String path = realpath + savePath;
+            if (file == null) {
+                path = "";
+            }
+            isFlag = articleService.insertDomain(name, keyword, path);
 
+
+        } else if (type == 2) {
+            //文章类型
+
+            String name = req.getParameter("name");
+            String keyword = req.getParameter("keyword");
+            String artcicle_type_id = req.getParameter("artcicle_type_id");
+            String num = req.getParameter("num_id");
             String path = realpath + savePath;
             if (file == null) {
                 path = "";
             }
 
-            isFlag = articleService.insertDomain(name, keyword, path);
+            isFlag = articleService.insertArticleType(name, keyword, artcicle_type_id, num,path);
         }
+
         if (isFlag) {
             try {
                 FileUtils.copyInputStreamToFile(file.getInputStream(), f);
@@ -146,8 +161,19 @@ public class ArticleManageController extends BaseController {
             map.put("message", "传参错误");
             return map;
         }
-
         return map;
+    }
+
+
+    /**
+     * 获取全部领域
+     *
+     * @return
+     */
+    @RequestMapping(value = "article/getAllDomain")
+    public List<Map<String, Object>> getAllDomain() {
+
+        return articleService.getAllDomain();
     }
 
 

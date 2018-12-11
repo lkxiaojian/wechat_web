@@ -1,13 +1,43 @@
 /**
  * 领域管理
  */
-app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'FileUploader',
-    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader) {
+app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'FileUploader', 'Upload','$window',
+    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload,$window) {
 
-        /**
-         *
-         * @type {{navigationMsg: string, typeData: Array, addIntegration: addIntegration}}
-         */
+        $scope.data = {
+            file: null
+        };
+
+
+        $scope.update = function () {
+            if ($scope.listObj.integrationQuery.domain_name == null) {
+                alert("领域名字没空！！！")
+                return;
+            }
+            if (!$scope.data.file) {
+                return;
+            }
+
+            var url = 'article/fileUploadDomain';  //params是model传的参数，图片上传接口的url
+            var data = angular.copy({
+                int_type: $scope.listObj.integrationQuery.int_type,
+                name: $scope.listObj.integrationQuery.domain_name,
+                keyword: $scope.listObj.integrationQuery.domain_keyword
+
+            });
+            data.file = $scope.data.file;
+
+            Upload.upload({
+                url: url,
+                data: data
+            }).success(function (data) {
+                $window.location.reload();
+            }).error(function () {
+                alert("上传失败！！！")
+            });
+        };
+
+
         $scope.listObj = {
             navigationMsg: '管理平台 > 领域管理',   //导航栏显示信息
             projectData: fylatService.projectSelect,   //产品选择框数据
@@ -27,7 +57,7 @@ app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatSer
                 domain_name: null,
                 domain_keyword: null,
                 int_type: 1,
-                file_name:null
+                file_name: null
             },
             searchPolicyBtn: function () {
                 $scope.listObj.integrationTableInstance.bootstrapTable('refresh');
@@ -47,69 +77,9 @@ app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatSer
                 }).error(function (data, status, headers, config) {
                     //upload failed
                 });
-            },
-
-            updateddd: function () {
-                if ($scope.listObj.integrationQuery.domain_name == null) {
-                    alert("领域名字没空！！！")
-                    return;
-                }
-
-                alert($scope.listObj.integrationQuery.file_name)
-
-
-                uploader.uploadAll();
-            },
+            }
 
         };
-
-        var uploader =
-            $scope.uploader = new FileUploader({
-                url: 'article/fileUploadDomain',
-                removeAfterUpload: true,  //上传后删除文件
-                formData: [{
-                    int_type: $scope.listObj.integrationQuery.int_type,
-                    name: $scope.listObj.integrationQuery.domain_name,
-                    keyword: $scope.listObj.integrationQuery.domain_keyword
-                }]
-            });
-
-        // //上传文件之前
-        // uploader.onBeforeUpload = function (item) {
-        //     console.info('onBeforeUploadItem', item);
-        // };
-        //
-        // uploader.onWhenAddingFileFailed = function (item, filter, options) {
-        //
-        //     console.info('onWhenAddingFileFailed', item, filter, options);
-        //
-        // };
-        //
-        // uploader.onErrorItem = function (fileItem, response, status, headers) {
-        //
-        //     console.info('onErrorItem', fileItem, response, status, headers);
-        // };
-        // uploader.onCancelItem = function (fileItem, response, status, headers) {
-        //
-        //     console.info('onCancelItem', fileItem, response, status, headers);
-        // };
-        //
-        // //添加文件
-        // uploader.onAfterAddingFile = function (fileItem) {
-        //     console.info('onAfterAddingFile', fileItem);
-        // };
-        uploader.onCompleteItem = function (fileItem, response, status, headers) {
-            console.info('onCompleteItem', fileItem, response, status, headers);
-            uploader.clearQueue();
-        };
-
-
-        /**
-         * 获取上传信息
-         */
-        $scope.$on('summon', function (e, newLocation) {
-            $scope.uploadPath = newLocation;
-        });
 
 
         /**

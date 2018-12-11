@@ -3,7 +3,7 @@
 /**
  * Config for the router
  */
-angular.module('app').config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('app.insure', {
             url: '/insure',
@@ -37,6 +37,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                             'insure/controllers/fylat/integrationManageController.js',
                             "ui.select",
                             'angularFileUpload'
+
                         ]);
                     }]
             }
@@ -51,8 +52,32 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                 deps: ['$ocLazyLoad',
                     function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
+                            'vendor/angular/angular-file-upload/ng-file-upload.js',
+                            'vendor/angular/angular-file-upload/ng-file-upload-shim.js',
                             'insure/controllers/zz_wechat/domainManageController.js',
-                            "ui.select"
+                            'ui.select',
+                            'ngFileUpload'
+
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.article_type', {
+            url: '/articleTypeManage',
+            templateUrl: 'insure/template/zz_wechat/articleTypeManage.html',
+            pageTitle: '文章类型',
+            controller: 'articleTypeManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'vendor/angular/angular-file-upload/ng-file-upload.js',
+                            'vendor/angular/angular-file-upload/ng-file-upload-shim.js',
+                            'insure/controllers/zz_wechat/articleTypeController.js',
+                            'ui.select',
+                            'ngFileUpload'
+
+
                         ]);
                     }]
             }

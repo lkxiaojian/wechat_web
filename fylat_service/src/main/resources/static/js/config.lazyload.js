@@ -69,6 +69,13 @@ angular.module('app')
                     ]
                 },
                 {
+                    name: 'ngFileUpload',
+                    files: [
+                        'vendor/angular/angular-file-upload/ng-file-upload-shim.js',
+                        'vendor/angular/angular-file-upload/ng-file-upload.js'
+                    ]
+                },
+                {
                     name: 'ui.calendar',
                     files: ['vendor/modules/angular-ui-calendar/calendar.js']
                 },

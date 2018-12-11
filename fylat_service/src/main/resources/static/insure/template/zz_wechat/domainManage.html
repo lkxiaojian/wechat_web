@@ -27,37 +27,38 @@
             <div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md"
                  style="margin: 0px 15px 0px 0px;">
                 <label class="col-md-3 col-sm-2 control-label padder-l-0">图标</label>
-                <div class="col-md-9 col-sm-10 padder-l-0" >
-                    <input  type="file" nv-file-select="" uploader="uploader" ng-model="listObj.integrationQuery.file_name" />
+                <div class="col-md-9 col-sm-10 padder-l-0">
+                    <!--<input type="file" nv-file-select="" uploader="uploader" options="123" filters="456"/>-->
 
                     <!--<input type="file" nv-file-select="" uploader="uploader" />-->
+
+
+                    <!--<div class="button" ngf-select ngf-pattern="'image/*'" ng-model="files" ngf-multiple="true">选择多张图片-->
+                    <!--</div>-->
+
+                    <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
+                         ngf-multiple="false" ng-model="data.file">
+                        选择文件
+                    </div>
+
+                    <img ngf-src="data.file || data.defaultImage" class="img-responsive" style="max-width: 50%"/>
+
+
                 </div>
             </div>
-            </div>
+        </div>
         <!--ng-click="uploader.uploadAll()"-->
-            <div class="row-row pull-right-xs text-center padder-l-0"    style="margin-bottom:20px">
-                <button class="btn m-b-xs w-xs btn-default"
-                        ng-disabled="searchuserForm.$invalid"
-                        ng-click="listObj.updateddd()"
-                        style="position: relative; left: -15px; top: 53px">添加</button>
-            </div>
+        <div class="row-row pull-right-xs text-center padder-l-0" style="margin-bottom:20px">
+            <button class="btn m-b-xs w-xs btn-default"
+                    ng-disabled="searchuserForm.$invalid"
+                    ng-click="update()"
+                    style="position: relative; left: -15px; top: 53px">添加
+            </button>
+        </div>
 
     </form>
 </div>
-<!--<div class="clearfix m-b-md" style="padding: 20px 20px 0px 20px;">-->
-    <!--<button route-flag="addPolicy" btn-flag="button"-->
-            <!--class="btn btn-default pull-left" ng-click="listObj.addIntegration()">-->
-        <!--<i class="fa fa-plus"></i>&#12288;新建进程-->
-    <!--</button>-->
-    <!--<button route-flag="delAllPolicy" btn-flag="button"-->
-            <!--class="btn btn-default pull-right"-->
-            <!--ng-click="listObj.deleteIntegration()">-->
-        <!--<i class="fa fa-minus"></i>&#12288;批量删除-->
-    <!--</button>-->
-<!--</div>-->
+
 <div>
-    <!--<div style="background: #fff; padding: 0px 20px 20px 20px;">-->
-        <!--<table table-directive tableoption="integrationTable" id="policytable"-->
-               <!--instance="listObj.integrationTableInstance"></table>-->
-    <!--</div>-->
+
 </div>

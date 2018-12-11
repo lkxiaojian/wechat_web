@@ -5,6 +5,7 @@ import com.kingweather.we_chat.service.ArticleService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -40,5 +41,15 @@ public class ArticleServiceIml implements ArticleService {
     @Override
     public boolean insertDomain(Object name, Object keyword,String path) {
         return articleDao.insertDomain(name,keyword,path);
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllDomain() {
+        return articleDao.getAllDomain();
+    }
+
+    @Override
+    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String path) {
+        return articleDao.insertArticleType(name,keyword,artcicle_type_id,num,path);
     }
 }
