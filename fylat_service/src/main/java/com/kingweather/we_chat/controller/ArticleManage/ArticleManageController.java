@@ -125,7 +125,7 @@ public class ArticleManageController extends BaseController {
                 map.put("message", "传参错误");
                 return map;
             }
-            String path = realpath + savePath;
+            String path = realpath.replaceAll("home","resources") + savePath;
             if (file == null) {
                 path = "";
             }
@@ -193,8 +193,8 @@ public class ArticleManageController extends BaseController {
             String keyword = req.getParameter("keyword");
             String artcicle_type_id = req.getParameter("artcicle_type_id");
             String num = req.getParameter("num_id");
-            String pathICon = realpath + savePathIcon;
-            String pathBack = realpath + savePathBack;
+            String pathICon = realpath.replaceAll("home","resources") + savePathIcon;
+            String pathBack = realpath.replaceAll("home","resources") + savePathBack;
             isFlag = articleService.insertArticleType(name, keyword, artcicle_type_id, num,pathICon,pathBack);
         }
 
