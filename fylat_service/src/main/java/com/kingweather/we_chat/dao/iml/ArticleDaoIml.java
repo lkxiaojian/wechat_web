@@ -6,10 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class ArticleDaoIml implements ArticleDao {
@@ -367,7 +364,7 @@ public class ArticleDaoIml implements ArticleDao {
                 key = keyword.toString();
             }
             String sysTime = DateUtil.getCurrentTimeString();
-            String insertSql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid) values(?,?,date_format(?,'%Y-%d-%m %H:%i:%s'),?,?)";
+            String insertSql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?)";
 
             int update = jdbcTemplate.update(insertSql, new Object[]{
                     name.toString(),
@@ -376,7 +373,7 @@ public class ArticleDaoIml implements ArticleDao {
                     path,
                     0
             });
-            if (update == 0) {
+            if (update == 1) {
                 return true;
             }
         }
@@ -404,7 +401,7 @@ public class ArticleDaoIml implements ArticleDao {
 
                 String sysTime = DateUtil.getCurrentTimeString();
                 //插入
-                String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back) values (?,?,date_format(?,'%Y-%d-%m %H:%i:%s'),?,?,?)";
+                String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
                 int update = jdbcTemplate.update(sql, new Object[]{
                         name,
                         keyword,
