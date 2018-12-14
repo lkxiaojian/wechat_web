@@ -388,7 +388,7 @@ public class ArticleDaoIml implements ArticleDao {
     }
 
     @Override
-    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String pathICon,String pathback) {
+    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String pathICon, String pathback) {
 
 
         String doNameSql = "select count(*) as count from zz_wechat.article_type where article_type_name=? and parentid=?";
@@ -399,23 +399,43 @@ public class ArticleDaoIml implements ArticleDao {
         //没有查找到
         if (countMap == null || countMap.get("count") == null || "0".equals(countMap.get("count").toString())) {
 
-                String sysTime = DateUtil.getCurrentTimeString();
-                //插入
-                String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
-                int update = jdbcTemplate.update(sql, new Object[]{
-                        name,
-                        keyword,
-                        sysTime,
-                        pathICon,
-                        Integer.parseInt(artcicle_type_id),
-                        pathback
-                });
-                if (update == 1) {
-                    return true;
-                }
+            String sysTime = DateUtil.getCurrentTimeString();
+            //插入
+            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+            int update = jdbcTemplate.update(sql, new Object[]{
+                    name,
+                    keyword,
+                    sysTime,
+                    pathICon,
+                    Integer.parseInt(artcicle_type_id),
+                    pathback
+            });
+            if (update == 1) {
+                return true;
+            }
 
         }
         return false;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllAricleType(String article_type_id) {
+        String sql = "";
+
+        int parentid = 0;
+        if (article_type_id == null) {
+            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid !=?";
+        } else {
+            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid=?";
+            parentid = Integer.parseInt(article_type_id);
+        }
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
+                parentid
+        });
+
+
+        return maps;
     }
 
 
