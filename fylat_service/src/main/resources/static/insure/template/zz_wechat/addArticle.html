@@ -1,0 +1,265 @@
+<!--头部导航信息-->
+<div class="modal-header">
+    <div class="btn pull-right m-t-n-xs m-l-n list-icon">
+        <a ui-sref="app.insure.integration_processManage"> <i
+                class="fa fa-mail-reply-all"></i>
+        </a>
+    </div>
+    <div style="margin: 0px 15px">
+        <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
+    </div>
+</div>
+
+<!--内容区-->
+<div class="wrapper-md">
+    <tabset class="tab-container">
+        <!--第一步：添加文章-->
+        <tab active="steps.step1" select="steps.percent=50">
+            <tab-heading>
+                添加文章
+            </tab-heading>
+            <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
+            <div class="modal-body">
+                <form class="form-horizontal m-b-md" id="add_integration"
+                      name="addIntegrationFormValidate" novalidate>
+
+                    <!-- 领域  类型-->
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star"></span>领域</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <ui-select ng-model="listObj.region.selected"
+                                       on-select="listObj.getRegionSelect($item)"
+                                       theme="bootstrap">
+                                <ui-select-match
+                                        placeholder="{{'请选择领域' | translate}}">
+                                    {{$select.selected.article_type_name}}
+                                </ui-select-match>
+                                <ui-select-choices group-by="'group'"
+                                                   repeat="item in listObj.projectData | filter: $select.search">
+                                    <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+
+                        <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>类型</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <ui-select ng-model="alistObj.regionType.selected"
+                                       on-select="listObj.getRegionTypeSelect($item)"
+                                       theme="bootstrap">
+
+                                <ui-select-match
+                                        placeholder="{{'请选择文章类型' | translate}}">
+                                    {{$select.selected.article_type_name}}
+                                </ui-select-match>
+                                <ui-select-choices group-by="'group'"
+                                                   repeat="item in listObj.articleTyprData | filter: $select.search">
+                                    <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                            <div class="error"
+                                 ng-show="!listObj.regionType.selected">
+                                <small class="error a-red">
+                                    请选择文章类型
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 作者 来源-->
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>作者</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="text" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.author" value="请输入作者"
+                                   required/>
+                            <div class="error"
+                                 ng-show="listObj.errorMessage.author">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.author">
+                                    请输入作者
+                                </small>
+                            </div>
+                        </div>
+
+                        <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>来源</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="text" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.source" value="请输入文章来源"
+                                   required/>
+                            <div class="error"
+                                 ng-show="listObj.errorMessage.source">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.source">
+                                    请输入文章来源
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 分享基数 收藏基数-->
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star"></span>分享基数</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="number" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.share_initcount" value="请输入分享基数"
+                                   required/>
+                            <!--  <div class="error"
+                                   ng-show="listObj.errorMessage.author">
+                                  <small class="error a-red">
+                                      请输入作者
+                                  </small>
+                              </div>-->
+                        </div>
+
+                        <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star"></span>收藏基数</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="number" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.collect_count" value="请输入收藏基数"
+                                   required/>
+                            <!-- <div class="error"
+                                  ng-show="listObj.errorMessage.source">
+                                 <small class="error a-red">
+                                     请输入文章来源
+                                 </small>
+                             </div>-->
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>文章标题</label>
+                        <div class="col-lg-10 col-md-10 col-sm-10">
+                            <input type="text" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.article_title" value="请输入文章标题"
+                                   ng-maxlength="50" id="policy_name" required/>
+                            <div class="error"
+                                 ng-show="listObj.errorMessage.article_title">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.article_title">
+                                    请输入文章标题
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>关键字</label>
+                        <div class="col-lg-10 col-md-10 col-sm-10">
+                            <input type="text" class="form-control" name="itVersion"
+                                   ng-maxlength="50" id="policy_code" value="请输入关键字"
+                                   ng-model="listObj.integrationQuery.article_keyword" required/>
+
+                            <!--   ng-show="addIntegrationFormValidate.itVersion.$dirty && addIntegrationFormValidate.itVersion.$invalid"
+
+                               ng-show="addIntegrationFormValidate.itVersion.$error.required"-->
+                            <div class="error" ng-show="listObj.errorMessage.article_keyword">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.article_keyword">
+                                    请输入关键字
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr class="b-l-light">
+
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>文章摘要</label>
+                        <div class="col-lg-10 col-md-10 col-sm-10">
+			   	           <textarea class="form-control" rows="3"
+                                     ng-model="listObj.integrationQuery.content_excerpt" value="请输入文章摘要"
+                                     name="special_appointment" id="special_appointment"></textarea>
+
+
+                            <div class="error" ng-show="listObj.errorMessage.content_excerpt">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.content_excerpt">
+                                    请输入文章摘要
+                                </small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>文章内容</label>
+                        <div class="col-sm-10">
+
+                            <div id="weEditor"  ng-model="listObj.integrationQuery.content">
+
+                            </div>
+
+                            <div class="error" ng-show="listObj.errorMessage.content">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.content">
+                                    请输入文章内容
+                                </small>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+
+                            <!-- 富文本框 -->
+
+
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!--<span class="_color_red pull-left">{{error_msg}}</span>-->
+                <button type="button" class="btn btn-default btn-rounded"
+                        ng-click="listObj.addMessageCommit()">提交
+                </button>
+            </div>
+        </tab>
+        <!--第二步：文章列表-->
+        <tab disable="addIntegrationObj.param === 'add' && !steps.step2" active="steps.step2"
+             select="steps.percent=100">
+            <tab-heading>
+                文章列表
+            </tab-heading>
+            <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
+            <div class="modal-body">
+
+                <div style="padding: 0px 0px;">
+                    <div>
+                        <!--<div class="col-title">用户列表</div>-->
+                        <div style="background: #fff;">
+                            <table table-directive tableoption="getAllArticle" id="userrmgtable" instance="tdInstance"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="modal-footer">-->
+                <!--<span class="_color_red pull-left">{{error_msg}}</span>-->
+                <!--<button type="button" class="btn btn-default btn-rounded"-->
+                        <!--ng-click="steps.step1=true">上一步-->
+                <!--</button>-->
+                <!--<button type="button" class="btn btn-default btn-rounded"-->
+                        <!--ng-click="steps.step3=true&&addIntegrationObj.getTableForSrc()">下一步-->
+                <!--</button>-->
+            <!--</div>-->
+
+        </tab>
+
+    </tabset>
+
+</div>
+
+
+<script type="text/ng-template" id="myModalContent.html">
+    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
+</script>
+

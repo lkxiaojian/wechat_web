@@ -64,9 +64,13 @@ public class ExceptiongAspect {
 
 	@Before("cutController()")
 	public void doBeforeController(JoinPoint joinPoint) throws Throwable {
-		if(!joinPoint.toString().contains("UserManage.UserManageController")&&!joinPoint.toString().contains("ArticleManage.ArticleManageController")){
+		if(!joinPoint.toString().contains("UserManage.UserManageController")
+				&&!joinPoint.toString().contains("ArticleManage.ArticleManageController")
+				&&!joinPoint.toString().contains("other.UploadController")
+
+				){
 			String method = joinPoint.getSignature().getName();
-			if(session.getAttribute("user") == null && !method.equals("userLogin")){
+			if(session.getAttribute("user") == null && !method.equals("userLogin")&&!method.equals("articleImageUpload")&&!method.equals("addArticle")){
 				logger.error("session失效");
 				throw new UserException("请重新登录!");
 			}

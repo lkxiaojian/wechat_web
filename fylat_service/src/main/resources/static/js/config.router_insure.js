@@ -21,28 +21,11 @@ angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function (
                             'vendor/My97DatePicker/WdatePicker.js',
                             'insure/controllers/common_insure.js',
 
-                        ]);
-                    }]
-            }
-        })
-        .state('app.insure.integration_processManage', {
-            url: '/integrationManage',
-            templateUrl: 'insure/template/fylat/integrationManage.html',
-            pageTitle: '进程管理',
-            controller: 'integrationManageController',
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            'insure/controllers/fylat/integrationManageController.js',
-                            "ui.select",
-                            'angularFileUpload'
 
                         ]);
                     }]
             }
         })
-
         .state('app.insure.domain_Manage', {
             url: '/domainManage',
             templateUrl: 'insure/template/zz_wechat/domainManage.html',
@@ -83,133 +66,23 @@ angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function (
             }
         })
 
-        .state('app.insure.integrationManage_addIntegration', {
-            url: '/addIntegration',
+        .state('app.insure.add_article', {
+            url: '/addArticle',
             params: {param: null, data: null},
-            templateUrl: 'insure/template/fylat/addIntegration.html',
-            pageTitle: '进程管理-新增进程',
-            controller: 'integrationManageController',
+            templateUrl: 'insure/template/zz_wechat/addArticle.html',
+            pageTitle: '添加文章',
+            controller: 'addArticleManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
                     function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
-                            'insure/controllers/fylat/integrationManageController.js',
-                            'insure/controllers/fylat/otherController.js',
+                            'vendor/jquery/wangEditor.js',
+                            'insure/controllers/zz_wechat/addArticleManageController.js',
                             'vendor/websocket/sockjs.min.js',
                             'vendor/websocket/stomp.js',
-                            "ui.select"
-                        ]);
-                    }]
-            }
-        })
-        .state('app.insure.operationManage_addOperation', {
-            url: '/addOperation',
-            templateUrl: 'insure/template/fylat/addOperation.html',
-            params: {"userName": null},
-            pageTitle: '新建作业流',
-            controller: 'addOperationController',
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            'insure/controllers/fylat/jobSchedulerManageController.js',
-                            "ui.select"
-                        ]);
-                    }]
-            }
-        })
-        .state('app.insure.integration_jobManage', {
-            url: '/operationManage',
-            templateUrl: 'insure/template/fylat/operationManage.html',
-            pageTitle: '作业流管理',
-            controller: 'operationManageController',
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            'vendor/websocket/sockjs.min.js',
-                            'vendor/websocket/stomp.js',
-                            'insure/controllers/fylat/jobSchedulerManageController.js',
-                            'insure/controllers/fylat/otherController.js',
-                            "ui.select"
-                        ]);
-                    }]
-            }
-        })
+                            'ui.select',
+                            'common/directives/custom_directives.js'
 
-        .state('app.insure.qualityTest_same', {
-            url: '/qualityTest_same',
-            templateUrl: 'insure/template/fylat/qualityTest_same.html',
-            pageTitle: '结果查看-目视检测',
-            controller: 'singleQualityTestController',
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            'insure/controllers/fylat/otherManageController.js',
-                            "ui.select"
-                        ]);
-                    }]
-            }
-        })
-        .state('app.insure.qualityTest_different', {
-            url: '/qualityTest_different',
-            templateUrl: 'insure/template/fylat/qualityTest_different.html',
-            pageTitle: '结果查看-异源检测',
-            controller: 'difSourceQualityTestController',
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            'insure/controllers/fylat/otherManageController.js',
-                            "ui.select"
-                        ]);
-                    }]
-            }
-        })
-        .state('app.insure.qualityTest_different_type', {
-            url: '/qualityTest_different_type',
-            templateUrl: 'insure/template/fylat/qualityTest_different_type.html',
-            pageTitle: '结果查看-不同类型检测',
-            controller: 'difTypeQualityTestController',
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            'insure/controllers/fylat/otherManageController.js',
-                            "ui.select"
-                        ]);
-                    }]
-            }
-        })
-        .state('app.insure.resourceManage', {
-            url: '/resourceManage',
-            templateUrl: 'insure/template/fylat/resourceManage.html',
-            pageTitle: '资源管理',
-            controller: 'resourceManageController',
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            'insure/controllers/fylat/otherManageController.js',
-                            'vendor/echarts/echarts-all.js',
-                            "ui.select"
-                        ]);
-                    }]
-            }
-        })
-
-        .state('app.insure.dataShare', {
-            url: '/dataShare',
-            templateUrl: 'insure/template/fylat/dataShare.html',
-            pageTitle: '数据分享',
-            controller: 'dataShareController',
-            resolve: {
-                deps: ['$ocLazyLoad',
-                    function ($ocLazyLoad) {
-                        return $ocLazyLoad.load([
-                            'insure/controllers/fylat/otherManageController.js',
-                            "ui.select"
                         ]);
                     }]
             }

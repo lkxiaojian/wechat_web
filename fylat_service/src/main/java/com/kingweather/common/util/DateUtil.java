@@ -1,5 +1,6 @@
 package com.kingweather.common.util;
 
+import java.sql.Timestamp;
 import java.text.FieldPosition;
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -71,7 +72,11 @@ public final class DateUtil {
 	}
 
 	public static synchronized String getCurrentTimeString() {
-		return getCurrentDateString(_formatterDateTime2);
+		Date nowdate=new Date();
+           //转换时间格式
+		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = simpleDate.format(nowdate);
+        return format;
 	}
 
 

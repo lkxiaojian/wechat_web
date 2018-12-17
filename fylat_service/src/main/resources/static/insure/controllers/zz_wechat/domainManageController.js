@@ -1,8 +1,8 @@
 /**
  * 领域管理
  */
-app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'FileUploader', 'Upload','$window',
-    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload,$window) {
+app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'FileUploader', 'Upload','$window','modalTip',
+    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload,$window,modalTip) {
 
         $scope.data = {
             file: null
@@ -15,6 +15,7 @@ app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatSer
                 return;
             }
             if (!$scope.data.file) {
+                alert("图片没有选择！！！")
                 return;
             }
 
@@ -31,9 +32,25 @@ app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatSer
                 url: url,
                 data: data
             }).success(function (data) {
-                $window.location.reload();
+                modalTip({
+                    tip: switchLang.switchLang('添加成功'),
+                    type: true
+                });
+                $scope.data = {
+                    file: null
+                };
+                $scope.listObj.integrationQuery={
+                    domain_name: null,
+                    domain_keyword: null,
+                    int_type: 1,
+                    file_name: null
+                }
             }).error(function () {
-                alert("上传失败！！！")
+                modalTip({
+                    tip: switchLang.switchLang('添加失败'),
+                    type: false
+                });
+
             });
         };
 

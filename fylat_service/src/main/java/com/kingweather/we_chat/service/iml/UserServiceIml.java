@@ -26,4 +26,9 @@ public class UserServiceIml implements UserService {
     public Map<String, Object> setAttention(String wechatid, String attentions,String type) {
         return userDao.setAttention(wechatid,attentions,type);
     }
+
+    @Override
+    public Map getIndexMessageLast(String wechatid, int page, String article_type_id) {
+        return userDao.getIndexMessageLast(wechatid,page,article_type_id);
+    }
 }

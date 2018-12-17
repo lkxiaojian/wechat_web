@@ -1,7 +1,7 @@
 #webpath  /home/huxq/NETDISK/web/
 ########################shell variable################################
 upload:
-  realpath: /home/iamges/articleTypeImages/
+  realpath: /home/images/articleTypeImages/
 liunx:
   ipAddress: 10.24.34.185
   username: huxq
@@ -10,6 +10,10 @@ liunx:
 ########################env config##################################
 server:
   port: 7903
+#  ssl:
+#    key-store: classpath:1620863_xiaochengxu.zhuanzhilink.com.pfx
+#    key-password: h3zPsMi9
+#    keyStoreType: PKCS12
 eureka:
   client:
     healthcheck:

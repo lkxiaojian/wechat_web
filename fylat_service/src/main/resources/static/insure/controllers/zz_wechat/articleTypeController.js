@@ -1,5 +1,5 @@
-app.controller('articleTypeManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'FileUploader', 'Upload', '$window',
-    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload, $window) {
+app.controller('articleTypeManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'FileUploader', 'Upload', '$window','modalTip',
+    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload, $window,modalTip) {
 
         $scope.data = {
             file_icon: null,
@@ -50,10 +50,31 @@ app.controller('articleTypeManageController', ['$scope', '$modal', '$http', 'fyl
                 url: url,
                 data: data
             }).success(function (data) {
-                $window.location.reload();
+                $scope.data = {
+                    file_icon: null,
+                    file_back: null
+
+                };
+
+
+                $scope.listObj. integrationQuery= {
+                    domain_name: null,
+                        domain_keyword: null,
+                        int_type: 2,
+                        file_name: null,
+                        artcicle_type_id: null
+                },
+                modalTip({
+                    tip: switchLang.switchLang('添加成功'),
+                    type: true
+                });
+
             }).error(function () {
                 $scope.mulImages = [];
-                alert("上传失败！！！")
+                modalTip({
+                    tip: switchLang.switchLang('添加失败'),
+                    type: true
+                });
             });
 
 

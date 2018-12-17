@@ -1,20 +1,22 @@
 package com.kingweather.we_chat.dao.iml;
 
+import com.kingweather.common.jdbc.JdbcUtil;
 import com.kingweather.common.util.DateUtil;
+import com.kingweather.common.util.Page;
+import com.kingweather.we_chat.constants.UuidUtils;
 import com.kingweather.we_chat.dao.ArticleDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class ArticleDaoIml implements ArticleDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
+    @Resource
+    private JdbcUtil jdbc;
 
     @Override
     public Map<String, Object> getArticleTrait(String articleId, int page) {
@@ -302,6 +304,16 @@ public class ArticleDaoIml implements ArticleDao {
 
             List<Map<String, Object>> gzArticleList = jdbcTemplate.queryForList(gzArticleSql);
 
+            if (gzArticleList == null) {
+                gzArticleList = new ArrayList<>();
+            }
+
+            resultMap.put("loveArticle", gzArticleList);
+        }
+
+        if (resultMap.get("loveArticle") == null) {
+
+            List<Map<String, Object>> gzArticleList = new ArrayList<>();
             resultMap.put("loveArticle", gzArticleList);
         }
 
@@ -335,9 +347,20 @@ public class ArticleDaoIml implements ArticleDao {
                     "," +
                     pageSize;
             List<Map<String, Object>> nogzArticleList = jdbcTemplate.queryForList(nogzArticleSql);
+            if (nogzArticleList == null) {
+                nogzArticleList = new ArrayList<>();
+            }
 
             resultMap.put("notLoveArticle", nogzArticleList);
         }
+
+
+        if (resultMap.get("notLoveArticle") == null) {
+            List<Map<String, Object>> gzArticleList = new ArrayList<>();
+            resultMap.put("notLoveArticle", gzArticleList);
+        }
+
+
         resultMap.put("code", 0);
         resultMap.put("message", "查询成功");
 
@@ -367,7 +390,7 @@ public class ArticleDaoIml implements ArticleDao {
                 key = keyword.toString();
             }
             String sysTime = DateUtil.getCurrentTimeString();
-            String insertSql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid) values(?,?,date_format(?,'%Y-%d-%m %H:%i:%s'),?,?)";
+            String insertSql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?)";
 
             int update = jdbcTemplate.update(insertSql, new Object[]{
                     name.toString(),
@@ -376,7 +399,7 @@ public class ArticleDaoIml implements ArticleDao {
                     path,
                     0
             });
-            if (update == 0) {
+            if (update == 1) {
                 return true;
             }
         }
@@ -391,7 +414,7 @@ public class ArticleDaoIml implements ArticleDao {
     }
 
     @Override
-    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String pathICon,String pathback) {
+    public boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String pathICon, String pathback) {
 
 
         String doNameSql = "select count(*) as count from zz_wechat.article_type where article_type_name=? and parentid=?";
@@ -402,23 +425,153 @@ public class ArticleDaoIml implements ArticleDao {
         //没有查找到
         if (countMap == null || countMap.get("count") == null || "0".equals(countMap.get("count").toString())) {
 
-                String sysTime = DateUtil.getCurrentTimeString();
-                //插入
-                String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back) values (?,?,date_format(?,'%Y-%d-%m %H:%i:%s'),?,?,?)";
-                int update = jdbcTemplate.update(sql, new Object[]{
-                        name,
-                        keyword,
-                        sysTime,
-                        pathICon,
-                        Integer.parseInt(artcicle_type_id),
-                        pathback
-                });
-                if (update == 1) {
-                    return true;
-                }
+            String sysTime = DateUtil.getCurrentTimeString();
+            //插入
+            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+            int update = jdbcTemplate.update(sql, new Object[]{
+                    name,
+                    keyword,
+                    sysTime,
+                    pathICon,
+                    Integer.parseInt(artcicle_type_id),
+                    pathback
+            });
+            if (update == 1) {
+                return true;
+            }
 
         }
         return false;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllAricleType(String article_type_id) {
+        String sql = "";
+
+        int parentid = 0;
+        if (article_type_id == null) {
+            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid !=?";
+        } else {
+            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid=?";
+            parentid = Integer.parseInt(article_type_id);
+        }
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
+                parentid
+        });
+
+
+        return maps;
+    }
+
+    /**
+     * 添加文章
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public Map<String, Object> addArticle(Map<String, Object> data) {
+        Map<String, Object> map = new HashMap<>();
+        Object article_type_id = data.get("article_type_id");
+        Object author = data.get("author");
+        Object source = data.get("source");
+        Object article_title = data.get("article_title");
+        Object article_keyword = data.get("article_keyword");
+        Object content_excerpt = data.get("content_excerpt");
+        Object share_initcount = data.get("share_initcount");
+        Object collect_count = data.get("collect_count");
+        Object content_manual = data.get("content_manual");
+
+        Object word_count = data.get("word_count");
+        Object details_txt = data.get("details_txt");
+        if (content_manual == null || article_type_id == null ||
+                author == null || source == null || article_title == null
+                || article_keyword == null || share_initcount == null || collect_count == null
+                || content_excerpt == null || word_count == null || details_txt == null) {
+            return getErrorMap();
+        }
+        try {
+
+
+            String article_id = UuidUtils.getUUid();
+            String create_time = DateUtil.getCurrentTimeString();
+            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt) " +
+                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?)";
+
+            int update = jdbcTemplate.update(sql, new Object[]{
+
+                    article_id,
+                    Integer.parseInt(article_type_id.toString()),
+                    article_title.toString(),
+                    article_keyword.toString(),
+                    author.toString(),
+                    source.toString(),
+                    create_time,
+                    Integer.parseInt(share_initcount.toString()),
+                    Integer.parseInt(collect_count.toString()),
+                    0,
+                    content_manual.toString(),
+                    Integer.parseInt(word_count.toString()),
+                    details_txt.toString()
+
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getErrorMapService();
+        }
+
+        map.put("code", 0);
+        map.put("message", "增加成功");
+        return map;
+    }
+
+    /**
+     * 查询文章
+     *
+     * @param conditions
+     * @return
+     */
+    @Override
+    public Map<String, Object> getAllArticle(Map<String, Object> conditions) {
+
+
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        Integer startNum = Integer.valueOf(conditions.get("startNum").toString());
+        Integer pageSize = Integer.valueOf(conditions.get("pageSize").toString());
+        String countSql = "select count(*) from zz_wechat.article ";
+
+        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword,create_time from zz_wechat.article ";
+        Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
+        map.put("code", 0);
+        map.put("message", "查询成功");
+        map.put("total", page.getTotalCount());
+        map.put("result", page.getResult());
+        return map;
+    }
+
+    /**
+     * 根据文章的id 删除
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public Map<String, Object> deletedById(String article_id) {
+        if (article_id == null || "".equals(article_id)) {
+            return getErrorMap();
+
+        }
+        String sql = "DELETE from zz_wechat.article  where article_id =?";
+        int update = jdbcTemplate.update(sql, new Object[]{
+                article_id
+        });
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "删除成功");
+
+        return map;
     }
 
 
