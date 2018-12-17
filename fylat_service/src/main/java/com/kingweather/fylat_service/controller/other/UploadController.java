@@ -34,7 +34,7 @@ public class UploadController {
      */
     @ResponseBody
     @RequestMapping(value = "orderData/fileUpload", method = RequestMethod.POST)
-    public Map<String, Object> add(@RequestParam MultipartFile file, HttpServletRequest req) {
+    public Map<String, Object> add(@RequestParam("file") MultipartFile file, HttpServletRequest req) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file.getOriginalFilename();
         File f = new File(realpath + savePath);

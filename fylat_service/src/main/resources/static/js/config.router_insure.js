@@ -21,6 +21,7 @@ angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function (
                             'vendor/My97DatePicker/WdatePicker.js',
                             'insure/controllers/common_insure.js',
 
+
                         ]);
                     }]
             }
@@ -75,10 +76,13 @@ angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function (
                 deps: ['$ocLazyLoad',
                     function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
+                            'vendor/jquery/wangEditor.js',
                             'insure/controllers/zz_wechat/addArticleManageController.js',
                             'vendor/websocket/sockjs.min.js',
                             'vendor/websocket/stomp.js',
-                            "ui.select"
+                            'ui.select',
+                            'common/directives/custom_directives.js'
+
                         ]);
                     }]
             }

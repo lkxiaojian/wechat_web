@@ -21,4 +21,10 @@ public interface ArticleDao {
     boolean insertArticleType(String name, String keyword, String artcicle_type_id, String num, String path,String pathBack);
 
     List<Map<String,Object>> getAllAricleType(String article_type_id);
+
+    Map<String,Object> addArticle(Map<String, Object> data);
+
+    Map<String,Object> getAllArticle(Map<String, Object> conditions);
+
+    Map<String,Object> deletedById(String article_id);
 }

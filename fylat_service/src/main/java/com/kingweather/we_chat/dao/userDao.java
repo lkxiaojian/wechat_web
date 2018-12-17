@@ -12,4 +12,6 @@ public interface userDao {
     Map<String,Object> getIndexMessage(String wechatid,int page);
 
     Map<String,Object> setAttention(String wechatid, String attentions,String type);
+
+    Map getIndexMessageLast(String wechatid, int page, String article_type_id);
 }

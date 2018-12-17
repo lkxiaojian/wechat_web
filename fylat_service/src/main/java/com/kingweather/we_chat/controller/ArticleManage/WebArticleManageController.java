@@ -15,10 +15,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class WebArticleManageController extends BaseController {
@@ -28,7 +25,6 @@ public class WebArticleManageController extends BaseController {
     private ArticleService articleService;
     @Value("${upload.realpath}")
     private String realpath;
-
 
 
     /**
@@ -62,7 +58,7 @@ public class WebArticleManageController extends BaseController {
                 map.put("message", "传参错误");
                 return map;
             }
-            String path = realpath.replaceAll("home","resources") + savePath;
+            String path = realpath.replaceAll("home", "resources") + savePath;
             if (file == null) {
                 path = "";
             }
@@ -98,7 +94,6 @@ public class WebArticleManageController extends BaseController {
     }
 
 
-
     @RequestMapping(value = "article/getAllAricleType")
     public List<Map<String, Object>> getAllAricleType(String article_type_id) {
 
@@ -115,7 +110,7 @@ public class WebArticleManageController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "article/addArticleType", method = RequestMethod.POST)
-    public Map<String, Object> addArticleType(@RequestParam("file[0]") MultipartFile  file1, @RequestParam("file[1]") MultipartFile  file2,HttpServletRequest req) {
+    public Map<String, Object> addArticleType(@RequestParam("file[0]") MultipartFile file1, @RequestParam("file[1]") MultipartFile file2, HttpServletRequest req) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         Object objType = req.getParameter("int_type");
         if (objType == null) {
@@ -128,17 +123,17 @@ public class WebArticleManageController extends BaseController {
         String savePathIcon = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file1.getOriginalFilename();
         File fICon = new File(realpath + savePathIcon);
         String savePathBack = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file2.getOriginalFilename();
-        File fBack= new File(realpath + savePathBack);
+        File fBack = new File(realpath + savePathBack);
         int type = Integer.parseInt(objType.toString());
-     if (type == 2) {
+        if (type == 2) {
             //文章类型
             String name = req.getParameter("name");
             String keyword = req.getParameter("keyword");
             String artcicle_type_id = req.getParameter("artcicle_type_id");
             String num = req.getParameter("num_id");
-            String pathICon = realpath.replaceAll("home","resources") + savePathIcon;
-            String pathBack = realpath.replaceAll("home","resources") + savePathBack;
-            isFlag = articleService.insertArticleType(name, keyword, artcicle_type_id, num,pathICon,pathBack);
+            String pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
+            String pathBack = realpath.replaceAll("home", "resources") + savePathBack;
+            isFlag = articleService.insertArticleType(name, keyword, artcicle_type_id, num, pathICon, pathBack);
         }
 
         if (isFlag) {
@@ -158,8 +153,87 @@ public class WebArticleManageController extends BaseController {
     }
 
 
+    /**
+     * 添加文章
+     *
+     * @return
+     */
+    @RequestMapping(value = "article/addArticle", method = RequestMethod.POST)
+    public Map<String, Object> addArticle(@RequestBody Map<String, Object> data) {
+
+        Map<String, Object> maps = articleService.addArticle(data);
+        return maps;
+    }
 
 
+    /**
+     * 上传图片-领域信息
+     *
+     * @param file
+     * @param req
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "article/articleImageUpload", method = RequestMethod.POST)
+    public Map<String, Object> articleImageUpload(@RequestParam("file") MultipartFile file, HttpServletRequest req) {
+
+
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file.getOriginalFilename();
+
+        String path = realpath + savePath;
+        File f = new File(path);
+
+        try {
+            FileUtils.copyInputStreamToFile(file.getInputStream(), f);
+            map.put("code",0);
+            List<String> pathList=new ArrayList<>();
+            String s = path.replaceAll("home", "resources");
+            pathList.add("http://106.2.11.94:7902"+s);
+            map.put("data", pathList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+
+    }
+
+
+
+    /**
+     * 查询组列表
+     */
+    @RequestMapping(value="/article/query",method=RequestMethod.GET)
+    public  Map<String, Object> select(){
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+            int startNum = Integer.parseInt(request.getParameter("pageNumber"));
+            int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+//            String gName = request.getParameter("gName");
+
+            Map<String, Object> conditions = new HashMap<String, Object>();
+            conditions.put("startNum", startNum);
+            conditions.put("pageSize", pageSize);
+
+            map = articleService.getAllArticle(conditions);
+
+
+        return map;
+    }
+
+
+
+    /**
+     * 文章删除
+     */
+    @RequestMapping(value="/article/deletedById",method=RequestMethod.GET)
+    public  Map<String, Object> deletedById(String article_id){
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map = articleService.deletedById(article_id);
+
+
+        return map;
+    }
 
 
 

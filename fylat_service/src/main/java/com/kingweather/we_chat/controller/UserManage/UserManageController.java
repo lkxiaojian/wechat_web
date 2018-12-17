@@ -8,10 +8,12 @@ import com.kingweather.we_chat.constants.HttpRequest;
 import com.kingweather.we_chat.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +22,7 @@ public class UserManageController extends BaseController {
     Logger log = LoggerFactory.getLogger(DataManageController.class);
     @Resource
     private UserService userService;
+
 
     /**
      * 用户注册
@@ -47,6 +50,25 @@ public class UserManageController extends BaseController {
         map = userService.getIndexMessage(wechatid, page);
         return map;
     }
+
+
+
+
+
+    /**
+     * 获取类型剩余多少片文章
+     *
+     * @return
+     */
+    @RequestMapping(value = "/user/getIndexMessageLast/rest")
+    public Map<String, Object> getIndexMessageLast(String wechatid, int page,String article_type_id) {
+        Map map = new HashMap();
+
+        map = userService.getIndexMessageLast(wechatid, page,article_type_id);
+        return map;
+    }
+
+
 
 
     /**

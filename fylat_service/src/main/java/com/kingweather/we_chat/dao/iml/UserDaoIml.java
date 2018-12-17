@@ -81,7 +81,7 @@ public class UserDaoIml implements userDao {
         if (wechatid == null) {
             return getErrorMap();
         }
-        List<List> list = new ArrayList();
+        List<Object> list = new ArrayList();
         //默认每页显示10页
         int pageSize = 10;
         //用户关注类型的文章
@@ -109,7 +109,30 @@ public class UserDaoIml implements userDao {
         if (count > 0 && pageSize * page <= count || count < 10) {
 
 
-            String loveId = "SELECT a.article_type_id from zz_wechat.article_type a,zz_wechat.user_articletype b " +
+            String sqld = "SELECT COUNT(*)-1 AS num_prods,c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name \n" +
+                    "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
+                    "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id " +
+                    "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
+                    user_id +
+                    "' AND type_id='1') " +
+                    "AND a.wechat_id='" +
+                    wechatid +
+                    "' GROUP BY d.article_type_id ORDER BY c.create_time LIMIT " +
+                    page * pageSize +
+                    "," +
+                    pageSize +
+                    "";
+
+            List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sqld);
+
+
+            list.addAll(mapList);
+
+
+
+
+
+      /*      String loveId = "SELECT a.article_type_id from zz_wechat.article_type a,zz_wechat.user_articletype b " +
                     "WHERE a.article_type_id=b.article_type_id AND b.user_id='" +
                     user_id +
                     "' AND a.parentid!=0 LIMIT " +
@@ -136,7 +159,7 @@ public class UserDaoIml implements userDao {
 
                 }
             }
-
+*/
 
         }
         //查询的不是关注的文章
@@ -147,22 +170,22 @@ public class UserDaoIml implements userDao {
             }
 
 
-//            String isNoLoveSql = "SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name " +
-//                    "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
-//                    "WHERE a.user_id=b.user_id AND b.article_type_id!=d.article_type_id AND c.article_type_id=d.article_type_id AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" + user_id +
-//                    "' AND type_id='1'" +
-//                    ") AND a.wechat_id=? GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT ?,?";
-//
-//            List<Map<String, Object>> mapList = jdbcTemplate.queryForList(isNoLoveSql, new Object[]{
-//                    wechatid,
-//                    count * pageSize,
-//                    pageSize
-//
-//            });
-//            list.addAll(mapList);
+            String isNoLoveSql = "SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name " +
+                    "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
+                    "WHERE a.user_id=b.user_id AND b.article_type_id!=d.article_type_id AND c.article_type_id=d.article_type_id AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" + user_id +
+                    "' AND type_id='1'" +
+                    ") AND a.wechat_id=? GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT ?,?";
+
+            List<Map<String, Object>> nomapList = jdbcTemplate.queryForList(isNoLoveSql, new Object[]{
+                    wechatid,
+                    count * pageSize,
+                    pageSize
+
+            });
+            list.addAll(nomapList);
 
 
-            String noLoveId = "SELECT article_type_id from zz_wechat.article_type WHERE article_type_id NOT in(SELECT article_type_id from user_articletype where user_id ='" +
+        /*    String noLoveId = "SELECT article_type_id from zz_wechat.article_type WHERE article_type_id NOT in(SELECT article_type_id from user_articletype where user_id ='" +
                     user_id +
                     "') LIMIT " +
                     count * pageSize +
@@ -184,7 +207,7 @@ public class UserDaoIml implements userDao {
                         list.add(mapList);
                     }
                 }
-            }
+            }*/
 
 
         }
@@ -237,6 +260,80 @@ public class UserDaoIml implements userDao {
         map.put("code", 0);
         map.put("message", "订阅成功");
         return map;
+    }
+
+    @Override
+    public Map getIndexMessageLast(String wechatid, int page, String article_type_id) {
+
+        if (wechatid == null || "".equals(wechatid)) {
+            return getErrorMap();
+        }
+
+        if (article_type_id == null || "".equals(article_type_id)) {
+            return getErrorMap();
+        }
+        try {
+            String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
+            Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
+            String user_id = userMap.get("user_id").toString();
+
+            String sqlCount = "SELECT count(*) as count FROM " +
+                    " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id \n" +
+                    " AND a.article_type_id='" +
+                    Integer.parseInt(article_type_id) +
+                    "' " +
+                    "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
+                    user_id +
+                    "' AND type_id='1') " +
+                    "ORDER BY b.create_time DESC";
+            Map<String, Object> mapCount = jdbcTemplate.queryForMap(sqlCount);
+
+
+            int count = 0;
+            Object objCount = mapCount.get("count");
+            if (objCount != null) {
+                count = Integer.parseInt(objCount.toString());
+            }
+
+            int pageSize = 10;
+
+
+            String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
+                    " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id  " +
+                    " AND b.article_type_id='" +
+                    Integer.parseInt(article_type_id) +
+                    "' AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
+                    user_id +
+                    "' AND type_id='1') " +
+                    "ORDER BY b.create_time DESC LIMIT " +
+                    page * pageSize +
+                    "," +
+                    pageSize;
+
+            Map<String, Object> mapresult = new HashMap<>();
+            List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
+
+
+            int num = count - (page + 1) * pageSize - 1;
+            if (num < 0) {
+                num = 0;
+            }
+
+            mapresult.put("count", num);
+            mapresult.put("article", mapList);
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "查询成功");
+            map.put("result", mapresult);
+            return map;
+
+
+        } catch (Exception e) {
+            return getErrorMapService();
+
+        }
+
+
     }
 
 

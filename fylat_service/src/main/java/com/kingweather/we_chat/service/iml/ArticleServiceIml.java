@@ -57,4 +57,19 @@ public class ArticleServiceIml implements ArticleService {
     public List<Map<String, Object>> getAllAricleType(String article_type_id) {
         return articleDao.getAllAricleType(article_type_id);
     }
+
+    @Override
+    public Map<String, Object> addArticle(Map<String, Object> data) {
+        return articleDao.addArticle(data);
+    }
+
+    @Override
+    public Map<String, Object> getAllArticle(Map<String, Object> conditions) {
+        return articleDao.getAllArticle(conditions);
+    }
+
+    @Override
+    public Map<String, Object> deletedById(String article_id) {
+        return articleDao.deletedById( article_id);
+    }
 }

@@ -23,8 +23,7 @@
                 <form class="form-horizontal m-b-md" id="add_integration"
                       name="addIntegrationFormValidate" novalidate>
 
-
-
+                    <!-- 领域  类型-->
                     <div class="form-group">
                         <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
                                 class="text-danger m-r-xs font-bold as-star"></span>领域</label>
@@ -46,7 +45,7 @@
 
                         <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
                                 class="text-danger m-r-xs font-bold as-star">*</span>类型</label>
-                        <div class="col-lg-4 col-md-4 col-sm-4" >
+                        <div class="col-lg-4 col-md-4 col-sm-4">
                             <ui-select ng-model="alistObj.regionType.selected"
                                        on-select="listObj.getRegionTypeSelect($item)"
                                        theme="bootstrap">
@@ -60,58 +59,110 @@
                                     <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
+                            <div class="error"
+                                 ng-show="!listObj.regionType.selected">
+                                <small class="error a-red">
+                                    请选择文章类型
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 作者 来源-->
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>作者</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="text" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.author" value="请输入作者"
+                                   required/>
+                            <div class="error"
+                                 ng-show="listObj.errorMessage.author">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.author">
+                                    请输入作者
+                                </small>
+                            </div>
+                        </div>
+
+                        <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>来源</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="text" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.source" value="请输入文章来源"
+                                   required/>
+                            <div class="error"
+                                 ng-show="listObj.errorMessage.source">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.source">
+                                    请输入文章来源
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 分享基数 收藏基数-->
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star"></span>分享基数</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="number" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.share_initcount" value="请输入分享基数"
+                                   required/>
+                            <!--  <div class="error"
+                                   ng-show="listObj.errorMessage.author">
+                                  <small class="error a-red">
+                                      请输入作者
+                                  </small>
+                              </div>-->
+                        </div>
+
+                        <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star"></span>收藏基数</label>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="number" class="form-control" name="itName"
+                                   ng-model="listObj.integrationQuery.collect_count" value="请输入收藏基数"
+                                   required/>
+                            <!-- <div class="error"
+                                  ng-show="listObj.errorMessage.source">
+                                 <small class="error a-red">
+                                     请输入文章来源
+                                 </small>
+                             </div>-->
                         </div>
                     </div>
 
 
                     <div class="form-group">
                         <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
-                                class="text-danger m-r-xs font-bold as-star">*</span>进程名</label>
+                                class="text-danger m-r-xs font-bold as-star">*</span>文章标题</label>
                         <div class="col-lg-10 col-md-10 col-sm-10">
                             <input type="text" class="form-control" name="itName"
-                                   ng-model="addIntegrationObj.addData.int_name" value="请输入进程名称"
+                                   ng-model="listObj.integrationQuery.article_title" value="请输入文章标题"
                                    ng-maxlength="50" id="policy_name" required/>
                             <div class="error"
-                                 ng-show="addIntegrationFormValidate.itName.$dirty && addIntegrationFormValidate.itName.$invalid">
-                                <small class="error a-red"
-                                       ng-show="addIntegrationFormValidate.itName.$error.required">
-                                    请输入进程名
+                                 ng-show="listObj.errorMessage.article_title">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.article_title">
+                                    请输入文章标题
                                 </small>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
-                                class="text-danger m-r-xs font-bold as-star">*</span>版本</label>
+                                class="text-danger m-r-xs font-bold as-star">*</span>关键字</label>
                         <div class="col-lg-10 col-md-10 col-sm-10">
                             <input type="text" class="form-control" name="itVersion"
-                                   ng-maxlength="50" id="policy_code" value="请输入版本"
-                                   ng-disabled="addIntegrationObj.param =='update'"
-                                   ng-model="addIntegrationObj.addData.int_version" required/>
-                            <div class="error"
-                                 ng-show="addIntegrationFormValidate.itVersion.$dirty && addIntegrationFormValidate.itVersion.$invalid">
-                                <small class="error a-red"
-                                       ng-show="addIntegrationFormValidate.itVersion.$error.required">
-                                    请输入版本
+                                   ng-maxlength="50" id="policy_code" value="请输入关键字"
+                                   ng-model="listObj.integrationQuery.article_keyword" required/>
+
+                            <!--   ng-show="addIntegrationFormValidate.itVersion.$dirty && addIntegrationFormValidate.itVersion.$invalid"
+
+                               ng-show="addIntegrationFormValidate.itVersion.$error.required"-->
+                            <div class="error" ng-show="listObj.errorMessage.article_keyword">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.article_keyword">
+                                    请输入关键字
                                 </small>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
-                                class="text-danger m-r-xs font-bold as-star">*</span>产品</label>
-                        <div class="col-lg-10 col-md-10 col-sm-10">
-                            <ui-select ng-change="listObj.getTypeSelect(addIntegrationObj.addData.int_project_type)"
-
-                                       ng-model="addIntegrationObj.addData.int_project_type" theme="bootstrap">
-                                <ui-select-match value="请选择产品">
-                                    {{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices group-by="'group'"
-                                                   repeat="item in listObj.projectData | filter: $select.search">
-                                    <span ng-bind-html="item.name | highlight: $select.search"></span>
-                                </ui-select-choices>
-                            </ui-select>
                         </div>
                     </div>
 
@@ -120,141 +171,86 @@
 
                     <div class="form-group">
                         <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
-                                class="text-danger m-r-xs font-bold as-star"></span>版本说明</label>
+                                class="text-danger m-r-xs font-bold as-star">*</span>文章摘要</label>
                         <div class="col-lg-10 col-md-10 col-sm-10">
-				<textarea class="form-control" rows="3"
-                          ng-model="addIntegrationObj.addData.int_version_explain" value="请输入版本说明"
-                          name="special_appointment" id="special_appointment"></textarea>
+			   	           <textarea class="form-control" rows="3"
+                                     ng-model="listObj.integrationQuery.content_excerpt" value="请输入文章摘要"
+                                     name="special_appointment" id="special_appointment"></textarea>
+
+
+                            <div class="error" ng-show="listObj.errorMessage.content_excerpt">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.content_excerpt">
+                                    请输入文章摘要
+                                </small>
+                            </div>
                         </div>
+
                     </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><span
+                                class="text-danger m-r-xs font-bold as-star">*</span>文章内容</label>
+                        <div class="col-sm-10">
+
+                            <div id="weEditor"  ng-model="listObj.integrationQuery.content">
+
+                            </div>
+
+                            <div class="error" ng-show="listObj.errorMessage.content">
+                                <small class="error a-red" ng-show="!listObj.integrationQuery.content">
+                                    请输入文章内容
+                                </small>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+
+                            <!-- 富文本框 -->
+
+
+
 
 
                 </form>
             </div>
             <div class="modal-footer">
-                <span class="_color_red pull-left">{{error_msg}}</span>
+                <!--<span class="_color_red pull-left">{{error_msg}}</span>-->
                 <button type="button" class="btn btn-default btn-rounded"
-                        ng-disabled="addIntegrationFormValidate.$invalid" ng-click="steps.step2=true">下一步
+                        ng-click="listObj.addMessageCommit()">提交
                 </button>
             </div>
         </tab>
         <!--第二步：文章列表-->
-        <tab disable="addIntegrationObj.param === 'add' && !steps.step2" active="steps.step2" select="steps.percent=100">
+        <tab disable="addIntegrationObj.param === 'add' && !steps.step2" active="steps.step2"
+             select="steps.percent=100">
             <tab-heading>
                 文章列表
             </tab-heading>
             <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
             <div class="modal-body">
-                <div class="hbox hbox-auto-xs hbox-auto-sm" ng-controller="FileUploadCtrl" nv-file-drop=""
-                     uploader="uploader" filters="queueLimit, customFilter">
-                    <div class="col w-lg bg-light b-r bg-auto">
-                        <div class="wrapper-md dker b-b">
-                            <h5 class="m-n font-bold">文件选择区</h5>
-                        </div>
-                        <div class="wrapper-md">
-                            <div ng-show="uploader.isHTML5" class="m-b-md">
-                                <!-- 3. nv-file-over uploader="link" over-class="className" -->
-                                <div class="b-a b-2x b-dashed wrapper-lg bg-white text-center m-b" nv-file-over=""
-                                     over-class="b-info" uploader="uploader">
-                                    将文件托至此
-                                </div>
 
-                            </div>
-
-                            <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
-                            <p>手动添加</p>
-                            <input type="file" nv-file-select="" uploader="uploader" multiple/>
-
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="wrapper-md bg-light dk b-b">
-                            <span class="pull-right m-t-xs">文件个数: <b
-                                    class="badge bg-info">{{ uploader.queue.length }}</b></span>
-                            <h5 class="m-n font-bold">上传文件区</h5>
-                        </div>
-                        <div class="wrapper-md">
-                            <table class="table bg-white-only b-a">
-                                <thead>
-                                <tr>
-                                    <th width="50%">文件名</th>
-                                    <th ng-show="uploader.isHTML5">大小</th>
-                                    <th ng-show="uploader.isHTML5">进度</th>
-                                    <th>状态</th>
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="item in uploader.queue">
-                                    <td width="50%"><strong>{{ item.file.name }}</strong></td>
-                                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:3 }} MB
-                                    </td>
-                                    <td ng-show="uploader.isHTML5">
-                                        <div class="progress progress-sm m-b-none m-t-xs">
-                                            <div class="progress-bar bg-info" role="progressbar"
-                                                 ng-style="{ 'width': item.progress + '%' }"></div>
-                                        </div>
-                                    </td>
-                                    <td class="text-center">
-                                        <span ng-show="item.isSuccess" class="text-success"><i
-                                                class="glyphicon glyphicon-ok"></i></span>
-                                        <span ng-show="item.isCancel" class="text-warning"><i
-                                                class="glyphicon glyphicon-ban-circle"></i></span>
-                                        <span ng-show="item.isError" class="text-danger"><i
-                                                class="glyphicon glyphicon-remove"></i></span>
-                                    </td>
-                                    <td nowrap>
-                                        <button type="button" class="btn btn-default btn-xs" ng-click="item.upload()"
-                                                ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                                            上传
-                                        </button>
-                                        <button type="button" class="btn btn-default btn-xs" ng-click="item.cancel()"
-                                                ng-disabled="!item.isUploading">
-                                            取消
-                                        </button>
-                                        <button type="button" class="btn btn-default btn-xs" ng-click="item.remove()">
-                                            移除
-                                        </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div>
-                                <div>
-                                    <p>总上传进度:</p>
-                                    <div class="progress bg-light dker" style="">
-                                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
-                                             ng-style="{ 'width': uploader.progress + '%' }"></div>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-addon btn-success" ng-click="uploader.uploadAll()"
-                                        ng-disabled="!uploader.getNotUploadedItems().length">
-                                    <i class="fa fa-arrow-circle-o-up"></i> 一键上传
-                                </button>
-                                <button type="button" class="btn btn-addon btn-warning" ng-click="uploader.cancelAll()"
-                                        ng-disabled="!uploader.isUploading">
-                                    <i class="fa fa-ban"></i> 一键取消
-                                </button>
-                                <button type="button" class="btn btn-addon btn-danger" ng-click="uploader.clearQueue()"
-                                        ng-disabled="!uploader.queue.length">
-                                    <i class="fa fa-trash-o"></i> 一键移除
-                                </button>
-                            </div>
+                <div style="padding: 0px 0px;">
+                    <div>
+                        <!--<div class="col-title">用户列表</div>-->
+                        <div style="background: #fff;">
+                            <table table-directive tableoption="getAllArticle" id="userrmgtable" instance="tdInstance"></table>
                         </div>
                     </div>
                 </div>
-
-
             </div>
-            <div class="modal-footer">
-                <span class="_color_red pull-left">{{error_msg}}</span>
-                <button type="button" class="btn btn-default btn-rounded"
-                        ng-click="steps.step1=true">上一步
-                </button>
-                <button type="button" class="btn btn-default btn-rounded"
-                        ng-click="steps.step3=true&&addIntegrationObj.getTableForSrc()">下一步
-                </button>
-            </div>
+            <!--<div class="modal-footer">-->
+                <!--<span class="_color_red pull-left">{{error_msg}}</span>-->
+                <!--<button type="button" class="btn btn-default btn-rounded"-->
+                        <!--ng-click="steps.step1=true">上一步-->
+                <!--</button>-->
+                <!--<button type="button" class="btn btn-default btn-rounded"-->
+                        <!--ng-click="steps.step3=true&&addIntegrationObj.getTableForSrc()">下一步-->
+                <!--</button>-->
+            <!--</div>-->
 
         </tab>
 
