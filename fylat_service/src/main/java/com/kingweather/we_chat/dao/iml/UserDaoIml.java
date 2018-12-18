@@ -78,7 +78,7 @@ public class UserDaoIml implements userDao {
     @Override
     public Map<String, Object> getIndexMessage(String wechatid, int page) {
 
-        if (wechatid == null) {
+        if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
         List<Object> list = new ArrayList();
@@ -104,7 +104,11 @@ public class UserDaoIml implements userDao {
         }
         String sql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(sql);
-        String user_id = userMap.get("user_id").toString();
+        Object objId = userMap.get("user_id");
+        if ( objId== null) {
+            return getErrorMap();
+        }
+        String user_id = objId.toString();
         //有关注的文章且 查询的都是关注的文章
         if (count > 0 && pageSize * page <= count || count < 10) {
 
@@ -114,7 +118,7 @@ public class UserDaoIml implements userDao {
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id " +
                     "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
                     user_id +
-                    "' AND type_id='1') " +
+                    "' AND type_id ='1') " +
                     "AND a.wechat_id='" +
                     wechatid +
                     "' GROUP BY d.article_type_id ORDER BY c.create_time LIMIT " +
@@ -170,18 +174,38 @@ public class UserDaoIml implements userDao {
             }
 
 
-            String isNoLoveSql = "SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name " +
-                    "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
-                    "WHERE a.user_id=b.user_id AND b.article_type_id!=d.article_type_id AND c.article_type_id=d.article_type_id AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" + user_id +
-                    "' AND type_id='1'" +
-                    ") AND a.wechat_id=? GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT ?,?";
+//            String isNoLoveSql = "SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name " +
+//                    "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
+//                    "WHERE a.user_id=b.user_id AND b.article_type_id!=d.article_type_id AND c.article_type_id=d.article_type_id AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" + user_id +
+//                    "' AND type_id ='1'" +
+//                    ") AND a.wechat_id=? GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT ?,?";
 
-            List<Map<String, Object>> nomapList = jdbcTemplate.queryForList(isNoLoveSql, new Object[]{
-                    wechatid,
-                    count * pageSize,
-                    pageSize
 
-            });
+            String isNoLoveSql="SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name FROM \n" +
+                    "zz_wechat.article c,zz_wechat.article_type d WHERE d.article_type_id=c.article_type_id  AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+                    user_id +
+                    "')  " +
+                    "AND d.parentid!='0' AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
+                    user_id +
+                    "' AND type_id ='1') " +
+                    "GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT " +
+                    count * pageSize+
+                    "," +
+                    pageSize +
+                    "  ";
+
+//            List<Map<String, Object>> nomapList = jdbcTemplate.queryForList(isNoLoveSql, new Object[]{
+//                    user_id,
+//                    0,
+//                    user_id,
+//                    1,
+//                    count * pageSize,
+//                    pageSize
+//
+//            });
+
+            List<Map<String, Object>> nomapList =  jdbcTemplate.queryForList(isNoLoveSql);
+
             list.addAll(nomapList);
 
 
@@ -232,14 +256,18 @@ public class UserDaoIml implements userDao {
      */
     @Override
     public Map<String, Object> setAttention(String wechatid, String attentions, String type) {
-        if (wechatid.isEmpty() || attentions.isEmpty()) {
+        if (wechatid == null || wechatid.isEmpty() || attentions == null || attentions.isEmpty()) {
             return getErrorMap();
         }
         try {
             String[] attentionList = attentions.split(",");
             String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
             Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
-            String user_id = userMap.get("user_id").toString();
+            Object objId = userMap.get("user_id");
+            if ( objId== null) {
+                return getErrorMap();
+            }
+            String user_id = objId.toString();
 
             for (int i = 0; i < attentionList.length; i++) {
                 String insertsql = "insert into zz_wechat.user_articletype (user_id,article_type_id) values(?,?)";
@@ -275,7 +303,11 @@ public class UserDaoIml implements userDao {
         try {
             String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
             Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
-            String user_id = userMap.get("user_id").toString();
+            Object objId = userMap.get("user_id");
+            if ( objId== null) {
+                return getErrorMap();
+            }
+            String user_id = objId.toString();
 
             String sqlCount = "SELECT count(*) as count FROM " +
                     " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id \n" +

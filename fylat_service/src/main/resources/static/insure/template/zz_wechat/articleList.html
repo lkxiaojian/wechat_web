@@ -1,0 +1,42 @@
+<!--头部导航信息-->
+<div class="modal-header">
+    <div class="btn pull-right m-t-n-xs m-l-n list-icon">
+        <a ui-sref="app.insure.integration_processManage"> <i
+                class="fa fa-mail-reply-all"></i>
+        </a>
+    </div>
+    <div style="margin: 0px 15px">
+        <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
+    </div>
+</div>
+
+<!--内容区-->
+<div class="wrapper-md">
+
+
+
+
+
+
+        <!--<tab disable="addIntegrationObj.param === 'add' && !steps.step2" active="steps.step2"-->
+                       <!--select="steps.percent=100">-->
+        <!--<tab-heading>-->
+            <!--文章列表-->
+        <!--</tab-heading>-->
+        <!--<progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>-->
+        <!--<div>-->
+
+        <!--</div>-->
+    <!--</tab>-->
+
+
+
+    <table table-directive tableoption="testOption" id="testArticle" instance="testInstance" style="height: 286px"></table>
+
+</div>
+
+
+<script type="text/ng-template" id="myModalContent.html">
+    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
+</script>
+
