@@ -504,7 +504,7 @@ public class ArticleDaoIml implements ArticleDao {
         Object word_count = data.get("word_count");
         Object details_txt = data.get("details_txt");
         if (content_manual == null || article_type_id == null ||
-                author == null || source == null || article_title == null
+                 source == null || article_title == null
                 || article_keyword == null || share_initcount == null || collect_count == null
                 || content_excerpt == null || word_count == null || details_txt == null) {
             return getErrorMap();

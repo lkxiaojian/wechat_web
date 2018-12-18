@@ -1,10 +1,10 @@
-app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
-    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
+app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile','$timeout',
+    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile,$timeout) {
         var editor;
-        window.onload = function () {
-            var E = window.wangEditor;
+/*        window.onload = function () {
+            var E = $window.wangEditor;
             editor = new E('#weEditor')
-         /*   editor.customConfig.uploadFileName = 'file'
+         /!*   editor.customConfig.uploadFileName = 'file'
             editor.customConfig.uploadImgHeaders = {
                 'Accept': 'multipart/form-data; charset=utf-8'
             }
@@ -59,10 +59,10 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
 
                     // result 必须是一个 JSON 格式字符串！！！否则报错
                 }
-            }*/
+            }*!/
             editor.create()
 
-        }
+        }*/
 
 
         $scope.listObj = {
@@ -132,26 +132,20 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
 
                 });
             },
-
             addMessageCommit: function () {
-
-
                 $scope.listObj.errorMessage.author = false;
                 $scope.listObj.errorMessage.source = false;
                 $scope.listObj.errorMessage.article_title = false;
                 $scope.listObj.errorMessage.article_keyword = false;
                 $scope.listObj.errorMessage.content_excerpt = false;
-
                 $scope.listObj.errorMessage.content = false
-
-
                 if (!$scope.listObj.regionType.selected) {
                     return;
                 }
-                if (!$scope.listObj.integrationQuery.author) {
-                    $scope.listObj.errorMessage.author = true;
-                    return;
-                }
+                // if (!$scope.listObj.integrationQuery.author) {
+                //     $scope.listObj.errorMessage.author = true;
+                //     return;
+                // }
                 if (!$scope.listObj.integrationQuery.source) {
                     $scope.listObj.errorMessage.source = true;
                     return;
@@ -170,15 +164,10 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                     $scope.listObj.errorMessage.content_excerpt = true;
                     return;
                 }
-
-
                 // 获取编辑器区域完整html代码
                 var html = editor.txt.html();
-
                 // 获取编辑器纯文本内容
                 var text = editor.txt.text();
-
-
                 if (text == null || text.length == 0) {
                     $scope.listObj.errorMessage.content = true;
                     return;
@@ -218,7 +207,6 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                                 collect_count: 0,//收藏基数
                                 content: null,//文章内容
                         }
-
                         $scope.listObj. errorMessage= {
                             author: false,//作者
                                 source: false,//来源
@@ -226,19 +214,13 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                                 article_keyword: false,//关键字
                                 content_excerpt: false,//文章摘要
                                 content: false
-
                         }
-
-
-
                     } else {
                         modalTip({
                             tip: switchLang.switchLang('添加失败'),
                             type: false
                         });
                     }
-
-
                 }).error(function (data, status, headers, config) {
                     console.log(data)
                     modalTip({
@@ -256,8 +238,11 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
 
         $scope.listObj.postRegion();
         $scope.listObj.postDownload();
-;
-
+        $timeout(function () {
+            var E = $window.wangEditor;
+            editor = new E('#weEditor');
+            editor.create();
+        },0);
     }])
 ;
 
