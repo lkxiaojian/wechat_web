@@ -3,7 +3,7 @@
 /**
  * Config for the router
  */
-angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+angular.module('app').config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     $stateProvider
         .state('app.insure', {
             url: '/insure',
@@ -20,8 +20,6 @@ angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function (
                             'css/insure/fylat_style.css',
                             'vendor/My97DatePicker/WdatePicker.js',
                             'insure/controllers/common_insure.js',
-
-
                         ]);
                     }]
             }
@@ -39,7 +37,7 @@ angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function (
                             'vendor/angular/angular-file-upload/ng-file-upload-shim.js',
                             'insure/controllers/zz_wechat/domainManageController.js',
                             'ui.select',
-                            'ngFileUpload'
+                            'ngFileUpload',
 
                         ]);
                     }]
@@ -59,8 +57,6 @@ angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function (
                             'insure/controllers/zz_wechat/articleTypeController.js',
                             'ui.select',
                             'ngFileUpload'
-
-
                         ]);
                     }]
             }
@@ -77,16 +73,33 @@ angular.module('app').config(['$stateProvider' ,'$urlRouterProvider', function (
                     function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
                             'vendor/jquery/wangEditor.js',
+                            'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/addArticleManageController.js',
-                            'vendor/websocket/sockjs.min.js',
-                            'vendor/websocket/stomp.js',
-                            'ui.select',
-                            'common/directives/custom_directives.js'
-
+                            'ui.select'
                         ]);
                     }]
             }
         })
+
+
+        .state('app.insure.article_list', {
+            url: '/articleList',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/articleList.html',
+            pageTitle: '文章列表',
+            controller: 'articleListManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/articleListManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+
         .state('app.insure.fileUpload', {
             url: '/fileUpload',
             templateUrl: 'insure/template/fylat/fileUpload.html',

@@ -20,7 +20,7 @@ public class ArticleDaoIml implements ArticleDao {
 
     @Override
     public Map<String, Object> getArticleTrait(String articleId, int page) {
-        if (articleId.isEmpty()) {
+        if (articleId == null || articleId.isEmpty()) {
             return getErrorMap();
         }
         int pageSize = 10;
@@ -44,7 +44,7 @@ public class ArticleDaoIml implements ArticleDao {
 
     @Override
     public Map<String, Object> getArticleMessage(String articleId, String wechatid) {
-        if (articleId.isEmpty() || wechatid.isEmpty()) {
+        if (articleId == null || articleId.isEmpty() || wechatid == null || wechatid.isEmpty()) {
             return getErrorMap();
         }
         //获取文章的详细信息
@@ -60,7 +60,12 @@ public class ArticleDaoIml implements ArticleDao {
 
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
-        String user_id = userMap.get("user_id").toString();
+        Object objId = userMap.get("user_id");
+        if ( objId== null) {
+            return getErrorMap();
+        }
+        String user_id = objId.toString();
+
         boolean isFlag = false;
 
         try {
@@ -120,7 +125,12 @@ public class ArticleDaoIml implements ArticleDao {
 
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechat_id.toString() + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
-        String user_id = userMap.get("user_id").toString();
+        Object objId = userMap.get("user_id");
+        if ( objId== null) {
+            return getErrorMap();
+        }
+        String user_id = objId.toString();
+
 
         String fild = "share_count";
         if ("2".equals(type.toString())) {
@@ -179,7 +189,7 @@ public class ArticleDaoIml implements ArticleDao {
 
     @Override
     public Map<String, Object> getAllArticleType(String wechatid) {
-        if (wechatid == null) {
+        if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
         String gzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,1 as type_id from article_type a,user_articletype b ,sys_user c WHERE a.article_type_id=b.article_type_id AND c.user_id=b.user_id AND c.wechat_id=?" +
@@ -192,7 +202,11 @@ public class ArticleDaoIml implements ArticleDao {
 
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
-        String user_id = userMap.get("user_id").toString();
+        Object objId = userMap.get("user_id");
+        if ( objId== null) {
+            return getErrorMap();
+        }
+        String user_id = objId.toString();
 
         String nogzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,2 as type_id \n" +
                 "from zz_wechat.article_type a ,zz_wechat.sys_user c WHERE " +
@@ -217,7 +231,7 @@ public class ArticleDaoIml implements ArticleDao {
 
     @Override
     public Map<String, Object> articleSearch(String wechatid, String message, int page) {
-        if (wechatid == null || message == null) {
+        if (wechatid == null || "".equals(wechatid) || message == null || "".equals(message)) {
             return getErrorMap();
         }
         int pageSize = 10;
@@ -225,7 +239,11 @@ public class ArticleDaoIml implements ArticleDao {
 
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
-        String user_id = userMap.get("user_id").toString();
+        Object objId = userMap.get("user_id");
+        if ( objId== null) {
+            return getErrorMap();
+        }
+        String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
         String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE parentid !=0 AND (article_type_name LIKE '%" +
@@ -449,7 +467,7 @@ public class ArticleDaoIml implements ArticleDao {
         String sql = "";
 
         int parentid = 0;
-        if (article_type_id == null) {
+        if (article_type_id == null || "".equals(article_type_id)) {
             sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid !=?";
         } else {
             sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid=?";
@@ -542,7 +560,7 @@ public class ArticleDaoIml implements ArticleDao {
         Integer pageSize = Integer.valueOf(conditions.get("pageSize").toString());
         String countSql = "select count(*) from zz_wechat.article ";
 
-        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword,create_time from zz_wechat.article ";
+        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword,create_time from zz_wechat.article ordery ORDER BY create_time desc";
         Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
         map.put("code", 0);
         map.put("message", "查询成功");

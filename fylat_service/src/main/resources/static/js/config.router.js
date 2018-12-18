@@ -88,7 +88,7 @@ angular.module('app')
                         function ($ocLazyLoad) {
                             return $ocLazyLoad.load([
                                 'css/app.css',
-                                'common/directives/custom_directives.js',
+                                // 'common/directives/custom_directives.js',
                                 'common/controllers/common_global.js',
                                 'insure/service/config_service_insure.js',
                                 'vendor/jquery/jquery.marquee.js'
