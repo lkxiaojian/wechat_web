@@ -61,7 +61,7 @@ public class ArticleDaoIml implements ArticleDao {
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
         Object objId = userMap.get("user_id");
-        if ( objId== null) {
+        if (objId == null) {
             return getErrorMap();
         }
         String user_id = objId.toString();
@@ -126,7 +126,7 @@ public class ArticleDaoIml implements ArticleDao {
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechat_id.toString() + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
         Object objId = userMap.get("user_id");
-        if ( objId== null) {
+        if (objId == null) {
             return getErrorMap();
         }
         String user_id = objId.toString();
@@ -203,7 +203,7 @@ public class ArticleDaoIml implements ArticleDao {
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
         Object objId = userMap.get("user_id");
-        if ( objId== null) {
+        if (objId == null) {
             return getErrorMap();
         }
         String user_id = objId.toString();
@@ -240,7 +240,7 @@ public class ArticleDaoIml implements ArticleDao {
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
         Object objId = userMap.get("user_id");
-        if ( objId== null) {
+        if (objId == null) {
             return getErrorMap();
         }
         String user_id = objId.toString();
@@ -500,22 +500,25 @@ public class ArticleDaoIml implements ArticleDao {
         Object share_initcount = data.get("share_initcount");
         Object collect_count = data.get("collect_count");
         Object content_manual = data.get("content_manual");
+        Object dateTIme = data.get("dateTIme");
+
 
         Object word_count = data.get("word_count");
         Object details_txt = data.get("details_txt");
         if (content_manual == null || article_type_id == null ||
-                 source == null || article_title == null
+                source == null || article_title == null
                 || article_keyword == null || share_initcount == null || collect_count == null
                 || content_excerpt == null || word_count == null || details_txt == null) {
             return getErrorMap();
         }
         try {
-
-
+            if (author == null) {
+                author = "";
+            }
             String article_id = UuidUtils.getUUid();
             String create_time = DateUtil.getCurrentTimeString();
-            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt) " +
-                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?)";
+            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count) " +
+                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
 
             int update = jdbcTemplate.update(sql, new Object[]{
 
@@ -525,13 +528,18 @@ public class ArticleDaoIml implements ArticleDao {
                     article_keyword.toString(),
                     author.toString(),
                     source.toString(),
-                    create_time,
+                    dateTIme,
                     Integer.parseInt(share_initcount.toString()),
                     Integer.parseInt(collect_count.toString()),
                     0,
                     content_manual.toString(),
                     Integer.parseInt(word_count.toString()),
-                    details_txt.toString()
+                    details_txt.toString(),
+                    create_time,
+                    content_excerpt,
+                    0,
+                    0
+
 
             });
 

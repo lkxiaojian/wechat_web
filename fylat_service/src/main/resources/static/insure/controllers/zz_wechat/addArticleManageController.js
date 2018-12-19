@@ -69,6 +69,8 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
             navigationMsg: '管理平台 >文章管理',
             region: {selected: undefined},//领域
             regionType: {selected: undefined},//文章类型
+            dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),
+
             //查询参数
             integrationQuery: {
                 author: null,//作者
@@ -187,7 +189,8 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                         collect_count: $scope.listObj.integrationQuery.collect_count,
                         word_count: text.length,
                         content_manual: html,
-                        details_txt: text
+                        details_txt: text,
+                        dateTIme:$scope.listObj.dataTime,
                     }
                 }).success(function (data) {
                     console.log(data)
@@ -215,6 +218,8 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                                 content_excerpt: false,//文章摘要
                                 content: false
                         }
+
+                        editor.txt.clear()
                     } else {
                         modalTip({
                             tip: switchLang.switchLang('添加失败'),
@@ -232,6 +237,13 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
 
 
             },
+            setTIme:function (endTimeId,maxDate,dateFmt) {
+                WdatePicker({
+                    el: endTimeId,
+                    maxDate: maxDate,
+                    dateFmt: dateFmt
+                })
+            }
 
         };
 

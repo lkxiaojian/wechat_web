@@ -77,10 +77,10 @@
                                    ng-model="listObj.integrationQuery.author" value="请输入作者"
                                    required/>
                             <!--<div class="error"-->
-                                 <!--ng-show="listObj.errorMessage.author">-->
-                                <!--<small class="error a-red" ng-show="!listObj.integrationQuery.author">-->
-                                    <!--请输入作者-->
-                                <!--</small>-->
+                            <!--ng-show="listObj.errorMessage.author">-->
+                            <!--<small class="error a-red" ng-show="!listObj.integrationQuery.author">-->
+                            <!--请输入作者-->
+                            <!--</small>-->
                             <!--</div>-->
                         </div>
 
@@ -104,31 +104,33 @@
                     <div class="form-group">
                         <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
                                 class="text-danger m-r-xs font-bold as-star"></span>分享基数</label>
-                        <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="col-lg-2 col-md-2 col-sm-2">
                             <input type="number" class="form-control" name="itName"
                                    ng-model="listObj.integrationQuery.share_initcount" value="请输入分享基数"
                                    required/>
-                            <!--  <div class="error"
-                                   ng-show="listObj.errorMessage.author">
-                                  <small class="error a-red">
-                                      请输入作者
-                                  </small>
-                              </div>-->
                         </div>
 
                         <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
                                 class="text-danger m-r-xs font-bold as-star"></span>收藏基数</label>
-                        <div class="col-lg-4 col-md-4 col-sm-4">
+                        <div class="col-lg-2 col-md-2 col-sm-2">
                             <input type="number" class="form-control" name="itName"
                                    ng-model="listObj.integrationQuery.collect_count" value="请输入收藏基数"
                                    required/>
-                            <!-- <div class="error"
-                                  ng-show="listObj.errorMessage.source">
-                                 <small class="error a-red">
-                                     请输入文章来源
-                                 </small>
-                             </div>-->
                         </div>
+
+                        <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
+                                class="text-danger m-r-xs font-bold as-star"></span>发表时间</label>
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                            <input type="text" class="form-control" value="{{listObj.dataTime}}"
+                                   name="issue_date"
+                                   ng-click="listObj.setTIme('time', '%y-%M-%d', 'yyyy-MM-dd')"
+                                   id="time" require/>
+                         <!--   <span class="input-group-btn"><button type="button" class="btn btn-default"
+                            ng-click="listObj.setTIme('time', '%y/%M/%d', 'yyyy/MM/dd')">
+                            <i class="glyphicon glyphicon-calendar"></i></button>
+                            </span>-->
+                        </div>
+
                     </div>
 
 
@@ -192,7 +194,7 @@
                                 class="text-danger m-r-xs font-bold as-star">*</span>文章内容</label>
                         <div class="col-sm-10">
 
-                            <div id="weEditor"  ng-model="listObj.integrationQuery.content">
+                            <div id="weEditor" ng-model="listObj.integrationQuery.content">
 
                             </div>
 
