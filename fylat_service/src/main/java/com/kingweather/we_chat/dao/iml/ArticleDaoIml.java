@@ -9,6 +9,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.*;
 
 @Repository
@@ -48,8 +54,16 @@ public class ArticleDaoIml implements ArticleDao {
             return getErrorMap();
         }
         //获取文章的详细信息
-        String messageSql = "SELECT article_id,article_type_id,article_title,article_keyword,author,source,create_time,(share_count+collect_initcount) as share_count,(collect_count+collect_initcount) as collect_count ,content_type,content_crawl,content_manual FROM  article where article_id=?";
+        String messageSql = "SELECT article_id,article_type_id,article_title,article_keyword,author,source,create_time,(share_count+collect_initcount) as share_count,(collect_count+collect_initcount) as collect_count ,content_type,content_crawl,details_div  FROM  article where article_id=?";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
+
+        Object details_div = messageMap.get("details_div");
+        byte[] bytes= (byte[]) details_div;
+        try {
+            messageMap.put("details_div",  new String(bytes,"UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         //获取相关文章（后期改成随机三遍文章）
         String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND article_id !=? ORDER BY a.create_time DESC limit 0,3";
@@ -600,6 +614,18 @@ public class ArticleDaoIml implements ArticleDao {
         return map;
     }
 
+    public  String BlobToString(Blob blob) throws SQLException, IOException {
+
+        String reString = "";
+        InputStream is =  blob.getBinaryStream();
+
+        ByteArrayInputStream bais = (ByteArrayInputStream)is;
+        byte[] byte_data = new byte[bais.available()]; //bais.available()返回此输入流的字节数
+        bais.read(byte_data, 0,byte_data.length);//将输入流中的内容读到指定的数组
+        reString = new String(byte_data,"utf-8"); //再转为String，并使用指定的编码方式
+        is.close();
+        return reString;
+    }
 
     /**
      * 传参错误
