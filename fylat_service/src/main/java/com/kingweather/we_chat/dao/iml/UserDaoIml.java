@@ -87,9 +87,10 @@ public class UserDaoIml implements userDao {
         //用户关注类型的文章
         String attentionSql = "SELECT c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
                 " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
-                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=?";
+                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?";
         List<Map<String, Object>> attentionList = jdbcTemplate.queryForList(attentionSql, new Object[]{
-                wechatid
+                wechatid,
+                0
         });
         //查询关注文章的总数
         String countSql = "select count(*) as count from zz_wechat.sys_user a,zz_wechat.article_type b,zz_wechat.user_articletype c where b.article_type_id=c.article_type_id AND a.user_id=c.user_id AND a.wechat_id=?";
@@ -105,7 +106,7 @@ public class UserDaoIml implements userDao {
         String sql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(sql);
         Object objId = userMap.get("user_id");
-        if ( objId== null) {
+        if (objId == null) {
             return getErrorMap();
         }
         String user_id = objId.toString();
@@ -181,7 +182,7 @@ public class UserDaoIml implements userDao {
 //                    ") AND a.wechat_id=? GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT ?,?";
 
 
-            String isNoLoveSql="SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name FROM \n" +
+            String isNoLoveSql = "SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name FROM \n" +
                     "zz_wechat.article c,zz_wechat.article_type d WHERE d.article_type_id=c.article_type_id  AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
                     "')  " +
@@ -189,7 +190,7 @@ public class UserDaoIml implements userDao {
                     user_id +
                     "' AND type_id ='1') " +
                     "GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT " +
-                    count * pageSize+
+                    count * pageSize +
                     "," +
                     pageSize +
                     "  ";
@@ -204,7 +205,7 @@ public class UserDaoIml implements userDao {
 //
 //            });
 
-            List<Map<String, Object>> nomapList =  jdbcTemplate.queryForList(isNoLoveSql);
+            List<Map<String, Object>> nomapList = jdbcTemplate.queryForList(isNoLoveSql);
 
             list.addAll(nomapList);
 
@@ -264,7 +265,7 @@ public class UserDaoIml implements userDao {
             String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
             Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
             Object objId = userMap.get("user_id");
-            if ( objId== null) {
+            if (objId == null) {
                 return getErrorMap();
             }
             String user_id = objId.toString();
@@ -292,11 +293,9 @@ public class UserDaoIml implements userDao {
 
     @Override
     public Map getIndexMessageLast(String wechatid, int page, String article_type_id) {
-
         if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
-
         if (article_type_id == null || "".equals(article_type_id)) {
             return getErrorMap();
         }
@@ -304,7 +303,7 @@ public class UserDaoIml implements userDao {
             String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
             Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
             Object objId = userMap.get("user_id");
-            if ( objId== null) {
+            if (objId == null) {
                 return getErrorMap();
             }
             String user_id = objId.toString();
@@ -319,17 +318,12 @@ public class UserDaoIml implements userDao {
                     "' AND type_id='1') " +
                     "ORDER BY b.create_time DESC";
             Map<String, Object> mapCount = jdbcTemplate.queryForMap(sqlCount);
-
-
             int count = 0;
             Object objCount = mapCount.get("count");
             if (objCount != null) {
                 count = Integer.parseInt(objCount.toString());
             }
-
             int pageSize = 10;
-
-
             String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
                     " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id  " +
                     " AND b.article_type_id='" +
@@ -344,13 +338,10 @@ public class UserDaoIml implements userDao {
 
             Map<String, Object> mapresult = new HashMap<>();
             List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
-
-
             int num = count - (page + 1) * pageSize - 1;
             if (num < 0) {
                 num = 0;
             }
-
             mapresult.put("count", num);
             mapresult.put("article", mapList);
             Map<String, Object> map = new HashMap<>();

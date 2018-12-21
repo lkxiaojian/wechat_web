@@ -53,14 +53,17 @@ public class ArticleDaoIml implements ArticleDao {
         if (articleId == null || articleId.isEmpty() || wechatid == null || wechatid.isEmpty()) {
             return getErrorMap();
         }
-        //获取文章的详细信息
-        String messageSql = "SELECT article_id,article_type_id,article_title,article_keyword,author,source,create_time,(share_count+collect_initcount) as share_count,(collect_count+collect_initcount) as collect_count ,content_type,content_crawl,details_div  FROM  article where article_id=?";
+        //获取文章的详细信息 content_manual
+        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
         Object details_div = messageMap.get("details_div");
         byte[] bytes= (byte[]) details_div;
         try {
-            messageMap.put("details_div",  new String(bytes,"UTF-8"));
+            if(details_div!=null){
+                messageMap.put("details_div",  new String(bytes,"UTF-8"));
+            }
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
