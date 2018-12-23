@@ -58,15 +58,16 @@ public class ArticleDaoIml implements ArticleDao {
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
         Object details_div = messageMap.get("details_div");
-        byte[] bytes= (byte[]) details_div;
+        byte[] bytes = (byte[]) details_div;
         try {
-            if(details_div!=null){
-                messageMap.put("details_div",  new String(bytes,"UTF-8"));
+            if (details_div != null) {
+                messageMap.put("details_div", new String(bytes, "UTF-8"));
             }
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
 
         //获取相关文章（后期改成随机三遍文章）
         String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND article_id !=? ORDER BY a.create_time DESC limit 0,3";
@@ -82,6 +83,20 @@ public class ArticleDaoIml implements ArticleDao {
             return getErrorMap();
         }
         String user_id = objId.toString();
+
+        //查询该文章是否已经收藏
+        String cSql = "select count(*) as count from user_article where article_id=? and user_id =? and type_id=?";
+        Map<String, Object> cMap = jdbcTemplate.queryForMap(cSql, new Object[]{
+                articleId,
+                user_id,
+                3
+        });
+        if (cMap != null && cMap.get("count") != null && Integer.parseInt(cMap.get("count").toString()) > 0) {
+            messageMap.put("collect_state", 0);
+        } else {
+            messageMap.put("collect_state", 1);
+        }
+
 
         boolean isFlag = false;
 
@@ -148,12 +163,38 @@ public class ArticleDaoIml implements ArticleDao {
         }
         String user_id = objId.toString();
 
-
+        Map<String, Object> cMap = new HashMap<>();
         String fild = "share_count";
         if ("2".equals(type.toString())) {
             fild = "share_count";
         } else if ("3".equals(type.toString())) {
             fild = "collect_count";
+
+
+            //判断是否已经收藏
+
+            //查询该文章是否已经收藏
+            String cSql = "select count(*) as count from user_article where article_id=? and user_id =? and type_id=?";
+            cMap = jdbcTemplate.queryForMap(cSql, new Object[]{
+                    article_id.toString(),
+                    user_id,
+                    3
+            });
+            if (cMap != null && cMap.get("count") != null && Integer.parseInt(cMap.get("count").toString()) > 0) {
+                String delSql = "DELETE from user_article where article_id=? and user_id =? and type_id=?";
+                jdbcTemplate.update(delSql, new Object[]{
+                        article_id.toString(),
+                        user_id,
+                        3
+
+                });
+
+
+            } else {
+
+            }
+
+
         } else {
             return getErrorMap();
         }
@@ -167,6 +208,7 @@ public class ArticleDaoIml implements ArticleDao {
         boolean isFlag = false;
         // 判断是否已经分享
         try {
+
             String selectSqlFora = "select count(*) as count from zz_wechat.user_article where type_id=? and article_id=? and article_type_id=? AND user_id=?";
             Map<String, Object> forMap = jdbcTemplate.queryForMap(selectSqlFora, new Object[]{
                     Integer.parseInt(type.toString()),
@@ -176,6 +218,9 @@ public class ArticleDaoIml implements ArticleDao {
             });
             if (forMap.get("count") == null || "0".equals(forMap.get("count").toString())) {
                 isFlag = true;
+                if (cMap != null && cMap.get("count") != null && Integer.parseInt(cMap.get("count").toString()) > 0) {
+                    isFlag = false;
+                }
             }
         } catch (Exception e) {
             isFlag = true;
@@ -273,7 +318,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         List<Map<String, Object>> gzMapList = jdbcTemplate.queryForList(gzSeachSql);
 
-        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE parentid !=0 AND (article_type_name LIKE '%" +
+        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE parentid !=0 AND (article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -332,7 +377,7 @@ public class ArticleDaoIml implements ArticleDao {
                     message +
                     "%' OR content_excerpt LIKE '%" +
                     message +
-                    "%') ORDER BY create_time LIMIT " +
+                    "%') ORDER BY create_time desc LIMIT " +
                     page * pageSize +
                     "," +
                     pageSize;
@@ -377,7 +422,7 @@ public class ArticleDaoIml implements ArticleDao {
                     message +
                     "%' OR content_excerpt LIKE '%" +
                     message +
-                    "%')ORDER BY create_time LIMIT " +
+                    "%')ORDER BY create_time DESC LIMIT " +
                     page * pageSize +
                     "," +
                     pageSize;
@@ -617,15 +662,15 @@ public class ArticleDaoIml implements ArticleDao {
         return map;
     }
 
-    public  String BlobToString(Blob blob) throws SQLException, IOException {
+    public String BlobToString(Blob blob) throws SQLException, IOException {
 
         String reString = "";
-        InputStream is =  blob.getBinaryStream();
+        InputStream is = blob.getBinaryStream();
 
-        ByteArrayInputStream bais = (ByteArrayInputStream)is;
+        ByteArrayInputStream bais = (ByteArrayInputStream) is;
         byte[] byte_data = new byte[bais.available()]; //bais.available()返回此输入流的字节数
-        bais.read(byte_data, 0,byte_data.length);//将输入流中的内容读到指定的数组
-        reString = new String(byte_data,"utf-8"); //再转为String，并使用指定的编码方式
+        bais.read(byte_data, 0, byte_data.length);//将输入流中的内容读到指定的数组
+        reString = new String(byte_data, "utf-8"); //再转为String，并使用指定的编码方式
         is.close();
         return reString;
     }

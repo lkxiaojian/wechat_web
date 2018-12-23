@@ -122,7 +122,7 @@ public class UserDaoIml implements userDao {
                     "' AND type_id ='1') " +
                     "AND a.wechat_id='" +
                     wechatid +
-                    "' GROUP BY d.article_type_id ORDER BY c.create_time LIMIT " +
+                    "' GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT " +
                     page * pageSize +
                     "," +
                     pageSize +
@@ -332,7 +332,7 @@ public class UserDaoIml implements userDao {
                     user_id +
                     "' AND type_id='1') " +
                     "ORDER BY b.create_time DESC LIMIT " +
-                    page * pageSize +
+                    page * pageSize+1 +
                     "," +
                     pageSize;
 
