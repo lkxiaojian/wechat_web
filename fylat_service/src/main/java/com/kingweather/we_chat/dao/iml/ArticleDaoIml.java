@@ -32,7 +32,7 @@ public class ArticleDaoIml implements ArticleDao {
         int pageSize = 10;
 
         String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back,b.article_keyword,b.article_title,b.content_excerpt " +
-                "FROM zz_wechat.article_type a,zz_wechat.article b where a.article_type_id=b.article_type_id and b.article_type_id=? ORDER BY b.create_time LIMIT ?,?";
+                "FROM zz_wechat.article_type a,zz_wechat.article b where a.article_type_id=b.article_type_id and b.article_type_id=? ORDER BY b.create_time DESC LIMIT ?,?";
 
 
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{

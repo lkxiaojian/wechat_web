@@ -129,8 +129,6 @@ public class UserDaoIml implements userDao {
                     "";
 
             List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sqld);
-
-
             list.addAll(mapList);
 
 
