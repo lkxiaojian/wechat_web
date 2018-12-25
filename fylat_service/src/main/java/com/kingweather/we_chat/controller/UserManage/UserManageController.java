@@ -47,6 +47,9 @@ public class UserManageController extends BaseController {
     @RequestMapping(value = "/user/getIndexMessage/rest")
     public Map<String, Object> getIndexMessage(String wechatid, int page) {
         Map map = new HashMap();
+        if(wechatid==null||"".equals(wechatid)){
+            wechatid="1";
+        }
         map = userService.getIndexMessage(wechatid, page);
         return map;
     }
@@ -63,6 +66,9 @@ public class UserManageController extends BaseController {
     @RequestMapping(value = "/user/getIndexMessageLast/rest")
     public Map<String, Object> getIndexMessageLast(String wechatid, int page,String article_type_id) {
         Map map = new HashMap();
+        if(wechatid==null||"".equals(wechatid)){
+            wechatid="1";
+        }
 
         map = userService.getIndexMessageLast(wechatid, page,article_type_id);
         return map;
@@ -79,6 +85,9 @@ public class UserManageController extends BaseController {
     @RequestMapping(value = "/user/setAttention/rest")
     public Map<String, Object> setAttention(String wechatid, String attentions, String type) {
         Map map = new HashMap();
+        if(wechatid==null||"".equals(wechatid)){
+            wechatid="1";
+        }
         map = userService.setAttention(wechatid, attentions, type);
         return map;
     }

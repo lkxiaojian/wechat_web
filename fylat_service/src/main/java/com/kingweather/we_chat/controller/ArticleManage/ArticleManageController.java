@@ -38,6 +38,7 @@ public class ArticleManageController extends BaseController {
     public Map<String, Object> getArticleTraitList(String articleId, int page) {
         log.info("获取文章类型");
 
+
         return articleService.getArticleTrait(articleId, page);
     }
 
@@ -51,6 +52,9 @@ public class ArticleManageController extends BaseController {
      */
     @RequestMapping(value = "/article/message/rest", method = RequestMethod.GET)
     public Map<String, Object> getArticleMessage(String articleId, String wechatid) {
+        if(wechatid==null||"".equals(wechatid)){
+            wechatid="1";
+        }
 
         return articleService.getArticleMessage(articleId, wechatid);
     }
@@ -77,6 +81,9 @@ public class ArticleManageController extends BaseController {
     @RequestMapping(value = "/article/getalltype/rest", method = RequestMethod.GET)
     public Map<String, Object> getAllArticleType(String wechatid) {
         log.info("查询全部期刊");
+        if(wechatid==null||"".equals(wechatid)){
+            wechatid="1";
+        }
         return articleService.getAllArticleType(wechatid);
     }
 
@@ -90,6 +97,9 @@ public class ArticleManageController extends BaseController {
     @RequestMapping(value = "/article/search/rest", method = RequestMethod.GET)
     public Map<String, Object> articleSearch(String wechatid, String message, int page) {
         log.info("搜索");
+        if(wechatid==null||"".equals(wechatid)){
+            wechatid="1";
+        }
         return articleService.articleSearch(wechatid, message, page);
     }
 

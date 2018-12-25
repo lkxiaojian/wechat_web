@@ -76,7 +76,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                 author: null,//作者
                 source: null,//来源
                 article_title: null,//文章标题
-                article_keyword: null,//关键字
+                article_keyword: null,//关键词
                 content_excerpt: null,//文章摘要
                 share_initcount: 0,//分享基数
                 collect_count: 0,//收藏基数
@@ -88,7 +88,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                 author: false,//作者
                 source: false,//来源
                 article_title: false,//文章标题
-                article_keyword: false,//关键字
+                article_keyword: false,//关键词
                 content_excerpt: false,//文章摘要
                 content: false
 
@@ -204,7 +204,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                             author: null,//作者
                                 source: null,//来源
                                 article_title: null,//文章标题
-                                article_keyword: null,//关键字
+                                article_keyword: null,//关键词
                                 content_excerpt: null,//文章摘要
                                 share_initcount: 0,//分享基数
                                 collect_count: 0,//收藏基数
@@ -214,7 +214,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                             author: false,//作者
                                 source: false,//来源
                                 article_title: false,//文章标题
-                                article_keyword: false,//关键字
+                                article_keyword: false,//关键词
                                 content_excerpt: false,//文章摘要
                                 content: false
                         }

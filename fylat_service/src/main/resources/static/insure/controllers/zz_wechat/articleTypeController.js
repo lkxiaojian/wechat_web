@@ -21,7 +21,7 @@ app.controller('articleTypeManageController', ['$scope', '$modal', '$http', 'fyl
             }
 
             if ($scope.listObj.integrationQuery.domain_keyword == null) {
-                alert("关键字为空！！！")
+                alert("关键词为空！！！")
                 return;
             }
             if (!$scope.data.file_icon || !$scope.data.file_back) {

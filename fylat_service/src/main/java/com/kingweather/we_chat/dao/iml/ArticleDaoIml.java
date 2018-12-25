@@ -146,6 +146,9 @@ public class ArticleDaoIml implements ArticleDao {
     @Override
     public Map<String, Object> collectingAndShare(Map<String, Object> data) {
         Object wechat_id = data.get("wechat_id");
+        if(wechat_id==null||"".equals(wechat_id)){
+            wechat_id="1";
+        }
         //分享 2 收藏 3
         Object type = data.get("type");
         Object article_id = data.get("article_id");
@@ -281,8 +284,9 @@ public class ArticleDaoIml implements ArticleDao {
         });
 
         List list = new ArrayList();
-        list.addAll(gzList);
+
         list.addAll(nogzList);
+        list.addAll(gzList);
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("cdoe", 0);
