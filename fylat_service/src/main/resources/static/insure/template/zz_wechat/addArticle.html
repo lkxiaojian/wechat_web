@@ -122,8 +122,7 @@
                                 class="text-danger m-r-xs font-bold as-star"></span>发表时间</label>
                         <div class="col-lg-3 col-md-3 col-sm-3">
                             <input type="text" class="form-control" value="{{listObj.dataTime}}"
-                                   name="issue_date"
-                                   ng-click="listObj.setTIme('time', '%y-%M-%d', 'yyyy-MM-dd')"
+                                   ng-click="listObj.setTIme('time', '%y-%M-%d %H:%i:%s', 'yyyy-MM-dd HH:mm:ss')"
                                    id="time" require/>
                          <!--   <span class="input-group-btn"><button type="button" class="btn btn-default"
                             ng-click="listObj.setTIme('time', '%y/%M/%d', 'yyyy/MM/dd')">

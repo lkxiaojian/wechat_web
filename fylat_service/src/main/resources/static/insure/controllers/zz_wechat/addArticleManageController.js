@@ -69,7 +69,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
             navigationMsg: '管理平台 >文章管理',
             region: {selected: undefined},//领域
             regionType: {selected: undefined},//文章类型
-            dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),
+            dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd hh:mm:ss"),
 
             //查询参数
             integrationQuery: {
@@ -175,6 +175,8 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                     return;
                 }
 
+                $scope.listObj.dataTime=  angular.element('#time').val();;
+
                 $http({
                     url: 'article/addArticle',
                     method: 'POST',
@@ -253,6 +255,8 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
         $timeout(function () {
             var E = $window.wangEditor;
             editor = new E('#weEditor');
+            // 忽略粘贴内容中的图片
+            // editor.customConfig.pasteIgnoreImg = true
             editor.create();
         },0);
     }])

@@ -634,7 +634,7 @@ public class ArticleDaoIml implements ArticleDao {
         Integer pageSize = Integer.valueOf(conditions.get("pageSize").toString());
         String countSql = "select count(*) from zz_wechat.article ";
 
-        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword,create_time from zz_wechat.article ordery ORDER BY create_time desc";
+        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword,create_time from zz_wechat.article ordery ORDER BY update_time desc";
         Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
         map.put("code", 0);
         map.put("message", "查询成功");

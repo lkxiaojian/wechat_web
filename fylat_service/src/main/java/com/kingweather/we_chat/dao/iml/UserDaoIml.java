@@ -114,7 +114,7 @@ public class UserDaoIml implements userDao {
         if (count > 0 && pageSize * page <= count || count < 10) {
 
 
-            String sqld = "SELECT COUNT(*)-1 AS num_prods,c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name \n" +
+            String sqld = "SELECT COUNT(*)-1 AS num_prods,c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,c.update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id " +
                     "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
@@ -122,7 +122,7 @@ public class UserDaoIml implements userDao {
                     "' AND type_id ='1') " +
                     "AND a.wechat_id='" +
                     wechatid +
-                    "' GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT " +
+                    "' GROUP BY d.article_type_id ORDER BY c.update_time DESC LIMIT " +
                     page * pageSize +
                     "," +
                     pageSize +
@@ -180,14 +180,14 @@ public class UserDaoIml implements userDao {
 //                    ") AND a.wechat_id=? GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT ?,?";
 
 
-            String isNoLoveSql = "SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name FROM \n" +
+            String isNoLoveSql = "SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,c.update_time,d.iamge_icon,d.article_type_name FROM \n" +
                     "zz_wechat.article c,zz_wechat.article_type d WHERE d.article_type_id=c.article_type_id  AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
                     "')  " +
                     "AND d.parentid!='0' AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
                     user_id +
                     "' AND type_id ='1') " +
-                    "GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT " +
+                    "GROUP BY d.article_type_id ORDER BY c.update_time DESC LIMIT " +
                     count * pageSize +
                     "," +
                     pageSize +
