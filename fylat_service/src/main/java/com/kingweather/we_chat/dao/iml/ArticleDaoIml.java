@@ -146,8 +146,8 @@ public class ArticleDaoIml implements ArticleDao {
     @Override
     public Map<String, Object> collectingAndShare(Map<String, Object> data) {
         Object wechat_id = data.get("wechat_id");
-        if(wechat_id==null||"".equals(wechat_id)){
-            wechat_id="1";
+        if (wechat_id == null || "".equals(wechat_id)) {
+            wechat_id = "1";
         }
         //分享 2 收藏 3
         Object type = data.get("type");
@@ -577,6 +577,7 @@ public class ArticleDaoIml implements ArticleDao {
                 || content_excerpt == null || word_count == null || details_txt == null) {
             return getErrorMap();
         }
+        content_manual = content_manual.toString().replaceAll("webp", "png");
         try {
             if (author == null) {
                 author = "";
@@ -657,7 +658,7 @@ public class ArticleDaoIml implements ArticleDao {
         }
         String sql = "DELETE from zz_wechat.article  where article_id =?";
         int update = jdbcTemplate.update(sql, new Object[]{
-                article_id
+                article_id,
         });
         Map<String, Object> map = new HashMap<>();
         map.put("code", 0);
@@ -666,7 +667,36 @@ public class ArticleDaoIml implements ArticleDao {
         return map;
     }
 
-    public String BlobToString(Blob blob) throws SQLException, IOException {
+    /**
+     * 添加搜索关键字
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public Map<String, Object> addKeyword(Map<String, Object> data) {
+        Object keywords = data.get("keyword");
+        if (keywords == null || "".equals(keywords)) {
+            return getErrorMap();
+
+        }
+
+        String[] split = keywords.toString().split(",");
+        String create_time = DateUtil.getCurrentTimeString();
+        String sql = "insert into zz_wechat.keyword (keyword_name,create_time) values(?,date_format(?,'%Y-%m-%d %H:%i:%s'))";
+        for (int i = 0; i < split.length; i++) {
+            jdbcTemplate.update(sql, new Object[]{
+                    split[i],
+                    create_time
+            });
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "添加成功");
+        return map;
+    }
+
+/*    public String BlobToString(Blob blob) throws SQLException, IOException {
 
         String reString = "";
         InputStream is = blob.getBinaryStream();
@@ -677,7 +707,7 @@ public class ArticleDaoIml implements ArticleDao {
         reString = new String(byte_data, "utf-8"); //再转为String，并使用指定的编码方式
         is.close();
         return reString;
-    }
+    }*/
 
     /**
      * 传参错误

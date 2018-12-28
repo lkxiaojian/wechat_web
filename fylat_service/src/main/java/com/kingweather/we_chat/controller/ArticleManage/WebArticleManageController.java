@@ -230,9 +230,21 @@ public class WebArticleManageController extends BaseController {
     public  Map<String, Object> deletedById(String article_id){
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map = articleService.deletedById(article_id);
-
-
         return map;
+    }
+
+
+
+    /**
+     * 添加文章
+     *
+     * @return
+     */
+    @RequestMapping(value = "article/addKeyword", method = RequestMethod.POST)
+    public Map<String, Object> addKeyword(@RequestBody Map<String, Object> data) {
+
+        Map<String, Object> maps = articleService.addKeyword(data);
+        return maps;
     }
 
 

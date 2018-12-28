@@ -99,6 +99,23 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
+        .state('app.insure.keyword_Manage', {
+            url: '/keywordManage',
+            templateUrl: 'insure/template/zz_wechat/keywordManage.html',
+            pageTitle: '关键词',
+            controller: 'keywordManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'insure/controllers/zz_wechat/keywordManageController.js',
+                            'ui.select',
+
+
+                        ]);
+                    }]
+            }
+        })
 
         .state('app.insure.fileUpload', {
             url: '/fileUpload',
