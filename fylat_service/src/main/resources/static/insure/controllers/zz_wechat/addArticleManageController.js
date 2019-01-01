@@ -256,7 +256,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
             var E = $window.wangEditor;
             editor = new E('#weEditor');
             // 忽略粘贴内容中的图片
-            // editor.customConfig.pasteIgnoreImg = true
+            editor.customConfig.pasteIgnoreImg = true
             editor.create();
         },0);
     }])
