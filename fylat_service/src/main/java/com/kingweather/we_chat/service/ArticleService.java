@@ -31,4 +31,8 @@ public interface ArticleService {
     Map<String,Object> deletedById(String article_id);
 
     Map<String,Object> addKeyword(Map<String, Object> data);
+
+    Map<String,Object> getwebmessage(String article_id);
+
+    Map<String,Object> updateArticle(Map<String, Object> data);
 }

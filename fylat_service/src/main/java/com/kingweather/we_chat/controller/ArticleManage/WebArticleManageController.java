@@ -236,7 +236,7 @@ public class WebArticleManageController extends BaseController {
 
 
     /**
-     * 添加文章
+     * 添加关键字
      *
      * @return
      */
@@ -244,6 +244,30 @@ public class WebArticleManageController extends BaseController {
     public Map<String, Object> addKeyword(@RequestBody Map<String, Object> data) {
 
         Map<String, Object> maps = articleService.addKeyword(data);
+        return maps;
+    }
+
+
+    /**
+     * 文章详情
+     */
+    @RequestMapping(value="/article/webMessage",method=RequestMethod.GET)
+    public  Map<String, Object> getwebmessage(String article_id){
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map = articleService.getwebmessage(article_id);
+        return map;
+    }
+
+
+    /**
+     * 更新文章
+     *
+     * @return
+     */
+    @RequestMapping(value = "article/updateArticle", method = RequestMethod.POST)
+    public Map<String, Object> updateArticle(@RequestBody Map<String, Object> data) {
+
+        Map<String, Object> maps = articleService.updateArticle(data);
         return maps;
     }
 

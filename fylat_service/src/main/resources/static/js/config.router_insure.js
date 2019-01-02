@@ -116,6 +116,24 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
+        .state('app.insure.modify_article', {
+            url: '/modifyArticle',
+            params: {param: null, article_id: null},
+            templateUrl: 'insure/template/zz_wechat/modifitionArticle.html',
+            pageTitle: '修改文章',
+            controller: 'modificationArticleManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'vendor/jquery/wangEditor.js',
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/modifitionArticleManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
 
         .state('app.insure.fileUpload', {
             url: '/fileUpload',

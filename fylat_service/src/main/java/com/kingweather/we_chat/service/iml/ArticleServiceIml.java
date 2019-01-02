@@ -77,4 +77,14 @@ public class ArticleServiceIml implements ArticleService {
     public Map<String, Object> addKeyword(Map<String, Object> data) {
         return articleDao.addKeyword(data);
     }
+
+    @Override
+    public Map<String, Object> getwebmessage(String article_id) {
+        return articleDao.getwebmessage(article_id);
+    }
+
+    @Override
+    public Map<String, Object> updateArticle(Map<String, Object> data) {
+        return articleDao.updateArticle(data);
+    }
 }

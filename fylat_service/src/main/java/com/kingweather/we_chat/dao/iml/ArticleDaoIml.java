@@ -696,18 +696,116 @@ public class ArticleDaoIml implements ArticleDao {
         return map;
     }
 
-/*    public String BlobToString(Blob blob) throws SQLException, IOException {
+    /**
+     * 文章详情
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public Map<String, Object> getwebmessage(String article_id) {
 
-        String reString = "";
-        InputStream is = blob.getBinaryStream();
+        //获取文章的详细信息 content_manual
+        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,source,a.create_time,a.collect_initcount,a.share_initcount ,a.collect_initcount ,a.content_type,a.content_crawl,a.details_div,a.content_manual,a.content_excerpt,b.article_type_id,b.article_type_name FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
+        Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{article_id});
 
-        ByteArrayInputStream bais = (ByteArrayInputStream) is;
-        byte[] byte_data = new byte[bais.available()]; //bais.available()返回此输入流的字节数
-        bais.read(byte_data, 0, byte_data.length);//将输入流中的内容读到指定的数组
-        reString = new String(byte_data, "utf-8"); //再转为String，并使用指定的编码方式
-        is.close();
-        return reString;
-    }*/
+        Object details_div = messageMap.get("details_div");
+        byte[] bytes = (byte[]) details_div;
+        try {
+            if (details_div != null) {
+                messageMap.put("details_div", new String(bytes, "UTF-8"));
+            }
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return getErrorMapService();
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "查询成功");
+        map.put("result", messageMap);
+
+
+        return map;
+    }
+
+    /**
+     * 更新文章
+     * @param data
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateArticle(Map<String, Object> data) {
+        Map<String, Object> map = new HashMap<>();
+        Object article_type_id = data.get("article_type_id");
+        Object author = data.get("author");
+        Object source = data.get("source");
+        Object article_title = data.get("article_title");
+        Object article_keyword = data.get("article_keyword");
+        Object content_excerpt = data.get("content_excerpt");
+        Object share_initcount = data.get("share_initcount");
+        Object collect_count = data.get("collect_count");
+        Object content_manual = data.get("content_manual");
+        Object dateTIme = data.get("dateTIme");
+        Object article_id = data.get("article_id");
+
+
+        Object word_count = data.get("word_count");
+        Object details_txt = data.get("details_txt");
+        if (content_manual == null || article_type_id == null ||
+                source == null || article_title == null
+                || article_keyword == null || share_initcount == null || collect_count == null
+                || content_excerpt == null || word_count == null || details_txt == null||article_id==null) {
+            return getErrorMap();
+        }
+        content_manual = content_manual.toString().replaceAll("webp", "png");
+        try {
+            if (author == null) {
+                author = "";
+            }
+
+            String create_time = DateUtil.getCurrentTimeString();
+//            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count) " +
+//                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+
+
+
+            String sql="UPDATE zz_wechat.article SET article_type_id=?,article_title=?,article_keyword=?," +
+                    "author=?,source=?,create_time=date_format(?,'%Y-%m-%d %H:%i:%s')," +
+                    "share_initcount=?,collect_initcount=?,content_type=?,content_manual=?,word_count=?," +
+                    "details_txt=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'),content_excerpt=? WHERE article_id=? ";
+            int update = jdbcTemplate.update(sql, new Object[]{
+
+                    Integer.parseInt(article_type_id.toString()),
+                    article_title.toString(),
+                    article_keyword.toString(),
+                    author.toString(),
+                    source.toString(),
+                    dateTIme,
+                    Integer.parseInt(share_initcount.toString()),
+                    Integer.parseInt(collect_count.toString()),
+                    0,
+                    content_manual.toString(),
+                    Integer.parseInt(word_count.toString()),
+                    details_txt.toString(),
+                    create_time,
+                    content_excerpt,
+                    article_id.toString()
+
+
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getErrorMapService();
+        }
+
+        map.put("code", 0);
+        map.put("message", "更新成功");
+        return map;
+    }
+
 
     /**
      * 传参错误

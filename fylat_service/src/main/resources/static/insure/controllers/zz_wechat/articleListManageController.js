@@ -72,8 +72,7 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                         },
                         events: {
                             'click .a-edit': function (e, value, row, index) {
-                                // rowData[0] = row;
-                                // $state.go('app.insure.sysManage_userRightsManange_editUser');
+                                // $state.go('app.insure.modify_article',{article_id:row.article_id});
                                 // $scope.testInstance.bootstrapTable('refresh');
                                 modalTip({
                                     tip: '开发中',
