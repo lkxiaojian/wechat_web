@@ -72,12 +72,12 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                         },
                         events: {
                             'click .a-edit': function (e, value, row, index) {
-                                // $state.go('app.insure.modify_article',{article_id:row.article_id});
-                                // $scope.testInstance.bootstrapTable('refresh');
-                                modalTip({
-                                    tip: '开发中',
-                                    type: false
-                                });
+                                $state.go('app.insure.modify_article',{article_id:row.article_id});
+                                $scope.testInstance.bootstrapTable('refresh');
+                                // modalTip({
+                                //     tip: '开发中',
+                                //     type: false
+                                // });
                             },
                             'click .a-delete': function (e, value, row, index) {
                                 if (confirm(switchLang.switchLang('确认删除该片文章吗？'))) {

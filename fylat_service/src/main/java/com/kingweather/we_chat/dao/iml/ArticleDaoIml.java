@@ -58,10 +58,16 @@ public class ArticleDaoIml implements ArticleDao {
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
         Object details_div = messageMap.get("details_div");
+        Object content_manual = messageMap.get("content_manual");
         byte[] bytes = (byte[]) details_div;
+        byte[] content_manualbytes = (byte[]) content_manual;
         try {
             if (details_div != null) {
                 messageMap.put("details_div", new String(bytes, "UTF-8"));
+            }
+
+            if (content_manual != null) {
+                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
             }
 
         } catch (UnsupportedEncodingException e) {
@@ -710,10 +716,17 @@ public class ArticleDaoIml implements ArticleDao {
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{article_id});
 
         Object details_div = messageMap.get("details_div");
-        byte[] bytes = (byte[]) details_div;
+
+        Object content_manual = messageMap.get("content_manual");
+        byte[] details_divbytes = (byte[]) details_div;
+
+        byte[] content_manualbytes = (byte[]) content_manual;
         try {
             if (details_div != null) {
-                messageMap.put("details_div", new String(bytes, "UTF-8"));
+                messageMap.put("details_div", new String(details_divbytes, "UTF-8"));
+            }
+            if (content_manualbytes != null) {
+                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
             }
 
         } catch (UnsupportedEncodingException e) {
