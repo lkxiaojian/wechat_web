@@ -3,6 +3,14 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
         var editor;
         $scope.listObj = {
             navigationMsg: '管理平台 >文章管理',
+            seachMessage: '',
+            seach: function () {
+                var a=$scope.listObj.seachMessage;
+                $scope.testInstance.bootstrapTable('refresh')
+            },
+            clear: function () {
+                $scope.listObj.seachMessage = '';
+            }
         }
 
 
@@ -13,9 +21,19 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                 url: 'article/query',
                 resultTag: 'result',
                 method: 'get',
-                params: {
-                    view: 'select',
+                // params: {
+                //     view: 'select',
+                //     message: $scope.listObj.seachMessage
+                // },
+                queryParams: function (params) {
+                    // console.log(params);
+                    $.extend(params, {
+                        view: 'select',
+                        message: $scope.listObj.seachMessage
+                    });
+                    return params;
                 },
+                message: $scope.listObj.seachMessage,
                 pageList: ['All'],
                 pageSize: 10,
                 onLoadSuccess: function (data) {
@@ -72,7 +90,7 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                         },
                         events: {
                             'click .a-edit': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article',{article_id:row.article_id});
+                                $state.go('app.insure.modify_article', {article_id: row.article_id});
                                 $scope.testInstance.bootstrapTable('refresh');
                                 // modalTip({
                                 //     tip: '开发中',
@@ -118,8 +136,6 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                     }
                 ]
             };
-
-
         }
 
         $scope.listAritcle();

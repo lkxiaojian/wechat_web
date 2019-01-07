@@ -639,9 +639,17 @@ public class ArticleDaoIml implements ArticleDao {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         Integer startNum = Integer.valueOf(conditions.get("startNum").toString());
         Integer pageSize = Integer.valueOf(conditions.get("pageSize").toString());
+        Object message = conditions.get("message");
         String countSql = "select count(*) from zz_wechat.article ";
+        if (message != null && !"".equals(message.toString())) {
+            countSql=countSql+" where article_title like '%"+message.toString()+"%' or author like '%"+message.toString() +"%' or source like '%"+message.toString() +"%'";
+        }
+        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword,create_time from zz_wechat.article ";
+        if (message != null && !"".equals(message.toString())) {
+            sql=sql+" where article_title like '%"+message.toString()+"%' or author like '%"+message.toString() +"%' or source like '%"+message.toString() +"%'";
+        }
+        sql=sql+" ORDER BY update_time desc";
 
-        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword,create_time from zz_wechat.article ordery ORDER BY update_time desc";
         Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
         map.put("code", 0);
         map.put("message", "查询成功");
@@ -745,6 +753,7 @@ public class ArticleDaoIml implements ArticleDao {
 
     /**
      * 更新文章
+     *
      * @param data
      * @return
      */
@@ -769,7 +778,7 @@ public class ArticleDaoIml implements ArticleDao {
         if (content_manual == null || article_type_id == null ||
                 source == null || article_title == null
                 || article_keyword == null || share_initcount == null || collect_count == null
-                || content_excerpt == null || word_count == null || details_txt == null||article_id==null) {
+                || content_excerpt == null || word_count == null || details_txt == null || article_id == null) {
             return getErrorMap();
         }
         content_manual = content_manual.toString().replaceAll("webp", "png");
@@ -783,8 +792,7 @@ public class ArticleDaoIml implements ArticleDao {
 //                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
 
 
-
-            String sql="UPDATE zz_wechat.article SET article_type_id=?,article_title=?,article_keyword=?," +
+            String sql = "UPDATE zz_wechat.article SET article_type_id=?,article_title=?,article_keyword=?," +
                     "author=?,source=?,create_time=date_format(?,'%Y-%m-%d %H:%i:%s')," +
                     "share_initcount=?,collect_initcount=?,content_type=?,content_manual=?,word_count=?," +
                     "details_txt=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'),content_excerpt=? WHERE article_id=? ";

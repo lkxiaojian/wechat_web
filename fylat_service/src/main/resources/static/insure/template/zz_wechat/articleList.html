@@ -9,30 +9,33 @@
         <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
     </div>
 </div>
+<div class="" style="margin-top: 20px;">
+
+    <div class="col-md-8 col-sm-12 padder-l-0 m-b-md">
+        <label class=" col-sm-1 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">搜索内容</label>
+        <div class="col-md-6 col-sm-16 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.seachMessage">
+        </div>
+
+        <button class="btn m-b-xs w-xs btn-default"
+                ng-disabled="searchuserForm.$invalid"
+                ng-click="listObj.seach()"
+                style="position: relative; left: 15px;">搜索
+        </button>
+        <button class="btn m-b-xs w-xs btn-default"
+                ng-disabled="searchuserForm.$invalid"
+                ng-click="listObj.clear()"
+                style="position: relative; left: 15px;">清空
+        </button>
+    </div>
+</div>
+
 
 <!--内容区-->
 <div class="wrapper-md">
-
-
-
-
-
-
-        <!--<tab disable="addIntegrationObj.param === 'add' && !steps.step2" active="steps.step2"-->
-                       <!--select="steps.percent=100">-->
-        <!--<tab-heading>-->
-            <!--文章列表-->
-        <!--</tab-heading>-->
-        <!--<progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>-->
-        <!--<div>-->
-
-        <!--</div>-->
-    <!--</tab>-->
-
-
-
-    <table table-directive tableoption="testOption" id="testArticle" instance="testInstance" style="height: 286px"></table>
-
+    <table table-directive tableoption="testOption" id="testArticle" instance="testInstance"
+           style="height: 286px"></table>
 </div>
 
 

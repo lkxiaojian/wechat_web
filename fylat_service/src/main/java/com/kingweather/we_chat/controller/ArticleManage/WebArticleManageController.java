@@ -204,7 +204,7 @@ public class WebArticleManageController extends BaseController {
      * 查询组列表
      */
     @RequestMapping(value="/article/query",method=RequestMethod.GET)
-    public  Map<String, Object> select(){
+    public  Map<String, Object> select(String message){
         Map<String, Object> map = new LinkedHashMap<String, Object>();
 
             int startNum = Integer.parseInt(request.getParameter("pageNumber"));
@@ -214,7 +214,7 @@ public class WebArticleManageController extends BaseController {
             Map<String, Object> conditions = new HashMap<String, Object>();
             conditions.put("startNum", startNum);
             conditions.put("pageSize", pageSize);
-
+           conditions.put("message", request.getParameter("message"));
             map = articleService.getAllArticle(conditions);
 
 
