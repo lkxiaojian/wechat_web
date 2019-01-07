@@ -7,7 +7,7 @@ app.controller('modificationArticleManageController', ['$scope', '$modal', '$htt
             navigationMsg: '管理平台 >文章修改',
             region: {selected: undefined},//领域
             regionType: {selected: undefined},//文章类型
-            dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd hh:mm:ss"),
+            dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),
             article_id: null,
             selectedItem: {
                 article_type_id: null,
@@ -232,7 +232,7 @@ app.controller('modificationArticleManageController', ['$scope', '$modal', '$htt
                         $scope.listObj.selectedItem.article_type_name = data.result.article_type_name;
                         $scope.listObj.regionType.selected= $scope.listObj.selectedItem;
                         $scope.listObj.postDownload();
-                        $scope.listObj.dataTime = insureUtil.dateToString(new Date(data.result.create_time), "yyyy-MM-dd hh:mm:ss");
+                        $scope.listObj.dataTime = insureUtil.dateToString(new Date(data.result.create_time), "yyyy-MM-dd");
                         if (editor != null && $scope.listObj.integrationQuery.content_type == 0) {
                             editor.txt.html($scope.listObj.integrationQuery.content_manual)
                         } else if (editor != null && $scope.listObj.integrationQuery.content_type == 1) {

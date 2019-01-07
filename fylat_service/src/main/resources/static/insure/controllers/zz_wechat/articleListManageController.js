@@ -74,7 +74,7 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                         width: "7%",
                         formatter: function (value, row, index) {
                             if (value) {
-                                return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
+                                return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
                             }
                             return '';
                         }

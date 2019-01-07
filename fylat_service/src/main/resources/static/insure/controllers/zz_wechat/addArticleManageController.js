@@ -69,7 +69,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
             navigationMsg: '管理平台 >文章管理',
             region: {selected: undefined},//领域
             regionType: {selected: undefined},//文章类型
-            dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd hh:mm:ss"),
+            dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),
 
             //查询参数
             integrationQuery: {
