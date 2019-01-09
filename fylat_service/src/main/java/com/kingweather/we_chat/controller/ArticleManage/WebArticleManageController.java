@@ -186,10 +186,10 @@ public class WebArticleManageController extends BaseController {
 
         try {
             FileUtils.copyInputStreamToFile(file.getInputStream(), f);
-            map.put("code",0);
-            List<String> pathList=new ArrayList<>();
+            map.put("code", 0);
+            List<String> pathList = new ArrayList<>();
             String s = path.replaceAll("home", "resources");
-            pathList.add("http://106.2.11.94:7902"+s);
+            pathList.add("http://106.2.11.94:7902" + s);
             map.put("data", pathList);
         } catch (IOException e) {
             e.printStackTrace();
@@ -199,40 +199,37 @@ public class WebArticleManageController extends BaseController {
     }
 
 
-
     /**
      * 查询组列表
      */
-    @RequestMapping(value="/article/query",method=RequestMethod.GET)
-    public  Map<String, Object> select(String message){
+    @RequestMapping(value = "/article/query", method = RequestMethod.GET)
+    public Map<String, Object> select(String message) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
 
-            int startNum = Integer.parseInt(request.getParameter("pageNumber"));
-            int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        int startNum = Integer.parseInt(request.getParameter("pageNumber"));
+        int pageSize = Integer.parseInt(request.getParameter("pageSize"));
 //            String gName = request.getParameter("gName");
 
-            Map<String, Object> conditions = new HashMap<String, Object>();
-            conditions.put("startNum", startNum);
-            conditions.put("pageSize", pageSize);
-           conditions.put("message", request.getParameter("message"));
-            map = articleService.getAllArticle(conditions);
+        Map<String, Object> conditions = new HashMap<String, Object>();
+        conditions.put("startNum", startNum);
+        conditions.put("pageSize", pageSize);
+        conditions.put("message", request.getParameter("message"));
+        map = articleService.getAllArticle(conditions);
 
 
         return map;
     }
-
 
 
     /**
      * 文章删除
      */
-    @RequestMapping(value="/article/deletedById",method=RequestMethod.GET)
-    public  Map<String, Object> deletedById(String article_id){
+    @RequestMapping(value = "/article/deletedById", method = RequestMethod.GET)
+    public Map<String, Object> deletedById(String article_id) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map = articleService.deletedById(article_id);
         return map;
     }
-
 
 
     /**
@@ -251,8 +248,8 @@ public class WebArticleManageController extends BaseController {
     /**
      * 文章详情
      */
-    @RequestMapping(value="/article/webMessage",method=RequestMethod.GET)
-    public  Map<String, Object> getwebmessage(String article_id){
+    @RequestMapping(value = "/article/webMessage", method = RequestMethod.GET)
+    public Map<String, Object> getwebmessage(String article_id) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map = articleService.getwebmessage(article_id);
         return map;
@@ -272,6 +269,33 @@ public class WebArticleManageController extends BaseController {
     }
 
 
+    /**
+     * 上传图片-文章
+     *
+     * @param file1
+     * @param req
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "article/addArticleImage", method = RequestMethod.POST)
+    public Map<String, Object> addArticleType(@RequestParam("file[0]") MultipartFile file1, HttpServletRequest req) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+        String savePathIcon = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file1.getOriginalFilename();
+        File fICon = new File(realpath + savePathIcon);
+        try {
+            FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
+            String pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
+            map.put("code", 0);
+            map.put("path", "http://106.2.11.94:7902" + pathICon);
+            return map;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return map;
+    }
 
 
 }

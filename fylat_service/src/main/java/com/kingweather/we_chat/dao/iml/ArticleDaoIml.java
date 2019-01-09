@@ -54,7 +54,10 @@ public class ArticleDaoIml implements ArticleDao {
             return getErrorMap();
         }
         //获取文章的详细信息 content_manual
-        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
+//        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
+
+        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
+
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
         Object details_div = messageMap.get("details_div");
@@ -644,7 +647,7 @@ public class ArticleDaoIml implements ArticleDao {
         if (message != null && !"".equals(message.toString())) {
             countSql=countSql+" where article_title like '%"+message.toString()+"%' or author like '%"+message.toString() +"%' or source like '%"+message.toString() +"%'";
         }
-        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword,DATE_ADD(create_time,INTERVAL -13 hour) as create_time from zz_wechat.article ";
+        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword, create_time from zz_wechat.article ";
         if (message != null && !"".equals(message.toString())) {
             sql=sql+" where article_title like '%"+message.toString()+"%' or author like '%"+message.toString() +"%' or source like '%"+message.toString() +"%'";
         }
@@ -720,7 +723,7 @@ public class ArticleDaoIml implements ArticleDao {
     public Map<String, Object> getwebmessage(String article_id) {
 
         //获取文章的详细信息 content_manual
-        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time ,a.collect_initcount,a.share_initcount ,a.collect_initcount ,a.content_type,a.content_crawl,a.details_div,a.content_manual,a.content_excerpt,b.article_type_id,b.article_type_name FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
+        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time ,a.collect_initcount,a.share_initcount ,a.collect_initcount ,a.content_type,a.content_crawl,a.details_div,a.content_manual,a.content_excerpt,b.article_type_id,b.article_type_name FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{article_id});
 
         Object details_div = messageMap.get("details_div");

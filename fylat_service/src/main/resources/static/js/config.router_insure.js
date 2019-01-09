@@ -20,6 +20,8 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                             'css/insure/fylat_style.css',
                             'vendor/My97DatePicker/WdatePicker.js',
                             'insure/controllers/common_insure.js',
+                            'vendor/angular/angular-file-upload/ng-file-upload.js',
+                            'vendor/angular/angular-file-upload/ng-file-upload-shim.js'
                         ]);
                     }]
             }
@@ -33,8 +35,6 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                 deps: ['$ocLazyLoad',
                     function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
-                            'vendor/angular/angular-file-upload/ng-file-upload.js',
-                            'vendor/angular/angular-file-upload/ng-file-upload-shim.js',
                             'insure/controllers/zz_wechat/domainManageController.js',
                             'ui.select',
                             'ngFileUpload',
@@ -52,8 +52,6 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                 deps: ['$ocLazyLoad',
                     function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
-                            'vendor/angular/angular-file-upload/ng-file-upload.js',
-                            'vendor/angular/angular-file-upload/ng-file-upload-shim.js',
                             'insure/controllers/zz_wechat/articleTypeController.js',
                             'ui.select',
                             'ngFileUpload'
@@ -75,7 +73,8 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                             'vendor/jquery/wangEditor.js',
                             'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/addArticleManageController.js',
-                            'ui.select'
+                            'ui.select',
+                            'ngFileUpload'
                         ]);
                     }]
             }
@@ -129,7 +128,8 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                             'vendor/jquery/wangEditor.js',
                             'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/modifitionArticleManageController.js',
-                            'ui.select'
+                            'ui.select',
+                            'ngFileUpload'
                         ]);
                     }]
             }

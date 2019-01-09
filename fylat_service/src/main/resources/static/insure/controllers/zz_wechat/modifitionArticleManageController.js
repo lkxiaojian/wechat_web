@@ -1,7 +1,32 @@
-app.controller('modificationArticleManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile', '$timeout',
-    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile, $timeout) {
+app.controller('modificationArticleManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile', '$timeout','FileUploader','Upload',
+    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile, $timeout,FileUploader,Upload) {
         var editor;
 
+        $scope.data = {
+            file_back: null
+
+        };
+        $scope.uploadImage = function (file) {
+            $scope.data.file_back='上传中';
+            Upload.upload({
+                url: 'article/addArticleImage',
+                data: {file: file}
+            }).success(function (result) {
+
+                if (result != null && result.code == 0) {
+                    $scope.data.file_back = result.path;
+                }else {
+                    $scope.data.file_back='上传失败';
+                }
+
+            }).error(function () {
+                $scope.data.file_back='上传失败';
+                modalTip({
+                    tip: switchLang.switchLang('添加失败'),
+                    type: true
+                });
+            });
+        };
 
         $scope.listObj = {
             navigationMsg: '管理平台 >文章修改',

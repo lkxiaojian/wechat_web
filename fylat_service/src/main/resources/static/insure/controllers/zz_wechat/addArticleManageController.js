@@ -1,69 +1,29 @@
-app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile','$timeout',
-    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile,$timeout) {
+app.controller('addArticleManageController', ['$scope', '$modal', '$http','fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile', '$timeout','FileUploader','Upload',
+    function ($scope, $modal, $http,fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile, $timeout,FileUploader,Upload ) {
         var editor;
-/*        window.onload = function () {
-            var E = $window.wangEditor;
-            editor = new E('#weEditor')
-         /!*   editor.customConfig.uploadFileName = 'file'
-            editor.customConfig.uploadImgHeaders = {
-                'Accept': 'multipart/form-data; charset=utf-8'
-            }
-            // 将图片大小限制为 3M
-            editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024;
-            // 限制一次最多上传 5 张图片
-            editor.customConfig.uploadImgMaxLength = 1;
-            editor.customConfig.uploadImgServer = 'article/articleImageUpload'  // 上传图片到服务器
+        $scope.data = {
+            file_back: null
 
+        };
 
-            editor.customConfig.uploadImgHooks = {
-                before: function (xhr, editor, files) {
-                    // 图片上传之前触发
-                    // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，files 是选择的图片文件
+        $scope.uploadImage = function (file) {
+            $scope.data.file_back='上传中';
+            Upload.upload({
+                url: 'article/addArticleImage',
+                data: {file: file}
+            }).success(function (result) {
 
-                    // 如果返回的结果是 {prevent: true, msg: 'xxxx'} 则表示用户放弃上传
-                    // return {
-                    //     prevent: true,
-                    //     msg: '放弃上传'
-                    // }
-                },
-                success: function (xhr, editor, result) {
-                    // 图片上传并返回结果，图片插入成功之后触发
-                    // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-                    console.log(result)
-                },
-                fail: function (xhr, editor, result) {
-                    // 图片上传并返回结果，但图片插入错误时触发
-                    // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-                    console.log(result)
-                },
-                error: function (xhr, editor) {
-                    // 图片上传出错时触发
-                    // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
-                    console.log(result)
-                },
-                timeout: function (xhr, editor) {
-                    // 图片上传超时时触发
-                    // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
-                    console.log(result)
-                },
-
-                // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
-                // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
-                customInsert: function (insertImg, result, editor) {
-                    // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
-                    // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
-
-                    // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
-                    console.log(result)
-                    insertImg(result.data)
-
-                    // result 必须是一个 JSON 格式字符串！！！否则报错
+                if (result != null && result.code == 0) {
+                    $scope.data.file_back = result.path;
                 }
-            }*!/
-            editor.create()
 
-        }*/
-
+            }).error(function () {
+                modalTip({
+                    tip: switchLang.switchLang('添加失败'),
+                    type: true
+                });
+            });
+        };
 
         $scope.listObj = {
             navigationMsg: '管理平台 >文章管理',
@@ -175,7 +135,8 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                     return;
                 }
 
-                $scope.listObj.dataTime=  angular.element('#time').val();;
+                $scope.listObj.dataTime = angular.element('#time').val();
+                ;
 
                 $http({
                     url: 'article/addArticle',
@@ -192,7 +153,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                         word_count: text.length,
                         content_manual: html,
                         details_txt: text,
-                        dateTIme:$scope.listObj.dataTime,
+                        dateTIme: $scope.listObj.dataTime,
                     }
                 }).success(function (data) {
                     console.log(data)
@@ -202,23 +163,23 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                             type: true
                         });
 
-                        $scope.listObj. integrationQuery= {
+                        $scope.listObj.integrationQuery = {
                             author: null,//作者
-                                source: null,//来源
-                                article_title: null,//文章标题
-                                article_keyword: null,//关键词
-                                content_excerpt: null,//文章摘要
-                                share_initcount: 0,//分享基数
-                                collect_count: 0,//收藏基数
-                                content: null,//文章内容
+                            source: null,//来源
+                            article_title: null,//文章标题
+                            article_keyword: null,//关键词
+                            content_excerpt: null,//文章摘要
+                            share_initcount: 0,//分享基数
+                            collect_count: 0,//收藏基数
+                            content: null,//文章内容
                         }
-                        $scope.listObj. errorMessage= {
+                        $scope.listObj.errorMessage = {
                             author: false,//作者
-                                source: false,//来源
-                                article_title: false,//文章标题
-                                article_keyword: false,//关键词
-                                content_excerpt: false,//文章摘要
-                                content: false
+                            source: false,//来源
+                            article_title: false,//文章标题
+                            article_keyword: false,//关键词
+                            content_excerpt: false,//文章摘要
+                            content: false
                         }
 
                         editor.txt.clear()
@@ -239,7 +200,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
 
 
             },
-            setTIme:function (endTimeId,maxDate,dateFmt) {
+            setTIme: function (endTimeId, maxDate, dateFmt) {
                 WdatePicker({
                     el: endTimeId,
                     maxDate: maxDate,
@@ -248,6 +209,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
             }
 
         };
+
 
 
         $scope.listObj.postRegion();
@@ -280,7 +242,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http', 'fyla
                 'redo'  // 重复
             ];
             editor.create();
-        },0);
-    }])
-;
+
+        }, 0);
+    }]);
 
