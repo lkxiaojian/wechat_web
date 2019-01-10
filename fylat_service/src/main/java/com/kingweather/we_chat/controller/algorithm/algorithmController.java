@@ -91,7 +91,6 @@ public class algorithmController extends BaseController {
                 }
             }
         }
-
         int count = Integer.parseInt(conutMap.get("count").toString()) - rows - page;
         if (count < 0) {
             count = 0;
