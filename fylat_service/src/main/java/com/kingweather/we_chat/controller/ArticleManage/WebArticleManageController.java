@@ -287,7 +287,7 @@ public class WebArticleManageController extends BaseController {
             FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
             String pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
             map.put("code", 0);
-            map.put("path", "http://106.2.11.94:7902" + pathICon);
+            map.put("path", "https://xiaochengxu.zhuanzhilink.com/weixin_img" + pathICon);
             return map;
 
         } catch (IOException e) {
