@@ -79,8 +79,10 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         //获取相关文章（后期改成随机三遍文章）
-        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND article_id !=? ORDER BY a.create_time DESC limit 0,3";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{articleId});
+        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? ORDER BY a.create_time DESC limit 0,3";
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{articleId,
+                messageMap.get("article_type_id").toString()
+        });
 
 
         //插入数据，代表文章已读

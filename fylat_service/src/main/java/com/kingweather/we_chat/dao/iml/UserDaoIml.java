@@ -111,10 +111,10 @@ public class UserDaoIml implements userDao {
         }
         String user_id = objId.toString();
         //有关注的文章且 查询的都是关注的文章
-        if (count > 0 && pageSize * page <= count || count < 10) {
+        if (count > 0 && pageSize * page < count || count < 10) {
 
 
-            String sqld = "SELECT COUNT(*)-1 AS num_prods,c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,c.update_time,d.iamge_icon,d.article_type_name \n" +
+            String sqld = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id " +
                     "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
@@ -122,7 +122,8 @@ public class UserDaoIml implements userDao {
                     "' AND type_id ='1') " +
                     "AND a.wechat_id='" +
                     wechatid +
-                    "' GROUP BY d.article_type_id ORDER BY c.update_time DESC LIMIT " +
+                    "' ORDER BY" +
+                    " c.update_time DESC) t GROUP BY article_type_id ORDER BY update_time DESC LIMIT " +
                     page * pageSize +
                     "," +
                     pageSize +
@@ -130,109 +131,27 @@ public class UserDaoIml implements userDao {
 
             List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sqld);
             list.addAll(mapList);
-
-
-
-
-
-      /*      String loveId = "SELECT a.article_type_id from zz_wechat.article_type a,zz_wechat.user_articletype b " +
-                    "WHERE a.article_type_id=b.article_type_id AND b.user_id='" +
-                    user_id +
-                    "' AND a.parentid!=0 LIMIT " +
-                    page * pageSize +
-                    "," +
-                    pageSize +
-                    "";
-            List<Map<String, Object>> loveIdList = jdbcTemplate.queryForList(loveId);
-            if (loveIdList != null) {
-                for (int i = 0; i < loveIdList.size(); i++) {
-                    String article_type_id = loveIdList.get(i).get("article_type_id").toString();
-
-                    String loveSql = "SELECT a.article_type_id,a.article_type_name,a.iamge_icon ,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt,b.content_type from zz_wechat.article_type a,zz_wechat.article b \n" +
-                            " WHERE a.article_type_id=b.article_type_id AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id='" +
-                            user_id +
-                            "' AND type_id=1) AND a.article_type_id='" +
-                            Integer.parseInt(article_type_id) +
-                            "' ORDER BY b.create_time DESC ";
-                    List<Map<String, Object>> mapList = jdbcTemplate.queryForList(loveSql);
-                    if (mapList != null && mapList.size() > 0) {
-                        list.add(mapList);
-                    }
-
-
-                }
-            }
-*/
-
         }
         //查询的不是关注的文章
-        if (count < 10 || pageSize * page > count) {
+        if (count < 10 || pageSize * page >= count) {
             count = (pageSize * page - count) / pageSize;
             if (count < 0) {
                 count = 0;
             }
-
-
-//            String isNoLoveSql = "SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,d.iamge_icon,d.article_type_name " +
-//                    "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
-//                    "WHERE a.user_id=b.user_id AND b.article_type_id!=d.article_type_id AND c.article_type_id=d.article_type_id AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" + user_id +
-//                    "' AND type_id ='1'" +
-//                    ") AND a.wechat_id=? GROUP BY d.article_type_id ORDER BY c.create_time DESC LIMIT ?,?";
-
-
-            String isNoLoveSql = "SELECT COUNT(*)-1 AS num_prods,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,c.update_time,d.iamge_icon,d.article_type_name FROM \n" +
+            String isNoLoveSql = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                     "zz_wechat.article c,zz_wechat.article_type d WHERE d.article_type_id=c.article_type_id  AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
                     "')  " +
                     "AND d.parentid!='0' AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
                     user_id +
-                    "' AND type_id ='1') " +
-                    "GROUP BY d.article_type_id ORDER BY c.update_time DESC LIMIT " +
+                    "' AND type_id ='1') ORDER BY c.update_time DESC) t " +
+                    "GROUP BY article_type_id ORDER BY update_time DESC LIMIT " +
                     count * pageSize +
                     "," +
                     pageSize +
                     "  ";
-
-//            List<Map<String, Object>> nomapList = jdbcTemplate.queryForList(isNoLoveSql, new Object[]{
-//                    user_id,
-//                    0,
-//                    user_id,
-//                    1,
-//                    count * pageSize,
-//                    pageSize
-//
-//            });
-
             List<Map<String, Object>> nomapList = jdbcTemplate.queryForList(isNoLoveSql);
-
             list.addAll(nomapList);
-
-
-        /*    String noLoveId = "SELECT article_type_id from zz_wechat.article_type WHERE article_type_id NOT in(SELECT article_type_id from user_articletype where user_id ='" +
-                    user_id +
-                    "') LIMIT " +
-                    count * pageSize +
-                    "," +
-                    pageSize;
-            List<Map<String, Object>> noLoveIdList = jdbcTemplate.queryForList(noLoveId);
-
-            if (noLoveIdList != null) {
-                for (int i = 0; i < noLoveIdList.size(); i++) {
-                    String article_type_id = noLoveIdList.get(i).get("article_type_id").toString();
-                    String loveSql = "SELECT a.article_type_id,a.article_type_name,a.iamge_icon ,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt,b.content_type from zz_wechat.article_type a,zz_wechat.article b \n" +
-                            " WHERE a.article_type_id=b.article_type_id AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id='" +
-                            user_id +
-                            "' AND type_id=1) AND a.article_type_id='" +
-                            Integer.parseInt(article_type_id) +
-                            "' ORDER BY b.create_time DESC ";
-                    List<Map<String, Object>> mapList = jdbcTemplate.queryForList(loveSql);
-                    if (mapList != null && mapList.size() > 0) {
-                        list.add(mapList);
-                    }
-                }
-            }*/
-
-
         }
 
         HashMap<String, Object> result = new HashMap<>();
