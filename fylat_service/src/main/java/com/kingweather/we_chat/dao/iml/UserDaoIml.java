@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository
@@ -82,9 +83,16 @@ public class UserDaoIml implements userDao {
             return getErrorMap();
         }
         String currentTimeString = DateUtil.getCurrentTimeString();
-        String oneDay = DateUtil.getbeforeCurrentDateString(1);
-        String twoDay = DateUtil.getbeforeCurrentDateString(2);
-        String threeDay = DateUtil.getbeforeCurrentDateString(3);
+        String oneDay = DateUtil.getbeforeDayCurrentDateString(1);
+
+        String oneStartTime=oneDay+" 00:00:00";
+        String oneEndTime=oneDay+" 23:59:59";
+        String twoDay = DateUtil.getbeforeDayCurrentDateString(2);
+        String twoStartTime=twoDay+" 00:00:00";
+        String twoEndTime=twoDay+" 23:59:59";
+        String threeDay = DateUtil.getbeforeDayCurrentDateString(3);
+        String threeStartTime=threeDay+" 00:00:00";
+        String threeEndTime=threeDay+" 23:59:59";
         List<Object> list = new ArrayList();
         //默认每页显示10页
         int pageSize = 10;
@@ -106,7 +114,7 @@ public class UserDaoIml implements userDao {
                 wechatid,
                 0,
                 currentTimeString,
-                oneDay
+                oneStartTime
 
 
         });
@@ -123,22 +131,22 @@ public class UserDaoIml implements userDao {
                 wechatid,
                 0,
                 currentTimeString,
-                oneDay
+                oneStartTime
 
         });
 
         attentionList.addAll(maps);
         //查询关注文章的总数
-        String countSql = "select count(*) as count from zz_wechat.sys_user a,zz_wechat.article_type b,zz_wechat.user_articletype c where b.article_type_id=c.article_type_id AND a.user_id=c.user_id AND a.wechat_id=?";
-
-        Map<String, Object> countMap = jdbcTemplate.queryForMap(countSql, new Object[]{
-                wechatid
-        });
-        int count = 0;
-        Object objCount = countMap.get("count");
-        if (objCount != null) {
-            count = Integer.parseInt(objCount.toString());
-        }
+//        String countSql = "select count(*) as count from zz_wechat.sys_user a,zz_wechat.article_type b,zz_wechat.user_articletype c where b.article_type_id=c.article_type_id AND a.user_id=c.user_id AND a.wechat_id=?";
+//
+//        Map<String, Object> countMap = jdbcTemplate.queryForMap(countSql, new Object[]{
+//                wechatid
+//        });
+//        int count = 0;
+//        Object objCount = countMap.get("count");
+//        if (objCount != null) {
+//            count = Integer.parseInt(objCount.toString());
+//        }
         String sql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(sql);
         Object objId = userMap.get("user_id");
@@ -153,8 +161,8 @@ public class UserDaoIml implements userDao {
         String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                 "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                 "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
-                " AND c.update_time>=date_format('" +
-                oneDay +
+                " AND c.update_time>date_format('" +
+                oneEndTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 " AND c.update_time<=date_format('" +
                 currentTimeString +
@@ -167,12 +175,6 @@ public class UserDaoIml implements userDao {
                 wechatid +
                 "' \n" +
                 "ORDER BY c.update_time DESC) t \n" +
-//                    " where update_time>=date_format('" +
-//                    oneDay    +
-//                    "','%Y-%m-%d %H:%i:%s')\n" +
-//                    " AND update_time<=date_format('" +
-//                    currentTimeString +
-//                    "','%Y-%m-%d %H:%i:%s')\n" +
                 "GROUP BY article_type_id ,date_format(update_time, '%Y-%m-%d %H ')\n" +
                 "ORDER BY update_time DESC ";
         List<Map<String, Object>> hoursDay = jdbcTemplate.queryForList(hoursSql);
@@ -181,10 +183,10 @@ public class UserDaoIml implements userDao {
                 "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                 "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                 " AND c.update_time>=date_format('" +
-                twoDay +
+                oneStartTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 " AND c.update_time<=date_format('" +
-                oneDay +
+                oneEndTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
                 "WHERE user_id='" +
@@ -210,10 +212,10 @@ public class UserDaoIml implements userDao {
                 "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                 "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                 " AND c.update_time>=date_format('" +
-                threeDay +
+                twoStartTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 " AND c.update_time<=date_format('" +
-                twoDay +
+                twoEndTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
                 "WHERE user_id='" +
@@ -239,7 +241,7 @@ public class UserDaoIml implements userDao {
                 "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                 "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                 " AND c.update_time<=date_format('" +
-                threeDay +
+                threeStartTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
                 "WHERE user_id='" +
@@ -305,7 +307,7 @@ public class UserDaoIml implements userDao {
                 user_id +
                 "')  AND d.parentid!='0' \n" +
                 " AND c.update_time>=date_format('" +
-                oneDay +
+                oneEndTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 " AND c.update_time<=date_format('" +
                 currentTimeString +
@@ -329,10 +331,10 @@ public class UserDaoIml implements userDao {
                 user_id +
                 "')  AND d.parentid!='0' \n" +
                 " AND c.update_time>=date_format('" +
-                twoDay +
+                oneStartTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 " AND c.update_time<=date_format('" +
-                oneDay +
+                oneEndTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
                 "WHERE user_id='" +
@@ -353,10 +355,10 @@ public class UserDaoIml implements userDao {
                 user_id +
                 "')  AND d.parentid!='0' \n" +
                 " AND c.update_time>=date_format('" +
-                threeDay +
+                twoStartTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 " AND c.update_time<=date_format('" +
-                twoDay +
+                twoEndTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
                 "WHERE user_id='" +
@@ -380,14 +382,14 @@ public class UserDaoIml implements userDao {
 //                threeDay +
 //                "','%Y-%m-%d %H:%i:%s')\n" +
                 " AND c.update_time<=date_format('" +
-                threeDay +
+                threeStartTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
                 "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
                 "WHERE user_id='" +
                 wechatid +
                 "' AND type_id ='1') \n" +
                 "ORDER BY c.update_time DESC) t \n" +
-                "GROUP BY article_type_id ,date_format(update_time, '%Y-%m-%d') ORDER BY update_time desc";
+                "GROUP BY article_type_id  ORDER BY update_time desc";
 
         List<Map<String, Object>> noThreeDayList = jdbcTemplate.queryForList(noThreeDaySql);
         list.addAll(noThreeDayList);
@@ -448,7 +450,7 @@ public class UserDaoIml implements userDao {
     }
 
     @Override
-    public Map getIndexMessageLast(String wechatid, int page, String article_type_id, int type, String time) {
+    public Map getIndexMessageLast(String wechatid, int page, String article_type_id, int type, String time,String article_id) {
         if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
@@ -531,8 +533,8 @@ public class UserDaoIml implements userDao {
                         "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
                         user_id +
                         "' AND type_id='1') " +
-                        "ORDER BY b.create_time DESC LIMIT " +
-                        page * pageSize + 1 +
+                        "ORDER BY b.update_time DESC LIMIT " +
+                        (page * pageSize + 1) +
                         "," +
                         pageSize;
 
@@ -568,13 +570,27 @@ public class UserDaoIml implements userDao {
                 String endTime = "";
                 if (time.endsWith("天前更新")) {
                     String day = time.substring(0, 1);
-                    startTime = DateUtil.getbeforeCurrentDateString(Integer.parseInt(day) + 1);
-                    endTime = DateUtil.getbeforeCurrentDateString(Integer.parseInt(day));
+                    String s = DateUtil.getbeforeDayCurrentDateString(Integer.parseInt(day));
+                    startTime =  s+ " 00:00:00";
+                    endTime = s+ " 23:59:59";
                 } else if (time.endsWith("小时前更新")) {
 
-                    String hour = time.substring(0, time.indexOf("小"));
-                    startTime = DateUtil.getbeforeCurrentHourDateString(Integer.parseInt(hour) + 1);
-                    endTime = DateUtil.getbeforeCurrentHourDateString(Integer.parseInt(hour));
+//                    String hour = time.substring(0, time.indexOf("小"));
+//                    startTime = DateUtil.getbeforeCurrentHourDateString(Integer.parseInt(hour) + 1);
+//                    endTime = DateUtil.getbeforeCurrentHourDateString(Integer.parseInt(hour));
+
+                    String sql="select update_time from zz_wechat.article where article_id='"+article_id+"'";
+                    Map<String, Object> timeMap = jdbcTemplate.queryForMap(sql);
+                    Object update_time = timeMap.get("update_time");
+                    if(update_time!=null){
+//                        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH");
+//                        long lt = new Long(update_time.toString());
+//                        Date date = new Date(lt);
+//                        String format = sdf.format(date);
+
+                        startTime=update_time.toString().substring(0,13)+":00:00";
+                        endTime=update_time.toString().substring(0,13)+":59:59";
+                    }
                 }
 
                 String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
@@ -589,13 +605,13 @@ public class UserDaoIml implements userDao {
                         "','%Y-%m-%d %H:%i:%s')  " +
                         "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
                         user_id +
-                        "' AND type_id='1') " +
-                        "ORDER BY b.create_time DESC LIMIT 1,100";
+                        "' AND type_id='1') AND b.article_id !='" +
+                        article_id+
+                        "' " +
+                        "ORDER BY b.update_time DESC";
 
 //                Map<String, Object> mapresult = new HashMap<>();
                 List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
-
-
                 mapresult.put("count", 0);
                 mapresult.put("article", mapList);
                 Map<String, Object> map = new HashMap<>();

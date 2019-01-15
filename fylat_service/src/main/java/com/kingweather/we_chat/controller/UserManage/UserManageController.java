@@ -64,13 +64,13 @@ public class UserManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/getIndexMessageLast/rest")
-    public Map<String, Object> getIndexMessageLast(String wechatid, int page,String article_type_id,int type,String time) {
+    public Map<String, Object> getIndexMessageLast(String wechatid, int page,String article_type_id,int type,String time,String article_id) {
         Map map = new HashMap();
         if(wechatid==null||"".equals(wechatid)){
             wechatid="1";
         }
 
-        map = userService.getIndexMessageLast(wechatid, page,article_type_id,type,time);
+        map = userService.getIndexMessageLast(wechatid, page,article_type_id,type,time,article_id);
         return map;
     }
 

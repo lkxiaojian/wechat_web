@@ -102,6 +102,30 @@ public final class DateUtil {
         return defaultStartDate;
     }
 
+
+    /**
+     * 取几天的时间
+     * @param day
+     * @return
+     */
+
+    public static synchronized String getbeforeDayCurrentDateString(int day) {
+        //当前时间
+        Date dNow = new Date();
+        Date dBefore = new Date();
+        //得到日历
+        Calendar calendar = Calendar.getInstance();
+        //把当前时间赋给日历
+        calendar.setTime(dNow);
+        //设置为前一天
+        calendar.add(Calendar.DAY_OF_MONTH, -day);
+        //得到前一天的时间
+        dBefore = calendar.getTime();
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); //设置时间格式
+        String defaultStartDate = sdf.format(dBefore);    //格式化前一天
+        return defaultStartDate;
+    }
+
     /**
      * 取几个小时前的数据
      * @param day
