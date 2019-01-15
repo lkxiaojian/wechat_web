@@ -79,9 +79,8 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         //获取相关文章（后期改成随机三遍文章）
-        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_id=? ORDER BY a.create_time DESC limit 0,3";
-        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{
-                articleId,
+        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? ORDER BY a.create_time DESC limit 0,3";
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{articleId,
                 messageMap.get("article_type_id").toString()
         });
 
@@ -648,13 +647,13 @@ public class ArticleDaoIml implements ArticleDao {
         Object message = conditions.get("message");
         String countSql = "select count(*) from zz_wechat.article ";
         if (message != null && !"".equals(message.toString())) {
-            countSql = countSql + " where article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%'";
+            countSql=countSql+" where article_title like '%"+message.toString()+"%' or author like '%"+message.toString() +"%' or source like '%"+message.toString() +"%'";
         }
         String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword, create_time from zz_wechat.article ";
         if (message != null && !"".equals(message.toString())) {
-            sql = sql + " where article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%'";
+            sql=sql+" where article_title like '%"+message.toString()+"%' or author like '%"+message.toString() +"%' or source like '%"+message.toString() +"%'";
         }
-        sql = sql + " ORDER BY update_time desc";
+        sql=sql+" ORDER BY update_time desc";
 
         Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
         map.put("code", 0);
@@ -793,7 +792,7 @@ public class ArticleDaoIml implements ArticleDao {
                 author = "";
             }
 
-//            String create_time = DateUtil.getCurrentTimeString();
+            String create_time = DateUtil.getCurrentTimeString();
 //            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count) " +
 //                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
 
@@ -801,7 +800,7 @@ public class ArticleDaoIml implements ArticleDao {
             String sql = "UPDATE zz_wechat.article SET article_type_id=?,article_title=?,article_keyword=?," +
                     "author=?,source=?,create_time=date_format(?,'%Y-%m-%d %H:%i:%s')," +
                     "share_initcount=?,collect_initcount=?,content_type=?,content_manual=?,word_count=?," +
-                    "details_txt=?,content_excerpt=? WHERE article_id=? ";
+                    "details_txt=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'),content_excerpt=? WHERE article_id=? ";
             int update = jdbcTemplate.update(sql, new Object[]{
 
                     Integer.parseInt(article_type_id.toString()),
@@ -816,7 +815,7 @@ public class ArticleDaoIml implements ArticleDao {
                     content_manual.toString(),
                     Integer.parseInt(word_count.toString()),
                     details_txt.toString(),
-
+                    create_time,
                     content_excerpt,
                     article_id.toString()
 

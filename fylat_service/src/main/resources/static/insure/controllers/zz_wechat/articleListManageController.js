@@ -71,7 +71,7 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                         class: 'col-md-1',
                         field: 'create_time',
                         align: 'center',
-                        width: "7%",
+                        width: "5%",
                         formatter: function (value, row, index) {
                             if (value) {
                                 return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
@@ -79,10 +79,16 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                             return '';
                         }
                     }, {
+                        title: '文章id',
+                        class: 'col-md-1',
+                        field: 'article_id',
+                        align: 'center',
+                        width: "7%"
+                    }, {
                         title: '操作',
                         class: 'col-md-1',
                         align: 'center',
-                        width: '10%',
+                        width: '5%',
                         formatter: function (value, row, index) {
 
                             return '<a class="a-edit a-blue" href="javascript:;">编辑</a>&nbsp;' +
