@@ -81,17 +81,53 @@ public class UserDaoIml implements userDao {
         if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
+        String currentTimeString = DateUtil.getCurrentTimeString();
+        String oneDay = DateUtil.getbeforeCurrentDateString(1);
+        String twoDay = DateUtil.getbeforeCurrentDateString(2);
+        String threeDay = DateUtil.getbeforeCurrentDateString(3);
         List<Object> list = new ArrayList();
         //默认每页显示10页
         int pageSize = 10;
         //用户关注类型的文章
-        String attentionSql = "SELECT c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
+/*        String attentionSql = "SELECT c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
                 " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
-                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?";
+                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?";*/
+
+
+        String attentionSql = "SELECT 1 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c.parentid" +
+                " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
+                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?" +
+                " AND b.article_type_id IN (SELECT article_type_id FROM zz_wechat.article where " +
+                " update_time<=date_format(?,'%Y-%m-%d %H:%i:%s') " +
+                "AND update_time>=date_format(?,'%Y-%m-%d %H:%i:%s'))";
+
         List<Map<String, Object>> attentionList = jdbcTemplate.queryForList(attentionSql, new Object[]{
+
                 wechatid,
-                0
+                0,
+                currentTimeString,
+                oneDay
+
+
         });
+
+
+        String attentionSqla = "SELECT 2 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
+                " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
+                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?" +
+                " AND b.article_type_id NOT IN (SELECT article_type_id FROM zz_wechat.article where " +
+                " update_time<date_format(?,'%Y-%m-%d %H:%i:%s') " +
+                "AND update_time>date_format(?,'%Y-%m-%d %H:%i:%s'))";
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(attentionSqla, new Object[]{
+                wechatid,
+                0,
+                currentTimeString,
+                oneDay
+
+        });
+
+        attentionList.addAll(maps);
         //查询关注文章的总数
         String countSql = "select count(*) as count from zz_wechat.sys_user a,zz_wechat.article_type b,zz_wechat.user_articletype c where b.article_type_id=c.article_type_id AND a.user_id=c.user_id AND a.wechat_id=?";
 
@@ -110,11 +146,117 @@ public class UserDaoIml implements userDao {
             return getErrorMap();
         }
         String user_id = objId.toString();
+
         //有关注的文章且 查询的都是关注的文章
-        if (count > 0 && pageSize * page < count || count < 10) {
+//        if (count > 0 && pageSize * page < count || count < 10) {
+
+        String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+                "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
+                "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
+                " AND c.update_time>=date_format('" +
+                oneDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                " AND c.update_time<=date_format('" +
+                currentTimeString +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
+                "WHERE user_id='" +
+                user_id +
+                "' AND type_id ='1') \n" +
+                "AND a.wechat_id='" +
+                wechatid +
+                "' \n" +
+                "ORDER BY c.update_time DESC) t \n" +
+//                    " where update_time>=date_format('" +
+//                    oneDay    +
+//                    "','%Y-%m-%d %H:%i:%s')\n" +
+//                    " AND update_time<=date_format('" +
+//                    currentTimeString +
+//                    "','%Y-%m-%d %H:%i:%s')\n" +
+                "GROUP BY article_type_id ,date_format(update_time, '%Y-%m-%d %H ')\n" +
+                "ORDER BY update_time DESC ";
+        List<Map<String, Object>> hoursDay = jdbcTemplate.queryForList(hoursSql);
+        list.addAll(hoursDay);
+        String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+                "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
+                "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
+                " AND c.update_time>=date_format('" +
+                twoDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                " AND c.update_time<=date_format('" +
+                oneDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
+                "WHERE user_id='" +
+                user_id +
+                "' AND type_id ='1') \n" +
+                "AND a.wechat_id='" +
+                wechatid +
+                "' \n" +
+                "ORDER BY c.update_time DESC) t \n" +
+//                    " where update_time>=date_format('" +
+//                    twoDay     +
+//                    "','%Y-%m-%d %H:%i:%s')\n" +
+//                    " AND update_time<=date_format('" +
+//                    oneDay +
+//                    "','%Y-%m-%d %H:%i:%s')\n" +  ,date_format(update_time, '%Y-%m-%d')
+                "GROUP BY article_type_id " +
+                "ORDER BY update_time DESC ";
+        List<Map<String, Object>> oneDayList = jdbcTemplate.queryForList(oneDaySql);
+        list.addAll(oneDayList);
 
 
-            String sqld = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+        String twoDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,3 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+                "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
+                "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
+                " AND c.update_time>=date_format('" +
+                threeDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                " AND c.update_time<=date_format('" +
+                twoDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
+                "WHERE user_id='" +
+                user_id +
+                "' AND type_id ='1') \n" +
+                "AND a.wechat_id='" +
+                wechatid +
+                "' \n" +
+                "ORDER BY c.update_time DESC) t \n" +
+//                    " where update_time>=date_format('" +
+//                    threeDay    +
+//                    "','%Y-%m-%d %H:%i:%s')\n" +
+//                    " AND update_time<=date_format('" +
+//                    twoDay  +
+//                    "','%Y-%m-%d %H:%i:%s')\n" +   ,date_format(update_time, '%Y-%m-%d')
+                "GROUP BY article_type_id " +
+                "ORDER BY update_time DESC ";
+        List<Map<String, Object>> twoDayList = jdbcTemplate.queryForList(twoDaySql);
+        list.addAll(twoDayList);
+
+
+        String sqld = "SELECT * ,COUNT(*) - 1 AS num_prods,4 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+                "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
+                "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
+                " AND c.update_time<=date_format('" +
+                threeDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
+                "WHERE user_id='" +
+                user_id +
+                "' AND type_id ='1') \n" +
+                "AND a.wechat_id='" +
+                wechatid +
+                "' \n" +
+                "ORDER BY c.update_time DESC) t \n" +
+//                    " where update_time<=date_format('" +
+//                    threeDay +
+//                    "','%Y-%m-%d %H:%i:%s')\n" +
+                "GROUP BY article_type_id\n" +
+                "ORDER BY update_time DESC ";
+
+
+       /*     String sqld = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id " +
                     "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
@@ -127,32 +269,129 @@ public class UserDaoIml implements userDao {
                     page * pageSize +
                     "," +
                     pageSize +
-                    "";
+                    "";*/
 
-            List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sqld);
-            list.addAll(mapList);
-        }
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sqld);
+        list.addAll(mapList);
+//        }
         //查询的不是关注的文章
-        if (count < 10 || pageSize * page >= count) {
-            count = (pageSize * page - count) / pageSize;
-            if (count < 0) {
-                count = 0;
-            }
-            String isNoLoveSql = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
-                    "zz_wechat.article c,zz_wechat.article_type d WHERE d.article_type_id=c.article_type_id  AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype WHERE user_id='" +
-                    user_id +
-                    "')  " +
-                    "AND d.parentid!='0' AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
-                    user_id +
-                    "' AND type_id ='1') ORDER BY c.update_time DESC) t " +
-                    "GROUP BY article_type_id ORDER BY update_time DESC LIMIT " +
-                    count * pageSize +
-                    "," +
-                    pageSize +
-                    "  ";
-            List<Map<String, Object>> nomapList = jdbcTemplate.queryForList(isNoLoveSql);
-            list.addAll(nomapList);
-        }
+//        if (count < 10 || pageSize * page >= count) {
+//            count = (pageSize * page - count) / pageSize;
+//            if (count < 0) {
+//                count = 0;
+//            }
+//            String isNoLoveSql = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+//                    "zz_wechat.article c,zz_wechat.article_type d WHERE d.article_type_id=c.article_type_id  AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                    user_id +
+//                    "')  " +
+//                    "AND d.parentid!='0' AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
+//                    user_id +
+//                    "' AND type_id ='1') ORDER BY c.update_time DESC) t " +
+//                    "GROUP BY article_type_id ORDER BY update_time DESC LIMIT " +
+//                    count * pageSize +
+//                    "," +
+//                    pageSize +
+//                    "  ";
+//            List<Map<String, Object>> nomapList = jdbcTemplate.queryForList(isNoLoveSql);
+//            list.addAll(nomapList);
+//        }
+
+
+        String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                "zz_wechat.article c,zz_wechat.article_type d \n" +
+                "WHERE d.article_type_id=c.article_type_id  \n" +
+                "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
+                "WHERE user_id='" +
+                user_id +
+                "')  AND d.parentid!='0' \n" +
+                " AND c.update_time>=date_format('" +
+                oneDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                " AND c.update_time<=date_format('" +
+                currentTimeString +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
+                "WHERE user_id='" +
+                wechatid +
+                "' AND type_id ='1') \n" +
+                "ORDER BY c.update_time DESC) t \n" +
+                "GROUP BY article_type_id ,date_format(update_time, '%Y-%m-%d %H ') ORDER BY update_time desc";
+
+        List<Map<String, Object>> noHosursList = jdbcTemplate.queryForList(noHosursSql);
+        list.addAll(noHosursList);
+
+
+        String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                "zz_wechat.article c,zz_wechat.article_type d \n" +
+                "WHERE d.article_type_id=c.article_type_id  \n" +
+                "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
+                "WHERE user_id='" +
+                user_id +
+                "')  AND d.parentid!='0' \n" +
+                " AND c.update_time>=date_format('" +
+                twoDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                " AND c.update_time<=date_format('" +
+                oneDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
+                "WHERE user_id='" +
+                wechatid +
+                "' AND type_id ='1') \n" +
+                "ORDER BY c.update_time DESC) t \n" +
+                "GROUP BY article_type_id ,date_format(update_time, '%Y-%m-%d') ORDER BY update_time desc";
+
+        List<Map<String, Object>> noOneDayList = jdbcTemplate.queryForList(noOneDaySql);
+        list.addAll(noOneDayList);
+
+
+        String noTwoDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,3 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                "zz_wechat.article c,zz_wechat.article_type d \n" +
+                "WHERE d.article_type_id=c.article_type_id  \n" +
+                "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
+                "WHERE user_id='" +
+                user_id +
+                "')  AND d.parentid!='0' \n" +
+                " AND c.update_time>=date_format('" +
+                threeDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                " AND c.update_time<=date_format('" +
+                twoDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
+                "WHERE user_id='" +
+                wechatid +
+                "' AND type_id ='1') \n" +
+                "ORDER BY c.update_time DESC) t \n" +
+                "GROUP BY article_type_id ,date_format(update_time, '%Y-%m-%d') ORDER BY update_time desc";
+
+        List<Map<String, Object>> noTwoDayList = jdbcTemplate.queryForList(noTwoDaySql);
+        list.addAll(noTwoDayList);
+
+
+        String noThreeDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,4 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                "zz_wechat.article c,zz_wechat.article_type d \n" +
+                "WHERE d.article_type_id=c.article_type_id  \n" +
+                "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
+                "WHERE user_id='" +
+                user_id +
+                "')  AND d.parentid!='0' \n" +
+//                " AND c.update_time>=date_format('" +
+//                threeDay +
+//                "','%Y-%m-%d %H:%i:%s')\n" +
+                " AND c.update_time<=date_format('" +
+                threeDay +
+                "','%Y-%m-%d %H:%i:%s')\n" +
+                "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article \n" +
+                "WHERE user_id='" +
+                wechatid +
+                "' AND type_id ='1') \n" +
+                "ORDER BY c.update_time DESC) t \n" +
+                "GROUP BY article_type_id ,date_format(update_time, '%Y-%m-%d') ORDER BY update_time desc";
+
+        List<Map<String, Object>> noThreeDayList = jdbcTemplate.queryForList(noThreeDaySql);
+        list.addAll(noThreeDayList);
+
 
         HashMap<String, Object> result = new HashMap<>();
         result.put("attention", attentionList);
@@ -209,13 +448,15 @@ public class UserDaoIml implements userDao {
     }
 
     @Override
-    public Map getIndexMessageLast(String wechatid, int page, String article_type_id) {
+    public Map getIndexMessageLast(String wechatid, int page, String article_type_id, int type, String time) {
         if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
         if (article_type_id == null || "".equals(article_type_id)) {
             return getErrorMap();
         }
+
+        Map<String, Object> mapresult = new HashMap<>();
         try {
             String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
             Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
@@ -224,49 +465,145 @@ public class UserDaoIml implements userDao {
                 return getErrorMap();
             }
             String user_id = objId.toString();
+            //歷史數據
+            if (type == 4) {
+//         /*       String sqlCount = "SELECT count(*) as count FROM " +
+//                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id \n" +
+//                        " AND a.article_type_id='" +
+//                        Integer.parseInt(article_type_id) +
+//                        "' " +
+//                        "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
+//                        user_id +
+//                        "' AND type_id='1') " +
+//                        "ORDER BY b.create_time DESC";
+//                Map<String, Object> mapCount = jdbcTemplate.queryForMap(sqlCount);
+//                int count = 0;
+//                Object objCount = mapCount.get("count");
+//                if (objCount != null) {
+//                    count = Integer.parseInt(objCount.toString());
+//                }
+//                int pageSize = 10;
+//                String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
+//                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id  " +
+//                        " AND b.article_type_id='" +
+//                        Integer.parseInt(article_type_id) +
+//                        "' AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
+//                        user_id +
+//                        "' AND type_id='1') " +
+//                        "ORDER BY b.create_time DESC LIMIT " +
+//                        page * pageSize + 1 +
+//                        "," +
+//                        pageSize;
+//
+//                Map<String, Object> mapresult = new HashMap<>();
+//                List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
+//                int num = count - (page + 1) * pageSize - 1;
+//                if (num < 0) {
+//                    num = 0;
+//                }*/
 
-            String sqlCount = "SELECT count(*) as count FROM " +
-                    " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id \n" +
-                    " AND a.article_type_id='" +
-                    Integer.parseInt(article_type_id) +
-                    "' " +
-                    "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
-                    user_id +
-                    "' AND type_id='1') " +
-                    "ORDER BY b.create_time DESC";
-            Map<String, Object> mapCount = jdbcTemplate.queryForMap(sqlCount);
-            int count = 0;
-            Object objCount = mapCount.get("count");
-            if (objCount != null) {
-                count = Integer.parseInt(objCount.toString());
+                String threeDay = DateUtil.getbeforeCurrentDateString(3);
+                String sqlCount = "SELECT count(*) as count FROM " +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id \n" +
+                        " AND a.article_type_id='" +
+                        Integer.parseInt(article_type_id) +
+                        "' AND b.update_time<date_format('" +
+                        threeDay +
+                        "','%Y-%m-%d %H:%i:%s') " +
+                        "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
+                        user_id +
+                        "' AND type_id='1') " +
+                        "ORDER BY b.create_time DESC";
+                Map<String, Object> mapCount = jdbcTemplate.queryForMap(sqlCount);
+                int count = 0;
+                Object objCount = mapCount.get("count");
+                if (objCount != null) {
+                    count = Integer.parseInt(objCount.toString());
+                }
+                int pageSize = 10;
+                String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id  " +
+                        " AND b.article_type_id='" +
+                        Integer.parseInt(article_type_id) +
+                        "' AND b.update_time<date_format('" +
+                        threeDay +
+                        "','%Y-%m-%d %H:%i:%s') " +
+                        "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
+                        user_id +
+                        "' AND type_id='1') " +
+                        "ORDER BY b.create_time DESC LIMIT " +
+                        page * pageSize + 1 +
+                        "," +
+                        pageSize;
+
+//                Map<String, Object> mapresult = new HashMap<>();
+                List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
+                int num = count - (page + 1) * pageSize - 1;
+                if (num < 0) {
+                    num = 0;
+                }
+
+                mapresult.put("count", num);
+                mapresult.put("article", mapList);
+                Map<String, Object> map = new HashMap<>();
+                map.put("code", 0);
+                map.put("message", "查询成功");
+                map.put("result", mapresult);
+                return map;
+
+            } else {
+
+                if (time == null || "".equals(time)) {
+//                    Map<String, Object> mapresult = new HashMap<>();
+                    mapresult.put("count", 0);
+                    mapresult.put("article", new ArrayList<>());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("code", 0);
+                    map.put("message", "查询成功");
+                    map.put("result", mapresult);
+                    return map;
+
+                }
+                String startTime = "";
+                String endTime = "";
+                if (time.endsWith("天前更新")) {
+                    String day = time.substring(0, 1);
+                    startTime = DateUtil.getbeforeCurrentDateString(Integer.parseInt(day) + 1);
+                    endTime = DateUtil.getbeforeCurrentDateString(Integer.parseInt(day));
+                } else if (time.endsWith("小时前更新")) {
+
+                    String hour = time.substring(0, time.indexOf("小"));
+                    startTime = DateUtil.getbeforeCurrentHourDateString(Integer.parseInt(hour) + 1);
+                    endTime = DateUtil.getbeforeCurrentHourDateString(Integer.parseInt(hour));
+                }
+
+                String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id  " +
+                        " AND b.article_type_id='" +
+                        Integer.parseInt(article_type_id) +
+                        "' AND b.update_time<date_format('" +
+                        endTime +
+                        "','%Y-%m-%d %H:%i:%s') " +
+                        "AND b.update_time>date_format('" +
+                        startTime +
+                        "','%Y-%m-%d %H:%i:%s')  " +
+                        "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
+                        user_id +
+                        "' AND type_id='1') " +
+                        "ORDER BY b.create_time DESC LIMIT 1,100";
+
+//                Map<String, Object> mapresult = new HashMap<>();
+                List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
+
+
+                mapresult.put("count", 0);
+                mapresult.put("article", mapList);
+                Map<String, Object> map = new HashMap<>();
+                map.put("code", 0);
+                map.put("message", "查询成功");
+                map.put("result", mapresult);
+                return map;
             }
-            int pageSize = 10;
-            String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
-                    " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id  " +
-                    " AND b.article_type_id='" +
-                    Integer.parseInt(article_type_id) +
-                    "' AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
-                    user_id +
-                    "' AND type_id='1') " +
-                    "ORDER BY b.create_time DESC LIMIT " +
-                    page * pageSize+1 +
-                    "," +
-                    pageSize;
-
-            Map<String, Object> mapresult = new HashMap<>();
-            List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
-            int num = count - (page + 1) * pageSize - 1;
-            if (num < 0) {
-                num = 0;
-            }
-            mapresult.put("count", num);
-            mapresult.put("article", mapList);
-            Map<String, Object> map = new HashMap<>();
-            map.put("code", 0);
-            map.put("message", "查询成功");
-            map.put("result", mapresult);
-            return map;
-
 
         } catch (Exception e) {
             return getErrorMapService();
