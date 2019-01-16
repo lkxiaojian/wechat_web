@@ -191,12 +191,6 @@ public class UserDaoIml implements userDao {
                 wechatid +
                 "' \n" +
                 "ORDER BY c.update_time DESC) t \n" +
-//                    " where update_time>=date_format('" +
-//                    twoDay     +
-//                    "','%Y-%m-%d %H:%i:%s')\n" +
-//                    " AND update_time<=date_format('" +
-//                    oneDay +
-//                    "','%Y-%m-%d %H:%i:%s')\n" +  ,date_format(update_time, '%Y-%m-%d')
                 "GROUP BY article_type_id " +
                 "ORDER BY update_time DESC ";
         List<Map<String, Object>> oneDayList = jdbcTemplate.queryForList(oneDaySql);
@@ -220,12 +214,6 @@ public class UserDaoIml implements userDao {
                 wechatid +
                 "' \n" +
                 "ORDER BY c.update_time DESC) t \n" +
-//                    " where update_time>=date_format('" +
-//                    threeDay    +
-//                    "','%Y-%m-%d %H:%i:%s')\n" +
-//                    " AND update_time<=date_format('" +
-//                    twoDay  +
-//                    "','%Y-%m-%d %H:%i:%s')\n" +   ,date_format(update_time, '%Y-%m-%d')
                 "GROUP BY article_type_id " +
                 "ORDER BY update_time DESC ";
         List<Map<String, Object>> twoDayList = jdbcTemplate.queryForList(twoDaySql);
@@ -246,9 +234,6 @@ public class UserDaoIml implements userDao {
                 wechatid +
                 "' \n" +
                 "ORDER BY c.update_time DESC) t \n" +
-//                    " where update_time<=date_format('" +
-//                    threeDay +
-//                    "','%Y-%m-%d %H:%i:%s')\n" +
                 "GROUP BY article_type_id\n" +
                 "ORDER BY update_time DESC ";
 
