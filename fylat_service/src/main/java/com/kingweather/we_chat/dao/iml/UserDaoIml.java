@@ -110,16 +110,11 @@ public class UserDaoIml implements userDao {
                 "AND update_time>=date_format(?,'%Y-%m-%d %H:%i:%s'))";
 
         List<Map<String, Object>> attentionList = jdbcTemplate.queryForList(attentionSql, new Object[]{
-
                 wechatid,
                 0,
                 currentTimeString,
                 oneStartTime
-
-
         });
-
-
         String attentionSqla = "SELECT 2 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
                 " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
                 " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?" +
@@ -584,7 +579,7 @@ public class UserDaoIml implements userDao {
                             endTime = update_time.toString().substring(0, 13) + ":59:59";
                         }
                     }*/
-                    String sql = "select DATE_ADD(update_time,INTERVAL - 8 HOUR) AS update_time from zz_wechat.article where article_id='" + article_id + "'";
+                    String sql = "select DATE_ADD(update_time,INTERVAL - 0 HOUR) AS update_time from zz_wechat.article where article_id='" + article_id + "'";
                     Map<String, Object> timeMap = jdbcTemplate.queryForMap(sql);
                     Object update_time = timeMap.get("update_time");
                     if (update_time != null) {
