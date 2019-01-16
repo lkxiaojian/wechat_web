@@ -94,6 +94,13 @@ public class UserDaoIml implements userDao {
         String threeStartTime = threeDay + " 00:00:00";
         String threeEndTime = threeDay + " 23:59:59";
         List<Object> list = new ArrayList();
+        String sql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
+        Map<String, Object> userMap = jdbcTemplate.queryForMap(sql);
+        Object objId = userMap.get("user_id");
+        if (objId == null) {
+            return getErrorMap();
+        }
+        String user_id = objId.toString();
         //默认每页显示10页
         int pageSize = 10;
         //用户关注类型的文章
@@ -107,29 +114,40 @@ public class UserDaoIml implements userDao {
                 " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?" +
                 " AND b.article_type_id IN (SELECT article_type_id FROM zz_wechat.article where " +
                 " update_time<=date_format(?,'%Y-%m-%d %H:%i:%s') " +
-                "AND update_time>=date_format(?,'%Y-%m-%d %H:%i:%s'))";
+                "AND update_time>=date_format(?,'%Y-%m-%d %H:%i:%s') and article_id NOT IN (SELECT article_id FROM  zz_wechat.user_article WHERE user_id=?))";
 
         List<Map<String, Object>> attentionList = jdbcTemplate.queryForList(attentionSql, new Object[]{
                 wechatid,
                 0,
                 currentTimeString,
-                oneStartTime
+                oneStartTime,
+                user_id
         });
+//        String attentionSqla = "SELECT 2 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
+//                " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
+//                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?" +
+//                " AND b.article_type_id NOT IN (SELECT article_type_id FROM zz_wechat.article where " +
+//                " update_time<date_format(?,'%Y-%m-%d %H:%i:%s') " +
+//                "AND update_time>date_format(?,'%Y-%m-%d %H:%i:%s'))";
+
         String attentionSqla = "SELECT 2 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
                 " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
-                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?" +
-                " AND b.article_type_id NOT IN (SELECT article_type_id FROM zz_wechat.article where " +
-                " update_time<date_format(?,'%Y-%m-%d %H:%i:%s') " +
-                "AND update_time>date_format(?,'%Y-%m-%d %H:%i:%s'))";
+                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?";
 
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(attentionSqla, new Object[]{
                 wechatid,
-                0,
-                currentTimeString,
-                oneStartTime
-
+                0
         });
 
+        List<Map<String, Object>> rulust = new ArrayList<>();
+        for (int i = 0; i < maps.size(); i++) {
+            for (int j = 0; j < attentionList.size(); j++) {
+                if (maps.get(i).get("article_type_id") == attentionList.get(j).get("article_type_id")) {
+                    rulust.add(maps.get(i));
+                }
+            }
+        }
+        maps.removeAll(rulust);
         attentionList.addAll(maps);
         //查询关注文章的总数
 //        String countSql = "select count(*) as count from zz_wechat.sys_user a,zz_wechat.article_type b,zz_wechat.user_articletype c where b.article_type_id=c.article_type_id AND a.user_id=c.user_id AND a.wechat_id=?";
@@ -142,13 +160,7 @@ public class UserDaoIml implements userDao {
 //        if (objCount != null) {
 //            count = Integer.parseInt(objCount.toString());
 //        }
-        String sql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
-        Map<String, Object> userMap = jdbcTemplate.queryForMap(sql);
-        Object objId = userMap.get("user_id");
-        if (objId == null) {
-            return getErrorMap();
-        }
-        String user_id = objId.toString();
+
 
         //有关注的文章且 查询的都是关注的文章
 //        if (count > 0 && pageSize * page < count || count < 10) {
