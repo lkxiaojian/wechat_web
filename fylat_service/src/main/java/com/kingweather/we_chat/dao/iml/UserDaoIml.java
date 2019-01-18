@@ -318,7 +318,7 @@ public class UserDaoIml implements userDao {
                 list.addAll(noHosursList);
 
 
-                String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_timeINTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
