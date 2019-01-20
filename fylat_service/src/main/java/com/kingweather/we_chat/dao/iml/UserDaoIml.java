@@ -165,7 +165,7 @@ public class UserDaoIml implements userDao {
         //有关注的文章且 查询的都是关注的文章
 //        if (count > 0 && pageSize * page < count || count < 10) {
         if (page == 0) {
-            String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+            String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time>date_format('" +
@@ -186,7 +186,7 @@ public class UserDaoIml implements userDao {
                     "ORDER BY update_time DESC ";
             List<Map<String, Object>> hoursDay = jdbcTemplate.queryForList(hoursSql);
             list.addAll(hoursDay);
-            String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+            String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time>=date_format('" +
@@ -209,7 +209,7 @@ public class UserDaoIml implements userDao {
             list.addAll(oneDayList);
 
 
-            String twoDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,3 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+            String twoDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,3 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time>=date_format('" +
@@ -232,7 +232,7 @@ public class UserDaoIml implements userDao {
             list.addAll(twoDayList);
 
 
-            String sqld = "SELECT * ,COUNT(*) - 1 AS num_prods,4 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+            String sqld = "SELECT * ,COUNT(*) - 1 AS num_prods,4 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time<=date_format('" +
@@ -250,7 +250,7 @@ public class UserDaoIml implements userDao {
                     " ORDER BY update_time DESC ";
 
 
-       /*     String sqld = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+       /*     String sqld = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d " +
                     "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id " +
                     "AND c.article_id NOT IN (SELECT article_id FROM zz_wechat.user_article WHERE user_id='" +
@@ -275,7 +275,7 @@ public class UserDaoIml implements userDao {
 //            if (count < 0) {
 //                count = 0;
 //            }
-//            String isNoLoveSql = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+//            String isNoLoveSql = "SELECT * ,COUNT(*) - 1 AS num_prods from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
 //                    "zz_wechat.article c,zz_wechat.article_type d WHERE d.article_type_id=c.article_type_id  AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype WHERE user_id='" +
 //                    user_id +
 //                    "')  " +
@@ -291,10 +291,10 @@ public class UserDaoIml implements userDao {
 //            list.addAll(nomapList);
 //        }
 
-        if (page == 1 || list.size() == 0) {
+        if (page == 1 || list.size() == 0&&page < 2) {
 
-            if (page == 1) {
-                String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+
+                String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -318,7 +318,7 @@ public class UserDaoIml implements userDao {
                 list.addAll(noHosursList);
 
 
-                String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_timeINTERVAL - 8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -342,7 +342,7 @@ public class UserDaoIml implements userDao {
                 list.addAll(noOneDayList);
 
 
-                String noTwoDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,3 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                String noTwoDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,3 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -366,7 +366,7 @@ public class UserDaoIml implements userDao {
                 list.addAll(noTwoDayList);
 
 
-                String noThreeDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,4 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL - 0 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                String noThreeDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,4 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -386,7 +386,7 @@ public class UserDaoIml implements userDao {
                 List<Map<String, Object>> noThreeDayList = jdbcTemplate.queryForList(noThreeDaySql);
                 list.addAll(noThreeDayList);
             }
-        }
+
 
 
         HashMap<String, Object> result = new HashMap<>();
@@ -563,7 +563,7 @@ public class UserDaoIml implements userDao {
                 String startTime = "";
                 String endTime = "";
                 if (type == 1) {
-                    String sql = "select DATE_ADD(update_time,INTERVAL - 0 HOUR) AS update_time from zz_wechat.article where article_id='" + article_id + "'";
+                    String sql = "select  update_time from zz_wechat.article where article_id='" + article_id + "'";
                     Map<String, Object> timeMap = jdbcTemplate.queryForMap(sql);
                     Object update_time = timeMap.get("update_time");
                     if (update_time != null) {
