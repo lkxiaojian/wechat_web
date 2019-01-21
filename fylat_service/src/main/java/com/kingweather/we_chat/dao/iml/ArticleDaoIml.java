@@ -647,13 +647,13 @@ public class ArticleDaoIml implements ArticleDao {
         Object message = conditions.get("message");
         String countSql = "select count(*) from zz_wechat.article ";
         if (message != null && !"".equals(message.toString())) {
-            countSql=countSql+" where article_title like '%"+message.toString()+"%' or author like '%"+message.toString() +"%' or source like '%"+message.toString() +"%'";
+            countSql = countSql + " where article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%'";
         }
         String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword, create_time from zz_wechat.article ";
         if (message != null && !"".equals(message.toString())) {
-            sql=sql+" where article_title like '%"+message.toString()+"%' or author like '%"+message.toString() +"%' or source like '%"+message.toString() +"%'";
+            sql = sql + " where article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%'";
         }
-        sql=sql+" ORDER BY update_time desc";
+        sql = sql + " ORDER BY update_time desc";
 
         Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
         map.put("code", 0);
@@ -703,15 +703,28 @@ public class ArticleDaoIml implements ArticleDao {
         String[] split = keywords.toString().split(",");
         String create_time = DateUtil.getCurrentTimeString();
         String sql = "insert into zz_wechat.keyword (keyword_name,create_time) values(?,date_format(?,'%Y-%m-%d %H:%i:%s'))";
+        int errorCount = 0;
+        int successCount = 0;
+        String countSql = "select count(*) as count from zz_wechat.keyword where keyword_name=?";
         for (int i = 0; i < split.length; i++) {
-            jdbcTemplate.update(sql, new Object[]{
-                    split[i],
-                    create_time
-            });
+
+            Map<String, Object> map = jdbcTemplate.queryForMap(countSql, new Object[]{split[i]});
+            if (map == null || map.get("count") != "1") {
+                jdbcTemplate.update(sql, new Object[]{
+                        split[i],
+                        create_time
+                });
+                successCount = successCount + 1;
+            } else {
+                errorCount = errorCount + 1;
+            }
         }
         Map<String, Object> map = new HashMap<>();
+
         map.put("code", 0);
-        map.put("message", "添加成功");
+        map.put("errorCount", errorCount);
+        map.put("successCount", successCount);
+
         return map;
     }
 
@@ -830,6 +843,64 @@ public class ArticleDaoIml implements ArticleDao {
         map.put("code", 0);
         map.put("message", "更新成功");
         return map;
+    }
+
+    /**
+     * @param map
+     * @return
+     */
+
+    @Override
+    public Map<String, Object> keywordQuery(Map<String, Object> map) {
+
+
+        Map<String, Object> resultmap = new LinkedHashMap<String, Object>();
+        Integer startNum = Integer.valueOf(map.get("startNum").toString());
+        Integer pageSize = Integer.valueOf(map.get("pageSize").toString());
+        Object message = map.get("message");
+        String countSql = "select count(*) from zz_wechat.keyword ";
+        if (message != null && !"".equals(message.toString())) {
+            countSql = countSql + " where keyword_name like '%" + message.toString() + "%' ";
+        }
+        String sql = "select id,keyword_name from zz_wechat.keyword ";
+        if (message != null && !"".equals(message.toString())) {
+            sql = sql + " where keyword_name like '%" + message.toString() + "%' ";
+        }
+        sql = sql + " ORDER BY update_time desc";
+
+        Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
+        resultmap.put("code", 0);
+        resultmap.put("message", "查询成功");
+        resultmap.put("total", page.getTotalCount());
+        resultmap.put("result", page.getResult());
+        return resultmap;
+    }
+
+    @Override
+    public Map<String, Object> updateKeyword(String id, String keyword_name) {
+
+        if ("".equals(id) || id != null || "".equals(keyword_name) || keyword_name != null) {
+            return getErrorMap();
+        }
+
+        String create_time = DateUtil.getCurrentTimeString();
+        String sql = "update zz_wechat.keyword set keyword_name=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s') where id=?";
+
+        int update = jdbcTemplate.update(sql, new Object[]{
+                keyword_name,
+                create_time,
+                Integer.parseInt(id)
+
+        });
+
+        HashMap<String, Object> map = new HashMap<>();
+        if(update==0){
+            map.put("code", 0);
+            map.put("message", "跟新成功！");
+            return map;
+        }
+
+        return getErrorMap();
     }
 
 

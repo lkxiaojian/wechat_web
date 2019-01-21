@@ -200,7 +200,7 @@ public class WebArticleManageController extends BaseController {
 
 
     /**
-     * 查询组列表
+     * 文章查询
      */
     @RequestMapping(value = "/article/query", method = RequestMethod.GET)
     public Map<String, Object> select(String message) {
@@ -294,6 +294,35 @@ public class WebArticleManageController extends BaseController {
             e.printStackTrace();
         }
 
+        return map;
+    }
+
+
+    /**
+     *关键字分页查询
+     *
+     * @return
+     */
+    @RequestMapping(value = "article/keywordQuery", method = RequestMethod.GET)
+    public Map<String, Object> keywordQuery() {
+        int startNum = Integer.parseInt(request.getParameter("pageNumber"));
+        int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        Map<String, Object> conditions = new HashMap<String, Object>();
+        conditions.put("startNum", startNum);
+        conditions.put("pageSize", pageSize);
+        conditions.put("message", request.getParameter("message"));
+        Map<String, Object> maps = articleService.keywordQuery(conditions);
+        return maps;
+    }
+
+
+    /**
+     *
+     */
+    @RequestMapping(value = "/article/updateKeyword", method = RequestMethod.GET)
+    public Map<String, Object> updateKeyword(String id,String keyword_name) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map = articleService.updateKeyword(id,keyword_name);
         return map;
     }
 

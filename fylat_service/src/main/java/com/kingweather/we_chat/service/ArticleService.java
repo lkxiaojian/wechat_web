@@ -35,4 +35,8 @@ public interface ArticleService {
     Map<String,Object> getwebmessage(String article_id);
 
     Map<String,Object> updateArticle(Map<String, Object> data);
+
+    Map<String,Object> keywordQuery(Map<String, Object> map);
+
+    Map<String,Object> updateKeyword(String id,String keyword_name);
 }
