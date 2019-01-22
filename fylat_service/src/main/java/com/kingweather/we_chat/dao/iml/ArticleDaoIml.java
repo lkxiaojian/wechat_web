@@ -897,7 +897,7 @@ public class ArticleDaoIml implements ArticleDao {
         HashMap<String, Object> map = new HashMap<>();
         if(update==0){
             map.put("code", 0);
-            map.put("message", "跟新成功！");
+            map.put("message", "更新成功！");
             return map;
         }
 
