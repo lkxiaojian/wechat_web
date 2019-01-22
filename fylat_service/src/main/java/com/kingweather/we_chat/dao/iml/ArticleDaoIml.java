@@ -702,7 +702,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         String[] split = keywords.toString().split(",");
         String create_time = DateUtil.getCurrentTimeString();
-        String sql = "insert into zz_wechat.keyword (keyword_name,create_time) values(?,date_format(?,'%Y-%m-%d %H:%i:%s'))";
+        String sql = "insert into zz_wechat.keyword (keyword_name,create_time,last_time) values(?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'))";
         int errorCount = 0;
         int successCount = 0;
         String countSql = "select count(*) as count from zz_wechat.keyword where keyword_name=?";
@@ -712,7 +712,8 @@ public class ArticleDaoIml implements ArticleDao {
             if (map == null || map.get("count") != "1") {
                 jdbcTemplate.update(sql, new Object[]{
                         split[i],
-                        create_time
+                        create_time,
+                        "2017-01-01"
                 });
                 successCount = successCount + 1;
             } else {
@@ -879,7 +880,7 @@ public class ArticleDaoIml implements ArticleDao {
     @Override
     public Map<String, Object> updateKeyword(String id, String keyword_name) {
 
-        if ("".equals(id) || id != null || "".equals(keyword_name) || keyword_name != null) {
+        if ("".equals(id) || id == null || "".equals(keyword_name) || keyword_name == null) {
             return getErrorMap();
         }
 

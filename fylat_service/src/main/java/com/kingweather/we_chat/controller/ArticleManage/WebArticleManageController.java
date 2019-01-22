@@ -317,7 +317,7 @@ public class WebArticleManageController extends BaseController {
 
 
     /**
-     *
+     *关键词的更新
      */
     @RequestMapping(value = "/article/updateKeyword", method = RequestMethod.GET)
     public Map<String, Object> updateKeyword(String id,String keyword_name) {
