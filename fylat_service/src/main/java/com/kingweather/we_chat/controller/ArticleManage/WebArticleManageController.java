@@ -327,4 +327,15 @@ public class WebArticleManageController extends BaseController {
     }
 
 
+    /**
+     *关键词的删除
+     */
+    @RequestMapping(value = "/article/delKeyword", method = RequestMethod.GET)
+    public Map<String, Object> updateKeyword(String id) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map = articleService.delKeyword(id);
+        return map;
+    }
+
+
 }

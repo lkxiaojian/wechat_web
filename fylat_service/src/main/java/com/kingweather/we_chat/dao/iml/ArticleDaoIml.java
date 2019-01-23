@@ -709,15 +709,15 @@ public class ArticleDaoIml implements ArticleDao {
         for (int i = 0; i < split.length; i++) {
 
             Map<String, Object> map = jdbcTemplate.queryForMap(countSql, new Object[]{split[i]});
-            if (map == null || map.get("count") != "1") {
+            if (map != null && map.get("count") != null &&"1".equals(map.get("count").toString())) {
+                errorCount = errorCount + 1;
+            } else {
                 jdbcTemplate.update(sql, new Object[]{
                         split[i],
                         create_time,
                         "2017-01-01"
                 });
                 successCount = successCount + 1;
-            } else {
-                errorCount = errorCount + 1;
             }
         }
         Map<String, Object> map = new HashMap<>();
@@ -895,13 +895,39 @@ public class ArticleDaoIml implements ArticleDao {
         });
 
         HashMap<String, Object> map = new HashMap<>();
-        if(update==0){
+        if (update == 0) {
             map.put("code", 0);
             map.put("message", "更新成功！");
             return map;
         }
 
         return getErrorMap();
+    }
+
+    /**
+     * 关键词的删除
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String, Object> delKeyword(String id) {
+        if ("".equals(id) || id == null) {
+            return getErrorMap();
+        }
+        String sql = "DELETE FROM zz_wechat.keyword where id=?";
+        int update = jdbcTemplate.update(sql, new Object[]{
+                Integer.parseInt(id)
+
+        });
+        HashMap<String, Object> map = new HashMap<>();
+        if (update == 1) {
+            map.put("code", 0);
+            map.put("message", "删除成功！");
+        } else {
+            return getErrorMap();
+        }
+        return map;
     }
 
 

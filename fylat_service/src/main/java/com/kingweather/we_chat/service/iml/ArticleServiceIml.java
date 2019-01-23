@@ -97,4 +97,9 @@ public class ArticleServiceIml implements ArticleService {
     public Map<String, Object> updateKeyword(String id,String keyword_name) {
         return articleDao.updateKeyword(id,keyword_name);
     }
+
+    @Override
+    public Map<String, Object> delKeyword(String id) {
+        return articleDao.delKeyword( id);
+    }
 }
