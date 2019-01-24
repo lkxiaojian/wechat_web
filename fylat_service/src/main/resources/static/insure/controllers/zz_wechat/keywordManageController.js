@@ -22,7 +22,7 @@ app.controller('keywordManageController', ['$scope', '$modal', '$http', 'fylatSe
                     }
                 }).success(function (data) {
                     console.log(data)
-                    if (data.code == 0) {
+                    if (data!=null&&data.code == 0) {
                         modalTip({
                             tip: switchLang.switchLang('添加成功'),
                             type: true
@@ -38,11 +38,11 @@ app.controller('keywordManageController', ['$scope', '$modal', '$http', 'fylatSe
                         });
                     }
                 }).error(function (data, status, headers, config) {
-                    console.log(data)
-                    modalTip({
-                        tip: switchLang.switchLang('添加失败'),
-                        type: false
-                    });
+                    // console.log(data)
+                    // modalTip({
+                    //     tip: switchLang.switchLang('添加失败'),
+                    //     type: false
+                    // });
 
                 });
             }

@@ -1,14 +1,18 @@
 package com.kingweather.we_chat.dao.iml;
 
+import com.alibaba.fastjson.JSONObject;
 import com.kingweather.common.jdbc.JdbcUtil;
 import com.kingweather.common.util.DateUtil;
 import com.kingweather.common.util.Page;
+import com.kingweather.we_chat.constants.HttpRequest;
 import com.kingweather.we_chat.constants.UuidUtils;
 import com.kingweather.we_chat.dao.ArticleDao;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import javax.rmi.CORBA.Util;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +27,9 @@ public class ArticleDaoIml implements ArticleDao {
     private JdbcTemplate jdbcTemplate;
     @Resource
     private JdbcUtil jdbc;
+
+    @Value("${urlPath}")
+    private String urlPath;
 
     @Override
     public Map<String, Object> getArticleTrait(String articleId, int page) {
@@ -700,33 +707,40 @@ public class ArticleDaoIml implements ArticleDao {
 
         }
 
-        String[] split = keywords.toString().split(",");
+//        String[] split = keywords.toString().split(",");
         String create_time = DateUtil.getCurrentTimeString();
-        String sql = "insert into zz_wechat.keyword (keyword_name,create_time,last_time) values(?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'))";
+        String sql = "insert into zz_wechat.keyword (id,keyword_name,create_time,last_time) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'))";
         int errorCount = 0;
         int successCount = 0;
+
         String countSql = "select count(*) as count from zz_wechat.keyword where keyword_name=?";
-        for (int i = 0; i < split.length; i++) {
 
-            Map<String, Object> map = jdbcTemplate.queryForMap(countSql, new Object[]{split[i]});
-            if (map != null && map.get("count") != null &&"1".equals(map.get("count").toString())) {
-                errorCount = errorCount + 1;
-            } else {
-                jdbcTemplate.update(sql, new Object[]{
-                        split[i],
-                        create_time,
-                        "2017-01-01"
-                });
-                successCount = successCount + 1;
-            }
+        String uUid = UuidUtils.getUUid();
+        Map<String, Object> map = jdbcTemplate.queryForMap(countSql, new Object[]{keywords.toString()});
+        if (map != null && map.get("count") != null && "1".equals(map.get("count").toString())) {
+            errorCount = errorCount + 1;
+        } else {
+            jdbcTemplate.update(sql, new Object[]{
+                    uUid,
+                    keywords.toString(),
+                    create_time,
+                    "2017-01-01"
+            });
+            successCount = successCount + 1;
         }
-        Map<String, Object> map = new HashMap<>();
 
-        map.put("code", 0);
-        map.put("errorCount", errorCount);
-        map.put("successCount", successCount);
+        if (successCount > 0) {
+            String url = urlPath + "article/addKeyword";
+            HttpRequest.sendGet(url, "param=" + keywords.toString() + "&uUid=" + uUid);
+        }
 
-        return map;
+        Map<String, Object> remap = new HashMap<>();
+        if (successCount > 0) {
+            remap.put("code", 0);
+            remap.put("message", "添加成功");
+        }
+
+        return remap;
     }
 
     /**
@@ -890,10 +904,12 @@ public class ArticleDaoIml implements ArticleDao {
         int update = jdbcTemplate.update(sql, new Object[]{
                 keyword_name,
                 create_time,
-                Integer.parseInt(id)
+                id
 
         });
 
+        String url = urlPath + "article/updateKeyword";
+        HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + keyword_name);
         HashMap<String, Object> map = new HashMap<>();
         if (update == 0) {
             map.put("code", 0);
@@ -917,9 +933,13 @@ public class ArticleDaoIml implements ArticleDao {
         }
         String sql = "DELETE FROM zz_wechat.keyword where id=?";
         int update = jdbcTemplate.update(sql, new Object[]{
-                Integer.parseInt(id)
+                id
 
         });
+
+
+        String url = urlPath + "article/delKeyword";
+        HttpRequest.sendGet(url, "id=" + id);
         HashMap<String, Object> map = new HashMap<>();
         if (update == 1) {
             map.put("code", 0);

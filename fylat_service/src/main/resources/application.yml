@@ -63,3 +63,5 @@ logging:
     root: INFO
     org.springframework.jdbc.core: DEBUG
     com.kingweather: DEBUG
+
+urlPath: http://localhost:8990/
