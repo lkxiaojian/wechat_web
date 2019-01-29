@@ -20,7 +20,7 @@ public class StatisticsController {
 
 
     @GetMapping
-    @RequestMapping(value = "/insertStatisticsInfo", method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/insertStatisticsInfo/rest", method = {RequestMethod.POST,RequestMethod.GET})
     public Map<String, Object> insertStatisticsInfo(@RequestParam Map<String, Object> info) {
 
         Map map = new HashMap();
