@@ -70,6 +70,7 @@ public class ExceptiongAspect {
         if (!joinPoint.toString().contains("UserManage.UserManageController")
                 && !joinPoint.toString().contains("ArticleManage.ArticleManageController")
                 && !joinPoint.toString().contains("other.UploadController")
+                && !joinPoint.toString().contains("statistics.StatisticsController")
                 &&!joinPoint.toString().contains("algorithm.algorithmController")){
             String method = joinPoint.getSignature().getName();
             if (session.getAttribute("user") == null && !method.equals("userLogin") && !method.equals("articleImageUpload") && !method.equals("addArticle")) {

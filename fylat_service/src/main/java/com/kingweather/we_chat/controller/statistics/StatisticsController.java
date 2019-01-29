@@ -1,10 +1,7 @@
 package com.kingweather.we_chat.controller.statistics;
 
 import com.kingweather.we_chat.service.StatisticsService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -22,8 +19,9 @@ public class StatisticsController {
     private StatisticsService statisticsService;
 
 
-    @RequestMapping(value = "/insertStatisticsInfo", method = RequestMethod.POST)
-    public Map<String, Object> insertStatisticsInfo(@RequestBody Map<String, Object> info) {
+    @GetMapping
+    @RequestMapping(value = "/insertStatisticsInfo", method = {RequestMethod.POST,RequestMethod.GET})
+    public Map<String, Object> insertStatisticsInfo(@RequestParam Map<String, Object> info) {
 
         Map map = new HashMap();
         map.put("code", 2);

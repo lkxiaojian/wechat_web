@@ -21,6 +21,6 @@ public class StatisticsServiceIml implements StatisticsService {
     @Override
     public int insertStatisticsInfo(Map<String, Object> info) throws Exception{
 
-        return 0;
+        return statisticsDao.insertStatisticsInfo(info);
     }
 }
