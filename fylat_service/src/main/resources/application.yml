@@ -64,4 +64,4 @@ logging:
     org.springframework.jdbc.core: DEBUG
     com.kingweather: DEBUG
 
-urlPath: http://localhost:8990/
+urlPath: http://106.2.13.148:8990/
