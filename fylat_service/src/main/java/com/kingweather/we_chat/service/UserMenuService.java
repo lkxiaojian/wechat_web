@@ -9,4 +9,8 @@ import java.util.List;
 public interface UserMenuService {
 
     public List getMenuTree();
+
+    public int addUserReMenu(List<String> list);
+
+    public int removeUserReMenu(List<String> list);
 }

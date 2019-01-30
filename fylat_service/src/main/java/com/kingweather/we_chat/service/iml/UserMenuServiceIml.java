@@ -34,6 +34,35 @@ public class UserMenuServiceIml implements UserMenuService {
         return list;
     }
 
+    @Override
+    public int addUserReMenu(List<String> list) {
+
+        int i= 0;
+
+        for (String l:list) {
+            try {
+                i+=userMenuDaoImp.addUserReMenu(l);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return i;
+    }
+
+    @Override
+    public int removeUserReMenu(List<String> list) {
+        int i= 0;
+        try {
+            for (String l:list) {
+                i+=userMenuDaoImp.removeUserReMenu(l);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
     public List<Map> getMenuTreeChildren(String parentId) {
         List<Map> list = userMenuDaoImp.getMenuTree(parentId);
         for (Map s:list) {

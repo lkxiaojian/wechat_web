@@ -21,13 +21,14 @@ public class StatisticsDaoIml implements StatisticsDao {
     @Override
     public int insertStatisticsInfo(Map<String, Object> info) throws Exception {
 
-        String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type) VALUES(?,?,NOW(),?,?)";
+        String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,?,NOW(),?,?,?)";
 
         int i = jdbcTemplate.update(sql, new Object[]{
                 info.get("articleId"),
                 info.get("statisticsType"),
                 info.get("userId"),
-                info.get("articleType")
+                info.get("articleType"),
+                info.get("countNum")
         });
         return i;
     }

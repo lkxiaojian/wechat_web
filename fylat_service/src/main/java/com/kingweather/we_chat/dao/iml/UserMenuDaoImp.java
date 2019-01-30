@@ -25,4 +25,18 @@ public class UserMenuDaoImp implements UserMenuDao {
         List list = jdbcTemplate.queryForList(sql,new Object[]{parentId});
         return list;
     }
+
+    @Override
+    public int addUserReMenu(String str) throws Exception {
+        String[] s = str.split("_");
+        String sql = "INSERT INTO sys_user_re_menu (id,user_id,menu_id) VALUES (?,?,?)";
+        return jdbcTemplate.update(sql,new Object[]{str,s[0],s[1]});
+    }
+
+    @Override
+    public int removeUserReMenu(String str) {
+
+        String sql ="DELETE FROM sys_user_re_menu WHERE id = ? ";
+        return jdbcTemplate.update(sql,new Object[]{str});
+    }
 }
