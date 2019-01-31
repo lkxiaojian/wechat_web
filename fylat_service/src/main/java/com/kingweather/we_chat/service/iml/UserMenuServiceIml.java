@@ -6,6 +6,7 @@ import com.kingweather.we_chat.service.UserMenuService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,16 @@ public class UserMenuServiceIml implements UserMenuService {
                 s.put("children",childrenList);
             }
         }
+        return list;
+    }
+
+    @Override
+    public List getUserMenuTree(HttpServletRequest request, String userId) {
+        if(null==userId||"".equals(userId.trim())){
+
+        }
+        List<Map> list = userMenuDaoImp.getUserMenuTree(userId);
+
         return list;
     }
 

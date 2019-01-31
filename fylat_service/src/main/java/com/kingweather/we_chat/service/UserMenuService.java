@@ -1,5 +1,6 @@
 package com.kingweather.we_chat.service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -9,6 +10,7 @@ import java.util.List;
 public interface UserMenuService {
 
     public List getMenuTree();
+    public List getUserMenuTree(HttpServletRequest request,String userId);
 
     public int addUserReMenu(List<String> list);
 

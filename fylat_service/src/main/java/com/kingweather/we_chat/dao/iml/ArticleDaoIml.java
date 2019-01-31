@@ -60,6 +60,9 @@ public class ArticleDaoIml implements ArticleDao {
         if (articleId == null || articleId.isEmpty() || wechatid == null || wechatid.isEmpty()) {
             return getErrorMap();
         }
+
+
+
         //获取文章的详细信息 content_manual
 //        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
@@ -79,6 +82,13 @@ public class ArticleDaoIml implements ArticleDao {
             if (content_manual != null) {
                 messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
             }
+
+            String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
+            jdbcTemplate.update(sql, new Object[]{
+                    articleId,
+                    wechatid,
+                    messageMap.get("article_type_id").toString()
+            });
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
