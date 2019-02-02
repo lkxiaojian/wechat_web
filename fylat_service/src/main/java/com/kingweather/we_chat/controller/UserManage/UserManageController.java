@@ -31,7 +31,7 @@ public class UserManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/register/rest", method = RequestMethod.POST)
-    public Map<String, Object> getDataManageList(@RequestParam  Map<String, Object> userData) {
+    public Map<String, Object> getDataManageList(@RequestBody  Map<String, Object> userData) {
         Map map = new HashMap();
         log.info("用户注册");
         map = userService.registerUser(userData);
@@ -103,11 +103,11 @@ public class UserManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/decodeUserInfo", method = RequestMethod.POST)
-    public Map<String, Object> decodeUserInfo(@RequestParam Map<String, Object> data) {
+    public Map<String, Object> decodeUserInfo(@RequestBody Map<String, Object> data) {
 
 
-        Object encryptedData = data.get("encryptedData");
-        Object iv = data.get("iv");
+//        Object encryptedData = data.get("encryptedData");
+//        Object iv = data.get("iv");
         Object code = data.get("code");
         Map map = new HashMap();
 
