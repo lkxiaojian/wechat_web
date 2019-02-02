@@ -19,7 +19,6 @@ public class StatisticsController {
     private StatisticsService statisticsService;
 
 
-    @GetMapping
     @RequestMapping(value = "/insertStatisticsInfo/rest", method = {RequestMethod.POST,RequestMethod.GET})
     public Map<String, Object> insertStatisticsInfo(@RequestParam Map<String, Object> info) {
 
