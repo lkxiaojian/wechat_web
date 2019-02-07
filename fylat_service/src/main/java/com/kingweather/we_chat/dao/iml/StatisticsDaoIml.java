@@ -50,11 +50,11 @@ public class StatisticsDaoIml implements StatisticsDao {
 
         sql.append("  	SELECT 	 ");
 
-        if("3".equals(statisticsType)){
-            sql.append("  	ROUND(IFNULL(AVG(a.count_num),0))||'' num  ");
-        }else{
+//        if("3".equals(statisticsType)){
+//            sql.append("  	ROUND(IFNULL(AVG(a.count_num),0))||'' num  ");
+//        }else{
             sql.append("  	IFNULL(SUM(a.count_num),0)||'' num ");
-        }
+//        }
         sql.append("  	FROM  statistics_info a RIGHT JOIN sys_hour b ON DATE_FORMAT (a.dispose_time,'%k') = b.name   ");
         sql.append(" and a.statistics_Type = ? ");
         parameterList.add(statisticsType);
@@ -109,6 +109,7 @@ public class StatisticsDaoIml implements StatisticsDao {
         sql.append(" 	a.article_keyword articleKeyword,	  ");
         sql.append(" 	a.author author,	  ");
         sql.append(" 	a.create_time createTime,	  ");
+        sql.append(" 	a.statistics_type statisticsType,	  ");
         sql.append(" 	a.source source,	  ");
         sql.append(" 	SUM(b.count_num) num	  ");
         sql.append(" 	FROM article a , statistics_info b	  ");
@@ -132,7 +133,7 @@ public class StatisticsDaoIml implements StatisticsDao {
             sql.append("  and DATE_FORMAT (b.dispose_time,'%k') = ?  	 ");
             parameterList.add(hour);
         }
-        sql.append(" 	GROUP BY a.article_id	  ");
+        sql.append(" 	GROUP BY a.article_id,statistics_type	  ");
 
 
         Number number =  jdbcTemplate.queryForObject("select count(1) from ("+sql.toString()+") c",parameterList.toArray(),Long.class);
