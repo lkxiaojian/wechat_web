@@ -11,7 +11,7 @@ public interface WebSysUserDao {
 
     public int updUser(Map<String, Object> info)throws Exception;
 
-    public List selUser(Map<String, Object> info)throws Exception;
+    public Map selUser(Map<String, Object> info)throws Exception;
 
     public int verifyLogin(String name,String pass)throws Exception;
 

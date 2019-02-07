@@ -86,11 +86,10 @@ public class WebSysUserController {
             map.put("code", 2);
             map.put("message", "系统异常，请联系管理员！");
 
-            List list  = webSysUserServiceIml.selUser(info);
+            map  = webSysUserServiceIml.selUser(info);
 
             map.put("code", 0);
             map.put("message", "查询用户成功！");
-            map.put("data",list);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -23,4 +23,16 @@ public class StatisticsServiceIml implements StatisticsService {
 
         return statisticsDao.insertStatisticsInfo(info);
     }
+
+    @Override
+    public Map getCharData(Map<String, Object> info) throws Exception {
+
+        return statisticsDao.getCharData(info);
+    }
+
+    @Override
+    public Map selStatisticsInfo(Map<String, Object> info) throws Exception {
+
+        return statisticsDao.selStatisticsInfo(info);
+    }
 }

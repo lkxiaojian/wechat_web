@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,18 +82,19 @@ public class WebSysUserDaoIml implements WebSysUserDao {
     }
 
     @Override
-    public List selUser(Map<String, Object> info) throws Exception{
+    public Map selUser(Map<String, Object> info) throws Exception{
 
+        Map map = new HashMap();
         String page =   info.get("page")==null?"":info.get("page").toString();
         String size =   info.get("size")==null?"":info.get("size").toString();
         String telPhone =   info.get("telPhone")==null?"":info.get("telPhone").toString();
         String name =   info.get("name")==null?"":info.get("name").toString();
         String userSex =   info.get("userSex")==null?"":info.get("userSex").toString();
-        String pass =   info.get("pass")==null?"":info.get("pass").toString();
-
 
         StringBuffer sql =  new StringBuffer();
+        StringBuffer sqlCount =  new StringBuffer();
         List list = new ArrayList();
+        List listCount = new ArrayList();
 
         sql.append("  	SELECT 	 ");
         sql.append("  	tel_phone telPhone, 	 ");
@@ -103,26 +105,43 @@ public class WebSysUserDaoIml implements WebSysUserDao {
         sql.append("  	FROM 	 ");
         sql.append("  	zz_wechat.sys_user WHERE STATUS= 1	 ");
 
+        sqlCount.append("  	SELECT 	 ");
+        sqlCount.append("  	count(id) num	 ");
+        sqlCount.append("  	FROM 	 ");
+        sqlCount.append("  	zz_wechat.sys_user WHERE STATUS= 1	 ");
 
         if(telPhone!=null&&!"".equals(telPhone)){
             sql.append("  	and tel_phone like ?  	 ");
             list.add(telPhone+"%");
+            sqlCount.append("  	and tel_phone like ?  	 ");
+            listCount.add(telPhone+"%");
+
         }
         if(name!=null&&!"".equals(name)){
             sql.append("  and nick_name like ?  	 ");
             list.add(name+"%");
+            sqlCount.append("  and nick_name like ?  	 ");
+            listCount.add(name+"%");
+
         }
         if(userSex!=null&&!"".equals(userSex)){
             sql.append("  and user_sex = ?  	 ");
             list.add(userSex);
+            sqlCount.append("  and user_sex = ?  	 ");
+            listCount.add(userSex);
+
         }
 
 
-        list.add(Integer.valueOf(page)-1);
+        list.add((Integer.valueOf(page)-1)*Integer.valueOf(size));
         list.add(Integer.valueOf(size));
         sql.append("  	LIMIT ?, ? 	 ");
-        System.out.println(sql.toString());
-        return jdbcTemplate.queryForList(sql.toString(),list.toArray());
+        List listData = jdbcTemplate.queryForList(sql.toString(),list.toArray());
+        map.put("data",listData);
+
+        Map mapCount = jdbcTemplate.queryForMap(sqlCount.toString(),listCount.toArray());
+        map.put("num",Integer.valueOf( mapCount.get("num").toString() ));
+        return map;
     }
 
     @Override

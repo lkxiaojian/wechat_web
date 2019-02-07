@@ -5,6 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,5 +35,118 @@ public class StatisticsDaoIml implements StatisticsDao {
                 info.get("countNum")
         });
         return i;
+    }
+
+    @Override
+    public Map getCharData(Map<String, Object> info) throws Exception {
+        String statisticsType =   info.get("statisticsType")==null?"":info.get("statisticsType").toString();
+        String articleType =   info.get("articleType")==null?"":info.get("articleType").toString();
+        String userId =   info.get("userId")==null?"":info.get("userId").toString();
+        String startTime =   info.get("startTime")==null?"":info.get("startTime").toString();
+        String endTime =   info.get("endTime")==null?"":info.get("endTime").toString();
+
+        StringBuffer sql = new StringBuffer();
+        List parameterList = new ArrayList();
+
+        sql.append("  	SELECT 	 ");
+
+        if("3".equals(statisticsType)){
+            sql.append("  	ROUND(IFNULL(AVG(a.count_num),0))||'' num  ");
+        }else{
+            sql.append("  	IFNULL(SUM(a.count_num),0)||'' num ");
+        }
+        sql.append("  	FROM  statistics_info a RIGHT JOIN sys_hour b ON DATE_FORMAT (a.dispose_time,'%k') = b.name   ");
+        sql.append(" and a.statistics_Type = ? ");
+        parameterList.add(statisticsType);
+        sql.append(" AND a.dispose_time BETWEEN ? AND ? ");
+        parameterList.add(startTime);
+        parameterList.add(endTime);
+
+        if(userId!=null&&!"".equals(userId)){
+            sql.append("  and a.user_id = ?  	 ");
+            parameterList.add(userId);
+        }
+
+        if(articleType!=null&&!"".equals(articleType)){
+            sql.append("  and a.article_type = ?  	 ");
+            parameterList.add(articleType);
+        }
+        sql.append("  	GROUP BY b.name	 ");
+        sql.append("  	ORDER BY b.name+0 	 ");
+
+        System.out.println(sql.toString());
+
+        List obj = jdbcTemplate.queryForList(sql.toString(),parameterList.toArray());
+        String[] str = new String[obj.size()];
+        for (int i=0,num=obj.size() ;i<num;i++){
+          Map m =(Map) obj.get(i);
+          str[i]=m.get("num").toString();
+        }
+        Map map = new HashMap();
+        map.put("data",str);
+        return map;
+    }
+
+    @Override
+    public Map selStatisticsInfo(Map<String, Object> info) throws Exception {
+
+        String statisticsType =   info.get("statisticsType")==null?"":info.get("statisticsType").toString();
+        String startTime =   info.get("startTime")==null?"":info.get("startTime").toString();
+        String endTime =   info.get("endTime")==null?"":info.get("endTime").toString();
+        String userId =   info.get("userId")==null?"":info.get("userId").toString();
+        String articleType =  info.get("articleType")==null?"":info.get("articleType").toString();
+        String page =   info.get("page")==null?"":info.get("page").toString();
+        String size =   info.get("size")==null?"":info.get("size").toString();
+        String hour =   info.get("hour")==null?"":info.get("hour").toString();
+
+
+        StringBuffer sql = new StringBuffer();
+        List parameterList = new ArrayList();
+
+        sql.append(" 	SELECT a.article_id articleId,	  ");
+        sql.append(" 	a.article_type_id articleTypeId,	  ");
+        sql.append(" 	a.article_title articleTitle,	  ");
+        sql.append(" 	a.article_keyword articleKeyword,	  ");
+        sql.append(" 	a.author author,	  ");
+        sql.append(" 	a.create_time createTime,	  ");
+        sql.append(" 	a.source source,	  ");
+        sql.append(" 	SUM(b.count_num) num	  ");
+        sql.append(" 	FROM article a , statistics_info b	  ");
+        sql.append(" 	WHERE a.article_id = b.article_id	  ");
+        sql.append(" AND b.dispose_time BETWEEN ? AND ? ");
+        parameterList.add(startTime);
+        parameterList.add(endTime);
+        sql.append(" 	AND b.statistics_type =	?  ");
+        parameterList.add(statisticsType);
+
+        if(userId!=null&&!"".equals(userId)){
+            sql.append("  and b.user_id = ?  	 ");
+            parameterList.add(userId);
+        }
+        if(articleType!=null&&!"".equals(articleType)){
+            sql.append("  and b.article_type = ?  	 ");
+            parameterList.add(articleType);
+        }
+
+        if(hour!=null&&!"".equals(hour)){
+            sql.append("  and DATE_FORMAT (b.dispose_time,'%k') = ?  	 ");
+            parameterList.add(hour);
+        }
+        sql.append(" 	GROUP BY a.article_id	  ");
+
+
+        Number number =  jdbcTemplate.queryForObject("select count(1) from ("+sql.toString()+") c",parameterList.toArray(),Long.class);
+
+        parameterList.add((Integer.valueOf(page)-1)*Integer.valueOf(size));
+        parameterList.add(Integer.valueOf(size));
+        sql.append("  	LIMIT ?, ? 	 ");
+
+        List obj = jdbcTemplate.queryForList(sql.toString(),parameterList.toArray());
+
+        Map map = new HashMap();
+        map.put("data",obj);
+        map.put("num",number.longValue());
+
+        return map;
     }
 }

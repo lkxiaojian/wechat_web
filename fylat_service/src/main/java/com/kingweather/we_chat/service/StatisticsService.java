@@ -9,5 +9,8 @@ import java.util.Map;
 public interface StatisticsService {
 
     int insertStatisticsInfo(Map<String, Object> info) throws Exception;
+    Map getCharData(Map<String, Object> info) throws Exception;
+
+    Map selStatisticsInfo(Map<String, Object> info) throws Exception;
 
 }

@@ -34,7 +34,7 @@ public class WebSysUserServiceIml implements WebSysUserService {
     }
 
     @Override
-    public List selUser(Map<String, Object> info)throws Exception {
+    public Map selUser(Map<String, Object> info)throws Exception {
         return webSysUserDaoIml.selUser(info);
     }
 

@@ -1,5 +1,6 @@
 package com.kingweather.we_chat.dao;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,5 +10,9 @@ import java.util.Map;
 public interface StatisticsDao {
 
     int insertStatisticsInfo(Map<String, Object> info) throws Exception;
+
+    Map getCharData(Map<String, Object> info) throws Exception;
+
+    Map selStatisticsInfo(Map<String, Object> info) throws Exception;
 
 }
