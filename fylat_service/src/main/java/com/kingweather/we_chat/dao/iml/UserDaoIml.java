@@ -418,12 +418,12 @@ public class UserDaoIml implements userDao {
 
         String oneStartTime = oneDay + " 00:00:00";
         String oneEndTime = oneDay + " 23:59:59";
-        String twoDay = DateUtil.getbeforeDayCurrentDateString(2);
-        String twoStartTime = twoDay + " 00:00:00";
-        String twoEndTime = twoDay + " 23:59:59";
-        String threeDay = DateUtil.getbeforeDayCurrentDateString(3);
-        String threeStartTime = threeDay + " 00:00:00";
-        String threeEndTime = threeDay + " 23:59:59";
+//        String twoDay = DateUtil.getbeforeDayCurrentDateString(2);
+//        String twoStartTime = twoDay + " 00:00:00";
+//        String twoEndTime = twoDay + " 23:59:59";
+//        String threeDay = DateUtil.getbeforeDayCurrentDateString(3);
+//        String threeStartTime = threeDay + " 00:00:00";
+//        String threeEndTime = threeDay + " 23:59:59";
         List<Object> list = new ArrayList();
         String sql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(sql);
@@ -595,7 +595,6 @@ public class UserDaoIml implements userDao {
             if (objNoCount != null) {
                 noLoveCount = Integer.parseInt(objNoCount.toString());
             }
-
             int num = page-(count / pageSize) +1;
             if (num < 0) {
                 num = 0;
@@ -648,7 +647,6 @@ public class UserDaoIml implements userDao {
                         num * pageSize +
                         "," +
                         pageSize;
-
                 List<Map<String, Object>> noOneDayList = jdbcTemplate.queryForList(noOneDaySql);
                 list.addAll(noOneDayList);
 
@@ -656,11 +654,9 @@ public class UserDaoIml implements userDao {
 
         }
 
-
         HashMap<String, Object> result = new HashMap<>();
         result.put("attention", attentionList);
         result.put("article", list);
-
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", 0);
         map.put("message", "查询成功");

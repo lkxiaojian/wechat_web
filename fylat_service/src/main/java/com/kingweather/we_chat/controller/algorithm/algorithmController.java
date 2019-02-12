@@ -43,7 +43,7 @@ public class algorithmController extends BaseController {
             countSql = countSql + messageSql;
             sql = sql + messageSql;
         }
-        sql = sql + " ORDER BY update_time ASC LIMIT " + page + "," + rows;
+        sql = sql + " ORDER BY update_time ASC LIMIT " + (page-1)*rows + "," + rows;
         Map<String, Object> map = new HashMap<>();
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> conutMap = jdbcTemplate.queryForMap(countSql);
@@ -60,7 +60,7 @@ public class algorithmController extends BaseController {
                 }
             }
         }
-        resultMap.put("count", Integer.parseInt(conutMap.get("count").toString()) - rows - page);
+        resultMap.put("count", Integer.parseInt(conutMap.get("count").toString()) - page*rows);
         resultMap.put("txt", resultList);
         map.put("code", 0);
         map.put("result", resultMap);
@@ -72,7 +72,7 @@ public class algorithmController extends BaseController {
     public Map<String, Object> getManualData(int rows, int page, int type) {
         String Sql = "select a.details_txt,b.parentid,a.article_type_id from zz_wechat.article a, zz_wechat.article_type b where a.article_type_id=b.article_type_id AND b.article_type_id !='0'" +
                 " AND  a.article_type_id='" + type + "'";
-        Sql = Sql + " ORDER BY update_time ASC LIMIT " + page + "," + rows;
+        Sql = Sql + " ORDER BY update_time ASC LIMIT " + (page-1)*rows + "," + rows;
 
         String countSql = "select count(*) as count from zz_wechat.article a, zz_wechat.article_type b where a.article_type_id=b.article_type_id AND b.article_type_id !='0'" +
                 " AND  a.article_type_id='" + type + "'";
@@ -91,7 +91,7 @@ public class algorithmController extends BaseController {
                 }
             }
         }
-        int count = Integer.parseInt(conutMap.get("count").toString()) - rows - page;
+        int count = Integer.parseInt(conutMap.get("count").toString()) -page*rows;
         if (count < 0) {
             count = 0;
         }
