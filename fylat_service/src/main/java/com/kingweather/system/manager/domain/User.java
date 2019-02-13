@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class User
 {
+	private String id;//ID
 	private String userId;//ID
     private String userName;//用户名
     private String password;//密码
@@ -34,7 +35,14 @@ public class User
     private JsonNode hirePro; //租户信息
     private User parentUser; //父用户
 
-    
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public String getSys_type() {
 		return sys_type;
 	}

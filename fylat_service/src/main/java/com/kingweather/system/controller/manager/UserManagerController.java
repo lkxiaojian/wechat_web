@@ -9,6 +9,7 @@ import com.kingweather.system.manager.domain.User;
 import com.kingweather.system.manager.domain.UserState;
 import com.kingweather.system.service.manager.MenuManagerService;
 import com.kingweather.system.service.manager.UserManagerService;
+import com.kingweather.we_chat.service.UserMenuService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,9 @@ public class UserManagerController extends BaseController
 
     @Resource
     private MenuManagerService menuManagerServiceImpl;
+
+	@Resource
+	private UserMenuService userMenuServiceIml;
 
 	private static Email e = null;
 
@@ -355,7 +359,11 @@ public class UserManagerController extends BaseController
                         map.put("result", menuTree);
                         session.setAttribute("menusTree", menuTree);
                         map.put("loginUser", user);
-                    }
+
+						List list = userMenuServiceIml.getUserMenuTree(null,user.getId());
+						map.put("userMenu", list);
+
+					}
                 }else if (expireDate < now) {
                     map.put("userCode", user.getStatus());
                     map.put("code", 0);

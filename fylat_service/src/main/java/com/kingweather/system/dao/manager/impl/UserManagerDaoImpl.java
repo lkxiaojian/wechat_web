@@ -453,6 +453,7 @@ public class UserManagerDaoImpl implements UserManagerDao {
 			return null;
 		}
 		User user = new User();
+		user.setId(map.get("id").toString());
 		user.setUserId(map.get("user_id").toString());
 		user.setUserName(map.get("nick_name").toString());
 
