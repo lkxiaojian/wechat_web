@@ -39,4 +39,6 @@ public interface ArticleDao {
     Map<String,Object> updateKeyword(String id,String keyword_name);
 
     Map<String,Object> delKeyword(String id);
+
+    Map<String,Object> getConditionDomain(Map<String, Object> conditions);
 }

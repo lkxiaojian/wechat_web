@@ -338,4 +338,26 @@ public class WebArticleManageController extends BaseController {
     }
 
 
+
+
+    /**
+     * 获取领域 条件和 分页查询
+     * @return
+     */
+    @RequestMapping(value = "article/getConditionDomain")
+    public Map<String, Object> getConditionDomain() {
+
+        int startNum = Integer.parseInt(request.getParameter("pageNumber"));
+        int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        Map<String, Object> conditions = new HashMap<String, Object>();
+        conditions.put("startNum", startNum);
+        conditions.put("pageSize", pageSize);
+        conditions.put("message", request.getParameter("message"));
+
+        return articleService.getConditionDomain(conditions);
+    }
+
+
+
+
 }

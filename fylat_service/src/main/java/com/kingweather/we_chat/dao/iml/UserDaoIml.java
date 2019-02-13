@@ -442,7 +442,7 @@ public class UserDaoIml implements userDao {
 
         String attentionSql = "SELECT 1 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c.parentid" +
                 " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
-                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?" +
+                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=? AND c.parentid !=?" +
                 " AND b.article_type_id IN (SELECT article_type_id FROM zz_wechat.article where " +
                 " update_time<=date_format(?,'%Y-%m-%d %H:%i:%s') " +
                 "AND update_time>=date_format(?,'%Y-%m-%d %H:%i:%s') and article_id NOT IN (SELECT article_id FROM  zz_wechat.user_article WHERE user_id=?))";
@@ -450,6 +450,7 @@ public class UserDaoIml implements userDao {
         List<Map<String, Object>> attentionList = jdbcTemplate.queryForList(attentionSql, new Object[]{
                 wechatid,
                 0,
+                -1,
                 currentTimeString,
                 oneStartTime,
                 user_id
@@ -458,11 +459,12 @@ public class UserDaoIml implements userDao {
 
         String attentionSqla = "SELECT 2 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
                 " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
-                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?";
+                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=? AND c.parentid !=?";
 
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(attentionSqla, new Object[]{
                 wechatid,
-                0
+                0,
+                -1
         });
 
         List<Map<String, Object>> rulust = new ArrayList<>();
@@ -577,7 +579,7 @@ public class UserDaoIml implements userDao {
                     "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
                     "WHERE user_id='" +
                     user_id +
-                    "')  AND d.parentid!='0' \n" +
+                    "')  AND d.parentid!='0' AND d.parentid!='-1' \n" +
                     " AND c.update_time<=date_format('" +
                     oneEndTime +
                     "','%Y-%m-%d %H:%i:%s')\n" +
@@ -607,7 +609,7 @@ public class UserDaoIml implements userDao {
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
                         "WHERE user_id='" +
                         user_id +
-                        "')  AND d.parentid!='0' \n" +
+                        "')  AND d.parentid!='0' AND d.parentid!='-1'\n" +
                         " AND c.update_time>=date_format('" +
                         oneEndTime +
                         "','%Y-%m-%d %H:%i:%s')\n" +
@@ -634,7 +636,7 @@ public class UserDaoIml implements userDao {
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
                         "WHERE user_id='" +
                         user_id +
-                        "')  AND d.parentid!='0' \n" +
+                        "')  AND d.parentid!='0' AND d.parentid!='-1'\n" +
                         " AND c.update_time<=date_format('" +
                         oneEndTime +
                         "','%Y-%m-%d %H:%i:%s')\n" +
@@ -764,7 +766,7 @@ public class UserDaoIml implements userDao {
 
                 String threeDay = DateUtil.getbeforeCurrentDateString(3);
                 String sqlCount = "SELECT count(*) as count FROM " +
-                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id \n" +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND  a.parentid !='-1' AND a.article_type_id=b.article_type_id \n" +
                         " AND a.article_type_id='" +
                         Integer.parseInt(article_type_id) +
                         "' AND b.update_time<date_format('" +
@@ -782,7 +784,7 @@ public class UserDaoIml implements userDao {
                 }
                 int pageSize = 10;
                 String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
-                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id  " +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
                         " AND b.article_type_id='" +
                         Integer.parseInt(article_type_id) +
                         "' AND b.update_time<date_format('" +
@@ -857,7 +859,7 @@ public class UserDaoIml implements userDao {
                 }
 
                 String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
-                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.article_type_id=b.article_type_id  " +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
                         " AND b.article_type_id='" +
                         Integer.parseInt(article_type_id) +
                         "' AND b.update_time<date_format('" +
