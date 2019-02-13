@@ -358,6 +358,31 @@ public class WebArticleManageController extends BaseController {
     }
 
 
+    /**
+     *领域的删除
+     */
+    @RequestMapping(value = "/article/delDomainById", method = RequestMethod.GET)
+    public Map<String, Object> delDomainById(String id) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map = articleService.delDomainById(id);
+        return map;
+    }
+
+
+    /**
+     * 领域的修改
+     *
+     * @return
+     */
+    @RequestMapping(value = "article/updateDomainById", method = RequestMethod.POST)
+    public Map<String, Object> updateDomainById(@RequestParam Map<String, Object> data) {
+
+        Map<String, Object> maps = articleService.updateDomainById(data);
+        return maps;
+    }
+
+
+
 
 
 }

@@ -43,4 +43,8 @@ public interface ArticleService {
     Map<String,Object> delKeyword(String id);
 
     Map<String,Object>  getConditionDomain(Map<String, Object> conditions);
+
+    Map<String,Object> delDomainById(String id);
+
+    Map<String,Object> updateDomainById(Map<String, Object> data);
 }

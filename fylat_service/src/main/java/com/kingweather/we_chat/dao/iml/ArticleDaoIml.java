@@ -1002,6 +1002,83 @@ public class ArticleDaoIml implements ArticleDao {
 
     }
 
+    /**
+     * 根据id删除 领域
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String, Object> delDomainById(String id) {
+        //删除相当于改变del_type 的值 不是真正的删除
+        String sql = "update zz_wechat.article_type set del_type=1 where article_type_id='" + id + "'";
+        jdbcTemplate.update(sql);
+        //根据父级id 查询所有的子级的节点的id
+        String idlist = "SELECT article_type_id FROM\n" +
+                "  (\n" +
+                "    SELECT * FROM article_type where parentid > 0 ORDER BY parentid, article_type_id DESC\n" +
+                "  ) realname_sorted,\n" +
+                "  (SELECT @pv :=" +
+                id +
+                ") initialisation\n" +
+                "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";
+        List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(idlist);
+
+
+        String idString = "";
+
+        if (idlistMaps != null && idlistMaps.size() > 0) {
+            for (int i = 0; i < idlistMaps.size(); i++) {
+                idString = idString + "'" + idlistMaps.get(i).get("article_type_id").toString() + "',";
+            }
+            if (idString.length() > 0) {
+                idString = idString.substring(0, idString.length() - 1);
+            }
+            //改变 子节点 del_type 的值
+            String ChildSql = "update zz_wechat.article_type set del_type=1 where article_type_id in( " + idString + " )";
+            jdbcTemplate.update(ChildSql);
+
+            //改变 文章的 del_type 的值
+            String ArticleSql = "update zz_wechat.article set del_type=1 where article_type_id in( " + idString + " )";
+            jdbcTemplate.update(ArticleSql);
+
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "删除成功");
+        return map;
+    }
+
+    /**
+     * @param data
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateDomainById(Map<String, Object> data) {
+        Object article_type_id = data.get("article_type_id");
+        Object article_type_name = data.get("article_type_name");
+        Object article_type_keyword = data.get("article_type_keyword");
+        if (article_type_id == null || article_type_name == null || article_type_keyword == null) {
+            return getErrorMap();
+        }
+
+        String sql = "update zz_wechat.article_type set article_type_name=?  ,article_type_keyword=? where article_type_id=?";
+
+        int update = jdbcTemplate.update(sql, new Object[]{
+                article_type_name.toString(),
+                article_type_keyword.toString(),
+                article_type_id.toString()
+        });
+        if(update==1){
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "跟新成功！");
+            return map;
+        }
+
+        return getErrorMap();
+    }
+
 
     /**
      * 传参错误
