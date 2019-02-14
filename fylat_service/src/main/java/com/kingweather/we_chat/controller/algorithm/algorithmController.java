@@ -79,7 +79,7 @@ public class algorithmController extends BaseController {
 
     @RequestMapping(value = "/reptile/getManualData/rest", method = RequestMethod.GET)
     public Map<String, Object> getManualData(int rows, int page, int type) {
-        String Sql = "select a.details_txt,b.parentid,a.article_type_id from zz_wechat.article a, zz_wechat.article_type b where a.article_type_id=b.article_type_id AND b.article_type_id !='0'" +
+        String Sql = "select a.details_txt,b.parentid,a.article_type_id,a.article_title from zz_wechat.article a, zz_wechat.article_type b where a.article_type_id=b.article_type_id AND b.article_type_id !='0'" +
                 " AND  a.article_type_id='" + type + "'";
         Sql = Sql + " ORDER BY update_time ASC LIMIT " + (page - 1) * rows + "," + rows;
 
