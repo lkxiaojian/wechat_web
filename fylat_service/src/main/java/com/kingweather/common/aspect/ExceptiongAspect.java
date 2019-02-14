@@ -96,7 +96,7 @@ public class ExceptiongAspect {
             request.setAttribute("method", null);
         } catch (Exception e1) {
             logger.error("eaop:::" + e1.getMessage());
-//			throw new RuntimeException(e1);
+			throw new RuntimeException(e1);
         }
 
     }
