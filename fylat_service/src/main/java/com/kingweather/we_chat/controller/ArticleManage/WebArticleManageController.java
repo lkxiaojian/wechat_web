@@ -338,4 +338,51 @@ public class WebArticleManageController extends BaseController {
     }
 
 
+
+
+    /**
+     * 获取领域 条件和 分页查询
+     * @return
+     */
+    @RequestMapping(value = "article/getConditionDomain")
+    public Map<String, Object> getConditionDomain() {
+
+        int startNum = Integer.parseInt(request.getParameter("pageNumber"));
+        int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+        Map<String, Object> conditions = new HashMap<String, Object>();
+        conditions.put("startNum", startNum);
+        conditions.put("pageSize", pageSize);
+        conditions.put("message", request.getParameter("message"));
+
+        return articleService.getConditionDomain(conditions);
+    }
+
+
+    /**
+     *领域的删除
+     */
+    @RequestMapping(value = "/article/delDomainById", method = RequestMethod.GET)
+    public Map<String, Object> delDomainById(String id) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map = articleService.delDomainById(id);
+        return map;
+    }
+
+
+    /**
+     * 领域的修改
+     *
+     * @return
+     */
+    @RequestMapping(value = "article/updateDomainById", method = RequestMethod.POST)
+    public Map<String, Object> updateDomainById(@RequestParam Map<String, Object> data) {
+
+        Map<String, Object> maps = articleService.updateDomainById(data);
+        return maps;
+    }
+
+
+
+
+
 }

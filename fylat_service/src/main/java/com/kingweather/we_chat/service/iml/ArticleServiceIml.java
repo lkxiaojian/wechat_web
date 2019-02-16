@@ -102,4 +102,19 @@ public class ArticleServiceIml implements ArticleService {
     public Map<String, Object> delKeyword(String id) {
         return articleDao.delKeyword( id);
     }
+
+    @Override
+    public Map<String, Object> getConditionDomain(Map<String, Object> conditions) {
+        return articleDao.getConditionDomain(conditions);
+    }
+
+    @Override
+    public Map<String, Object> delDomainById(String id) {
+        return articleDao.delDomainById(id);
+    }
+
+    @Override
+    public Map<String, Object> updateDomainById(Map<String, Object> data) {
+        return articleDao.updateDomainById(data);
+    }
 }

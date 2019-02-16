@@ -62,7 +62,6 @@ public class ArticleDaoIml implements ArticleDao {
         }
 
 
-
         //获取文章的详细信息 content_manual
 //        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
@@ -287,10 +286,12 @@ public class ArticleDaoIml implements ArticleDao {
         }
         String gzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,1 as type_id from article_type a,user_articletype b ,sys_user c WHERE a.article_type_id=b.article_type_id AND c.user_id=b.user_id AND c.wechat_id=?" +
                 "AND a.parentid !=? " +
+                "AND a.parentid !=? " +
                 "ORDER BY a.create_time DESC";
         List<Map<String, Object>> gzList = jdbcTemplate.queryForList(gzSql, new Object[]{
                 wechatid,
-                0
+                0,
+                -1
         });
 
         String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
@@ -304,11 +305,12 @@ public class ArticleDaoIml implements ArticleDao {
         String nogzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,2 as type_id \n" +
                 "from zz_wechat.article_type a ,zz_wechat.sys_user c WHERE " +
                 "a.article_type_id not in(SELECT article_type_id FROM zz_wechat.user_articletype WHERE user_id=?) AND c.wechat_id=?" +
-                "AND a.parentid !=?";
+                "AND a.parentid !=? AND a.parentid !=?";
         List<Map<String, Object>> nogzList = jdbcTemplate.queryForList(nogzSql, new Object[]{
                 user_id,
                 wechatid,
-                0
+                0,
+                -1
         });
 
         List list = new ArrayList();
@@ -340,7 +342,7 @@ public class ArticleDaoIml implements ArticleDao {
         String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
-        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE parentid !=0 AND (article_type_name LIKE '%" +
+        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE parentid !=0 AND  parentid !=-1 AND (article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -350,7 +352,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         List<Map<String, Object>> gzMapList = jdbcTemplate.queryForList(gzSeachSql);
 
-        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE parentid !=0 AND (article_type_name LIKE '%" +
+        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE parentid !=0 AND  parentid !=-1 AND (article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -562,14 +564,15 @@ public class ArticleDaoIml implements ArticleDao {
 
         int parentid = 0;
         if (article_type_id == null || "".equals(article_type_id)) {
-            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid !=?";
+            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid !=? AND parentid !=? ";
         } else {
-            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid=?";
+            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid=? AND parentid !=?";
             parentid = Integer.parseInt(article_type_id);
         }
 
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
-                parentid
+                parentid,
+                -1
         });
 
 
@@ -958,6 +961,122 @@ public class ArticleDaoIml implements ArticleDao {
             return getErrorMap();
         }
         return map;
+    }
+
+    /**
+     * 领域分页和条件查询
+     *
+     * @param conditions
+     * @return
+     */
+    @Override
+    public Map<String, Object> getConditionDomain(Map<String, Object> conditions) {
+        try {
+            Map<String, Object> map = new LinkedHashMap<String, Object>();
+            Integer startNum = Integer.valueOf(conditions.get("startNum").toString());
+            Integer pageSize = Integer.valueOf(conditions.get("pageSize").toString());
+            Object message = conditions.get("message");
+
+
+            String countSql = "select count(*) from zz_wechat.article_type where parentid='0' ";
+            if (message != null && !"".equals(message.toString())) {
+                countSql = countSql + "  and article_type_name like '%" + message.toString() + "%' ";
+            }
+            String sql = "select article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon, iamge_back,parentid from zz_wechat.article_type where parentid='0' ";
+            if (message != null && !"".equals(message.toString())) {
+                sql = sql + " and article_type_name like '%" + message.toString() + "%'  ";
+            }
+            sql = sql + " ORDER BY create_time desc";
+
+            Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
+            map.put("code", 0);
+            map.put("message", "查询成功");
+            map.put("total", page.getTotalCount());
+            map.put("result", page.getResult());
+            return map;
+
+        } catch (Exception e) {
+            return getErrorMap();
+        }
+
+
+    }
+
+    /**
+     * 根据id删除 领域
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String, Object> delDomainById(String id) {
+        //删除相当于改变del_type 的值 不是真正的删除
+        String sql = "update zz_wechat.article_type set del_type=1 where article_type_id='" + id + "'";
+        jdbcTemplate.update(sql);
+        //根据父级id 查询所有的子级的节点的id
+        String idlist = "SELECT article_type_id FROM\n" +
+                "  (\n" +
+                "    SELECT * FROM article_type where parentid > 0 ORDER BY parentid, article_type_id DESC\n" +
+                "  ) realname_sorted,\n" +
+                "  (SELECT @pv :=" +
+                id +
+                ") initialisation\n" +
+                "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";
+        List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(idlist);
+
+
+        String idString = "";
+
+        if (idlistMaps != null && idlistMaps.size() > 0) {
+            for (int i = 0; i < idlistMaps.size(); i++) {
+                idString = idString + "'" + idlistMaps.get(i).get("article_type_id").toString() + "',";
+            }
+            if (idString.length() > 0) {
+                idString = idString.substring(0, idString.length() - 1);
+            }
+            //改变 子节点 del_type 的值
+            String ChildSql = "update zz_wechat.article_type set del_type=1 where article_type_id in( " + idString + " )";
+            jdbcTemplate.update(ChildSql);
+
+            //改变 文章的 del_type 的值
+            String ArticleSql = "update zz_wechat.article set del_type=1 where article_type_id in( " + idString + " )";
+            jdbcTemplate.update(ArticleSql);
+
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "删除成功");
+        return map;
+    }
+
+    /**
+     * @param data
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateDomainById(Map<String, Object> data) {
+        Object article_type_id = data.get("article_type_id");
+        Object article_type_name = data.get("article_type_name");
+        Object article_type_keyword = data.get("article_type_keyword");
+        if (article_type_id == null || article_type_name == null || article_type_keyword == null) {
+            return getErrorMap();
+        }
+
+        String sql = "update zz_wechat.article_type set article_type_name=?  ,article_type_keyword=? where article_type_id=?";
+
+        int update = jdbcTemplate.update(sql, new Object[]{
+                article_type_name.toString(),
+                article_type_keyword.toString(),
+                article_type_id.toString()
+        });
+        if(update==1){
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "跟新成功！");
+            return map;
+        }
+
+        return getErrorMap();
     }
 
 
