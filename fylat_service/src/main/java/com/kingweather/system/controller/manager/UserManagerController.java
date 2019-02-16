@@ -359,7 +359,6 @@ public class UserManagerController extends BaseController
                         map.put("result", menuTree);
                         session.setAttribute("menusTree", menuTree);
                         map.put("loginUser", user);
-
 						List list = userMenuServiceIml.getUserMenuTree(null,user.getId());
 						map.put("userMenu", list);
 
