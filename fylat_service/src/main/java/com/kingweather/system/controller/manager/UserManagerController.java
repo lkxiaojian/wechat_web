@@ -355,6 +355,8 @@ public class UserManagerController extends BaseController
                         map.put("result", menuTree);
                         session.setAttribute("menusTree", menuTree);
                         map.put("loginUser", user);
+
+
                     }
                 }else if (expireDate < now) {
                     map.put("userCode", user.getStatus());
