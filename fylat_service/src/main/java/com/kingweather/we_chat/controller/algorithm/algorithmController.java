@@ -27,7 +27,7 @@ public class algorithmController extends BaseController {
     @RequestMapping(value = "/reptile/getData/rest", method = RequestMethod.GET)
     public Map<String, Object> getData(int rows, int page, String type) {
         String countSql = "select count(*) as count from zz_wechat.article1 ";
-        String sql = "select details_txt as txt,article_title from zz_wechat.article1 ";
+        String sql = "select details_txt,article_title,update_time from zz_wechat.article1 ";
         if (type != null || "".equals(type)) {
             String messageSql = "";
             if ("1".equals(type)) {
@@ -50,7 +50,7 @@ public class algorithmController extends BaseController {
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         List<String> resultList = new ArrayList<>();
         for (int i = 0; i < maps.size(); i++) {
-            Object details_div = maps.get(i).get("txt");
+            Object details_div = maps.get(i).get("details_txt");
             Object article_title = maps.get(i).get("article_title");
 
             byte[] details_divbytes = (byte[]) details_div;
@@ -64,13 +64,14 @@ public class algorithmController extends BaseController {
                             .replaceAll("-","—").replaceAll(" ","").replaceAll("\\s","");
                     s =s.replaceAll(s1, "");
                     resultList.add(s);
+                    maps.get(i).put("details_txt",s);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
             }
         }
         resultMap.put("count", Integer.parseInt(conutMap.get("count").toString()) - page * rows);
-        resultMap.put("txt", resultList);
+        resultMap.put("txt", maps);
         map.put("code", 0);
         map.put("result", resultMap);
         return map;
@@ -79,7 +80,7 @@ public class algorithmController extends BaseController {
 
     @RequestMapping(value = "/reptile/getManualData/rest", method = RequestMethod.GET)
     public Map<String, Object> getManualData(int rows, int page, int type) {
-        String Sql = "select a.details_txt,b.parentid,a.article_type_id,a.article_title from zz_wechat.article a, zz_wechat.article_type b where a.article_type_id=b.article_type_id AND b.article_type_id !='0'" +
+        String Sql = "select a.details_txt,b.parentid,a.article_type_id,a.article_title,a.update_time from zz_wechat.article a, zz_wechat.article_type b where a.article_type_id=b.article_type_id AND b.article_type_id !='0'" +
                 " AND  a.article_type_id='" + type + "'";
         Sql = Sql + " ORDER BY update_time ASC LIMIT " + (page - 1) * rows + "," + rows;
 
