@@ -65,3 +65,5 @@ logging:
     com.kingweather: DEBUG
 
 urlPath: http://106.2.13.148:8990/
+
+#urlPath: http://localhost:8990/

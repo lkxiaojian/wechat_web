@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.*;
@@ -754,7 +755,12 @@ public class ArticleDaoIml implements ArticleDao {
 
         if (successCount > 0) {
             String url = urlPath + "article/addKeyword";
-            HttpRequest.sendGet(url, "param=" + keywords.toString() + "&uUid=" + uUid);
+            try {
+                HttpRequest.sendGet(url, "param=" +  URLEncoder.encode(keywords.toString(), "utf-8").trim()+ "&uUid=" + uUid);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
         }
 
         Map<String, Object> remap = new HashMap<>();
@@ -932,7 +938,11 @@ public class ArticleDaoIml implements ArticleDao {
         });
 
         String url = urlPath + "article/updateKeyword";
-        HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + keyword_name);
+        try {
+            HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + URLEncoder.encode(keyword_name.toString(), "utf-8").trim());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         HashMap<String, Object> map = new HashMap<>();
         if (update == 0) {
             map.put("code", 0);
