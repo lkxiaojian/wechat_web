@@ -442,7 +442,7 @@ public class UserDaoIml implements userDao {
 
         String attentionSql = "SELECT 1 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c.parentid" +
                 " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
-                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=? AND c.parentid !=?" +
+                " where c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=? AND c.parentid !=?" +
                 " AND b.article_type_id IN (SELECT article_type_id FROM zz_wechat.article where " +
                 " update_time<=date_format(?,'%Y-%m-%d %H:%i:%s') " +
                 "AND update_time>=date_format(?,'%Y-%m-%d %H:%i:%s') and article_id NOT IN (SELECT article_id FROM  zz_wechat.user_article WHERE user_id=?))";
@@ -459,9 +459,10 @@ public class UserDaoIml implements userDao {
 
         String attentionSqla = "SELECT 2 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
                 " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
-                " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=? AND c.parentid !=?";
+                " where c.del_type != ? AND  a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=? AND c.parentid !=?";
 
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(attentionSqla, new Object[]{
+                1,
                 wechatid,
                 0,
                 -1
@@ -480,7 +481,7 @@ public class UserDaoIml implements userDao {
         //查询关注文章的总数
         String countSql = " SELECT count(*) as count from ( SELECT 2 as  type from (SELECT c.article_type_id,c.article_id,c.create_time,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time\n" +
                 "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
-                "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
+                "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                 " AND c.update_time<=date_format('" +
                 oneEndTime +
                 "','%Y-%m-%d %H:%i:%s')\n" +
@@ -507,7 +508,7 @@ public class UserDaoIml implements userDao {
         if (page == 0) {
             String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
-                    "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
+                    "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time>date_format('" +
                     oneEndTime +
                     "','%Y-%m-%d %H:%i:%s')\n" +
@@ -528,7 +529,7 @@ public class UserDaoIml implements userDao {
             list.addAll(hoursDay);
             String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
-                    "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
+                    "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time<=date_format('" +
                     oneEndTime +
                     "','%Y-%m-%d %H:%i:%s')\n" +
@@ -548,7 +549,7 @@ public class UserDaoIml implements userDao {
         if (page > 0 && count > 0 && pageSize * (page + 1) < count) {
             String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
-                    "WHERE a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
+                    "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time<=date_format('" +
                     oneEndTime +
                     "','%Y-%m-%d %H:%i:%s')\n" +
@@ -575,7 +576,7 @@ public class UserDaoIml implements userDao {
 
             String noCount = "SELECT  count(*) as noCount from ( SELECT 2 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                     "zz_wechat.article c,zz_wechat.article_type d \n" +
-                    "WHERE d.article_type_id=c.article_type_id  \n" +
+                    "WHERE d.del_type !=1 and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                     "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
                     "WHERE user_id='" +
                     user_id +
@@ -605,7 +606,7 @@ public class UserDaoIml implements userDao {
                 //小时分类
                 String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
-                        "WHERE d.article_type_id=c.article_type_id  \n" +
+                        "WHERE d.del_type !=1  and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
                         "WHERE user_id='" +
                         user_id +
@@ -632,7 +633,7 @@ public class UserDaoIml implements userDao {
 
                 String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
-                        "WHERE d.article_type_id=c.article_type_id  \n" +
+                        "WHERE d.del_type !=1 and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
                         "WHERE user_id='" +
                         user_id +
@@ -766,7 +767,7 @@ public class UserDaoIml implements userDao {
 
                 String threeDay = DateUtil.getbeforeCurrentDateString(3);
                 String sqlCount = "SELECT count(*) as count FROM " +
-                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND  a.parentid !='-1' AND a.article_type_id=b.article_type_id \n" +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE d.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND  a.parentid !='-1' AND a.article_type_id=b.article_type_id \n" +
                         " AND a.article_type_id='" +
                         Integer.parseInt(article_type_id) +
                         "' AND b.update_time<date_format('" +
@@ -784,7 +785,7 @@ public class UserDaoIml implements userDao {
                 }
                 int pageSize = 10;
                 String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
-                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE d.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
                         " AND b.article_type_id='" +
                         Integer.parseInt(article_type_id) +
                         "' AND b.update_time<date_format('" +
@@ -859,7 +860,7 @@ public class UserDaoIml implements userDao {
                 }
 
                 String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
-                        " zz_wechat.article_type a,zz_wechat.article b WHERE a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
+                        " zz_wechat.article_type a,zz_wechat.article b WHERE b.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
                         " AND b.article_type_id='" +
                         Integer.parseInt(article_type_id) +
                         "' AND b.update_time<date_format('" +
