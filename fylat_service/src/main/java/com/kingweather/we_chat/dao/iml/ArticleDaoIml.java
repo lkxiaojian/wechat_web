@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.*;
@@ -39,7 +40,7 @@ public class ArticleDaoIml implements ArticleDao {
         int pageSize = 10;
 
         String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back,b.article_keyword,b.article_title,b.content_excerpt " +
-                "FROM zz_wechat.article_type a,zz_wechat.article b where a.article_type_id=b.article_type_id and b.article_type_id=? ORDER BY b.create_time DESC LIMIT ?,?";
+                "FROM zz_wechat.article_type a,zz_wechat.article b where b.del_type !=1 and a.del_type !=1 and a.article_type_id=b.article_type_id and b.article_type_id=? ORDER BY b.create_time DESC LIMIT ?,?";
 
 
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{
@@ -284,11 +285,12 @@ public class ArticleDaoIml implements ArticleDao {
         if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
-        String gzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,1 as type_id from article_type a,user_articletype b ,sys_user c WHERE a.article_type_id=b.article_type_id AND c.user_id=b.user_id AND c.wechat_id=?" +
+        String gzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,1 as type_id from article_type a,user_articletype b ,sys_user c WHERE a.del_type !=? and a.article_type_id=b.article_type_id AND c.user_id=b.user_id AND c.wechat_id=?" +
                 "AND a.parentid !=? " +
                 "AND a.parentid !=? " +
                 "ORDER BY a.create_time DESC";
         List<Map<String, Object>> gzList = jdbcTemplate.queryForList(gzSql, new Object[]{
+                1,
                 wechatid,
                 0,
                 -1
@@ -305,10 +307,11 @@ public class ArticleDaoIml implements ArticleDao {
         String nogzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,2 as type_id \n" +
                 "from zz_wechat.article_type a ,zz_wechat.sys_user c WHERE " +
                 "a.article_type_id not in(SELECT article_type_id FROM zz_wechat.user_articletype WHERE user_id=?) AND c.wechat_id=?" +
-                "AND a.parentid !=? AND a.parentid !=?";
+                " AND a.del_type !=? AND a.parentid !=? AND a.parentid !=?";
         List<Map<String, Object>> nogzList = jdbcTemplate.queryForList(nogzSql, new Object[]{
                 user_id,
                 wechatid,
+                1,
                 0,
                 -1
         });
@@ -342,7 +345,7 @@ public class ArticleDaoIml implements ArticleDao {
         String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
-        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE parentid !=0 AND  parentid !=-1 AND (article_type_name LIKE '%" +
+        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=0 AND  parentid !=-1 AND (article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -352,7 +355,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         List<Map<String, Object>> gzMapList = jdbcTemplate.queryForList(gzSeachSql);
 
-        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE parentid !=0 AND  parentid !=-1 AND (article_type_name LIKE '%" +
+        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=0 AND  parentid !=-1 AND (article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -365,7 +368,7 @@ public class ArticleDaoIml implements ArticleDao {
         list.addAll(nogzmapList);
 
         resultMap.put("articleType", list);
-        String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+        String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                 user_id +
                 "' ) AND (article_title LIKE '%" +
                 message +
@@ -394,7 +397,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         if (count > 0 && pageSize * page <= count || count < 10) {
 
-            String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+            String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
                     "' ) AND (article_title LIKE '%" +
                     message +
@@ -439,7 +442,7 @@ public class ArticleDaoIml implements ArticleDao {
             }
 
 
-            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE article_type_id NOT in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id NOT in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
                     "' ) AND (article_title LIKE '%" +
                     message +
@@ -504,13 +507,14 @@ public class ArticleDaoIml implements ArticleDao {
                 key = keyword.toString();
             }
             String sysTime = DateUtil.getCurrentTimeString();
-            String insertSql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?)";
+            String insertSql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
 
             int update = jdbcTemplate.update(insertSql, new Object[]{
                     name.toString(),
                     key,
                     sysTime,
                     path,
+                    0,
                     0
             });
             if (update == 1) {
@@ -522,7 +526,7 @@ public class ArticleDaoIml implements ArticleDao {
 
     @Override
     public List<Map<String, Object>> getAllDomain() {
-        String sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid='0' ORDER BY create_time DESC";
+        String sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid='0' AND del_type !=1 ORDER BY create_time DESC";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         return maps;
     }
@@ -541,14 +545,15 @@ public class ArticleDaoIml implements ArticleDao {
 
             String sysTime = DateUtil.getCurrentTimeString();
             //插入
-            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?)";
             int update = jdbcTemplate.update(sql, new Object[]{
                     name,
                     keyword,
                     sysTime,
                     pathICon,
                     Integer.parseInt(artcicle_type_id),
-                    pathback
+                    pathback,
+                    0
             });
             if (update == 1) {
                 return true;
@@ -564,15 +569,16 @@ public class ArticleDaoIml implements ArticleDao {
 
         int parentid = 0;
         if (article_type_id == null || "".equals(article_type_id)) {
-            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid !=? AND parentid !=? ";
+            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid !=? AND parentid !=? AND del_type !=? ";
         } else {
-            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid=? AND parentid !=?";
+            sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid=? AND parentid !=? AND del_type !=? ";
             parentid = Integer.parseInt(article_type_id);
         }
 
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
                 parentid,
-                -1
+                -1,
+                1
         });
 
 
@@ -615,8 +621,8 @@ public class ArticleDaoIml implements ArticleDao {
             }
             String article_id = UuidUtils.getUUid();
             String create_time = DateUtil.getCurrentTimeString();
-            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count) " +
-                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count,del_type) " +
+                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?)";
 
             int update = jdbcTemplate.update(sql, new Object[]{
 
@@ -635,6 +641,7 @@ public class ArticleDaoIml implements ArticleDao {
                     details_txt.toString(),
                     create_time,
                     content_excerpt,
+                    0,
                     0,
                     0
 
@@ -665,13 +672,13 @@ public class ArticleDaoIml implements ArticleDao {
         Integer startNum = Integer.valueOf(conditions.get("startNum").toString());
         Integer pageSize = Integer.valueOf(conditions.get("pageSize").toString());
         Object message = conditions.get("message");
-        String countSql = "select count(*) from zz_wechat.article ";
+        String countSql = "select count(*) from zz_wechat.article where del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
-            countSql = countSql + " where article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%'";
+            countSql = countSql + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
         }
-        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword, create_time from zz_wechat.article ";
+        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword, create_time from zz_wechat.article where del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
-            sql = sql + " where article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%'";
+            sql = sql + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
         }
         sql = sql + " ORDER BY update_time desc";
 
@@ -695,8 +702,11 @@ public class ArticleDaoIml implements ArticleDao {
             return getErrorMap();
 
         }
-        String sql = "DELETE from zz_wechat.article  where article_id =?";
-        int update = jdbcTemplate.update(sql, new Object[]{
+//        String sql = "DELETE from zz_wechat.article  where article_id =?";
+
+        String sql = "UPDATE  zz_wechat.article set del_type=? where article_id =?";
+        jdbcTemplate.update(sql, new Object[]{
+                1,
                 article_id,
         });
         Map<String, Object> map = new HashMap<>();
@@ -722,7 +732,7 @@ public class ArticleDaoIml implements ArticleDao {
 
 //        String[] split = keywords.toString().split(",");
         String create_time = DateUtil.getCurrentTimeString();
-        String sql = "insert into zz_wechat.keyword (id,keyword_name,create_time,last_time) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'))";
+        String sql = "insert into zz_wechat.keyword (id,keyword_name,create_time,last_time,del_type) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'),?)";
         int errorCount = 0;
         int successCount = 0;
 
@@ -737,14 +747,20 @@ public class ArticleDaoIml implements ArticleDao {
                     uUid,
                     keywords.toString(),
                     create_time,
-                    "2017-01-01"
+                    "2017-01-01",
+                    0
             });
             successCount = successCount + 1;
         }
 
         if (successCount > 0) {
             String url = urlPath + "article/addKeyword";
-            HttpRequest.sendGet(url, "param=" + keywords.toString() + "&uUid=" + uUid);
+            try {
+                HttpRequest.sendGet(url, "param=" +  URLEncoder.encode(keywords.toString(), "utf-8").trim()+ "&uUid=" + uUid);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
         }
 
         Map<String, Object> remap = new HashMap<>();
@@ -886,13 +902,13 @@ public class ArticleDaoIml implements ArticleDao {
         Integer startNum = Integer.valueOf(map.get("startNum").toString());
         Integer pageSize = Integer.valueOf(map.get("pageSize").toString());
         Object message = map.get("message");
-        String countSql = "select count(*) from zz_wechat.keyword ";
+        String countSql = "select count(*) from zz_wechat.keyword where del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
-            countSql = countSql + " where keyword_name like '%" + message.toString() + "%' ";
+            countSql = countSql + " and keyword_name like '%" + message.toString() + "%' ";
         }
-        String sql = "select id,keyword_name from zz_wechat.keyword ";
+        String sql = "select id,keyword_name from zz_wechat.keyword where  del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
-            sql = sql + " where keyword_name like '%" + message.toString() + "%' ";
+            sql = sql + " and keyword_name like '%" + message.toString() + "%' ";
         }
         sql = sql + " ORDER BY update_time desc";
 
@@ -922,7 +938,11 @@ public class ArticleDaoIml implements ArticleDao {
         });
 
         String url = urlPath + "article/updateKeyword";
-        HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + keyword_name);
+        try {
+            HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + URLEncoder.encode(keyword_name.toString(), "utf-8").trim());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         HashMap<String, Object> map = new HashMap<>();
         if (update == 0) {
             map.put("code", 0);
@@ -944,10 +964,12 @@ public class ArticleDaoIml implements ArticleDao {
         if ("".equals(id) || id == null) {
             return getErrorMap();
         }
-        String sql = "DELETE FROM zz_wechat.keyword where id=?";
-        int update = jdbcTemplate.update(sql, new Object[]{
-                id
+//        String sql = "DELETE FROM zz_wechat.keyword where id=?";
 
+        String sql = "UPDATE  zz_wechat.keyword set del_type=? where id=?";
+        int update = jdbcTemplate.update(sql, new Object[]{
+                1,
+                id
         });
 
 
@@ -978,11 +1000,11 @@ public class ArticleDaoIml implements ArticleDao {
             Object message = conditions.get("message");
 
 
-            String countSql = "select count(*) from zz_wechat.article_type where parentid='0' ";
+            String countSql = "select count(*) from zz_wechat.article_type where parentid='0' and del_type !='1' ";
             if (message != null && !"".equals(message.toString())) {
                 countSql = countSql + "  and article_type_name like '%" + message.toString() + "%' ";
             }
-            String sql = "select article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon, iamge_back,parentid from zz_wechat.article_type where parentid='0' ";
+            String sql = "select article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon, iamge_back,parentid from zz_wechat.article_type where parentid='0' and del_type !='1' ";
             if (message != null && !"".equals(message.toString())) {
                 sql = sql + " and article_type_name like '%" + message.toString() + "%'  ";
             }
@@ -1069,7 +1091,7 @@ public class ArticleDaoIml implements ArticleDao {
                 article_type_keyword.toString(),
                 article_type_id.toString()
         });
-        if(update==1){
+        if (update == 1) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("code", 0);
             map.put("message", "跟新成功！");
