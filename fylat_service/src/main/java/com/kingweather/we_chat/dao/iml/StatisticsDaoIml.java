@@ -53,7 +53,7 @@ public class StatisticsDaoIml implements StatisticsDao {
 //        if("3".equals(statisticsType)){
 //            sql.append("  	ROUND(IFNULL(AVG(a.count_num),0))||'' num  ");
 //        }else{
-            sql.append("  	IFNULL(SUM(a.count_num),0)||'' num ");
+            sql.append("  	IFNULL(SUM(a.count_num),0) num ");
 //        }
         sql.append("  	FROM  statistics_info a RIGHT JOIN sys_hour b ON DATE_FORMAT (a.dispose_time,'%k') = b.name   ");
         sql.append(" and a.statistics_Type = ? ");
@@ -71,10 +71,10 @@ public class StatisticsDaoIml implements StatisticsDao {
             sql.append("  and a.article_type = ?  	 ");
             parameterList.add(articleType);
         }
+        sql.append("  	LEFT JOIN article_type c ON c.article_type_id = a.article_type and c.del_type = 0	 ");
+
         sql.append("  	GROUP BY b.name	 ");
         sql.append("  	ORDER BY b.name+0 	 ");
-
-        System.out.println(sql.toString());
 
         List obj = jdbcTemplate.queryForList(sql.toString(),parameterList.toArray());
         String[] str = new String[obj.size()];
@@ -105,6 +105,7 @@ public class StatisticsDaoIml implements StatisticsDao {
 
         sql.append(" 	SELECT a.article_id articleId,	  ");
         sql.append(" 	a.article_type_id articleTypeId,	  ");
+        sql.append(" 	c.article_type_name articleTypeName,	  ");
         sql.append(" 	a.article_title articleTitle,	  ");
         sql.append(" 	a.article_keyword articleKeyword,	  ");
         sql.append(" 	a.author author,	  ");
@@ -112,8 +113,10 @@ public class StatisticsDaoIml implements StatisticsDao {
         sql.append(" 	a.statistics_type statisticsType,	  ");
         sql.append(" 	a.source source,	  ");
         sql.append(" 	SUM(b.count_num) num	  ");
-        sql.append(" 	FROM article a , statistics_info b	  ");
-        sql.append(" 	WHERE a.article_id = b.article_id	  ");
+        sql.append(" 	FROM article a , statistics_info b,article_type c	  ");
+        sql.append(" 	WHERE a.article_id = b.article_id and a.article_type_id = c.article_type_id	  ");
+        sql.append(" AND c.del_type = 0 ");
+
         sql.append(" AND b.dispose_time BETWEEN ? AND ? ");
         parameterList.add(startTime);
         parameterList.add(endTime);
