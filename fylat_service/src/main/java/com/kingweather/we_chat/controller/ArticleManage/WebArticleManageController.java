@@ -375,7 +375,7 @@ public class WebArticleManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "article/updateDomainById", method = RequestMethod.POST)
-    public Map<String, Object> updateDomainById(@RequestParam Map<String, Object> data) {
+    public Map<String, Object> updateDomainById(@RequestBody Map<String, Object> data) {
 
         Map<String, Object> maps = articleService.updateDomainById(data);
         return maps;

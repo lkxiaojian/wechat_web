@@ -944,7 +944,7 @@ public class ArticleDaoIml implements ArticleDao {
             e.printStackTrace();
         }
         HashMap<String, Object> map = new HashMap<>();
-        if (update == 0) {
+        if (update == 1) {
             map.put("code", 0);
             map.put("message", "更新成功！");
             return map;
@@ -1094,7 +1094,7 @@ public class ArticleDaoIml implements ArticleDao {
         if (update == 1) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("code", 0);
-            map.put("message", "跟新成功！");
+            map.put("message", "更新成功！");
             return map;
         }
 
