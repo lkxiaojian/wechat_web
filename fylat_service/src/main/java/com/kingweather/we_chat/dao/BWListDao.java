@@ -7,4 +7,5 @@ public interface BWListDao {
 
     Map<String,Object> GetSettingMessage();
 
+    Map<String,Object> addbwKeyName(String name);
 }

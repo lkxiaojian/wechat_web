@@ -6,4 +6,6 @@ public interface BWListService {
     Map<String,Object> scoresSetting(Map<String, Object> data);
 
     Map<String,Object> GetSettingMessage();
+
+    Map<String,Object> addbwKeyName(String name);
 }

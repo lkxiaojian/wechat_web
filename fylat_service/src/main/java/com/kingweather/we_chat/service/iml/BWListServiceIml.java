@@ -23,4 +23,9 @@ public class BWListServiceIml implements BWListService{
     public Map<String, Object> GetSettingMessage() {
         return bwListDao.GetSettingMessage();
     }
+
+    @Override
+    public Map<String, Object> addbwKeyName(String name) {
+        return bwListDao.addbwKeyName( name);
+    }
 }
