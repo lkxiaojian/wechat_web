@@ -57,8 +57,30 @@ public class BWListController extends BaseController {
     }
 
 
+    /**
+     * 修改黑白名单类型
+     * @return
+     */
+
+    @RequestMapping(value = "/bw/updatebwKeyName", method = RequestMethod.GET)
+    public Map<String, Object> updatebwKeyName(String id,String name) {
+        log.info("修改黑白名单类型");
+        return bwListService.updatebwKeyName(id,name);
+    }
 
 
+
+
+    /**
+     * 删除黑白名单类型
+     * @return
+     */
+
+    @RequestMapping(value = "/bw/delbwKeyName", method = RequestMethod.GET)
+    public Map<String, Object> delbwKeyName(String id) {
+        log.info("删除黑白名单类型");
+        return bwListService.delbwKeyName(id);
+    }
 
 
 

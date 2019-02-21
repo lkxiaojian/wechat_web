@@ -8,4 +8,8 @@ public interface BWListDao {
     Map<String,Object> GetSettingMessage();
 
     Map<String,Object> addbwKeyName(String name);
+
+    Map<String,Object> updatebwKeyName(String id,String name);
+
+    Map<String,Object> delbwKeyName(String id);
 }

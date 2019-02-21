@@ -28,4 +28,14 @@ public class BWListServiceIml implements BWListService{
     public Map<String, Object> addbwKeyName(String name) {
         return bwListDao.addbwKeyName( name);
     }
+
+    @Override
+    public Map<String, Object> updatebwKeyName(String id,String name) {
+        return bwListDao.updatebwKeyName( id,name);
+    }
+
+    @Override
+    public Map<String, Object> delbwKeyName(String id) {
+        return bwListDao.delbwKeyName(id);
+    }
 }

@@ -48,7 +48,7 @@ public class BWListDaoIml implements BWListDao {
         //更新
         if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) > 0) {
 
-            String sql = "update zz_wechat.article_score set page_view=?,article_standing_time=?,word_count=?,author_adoption=?,public_adoption=?,"  +
+            String sql = "update zz_wechat.article_score set page_view=?,article_standing_time=?,word_count=?,author_adoption=?,public_adoption=?," +
                     " topic_match=?,transpond_count=?,content_plate=?,fall_back=?,reserve=?,callback=?,hot_article=?,technical_information=? where id=? ";
 
             int update = jdbcTemplate.update(sql, new Object[]{
@@ -156,6 +156,51 @@ public class BWListDaoIml implements BWListDao {
             reusltmap.put("message", "添加成功");
             return reusltmap;
         }
+    }
+
+
+    /**
+     * 修改黑白名单类型
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public Map<String, Object> updatebwKeyName(String id, String name) {
+        if (id == null || name == null || id.equals("") || "".equals(name)) {
+            return getErrorMap();
+        }
+        HashMap<String, Object> reusltmap = new HashMap<>();
+
+        String updateSql = "update zz_wechat.bw_keyword set bw_key_name=? where id =?";
+        jdbcTemplate.update(updateSql, new Object[]{
+                name, Integer.parseInt(id)
+        });
+        reusltmap.put("code", 0);
+        reusltmap.put("message", "更新成功");
+        return reusltmap;
+    }
+
+    /**
+     * 根据id 删除黑白名单字段
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String, Object> delbwKeyName(String id) {
+        if (id == null || id.equals("")) {
+            return getErrorMap();
+        }
+        String updateSql = "update zz_wechat.bw_keyword set del_type=? where id =?";
+        jdbcTemplate.update(updateSql,new Object[]{
+                1,
+                Integer.parseInt(id)
+        });
+        HashMap<String, Object> reusltmap = new HashMap<>();
+        reusltmap.put("code", 0);
+        reusltmap.put("message", "删除成功");
+        return reusltmap;
     }
 
 
