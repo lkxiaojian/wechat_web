@@ -45,6 +45,7 @@ app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatSer
                     int_type: 1,
                     file_name: null
                 }
+                $state.go('app.insure.domainList');
             }).error(function () {
                 modalTip({
                     tip: switchLang.switchLang('添加失败'),

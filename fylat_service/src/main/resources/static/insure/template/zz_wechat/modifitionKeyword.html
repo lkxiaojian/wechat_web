@@ -1,0 +1,43 @@
+<!--头部导航信息-->
+<div class="modal-header">
+    <div class="btn pull-right m-t-n-xs m-l-n list-icon">
+        <a ui-sref="app.insure.article_list"> <i
+                class="fa fa-mail-reply-all"></i>
+        </a>
+    </div>
+    <div style="margin: 0px 15px">
+        <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
+    </div>
+</div>
+
+<!--内容区-->
+<div class="wrapper-md">
+    <tabset class="tab-container">
+        <tab active="steps.step1" select="steps.percent=50">
+            <tab-heading>
+                领域修改
+            </tab-heading>
+            <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
+            <div class="modal-body">
+                <form class="form-horizontal m-b-md" id="add_integration"
+                      name="addIntegrationFormValidate" novalidate>
+
+                    <div class="" style="margin-top: 20px;margin-bottom: 20px;">
+                        <div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+                            <label class="col-md-3 col-sm-2 control-label padder-l-0">关键词</label>
+                            <div class="col-md-9 col-sm-10 padder-l-0">
+                                <input type="text" class="form-control"
+                                       ng-model="listObj.keyword_name">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="margin-top: 40px;">
+                <button type="button" class="btn btn-default btn-rounded"
+                        ng-click="listObj.addMessageCommit()">提交
+                </button>
+            </div>
+        </tab>
+    </tabset>
+</div>

@@ -30,6 +30,7 @@ app.controller('keywordManageController', ['$scope', '$modal', '$http', 'fylatSe
                         $scope.listObj. integrationQuery= {
                             article_keyword: null,//关键词
                         }
+                        $state.go('app.insure.keywordList');
 
                     } else {
                         modalTip({
