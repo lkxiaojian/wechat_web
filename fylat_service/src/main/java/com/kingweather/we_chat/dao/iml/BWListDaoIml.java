@@ -46,9 +46,9 @@ public class BWListDaoIml implements BWListDao {
         String countSql = "select count(*) as count  from zz_wechat.article_score";
         Map<String, Object> map = jdbcTemplate.queryForMap(countSql);
         //更新
-        if (map != null && map.get("count") != null && Integer.parseInt(map.get("conunt").toString()) > 0) {
+        if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) > 0) {
 
-            String sql = "update zz_wechat.article_score set page_view=?,article_standing_time=?,word_count=?,author_adoption=?,public_adoption=?,\" +\n" +
+            String sql = "update zz_wechat.article_score set page_view=?,article_standing_time=?,word_count=?,author_adoption=?,public_adoption=?,"  +
                     " topic_match=?,transpond_count=?,content_plate=?,fall_back=?,reserve=?,callback=?,hot_article=?,technical_information=? where id=? ";
 
             int update = jdbcTemplate.update(sql, new Object[]{
@@ -92,8 +92,8 @@ public class BWListDaoIml implements BWListDao {
         }
 
         HashMap<String, Object> resultMap = new HashMap<>();
-        map.put("code", 0);
-        map.put("message", "成功！");
+        resultMap.put("code", 0);
+        resultMap.put("message", "成功！");
         return resultMap;
     }
 
@@ -106,13 +106,56 @@ public class BWListDaoIml implements BWListDao {
     @Override
     public Map<String, Object> GetSettingMessage() {
         String sql = "select * from zz_wechat.article_score LIMIT 0,1";
-        Map<String, Object> map = jdbcTemplate.queryForMap(sql);
         HashMap<String, Object> resultMap = new HashMap<>();
-        resultMap.put("code", 0);
-        resultMap.put("message", "成功！");
-        resultMap.put("result", map);
+        try {
+            Map<String, Object> map = jdbcTemplate.queryForMap(sql);
+            resultMap.put("code", 0);
+            resultMap.put("message", "成功！");
+            resultMap.put("result", map);
+        } catch (Exception e) {
+            resultMap.put("code", 0);
+            resultMap.put("message", "成功！");
+            resultMap.put("result", null);
+
+        }
 
         return resultMap;
+
+    }
+
+    /**
+     * 添加黑白名单类型
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public Map<String, Object> addbwKeyName(String name) {
+        if (name == null || "".equals(name)) {
+            return getErrorMap();
+        }
+
+        String countSql = "select count(*) as count from zz_wechat.bw_keyword where bw_key_name =?";
+        Map<String, Object> map = jdbcTemplate.queryForMap(countSql, new Object[]{
+                name
+        });
+        HashMap<String, Object> reusltmap = new HashMap<>();
+        if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) > 0) {
+            reusltmap.put("code", 0);
+            reusltmap.put("messageCode", 1);
+            reusltmap.put("message", "该类型已存在");
+            return reusltmap;
+        } else {
+            String insertSql = "insert into zz_wechat.bw_keyword (bw_key_name,del_type) values (?,?)";
+            jdbcTemplate.update(insertSql, new Object[]{
+                    name,
+                    0
+            });
+
+            reusltmap.put("code", 0);
+            reusltmap.put("message", "添加成功");
+            return reusltmap;
+        }
     }
 
 

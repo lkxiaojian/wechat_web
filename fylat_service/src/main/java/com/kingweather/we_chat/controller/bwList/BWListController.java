@@ -5,10 +5,7 @@ import com.kingweather.fylat_service.controller.other.DataManageController;
 import com.kingweather.we_chat.service.BWListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -29,8 +26,8 @@ public class BWListController extends BaseController {
      * @return
      */
 
-    @RequestMapping(value = "/scores/setting/rest", method = RequestMethod.POST)
-    public Map<String, Object> scoresSetting(@RequestBody Map<String, Object> data) {
+    @RequestMapping(value = "/scores/setting", method = RequestMethod.POST)
+    public Map<String, Object> scoresSetting(@RequestParam Map<String, Object> data) {
         log.info("分数参数设置");
         return bwListService.scoresSetting(data);
     }
@@ -41,11 +38,24 @@ public class BWListController extends BaseController {
      * @return
      */
 
-    @RequestMapping(value = "/scores/GetSettingMessage/rest", method = RequestMethod.GET)
+    @RequestMapping(value = "/scores/GetSettingMessage", method = RequestMethod.GET)
     public Map<String, Object> GetSettingMessage() {
-        log.info("分数参数设置");
+        log.info("得到分数参数设置");
         return bwListService.GetSettingMessage();
     }
+
+
+    /**
+     * 添加黑白名单类型
+     * @return
+     */
+
+    @RequestMapping(value = "/bw/addbwKeyName", method = RequestMethod.GET)
+    public Map<String, Object> addbwKeyName(String name) {
+        log.info("添加黑白名单类型");
+        return bwListService.addbwKeyName(name);
+    }
+
 
 
 
