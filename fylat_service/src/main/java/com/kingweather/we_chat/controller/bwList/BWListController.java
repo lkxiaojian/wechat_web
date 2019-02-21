@@ -83,5 +83,18 @@ public class BWListController extends BaseController {
     }
 
 
+    /**
+     * 得到黑白名单类型
+     * @return
+     */
+
+    @RequestMapping(value = "/bw/getbwKeyNameList", method = RequestMethod.GET)
+    public Map<String, Object> getbwKeyNameList(String message) {
+        log.info("得到黑白名单类型");
+        return bwListService.getbwKeyNameList(message);
+    }
+
+
+
 
 }

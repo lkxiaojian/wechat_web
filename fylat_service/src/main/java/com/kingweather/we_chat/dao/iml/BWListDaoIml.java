@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -193,7 +194,7 @@ public class BWListDaoIml implements BWListDao {
             return getErrorMap();
         }
         String updateSql = "update zz_wechat.bw_keyword set del_type=? where id =?";
-        jdbcTemplate.update(updateSql,new Object[]{
+        jdbcTemplate.update(updateSql, new Object[]{
                 1,
                 Integer.parseInt(id)
         });
@@ -201,6 +202,29 @@ public class BWListDaoIml implements BWListDao {
         reusltmap.put("code", 0);
         reusltmap.put("message", "删除成功");
         return reusltmap;
+    }
+
+    /**
+     * 黑白名单list
+     *
+     * @param message
+     * @return
+     */
+    @Override
+    public Map<String, Object> getbwKeyNameList(String message) {
+        String sql = "select id,bw_key_name from zz_wechat.bw_keyword where 1=1";
+        if (message != null && !"".equals(message)) {
+            sql = sql + " and bw_key_name like '%" + message + "%' ";
+
+        }
+        sql = sql + " ORDER BY bw_key_name DESC";
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        HashMap<String, Object> reusltmap = new HashMap<>();
+        reusltmap.put("code", 0);
+        reusltmap.put("message", "查询成功");
+        reusltmap.put("result", maps);
+        return reusltmap;
+
     }
 
 

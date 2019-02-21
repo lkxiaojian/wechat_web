@@ -12,4 +12,6 @@ public interface BWListService {
     Map<String,Object> updatebwKeyName(String id,String name);
 
     Map<String,Object> delbwKeyName(String id);
+
+    Map<String,Object> getbwKeyNameList(String message);
 }

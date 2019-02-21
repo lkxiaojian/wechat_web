@@ -38,4 +38,9 @@ public class BWListServiceIml implements BWListService{
     public Map<String, Object> delbwKeyName(String id) {
         return bwListDao.delbwKeyName(id);
     }
+
+    @Override
+    public Map<String, Object> getbwKeyNameList(String message) {
+        return bwListDao.getbwKeyNameList(message);
+    }
 }
