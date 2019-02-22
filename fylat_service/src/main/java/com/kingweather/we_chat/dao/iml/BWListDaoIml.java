@@ -1,6 +1,7 @@
 package com.kingweather.we_chat.dao.iml;
 
 import com.kingweather.common.jdbc.JdbcUtil;
+import com.kingweather.common.util.Page;
 import com.kingweather.we_chat.dao.BWListDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -136,7 +137,7 @@ public class BWListDaoIml implements BWListDao {
             return getErrorMap();
         }
 
-        String countSql = "select count(*) as count from zz_wechat.bw_keyword where bw_key_name =?";
+        String countSql = "select count(*) as count,del_type from zz_wechat.bw_keyword where bw_key_name =?";
         Map<String, Object> map = jdbcTemplate.queryForMap(countSql, new Object[]{
                 name
         });
@@ -198,6 +199,13 @@ public class BWListDaoIml implements BWListDao {
                 1,
                 Integer.parseInt(id)
         });
+
+//改变黑白名单list 的值
+        String updateListSql = "update zz_wechat.bw_list set del_type=? where type_id =?";
+        jdbcTemplate.update(updateListSql, new Object[]{
+                1,
+                Integer.parseInt(id)
+        });
         HashMap<String, Object> reusltmap = new HashMap<>();
         reusltmap.put("code", 0);
         reusltmap.put("message", "删除成功");
@@ -225,6 +233,140 @@ public class BWListDaoIml implements BWListDao {
         reusltmap.put("result", maps);
         return reusltmap;
 
+    }
+
+    /**
+     * 添加黑白名单
+     *
+     * @param data
+     * @return
+     */
+
+    @Override
+    public Map<String, Object> addBwList(Map<String, Object> data) {
+        Object type_name = data.get("name");
+        Object type_id = data.get("type_id");
+        Object status = data.get("status");
+
+        if (type_name == null || type_id == null || status == null) {
+            return getErrorMap();
+        }
+        HashMap<String, Object> reusltmap = new HashMap<>();
+        try {
+
+
+            String sql = "select count(*) as count ,del_type from zz_wechat.bw_list where name=? and type_id=?";
+            Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{
+                    type_name.toString(),
+                    Integer.parseInt(type_id.toString())
+
+            });
+
+            //已经入库
+            if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) > 0) {
+                reusltmap.put("code", 0);
+                reusltmap.put("messageCode", 1);
+                reusltmap.put("message", "该类型已存在");
+                return reusltmap;
+            } else {
+                //插入
+                String inserSql = "insert into zz_wechat.bw_list (name,type_id,status) values (?,?,?)";
+                jdbcTemplate.update(inserSql, new Object[]{
+
+                        type_name.toString(),
+                        Integer.parseInt(type_id.toString()),
+                        Integer.parseInt(status.toString())
+
+                });
+            }
+
+        } catch (Exception e) {
+            String inserSql = "insert into zz_wechat.bw_list (name,type_id,status) values (?,?,?)";
+            jdbcTemplate.update(inserSql, new Object[]{
+
+                    type_name.toString(),
+                    Integer.parseInt(type_id.toString()),
+                    Integer.parseInt(status.toString())
+
+            });
+        }
+        reusltmap.put("code", 0);
+        reusltmap.put("message", "添加成功");
+        return reusltmap;
+    }
+
+    @Override
+    public Map<String, Object> updateBwList(Map<String, Object> data) {
+        Object id = data.get("id");
+        Object type_name = data.get("name");
+        Object type_id = data.get("type_id");
+        Object status = data.get("status");
+
+        if (id == null || type_name == null || type_id == null || status == null) {
+            return getErrorMap();
+        }
+
+        String updateSql = "update zz_wechat.bw_list set name=?,set type_id=?,set status=? where id=?";
+        jdbcTemplate.update(updateSql, new Object[]{
+                type_name.toString(),
+                Integer.parseInt(type_id.toString()),
+                Integer.parseInt(status.toString()),
+                Integer.parseInt(id.toString())
+
+        });
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "更新成功");
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> delBwList(String id) {
+
+        String sql = "update zz_wechat.bw_list set del_type=? where id=?";
+        jdbcTemplate.update(sql, new Object[]{
+                1,
+                Integer.parseInt(id.toString())
+        });
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "删除成功");
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getBwList(Map<String, Object> data) {
+
+        Integer startNum = Integer.valueOf(data.get("startNum").toString());
+        Integer pageSize = Integer.valueOf(data.get("pageSize").toString());
+        Object message = data.get("message");
+        Object type_id = data.get("type_id");
+        Object status = data.get("status");
+
+        String countSql = "select count(*) as count from zz_wechat.bw_list where del_type !='1'  ";
+
+        String sql = "select a.id,a.name,a.type_id,a.status,b.bw_key_name  from zz_wechat.bw_list a ,zz_wechat.bw_keyword b where a.del_type !='1' and where b.del_type !='1'";
+
+        if (message != null) {
+            countSql = countSql + " and name like '%" + message.toString() + "%' ";
+            sql = sql + " and name like '%" + message.toString() + "%' ";
+        }
+        if (type_id != null) {
+            countSql = countSql + " and type_id ="+Integer.parseInt(type_id.toString());
+            sql = sql + " and type_id ="+Integer.parseInt(type_id.toString());
+
+        }
+        if (status != null) {
+            countSql = countSql + " and status ="+Integer.parseInt(status.toString());
+            sql = sql + " and status ="+Integer.parseInt(status.toString());
+        }
+        HashMap<String, Object> resultmap = new HashMap<>();
+        Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
+        resultmap.put("code", 0);
+        resultmap.put("message", "查询成功");
+        resultmap.put("total", page.getTotalCount());
+        resultmap.put("result", page.getResult());
+        return resultmap;
     }
 
 
