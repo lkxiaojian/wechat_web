@@ -725,14 +725,14 @@ public class ArticleDaoIml implements ArticleDao {
     @Override
     public Map<String, Object> addKeyword(Map<String, Object> data) {
         Object keywords = data.get("keyword");
-        if (keywords == null || "".equals(keywords)) {
+        Object parent_id = data.get("parent_id");
+        if (keywords == null || "".equals(keywords) || parent_id == null || "".equals(parent_id)) {
             return getErrorMap();
 
         }
 
-//        String[] split = keywords.toString().split(",");
         String create_time = DateUtil.getCurrentTimeString();
-        String sql = "insert into zz_wechat.keyword (id,keyword_name,create_time,last_time,del_type) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'),?)";
+        String sql = "insert into zz_wechat.keyword (id,keyword_name,create_time,last_time,del_type,parent_id) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'),?,?)";
         int errorCount = 0;
         int successCount = 0;
 
@@ -748,7 +748,8 @@ public class ArticleDaoIml implements ArticleDao {
                     keywords.toString(),
                     create_time,
                     "2017-01-01",
-                    0
+                    0,
+                    parent_id.toString()
             });
             successCount = successCount + 1;
         }
@@ -756,7 +757,7 @@ public class ArticleDaoIml implements ArticleDao {
         if (successCount > 0) {
             String url = urlPath + "article/addKeyword";
             try {
-                HttpRequest.sendGet(url, "param=" +  URLEncoder.encode(keywords.toString(), "utf-8").trim()+ "&uUid=" + uUid);
+                HttpRequest.sendGet(url, "param=" + URLEncoder.encode(keywords.toString(), "utf-8").trim() + "&uUid=" + uUid + "&parent_id=" + parent_id);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -902,6 +903,8 @@ public class ArticleDaoIml implements ArticleDao {
         Integer startNum = Integer.valueOf(map.get("startNum").toString());
         Integer pageSize = Integer.valueOf(map.get("pageSize").toString());
         Object message = map.get("message");
+        Object parent_id = map.get("parent_id");
+
         String countSql = "select count(*) from zz_wechat.keyword where del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
             countSql = countSql + " and keyword_name like '%" + message.toString() + "%' ";
@@ -909,6 +912,11 @@ public class ArticleDaoIml implements ArticleDao {
         String sql = "select id,keyword_name from zz_wechat.keyword where  del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
             sql = sql + " and keyword_name like '%" + message.toString() + "%' ";
+        }
+
+        if(parent_id!=null||!"".equals(parent_id.toString())){
+            countSql=countSql+" and parent_id='"+parent_id+"'";
+            sql=sql+" and parent_id='"+parent_id+"'";
         }
         sql = sql + " ORDER BY update_time desc";
 
@@ -921,25 +929,26 @@ public class ArticleDaoIml implements ArticleDao {
     }
 
     @Override
-    public Map<String, Object> updateKeyword(String id, String keyword_name) {
+    public Map<String, Object> updateKeyword(String id, String keyword_name, String parent_id) {
 
-        if ("".equals(id) || id == null || "".equals(keyword_name) || keyword_name == null) {
+        if ("".equals(id) || id == null || "".equals(keyword_name) || keyword_name == null || parent_id == null || "".equals(parent_id)) {
             return getErrorMap();
         }
 
         String create_time = DateUtil.getCurrentTimeString();
-        String sql = "update zz_wechat.keyword set keyword_name=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s') where id=?";
+        String sql = "update zz_wechat.keyword set keyword_name=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'), parent_id=? where id=?";
 
         int update = jdbcTemplate.update(sql, new Object[]{
                 keyword_name,
                 create_time,
+                parent_id,
                 id
 
         });
 
         String url = urlPath + "article/updateKeyword";
         try {
-            HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + URLEncoder.encode(keyword_name.toString(), "utf-8").trim());
+            HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + URLEncoder.encode(keyword_name.toString(), "utf-8").trim() + "&parent_id=" + parent_id);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

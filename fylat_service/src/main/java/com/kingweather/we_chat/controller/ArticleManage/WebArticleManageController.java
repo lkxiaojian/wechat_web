@@ -238,7 +238,7 @@ public class WebArticleManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "article/addKeyword", method = RequestMethod.POST)
-    public Map<String, Object> addKeyword(@RequestBody Map<String, Object> data) {
+    public Map<String, Object> addKeyword(@RequestParam Map<String, Object> data) {
 
         Map<String, Object> maps = articleService.addKeyword(data);
         return maps;
@@ -311,6 +311,7 @@ public class WebArticleManageController extends BaseController {
         conditions.put("startNum", startNum);
         conditions.put("pageSize", pageSize);
         conditions.put("message", request.getParameter("message"));
+        conditions.put("parent_id", request.getParameter("parent_id"));
         Map<String, Object> maps = articleService.keywordQuery(conditions);
         return maps;
     }
@@ -320,9 +321,9 @@ public class WebArticleManageController extends BaseController {
      *关键词的更新
      */
     @RequestMapping(value = "/article/updateKeyword", method = RequestMethod.GET)
-    public Map<String, Object> updateKeyword(String id,String keyword_name) {
+    public Map<String, Object> updateKeyword(String id,String keyword_name,String parent_id) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        map = articleService.updateKeyword(id,keyword_name);
+        map = articleService.updateKeyword(id,keyword_name,parent_id);
         return map;
     }
 

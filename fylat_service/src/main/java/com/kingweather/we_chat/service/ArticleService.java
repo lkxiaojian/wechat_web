@@ -38,7 +38,7 @@ public interface ArticleService {
 
     Map<String,Object> keywordQuery(Map<String, Object> map);
 
-    Map<String,Object> updateKeyword(String id,String keyword_name);
+    Map<String,Object> updateKeyword(String id,String keyword_name,String parent_id);
 
     Map<String,Object> delKeyword(String id);
 
