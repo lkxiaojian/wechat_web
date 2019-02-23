@@ -914,7 +914,7 @@ public class ArticleDaoIml implements ArticleDao {
             sql = sql + " and keyword_name like '%" + message.toString() + "%' ";
         }
 
-        if(parent_id!=null||!"".equals(parent_id.toString())){
+        if(parent_id!=null&&!"".equals(parent_id.toString())){
             countSql=countSql+" and parent_id='"+parent_id+"'";
             sql=sql+" and parent_id='"+parent_id+"'";
         }
