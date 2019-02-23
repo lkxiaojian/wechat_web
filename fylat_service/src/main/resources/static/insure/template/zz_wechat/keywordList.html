@@ -12,8 +12,25 @@
 <div class="" style="margin-top: 20px;">
 
     <div class="col-md-10 col-sm-12 padder-l-0 m-b-md">
-        <label class=" col-md-4 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">关键词</label>
-        <div class="col-md-5 col-sm-16 padder-l-0">
+
+        <label class="col-sm-1 control-label" style="width:5%;margin-top: 3px;margin-left: 20px">领域</label>
+        <div class="col-md-3">
+            <ui-select ng-model="listObj.region.selected"
+                       on-select="listObj.getTypeSelect($item)"
+                       theme="bootstrap">
+                <ui-select-match
+                        placeholder="{{'请选择领域' | translate}}">
+                    {{$select.selected.article_type_name}}
+                </ui-select-match>
+                <ui-select-choices group-by="'group'"
+                                   repeat="item in listObj.projectData | filter: $select.search">
+                    <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+
+        <label class=" col-sm-1 control-label padder-l-0" style="width:6%;margin-top: 3px;margin-left: 20px">关键词</label>
+        <div class="col-md-3 col-sm-16 padder-l-0">
             <input type="text" class="form-control"
                    ng-model="listObj.seachMessage">
         </div>

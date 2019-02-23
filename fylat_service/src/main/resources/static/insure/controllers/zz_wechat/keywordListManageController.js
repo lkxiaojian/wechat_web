@@ -4,17 +4,36 @@ app.controller('keywordListManageController', ['$scope', '$modal', '$http', 'fyl
         $scope.listObj = {
             navigationMsg: '管理平台 >关键词管理',
             seachMessage: '',
+            parent_id: null,
             seach: function () {
                 // var a=$scope.listObj.seachMessage;
                 $scope.testInstance.bootstrapTable('refresh')
             },
             clear: function () {
                 $scope.listObj.seachMessage = '';
+                $scope.listObj.region.selected = undefined;
             },
             add: function () {
                 $state.go('app.insure.keyword_Manage');
+            },
+            projectData: [],
+            region: {selected: undefined},
+            getTypeSelect: function (item) {
+                $scope.listObj.region.selected = item;
+                $scope.listObj.parent_id = item.article_type_id;
+            },
+            postDownload: function () {
+                $http({
+                    url: 'article/getAllDomain',
+                    method: "GET"
+                }).success(function (data) {
+                    // $scope.listObj.region.selected = data[0];
+                    $scope.listObj.projectData = data;
+                }).error(function (data) {
+                    alert("服务器请求错误")
+                });
             }
-        }
+        };
 
 
         //领域列表
@@ -32,7 +51,9 @@ app.controller('keywordListManageController', ['$scope', '$modal', '$http', 'fyl
                     // console.log(params);
                     $.extend(params, {
                         view: 'select',
-                        message: $scope.listObj.seachMessage
+                        message: $scope.listObj.seachMessage,
+                        //领域ID
+                        parent_id: $scope.listObj.parent_id
                     });
                     return params;
                 },
@@ -50,7 +71,14 @@ app.controller('keywordListManageController', ['$scope', '$modal', '$http', 'fyl
                         align: 'center',
                         width: "6%"
                     }, {
-                        title: '关键字',
+                        title: '所属领域',
+                        class: 'col-md-1',
+                        field: 'article_type_name',
+                        align: 'center',
+                        width: "13%"
+
+                    }, {
+                        title: '关键词',
                         class: 'col-md-1',
                         field: 'keyword_name',
                         align: 'center',
@@ -70,7 +98,9 @@ app.controller('keywordListManageController', ['$scope', '$modal', '$http', 'fyl
                             'click .a-edit': function (e, value, row, index) {
                                 $state.go('app.insure.modifyKeyword', {
                                     id: row.id,
-                                    keyword_name: row.keyword_name});
+                                    keyword_name: row.keyword_name,
+                                    parent_id: row.parent_id,
+                                    article_type_name: row.article_type_name});
                                 $scope.testInstance.bootstrapTable('refresh');
                                 // modalTip({
                                 //     tip: '开发中',
@@ -116,8 +146,9 @@ app.controller('keywordListManageController', ['$scope', '$modal', '$http', 'fyl
                     }
                 ]
             };
-        }
+        };
 
+        $scope.listObj.postDownload();
         $scope.listDomain();
 
     }])

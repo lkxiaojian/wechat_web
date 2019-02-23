@@ -50,7 +50,7 @@ app.controller('domainListManageController', ['$scope', '$modal', '$http', 'fyla
                         align: 'center',
                         width: "6%"
                     }, {
-                        title: '关键字',
+                        title: '关键词',
                         class: 'col-md-1',
                         field: 'article_type_keyword',
                         align: 'center',

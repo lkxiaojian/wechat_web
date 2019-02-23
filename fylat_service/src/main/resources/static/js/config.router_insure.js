@@ -223,7 +223,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         })
         .state('app.insure.modifyKeyword', {
             url: '/modifyKeyword',
-            params: {id: null, keyword_name: null},
+            params: {id: null, keyword_name: null, parent_id: null, article_type_name: null},
             templateUrl: 'insure/template/zz_wechat/modifitionKeyword.html',
             pageTitle: '关键词修改',
             controller: 'modifitionKeywordManageController',

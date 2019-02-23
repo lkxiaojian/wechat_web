@@ -8,14 +8,24 @@
     <div style="margin-left:20px"><h4>关键词管理：</h4></div>
     <form class="form-horizontal" name="searchuserForm"
           style="margin-top: 5px;padding-bottom: 30px">
+        <div class="form-group">
+            <label class="col-md-1 control-label" style="margin-left: 20px">领域</label>
+            <div class="col-md-7">
+                <ui-select ng-model="listObj.region.selected"
+                           on-select="listObj.getTypeSelect($item)"
+                           theme="bootstrap">
+                    <ui-select-match
+                            placeholder="{{'请选择领域' | translate}}">
+                        {{$select.selected.article_type_name}}
+                    </ui-select-match>
+                    <ui-select-choices group-by="'group'"
+                                       repeat="item in listObj.projectData | filter: $select.search">
+                        <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
         <div class="" style="margin-top: 20px;">
-   <!--         <div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
-                <label class="col-md-3 col-sm-2 control-label padder-l-0">领域名称</label>
-                <div class="col-md-9 col-sm-10 padder-l-0">
-                    <input type="text" class="form-control"
-                           ng-model="listObj.integrationQuery.domain_name">
-                </div>
-            </div>-->
             <div class="col-md-7 col-sm-12 padder-l-0 m-b-md">
                 <label class="col-md-3 col-sm-2 control-label padder-l-0">关键词</label>
                 <div class="col-md-9 col-sm-10 padder-l-0">
@@ -24,7 +34,6 @@
                 </div>
             </div>
         </div>
-        <!--ng-click="uploader.uploadAll()"-->
         <div class="row-row pull-right-xs text-center padder-l-0" style="margin-bottom:20px">
             <button class="btn m-b-xs w-xs btn-default"
                     ng-disabled="searchuserForm.$invalid"
@@ -32,7 +41,6 @@
                     style="position: relative; left: -15px; top: 53px">添加
             </button>
         </div>
-
     </form>
 </div>
 

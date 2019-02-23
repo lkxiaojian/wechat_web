@@ -11,6 +11,8 @@ app.controller('modifitionKeywordManageController', ['$scope', '$modal', '$http'
             navigationMsg: '管理平台 >关键词修改',
             id: null,
             keyword_name: null,
+            parent_id: null,
+            article_type_name: null,
             errorMessage: {
                 keyword_name: false//关键词名称
             },
@@ -25,7 +27,8 @@ app.controller('modifitionKeywordManageController', ['$scope', '$modal', '$http'
                     method: "GET",
                     params: {
                         id: $scope.listObj.id,
-                        keyword_name: $scope.listObj.keyword_name
+                        keyword_name: $scope.listObj.keyword_name,
+                        parent_id: $scope.listObj.parent_id
                     }
                 }).success(function (data) {
                     console.log(data)
@@ -57,6 +60,8 @@ app.controller('modifitionKeywordManageController', ['$scope', '$modal', '$http'
             getKeywordMessage: function () {
                 $scope.listObj.id = $stateParams.id;
                 $scope.listObj.keyword_name = $stateParams.keyword_name;
+                $scope.listObj.parent_id = $stateParams.parent_id;
+                $scope.listObj.article_type_name = $stateParams.article_type_name;
             }
         };
         $scope.listObj.getKeywordMessage();
