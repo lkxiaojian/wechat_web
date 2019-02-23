@@ -30,13 +30,14 @@ public class WebArticleManageController extends BaseController {
     /**
      * 上传图片-领域信息
      *
-     * @param file
+     * @param
      * @param req
      * @return
+     * @RequestParam MultipartFile file,
      */
     @ResponseBody
     @RequestMapping(value = "article/fileUploadDomain", method = RequestMethod.POST)
-    public Map<String, Object> add(@RequestParam MultipartFile file, HttpServletRequest req) {
+    public Map<String, Object> add( HttpServletRequest req) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         Object objType = req.getParameter("int_type");
         if (objType == null) {
@@ -44,9 +45,9 @@ public class WebArticleManageController extends BaseController {
             map.put("message", "传参错误");
             return map;
         }
-        boolean isFlag = false;
-        String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file.getOriginalFilename();
-        File f = new File(realpath + savePath);
+//        boolean isFlag = false;
+//        String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file.getOriginalFilename();
+//        File f = new File(realpath + savePath);
         int type = Integer.parseInt(objType.toString());
         if (type == 1) {
             //领域
@@ -58,26 +59,27 @@ public class WebArticleManageController extends BaseController {
                 map.put("message", "传参错误");
                 return map;
             }
-            String path = realpath.replaceAll("home", "resources") + savePath;
-            if (file == null) {
-                path = "";
-            }
-            isFlag = articleService.insertDomain(name, keyword, path);
+//            String path = realpath.replaceAll("home", "resources") + savePath;
+//            if (file == null) {
+//                path = "";
+//            }
+            articleService.insertDomain(name, keyword, "");
 
-
-        }
-
-        if (isFlag) {
-            try {
-                FileUtils.copyInputStreamToFile(file.getInputStream(), f);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
             map.put("code", 0);
-            map.put("message", "传参错误");
-            return map;
+            map.put("message", "添加成功");
         }
+
+//        if (isFlag) {
+//            try {
+//                FileUtils.copyInputStreamToFile(file.getInputStream(), f);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
+//            map.put("code", 0);
+//            map.put("message", "传参错误");
+//            return map;
+//        }
         return map;
     }
 
@@ -102,7 +104,7 @@ public class WebArticleManageController extends BaseController {
 
 
     /**
-     * 上传图片-领域信息
+     * 上传图片-类型信息
      *
      * @param file1
      * @param req
@@ -299,7 +301,7 @@ public class WebArticleManageController extends BaseController {
 
 
     /**
-     *关键字分页查询
+     * 关键字分页查询
      *
      * @return
      */
@@ -318,18 +320,18 @@ public class WebArticleManageController extends BaseController {
 
 
     /**
-     *关键词的更新
+     * 关键词的更新
      */
     @RequestMapping(value = "/article/updateKeyword", method = RequestMethod.GET)
-    public Map<String, Object> updateKeyword(String id,String keyword_name,String parent_id) {
+    public Map<String, Object> updateKeyword(String id, String keyword_name, String parent_id) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        map = articleService.updateKeyword(id,keyword_name,parent_id);
+        map = articleService.updateKeyword(id, keyword_name, parent_id);
         return map;
     }
 
 
     /**
-     *关键词的删除
+     * 关键词的删除
      */
     @RequestMapping(value = "/article/delKeyword", method = RequestMethod.GET)
     public Map<String, Object> updateKeyword(String id) {
@@ -339,10 +341,9 @@ public class WebArticleManageController extends BaseController {
     }
 
 
-
-
     /**
      * 获取领域 条件和 分页查询
+     *
      * @return
      */
     @RequestMapping(value = "article/getConditionDomain")
@@ -360,7 +361,7 @@ public class WebArticleManageController extends BaseController {
 
 
     /**
-     *领域的删除
+     * 领域的删除
      */
     @RequestMapping(value = "/article/delDomainById", method = RequestMethod.GET)
     public Map<String, Object> delDomainById(String id) {
@@ -376,14 +377,11 @@ public class WebArticleManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "article/updateDomainById", method = RequestMethod.POST)
-    public Map<String, Object> updateDomainById(@RequestBody  Map<String, Object> data) {
+    public Map<String, Object> updateDomainById(@RequestBody Map<String, Object> data) {
 
         Map<String, Object> maps = articleService.updateDomainById(data);
         return maps;
     }
-
-
-
 
 
 }

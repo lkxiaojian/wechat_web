@@ -14,10 +14,10 @@ app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatSer
                 alert("领域名字没空！！！")
                 return;
             }
-            if (!$scope.data.file) {
-                alert("图片没有选择！！！")
-                return;
-            }
+            // if (!$scope.data.file) {
+            //     alert("图片没有选择！！！")
+            //     return;
+            // }
 
             var url = 'article/fileUploadDomain';  //params是model传的参数，图片上传接口的url
             var data = angular.copy({
@@ -26,7 +26,7 @@ app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatSer
                 keyword: $scope.listObj.integrationQuery.domain_keyword
 
             });
-            data.file = $scope.data.file;
+            // data.file = $scope.data.file;
 
             Upload.upload({
                 url: url,
