@@ -238,7 +238,7 @@ public class WebArticleManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "article/addKeyword", method = RequestMethod.POST)
-    public Map<String, Object> addKeyword(@RequestParam Map<String, Object> data) {
+    public Map<String, Object> addKeyword(@RequestBody Map<String, Object> data) {
 
         Map<String, Object> maps = articleService.addKeyword(data);
         return maps;
