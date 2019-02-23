@@ -57,6 +57,28 @@ app.controller('modifitionKeywordManageController', ['$scope', '$modal', '$http'
                 });
             },
 
+            projectData: [],
+            region: {selected: undefined},
+            getTypeSelect: function (item) {
+                $scope.listObj.region.selected = item;
+                $scope.listObj.parent_id = item.article_type_id;
+                // $scope.listObj.article_type_name = item.article_type_name;
+            },
+            postDownload: function () {
+                $http({
+                    url: 'article/getAllDomain',
+                    method: "GET"
+                }).success(function (data) {
+                    console.log(data[0])
+                    var temp = {article_type_id: $scope.listObj.parent_id, article_type_name: $scope.listObj.article_type_name};
+                    $scope.listObj.region.selected = temp;
+                    // $scope.listObj.parent_id = data[0].article_type_id;
+                    $scope.listObj.projectData = data;
+                }).error(function (data) {
+                    alert("服务器请求错误")
+                });
+            },
+
             getKeywordMessage: function () {
                 $scope.listObj.id = $stateParams.id;
                 $scope.listObj.keyword_name = $stateParams.keyword_name;
@@ -64,6 +86,7 @@ app.controller('modifitionKeywordManageController', ['$scope', '$modal', '$http'
                 $scope.listObj.article_type_name = $stateParams.article_type_name;
             }
         };
+        $scope.listObj.postDownload();
         $scope.listObj.getKeywordMessage();
     }])
 ;

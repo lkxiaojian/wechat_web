@@ -23,10 +23,20 @@
                       name="addIntegrationFormValidate" novalidate>
                     <div class="" style="margin-top: 20px;margin-bottom: 20px;">
                         <div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
-                            <label class="col-md-3 col-sm-2 control-label padder-l-0">领域</label>
-                            <div class="col-md-9 col-sm-10 padder-l-0">
-                                <input type="text" class="form-control"
-                                       ng-model="listObj.article_type_name" disabled>
+                            <label class="col-md-1 control-label padder-l-0">领域</label>
+                            <div class="col-md-8 padder-l-0 m-b-md">
+                                <ui-select ng-model="listObj.region.selected"
+                                           on-select="listObj.getTypeSelect($item)"
+                                           theme="bootstrap">
+                                    <ui-select-match
+                                            placeholder="{{'请选择领域' | translate}}">
+                                        {{$select.selected.article_type_name}}
+                                    </ui-select-match>
+                                    <ui-select-choices group-by="'group'"
+                                                       repeat="item in listObj.projectData | filter: $select.search">
+                                        <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                     </div>
