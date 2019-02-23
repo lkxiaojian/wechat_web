@@ -905,9 +905,9 @@ public class ArticleDaoIml implements ArticleDao {
         Object message = map.get("message");
         Object parent_id = map.get("parent_id");
 
-        String countSql = "select count(*) from zz_wechat.keyword where del_type !='1' ";
+        String countSql = "select count(*) from zz_wechat.keyword a,zz_wechat.article_type b where a.del_type !='1' and a.parent_id=b.article_type_id ";
         if (message != null && !"".equals(message.toString())) {
-            countSql = countSql + " and keyword_name like '%" + message.toString() + "%' ";
+            countSql = countSql + " and a.keyword_name like '%" + message.toString() + "%' ";
         }
         String sql = "select a.id,a.keyword_name,a.parent_id,b.article_type_name from zz_wechat.keyword a,zz_wechat.article_type b where  a.del_type !='1' and a.parent_id=b.article_type_id ";
         if (message != null && !"".equals(message.toString())) {
@@ -915,7 +915,7 @@ public class ArticleDaoIml implements ArticleDao {
         }
 
         if(parent_id!=null&&!"".equals(parent_id.toString())){
-            countSql=countSql+" and parent_id='"+parent_id+"'";
+            countSql=countSql+" and a.parent_id='"+parent_id+"'";
             sql=sql+" and a.parent_id='"+parent_id+"'";
         }
         sql = sql + " ORDER BY a.update_time desc";
