@@ -909,16 +909,16 @@ public class ArticleDaoIml implements ArticleDao {
         if (message != null && !"".equals(message.toString())) {
             countSql = countSql + " and keyword_name like '%" + message.toString() + "%' ";
         }
-        String sql = "select id,keyword_name from zz_wechat.keyword where  del_type !='1' ";
+        String sql = "select a.id,a.keyword_name,a.parent_id,b.article_type_name from zz_wechat.keyword a,zz_wechat.article_type b where  a.del_type !='1' and a.parent_id=b.article_type_id ";
         if (message != null && !"".equals(message.toString())) {
-            sql = sql + " and keyword_name like '%" + message.toString() + "%' ";
+            sql = sql + " and a.keyword_name like '%" + message.toString() + "%' ";
         }
 
         if(parent_id!=null&&!"".equals(parent_id.toString())){
             countSql=countSql+" and parent_id='"+parent_id+"'";
-            sql=sql+" and parent_id='"+parent_id+"'";
+            sql=sql+" and a.parent_id='"+parent_id+"'";
         }
-        sql = sql + " ORDER BY update_time desc";
+        sql = sql + " ORDER BY a.update_time desc";
 
         Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
         resultmap.put("code", 0);
