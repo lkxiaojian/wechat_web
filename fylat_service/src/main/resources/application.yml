@@ -2,8 +2,9 @@
 ########################shell variable################################
 upload:
   realpath: /home/images/articleTypeImages/
+  pafpath: /home/pdf/paper/
 liunx:
-  ipAddress: 10.24.34.185
+  ipAddress:
   username: huxq
   password: 123456
   port: 22

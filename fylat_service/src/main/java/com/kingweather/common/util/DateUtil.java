@@ -79,6 +79,14 @@ public final class DateUtil {
         return format;
     }
 
+
+    public static synchronized String getCurrentTimeString(String time) {
+        //转换时间格式
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String format = simpleDate.format(time);
+        return format;
+    }
+
     /**
      * 取几天的时间
      * @param day

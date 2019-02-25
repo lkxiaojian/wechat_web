@@ -509,7 +509,21 @@ public class ArticleDaoIml implements ArticleDao {
             String sysTime = DateUtil.getCurrentTimeString();
             String insertSql = "insert into zz_wechat.article_type (article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type) values(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
 
+
+            String insertSqlTMp = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type) values(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+
+
             int update = jdbcTemplate.update(insertSql, new Object[]{
+                    UuidUtils.getUUid(),
+                    name.toString(),
+                    key,
+                    sysTime,
+                    path,
+                    0,
+                    0
+            });
+
+            int updateTmp = jdbcTemplate.update(insertSqlTMp, new Object[]{
                     UuidUtils.getUUid(),
                     name.toString(),
                     key,
@@ -1096,7 +1110,15 @@ public class ArticleDaoIml implements ArticleDao {
 
         String sql = "update zz_wechat.article_type set article_type_name=?  ,article_type_keyword=? where article_type_id=?";
 
+
+        String sqlTmp = "update zz_wechat.article_type_tmp set article_type_name=?  ,article_type_keyword=? where article_type_id=?";
+
         int update = jdbcTemplate.update(sql, new Object[]{
+                article_type_name.toString(),
+                article_type_keyword.toString(),
+                article_type_id.toString()
+        });
+        jdbcTemplate.update(sqlTmp, new Object[]{
                 article_type_name.toString(),
                 article_type_keyword.toString(),
                 article_type_id.toString()
