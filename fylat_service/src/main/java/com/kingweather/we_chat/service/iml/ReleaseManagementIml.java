@@ -27,6 +27,12 @@ public class ReleaseManagementIml implements ReleaseManagementService {
 
     }
 
+    @Override
+    public Map getTypeMessage(String article_type_id) {
+        Map map =releaseManagementDao.getTypeMessage(article_type_id);
+        return map;
+    }
+
     private List getMenuTreeChildren(String parentId) {
 
         List<Map> list = releaseManagementDao.getTypeMenuTree(parentId);
