@@ -876,7 +876,7 @@ public class ArticleDaoIml implements ArticleDao {
                     "details_txt=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'),content_excerpt=? WHERE article_id=? ";
             int update = jdbcTemplate.update(sql, new Object[]{
 
-                    Integer.parseInt(article_type_id.toString()),
+                    article_type_id,
                     article_title.toString(),
                     article_keyword.toString(),
                     author.toString(),
