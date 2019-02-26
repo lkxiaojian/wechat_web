@@ -101,7 +101,12 @@ public class AlgorithmDataController extends BaseController {
         String create_time = data.get("create_time").toString();
         String insertArticleSql = "insert into zz_wechat.article_tmp (article_id,article_type_id,article_title,article_keyword,author,source,content_excerpt,details_txt" +
                 ",details_div,details_size,create_time,update_time,status) values(?,?,?,?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d %H:%i:%s'),?)";
+        String div = data.get("article_div").toString();
 
+        div = div.replaceAll("data-src=", "src=");
+        div = div.replaceAll("webp", "png");
+        div = div.substring(0,div.indexOf("<script nonce"));
+        div =div+"</div>";
         int update = jdbcTemplate.update(insertArticleSql, new Object[]{
                 data.get("article_id").toString(),
                 type_id,
@@ -111,7 +116,7 @@ public class AlgorithmDataController extends BaseController {
                 source.toString(),
                 data.get("summary").toString(),
                 data.get("article_txt").toString(),
-                data.get("article_div").toString(),
+                div,
                 data.get("article_txt").toString().length(),
                 create_time,
                 currentTime,
@@ -224,7 +229,7 @@ public class AlgorithmDataController extends BaseController {
             int update = jdbcTemplate.update(insertPaperSql, new Object[]{
                     article_id,
                     article_title,
-                    articleKeyword,
+                    article_keyword,
                     author,
                     currentTime,
                     create_time,

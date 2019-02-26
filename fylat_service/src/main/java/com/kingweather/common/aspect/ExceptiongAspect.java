@@ -73,7 +73,8 @@ public class ExceptiongAspect {
                 && !joinPoint.toString().contains("statistics.StatisticsController")
                 && !joinPoint.toString().contains("usermenu.UserMenuController")
                 && !joinPoint.toString().contains("websysuser.WebSysUserController")
-                &&!joinPoint.toString().contains("algorithm.algorithmController")){
+                &&!joinPoint.toString().contains("algorithm.algorithmController")
+                &&!joinPoint.toString().contains("algorithm.AlgorithmDataController")){
             String method = joinPoint.getSignature().getName();
             if (session.getAttribute("user") == null && !method.equals("userLogin") && !method.equals("articleImageUpload") && !method.equals("addArticle")) {
                 logger.error("session失效");
