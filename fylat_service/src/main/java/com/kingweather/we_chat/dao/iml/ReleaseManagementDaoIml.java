@@ -158,8 +158,6 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             Object details_size_more = data.get("details_size_more");
             //字数少于多少
             Object details_size_less = data.get("details_size_less");
-
-
             String sqlCount = "select count(*) as count from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type !=1 " +
                     "AND a.article_type_id=b.article_type_id and article_type_id='" + article_type_id + "' ";
 
@@ -196,29 +194,20 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             if (details_size_more != null) {
                 sqlCount = sqlCount + " and details_size>=" + Integer.parseInt(details_size_more.toString());
                 sqlMessage = sqlMessage + " and details_size>=" + Integer.parseInt(details_size_more.toString());
-
             }
-
-
             if (details_size_less != null) {
                 sqlCount = sqlCount + " and details_size<=" + Integer.parseInt(details_size_less.toString());
                 sqlMessage = sqlMessage + " and details_size<=" + Integer.parseInt(details_size_less.toString());
             }
-
-
             if (message != null) {
                 sqlCount = sqlCount + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
                 sqlMessage = sqlMessage + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
             }
-
             if (checkType != null) {
                 sqlCount = sqlCount + " and check_type=" + Integer.parseInt(checkType.toString());
                 sqlMessage = sqlMessage + " and check_type=" + Integer.parseInt(checkType.toString());
-
             }
-
             sqlMessage = sqlMessage + " ORDER BY update_time asc";
-
             Page<Map<String, Object>> page = jdbc.queryForPage(Integer.parseInt(startNum.toString()), Integer.parseInt(pageSize.toString()), sqlCount, sqlMessage, new Object[]{});
             map.put("code", 0);
             map.put("message", "查询成功");
