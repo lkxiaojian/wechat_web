@@ -83,12 +83,18 @@ public final class DateUtil {
     public static synchronized String getCurrentTimeString(String time) {
         //转换时间格式
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String format = simpleDate.format(time);
-        return format;
+//        String format = simpleDate.format(time);
+        try {
+            return String.valueOf(simpleDate.parse(time).getTime() / 1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**
      * 取几天的时间
+     *
      * @param day
      * @return
      */
@@ -97,7 +103,7 @@ public final class DateUtil {
         //当前时间
         Date dNow = new Date();
         Date dBefore = new Date();
-         //得到日历
+        //得到日历
         Calendar calendar = Calendar.getInstance();
         //把当前时间赋给日历
         calendar.setTime(dNow);
@@ -105,7 +111,7 @@ public final class DateUtil {
         calendar.add(Calendar.DAY_OF_MONTH, -day);
         //得到前一天的时间
         dBefore = calendar.getTime();
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //设置时间格式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); //设置时间格式
         String defaultStartDate = sdf.format(dBefore);    //格式化前一天
         return defaultStartDate;
     }
@@ -113,6 +119,7 @@ public final class DateUtil {
 
     /**
      * 取几天的时间
+     *
      * @param day
      * @return
      */
@@ -129,13 +136,14 @@ public final class DateUtil {
         calendar.add(Calendar.DAY_OF_MONTH, -day);
         //得到前一天的时间
         dBefore = calendar.getTime();
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); //设置时间格式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //设置时间格式
         String defaultStartDate = sdf.format(dBefore);    //格式化前一天
         return defaultStartDate;
     }
 
     /**
      * 取几个小时前的数据
+     *
      * @param day
      * @return
      */
@@ -151,11 +159,10 @@ public final class DateUtil {
         calendar.add(Calendar.HOUR_OF_DAY, -day);
         //得到前一天的时间
         dBefore = calendar.getTime();
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String defaultStartDate = sdf.format(dBefore);
         return defaultStartDate;
     }
-
 
 
     public static synchronized String getCurrentDateString(String formatStr) {

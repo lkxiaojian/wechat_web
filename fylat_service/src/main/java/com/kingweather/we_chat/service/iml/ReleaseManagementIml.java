@@ -33,6 +33,46 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         return map;
     }
 
+    @Override
+    public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack,String parentid) {
+
+        int i = releaseManagementDao.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack,parentid);
+
+
+
+
+
+        return i;
+    }
+
+    @Override
+    public int updateTypeParentId(String article_type_id, String parentid) {
+        int i=releaseManagementDao.updateTypeParentId(article_type_id,parentid);
+
+        return i;
+    }
+
+    @Override
+    public Map selectAricleTmpList(Map<String, java.lang.Object> data) {
+        return releaseManagementDao.selectAricleTmpList(data);
+    }
+
+    @Override
+    public Map<String, Object> delAricleTmpList(String articleIdList) {
+        return releaseManagementDao.delAricleTmpList(articleIdList);
+    }
+
+    @Override
+    public Map<String, Object> getAricleTmpMessageById(String articleId,String type) {
+        return releaseManagementDao.getAricleTmpMessageById(articleId,type);
+    }
+
+    @Override
+    public Map<String, Object> getAricleTmpCheckById(String articleId, String type) {
+        return releaseManagementDao.getAricleTmpCheckById(articleId,type);
+    }
+
+
     private List getMenuTreeChildren(String parentId) {
 
         List<Map> list = releaseManagementDao.getTypeMenuTree(parentId);
