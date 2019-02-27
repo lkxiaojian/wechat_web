@@ -47,62 +47,84 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
     @Override
     public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack, String parentid) {
-
-        String updateSqlTmp = "update set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=? from zz_wechat.article_type_tmp where article_type_id=?";
-        int update = jdbcTemplate.update(updateSqlTmp, new Object[]{
-
-                name,
-                keyword,
-                pathICon,
-                pathBack,
-                "1",
-                artcicle_type_id
-
-        });
-
-
-        String sqlCount = "select count(*) as count from zz_wechat.article_type where artcicle_type_id=?";
-        Map<String, Object> map = jdbcTemplate.queryForMap(sqlCount, new Object[]{
-                artcicle_type_id
-        });
-        if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
-            //插入实际的类型表
-            String currentTime = DateUtil.getCurrentTimeString();
-            String insertSqlt = "insert into (artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time) values " +
-                    "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'))";
-            jdbcTemplate.update(insertSqlt, new Object[]{
-                    artcicle_type_id,
-                    keyword,
-                    name,
-                    pathICon,
-                    pathBack,
-                    parentid,
-                    0,
-                    currentTime
-
-            });
-
-        } else {
-            String updateSql = "update set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=? ,del_type=? from zz_wechat.article_type where article_type_id=?";
-            jdbcTemplate.update(updateSql, new Object[]{
-
+        try {
+            String updateSqlTmp = "update  zz_wechat.article_type_tmp set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=?  where article_type_id=?";
+            int update = jdbcTemplate.update(updateSqlTmp, new Object[]{
                     name,
                     keyword,
                     pathICon,
                     pathBack,
                     "1",
-                    artcicle_type_id,
-                    0
+                    parentid,
+                    artcicle_type_id
 
             });
+
+            try {
+                String sqlCount = "select count(*) as count from zz_wechat.article_type where artcicle_type_id=?";
+                Map<String, Object> map = jdbcTemplate.queryForMap(sqlCount, new Object[]{
+                        artcicle_type_id
+                });
+                if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
+                    //插入实际的类型表
+                    String currentTime = DateUtil.getCurrentTimeString();
+                    String insertSqlt = "insert into (artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time) values " +
+                            "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'))";
+                    jdbcTemplate.update(insertSqlt, new Object[]{
+                            artcicle_type_id,
+                            keyword,
+                            name,
+                            pathICon,
+                            pathBack,
+                            parentid,
+                            0,
+                            currentTime
+
+                    });
+
+                } else {
+                    String updateSql = "update zz_wechat.article_type set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=? ,del_type=?   where article_type_id=?";
+                    jdbcTemplate.update(updateSql, new Object[]{
+
+                            name,
+                            keyword,
+                            pathICon,
+                            pathBack,
+                            parentid,
+                            "1",
+                            artcicle_type_id,
+                            0
+
+                    });
+                }
+            } catch (Exception e) {
+                //插入实际的类型表
+                String currentTime = DateUtil.getCurrentTimeString();
+                String insertSqlt = "insert into (artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time) values " +
+                        "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'))";
+                jdbcTemplate.update(insertSqlt, new Object[]{
+                        artcicle_type_id,
+                        keyword,
+                        name,
+                        pathICon,
+                        pathBack,
+                        parentid,
+                        0,
+                        currentTime
+                });
+            }
+
+            return update;
+        } catch (Exception e) {
+            System.out.println(e);
+            return 0;
         }
-        return update;
     }
 
     @Override
     public int updateTypeParentId(String article_type_id, String parentid) {
 
-        String updateSqlTmp = "update set parentid=? from zz_wechat.article_type_tmp where article_type_id=?";
+        String updateSqlTmp = "update zz_wechat.article_type_tmp set parentid=?   where article_type_id=?";
         int update = jdbcTemplate.update(updateSqlTmp, new Object[]{
                 parentid,
                 article_type_id
@@ -115,7 +137,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         });
         if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 1) {
 
-            String updateSql = "update set parentid=? from zz_wechat.article_type where article_type_id=?";
+            String updateSql = "update zz_wechat.article_type set parentid=?   where article_type_id=?";
             jdbcTemplate.update(updateSql, new Object[]{
                     parentid,
                     article_type_id

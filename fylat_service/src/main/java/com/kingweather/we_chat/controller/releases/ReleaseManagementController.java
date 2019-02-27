@@ -79,8 +79,8 @@ public class ReleaseManagementController extends BaseController {
      * @return
      */
 
-    @RequestMapping(value = "updateTypeMessage/rest", method = RequestMethod.POST)
-    public Map<String, Object> updateTypeMessage(@RequestParam("file[0]") MultipartFile file1, @RequestParam("file[1]") MultipartFile file2, HttpServletRequest req) {
+    @RequestMapping(value = "/updateTypeMessage/rest", method = RequestMethod.POST)
+    public Map<String, Object> updateTypeMessage(@RequestParam(value="file[0]",required = false) MultipartFile file1, @RequestParam(value="file[1]",required = false) MultipartFile file2, HttpServletRequest req) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         String pathICon = "";
         String pathBack = "";
