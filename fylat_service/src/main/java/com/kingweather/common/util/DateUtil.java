@@ -85,7 +85,8 @@ public final class DateUtil {
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        String format = simpleDate.format(time);
         try {
-            return String.valueOf(simpleDate.parse(time).getTime() / 1000);
+            String s = String.valueOf(simpleDate.parse(time).getTime() / 1000);
+            return s;
         } catch (ParseException e) {
             e.printStackTrace();
         }

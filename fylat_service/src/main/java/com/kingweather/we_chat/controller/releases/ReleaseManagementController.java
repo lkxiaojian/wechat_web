@@ -163,8 +163,8 @@ public class ReleaseManagementController extends BaseController {
      * @return
      */
 
-    @RequestMapping(value = "selectAricleTmpList/rest", method = RequestMethod.POST)
-    public Map<String, Object> selectAricleTmpList(@RequestParam Map<String, Object> data) {
+    @RequestMapping(value = "/selectAricleTmpList/rest", method = RequestMethod.POST)
+    public Map<String, Object> selectAricleTmpList(@RequestBody Map<String, Object> data) {
         try {
 
             return releaseManagementService.selectAricleTmpList(data);
@@ -180,7 +180,7 @@ public class ReleaseManagementController extends BaseController {
      * @param articleIdList
      * @return
      */
-    @RequestMapping(value = "delAricleTmpList/rest", method = RequestMethod.POST)
+    @RequestMapping(value = "/delAricleTmpList/rest", method = RequestMethod.GET)
     public Map<String, Object> delAricleTmpList(String articleIdList) {
         try {
 
@@ -197,7 +197,7 @@ public class ReleaseManagementController extends BaseController {
      * @param articleId type 0  文章 1 论文
      * @return
      */
-    @RequestMapping(value = "getAricleTmpMessageById/rest", method = RequestMethod.GET)
+    @RequestMapping(value = "/getAricleTmpMessageById/rest", method = RequestMethod.GET)
     public Map<String, Object> getAricleTmpMessageById(String articleId, String type) {
         try {
             return releaseManagementService.getAricleTmpMessageById(articleId,type);
@@ -208,15 +208,15 @@ public class ReleaseManagementController extends BaseController {
 
     /**
      * 根据文章的id  进行审核
-     * @param articleId
+     * @param articleIds
      * @param type  type 0  文章 1 论文
      * @return
      */
 
-    @RequestMapping(value = "getAricleTmpCheckById/rest", method = RequestMethod.GET)
-    public Map<String, Object> getAricleTmpCheckById(String articleId, String type) {
+    @RequestMapping(value = "/getAricleTmpCheckById/rest", method = RequestMethod.GET)
+    public Map<String, Object> getAricleTmpCheckById(String articleIds, String type) {
         try {
-            return releaseManagementService.getAricleTmpCheckById(articleId,type);
+            return releaseManagementService.getAricleTmpCheckById(articleIds,type);
         } catch (Exception e) {
             return getErrorMapService();
         }
