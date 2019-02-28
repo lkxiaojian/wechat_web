@@ -72,6 +72,11 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         return releaseManagementDao.getAricleTmpCheckById(articleId,type);
     }
 
+    @Override
+    public Map<String, Object> updateAricleTmpMesage(Map<String, Object> data) {
+        return releaseManagementDao.updateAricleTmpMesage(data);
+    }
+
 
     private List getMenuTreeChildren(String parentId) {
 

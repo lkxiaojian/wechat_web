@@ -148,7 +148,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -350,6 +350,68 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             map.put("message", "审核成功！");
             return map;
         }
+        return null;
+    }
+
+    /**
+     * 更新论文或者文章
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateAricleTmpMesage(Map<String, Object> data) {
+        Object type = data.get("type");
+        Object article_id = data.get("article_id");
+        Object article_type_id = data.get("article_type_id");
+        Object article_title = data.get("article_title");
+        Object article_keyword = data.get("article_keyword");
+        Object create_time = data.get("create_time");
+        Object content_excerpt = data.get("content_excerpt");
+        Object details_txt = data.get("details_txt");
+        Object details_div = data.get("details_div");
+//        Object details_size = data.get("details_size");
+        Object article_score = data.get("article_score");
+        if (type == null || article_id == null||article_type_id == null || article_title == null||article_keyword == null || create_time == null
+                ||content_excerpt == null || details_txt == null||details_div == null ||article_score == null) {
+            return getErrorMap();
+        }
+
+
+        Object author = data.get("author");
+
+        Object source = data.get("source");
+
+
+        if ("0".equals(type)) {
+            String sql = "update zz_wechat.article_tmp set article_type_id=?,article_title=?,article_keyword=?,author=?,source=?," +
+                    "content_excerpt=?,details_txt=?,details_div=?,details_size=?,status=?,article_score=?,del_type=?," +
+                    "set create_time=date_format(?,'%Y-%m-%d %H:%i:%s'),set update_time=date_format(?,'%Y-%m-%d %H:%i:%s') where article_id=?";
+
+            int update = jdbcTemplate.update(sql, new Object[]{
+                    article_type_id.toString(),
+                    article_title.toString(),
+                    article_keyword.toString(),
+                    author,
+                    source,
+                    content_excerpt.toString(),
+                    details_txt.toString(),
+                    details_div.toString(),
+                    Integer.parseInt(details_txt.toString()),
+                    "1",
+                    Integer.parseInt(article_score.toString()),
+                    "0",
+                    create_time,
+                    DateUtil.getCurrentTimeString(),
+                    article_id.toString()
+            });
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "更新！");
+            return map;
+        }
+
+
         return null;
     }
 

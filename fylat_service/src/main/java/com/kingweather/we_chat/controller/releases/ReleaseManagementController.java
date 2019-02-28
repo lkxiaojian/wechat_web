@@ -223,6 +223,26 @@ public class ReleaseManagementController extends BaseController {
     }
 
 
+
+
+    /**
+     * 更新文章或者论文列表
+     *
+     * @param data
+     * @return
+     */
+
+    @RequestMapping(value = "/updateAricleTmpMesage/rest", method = RequestMethod.POST)
+    public Map<String, Object> updateAricleTmpMesage(@RequestBody Map<String, Object> data) {
+        try {
+            return releaseManagementService.updateAricleTmpMesage(data);
+        } catch (Exception e) {
+
+            return getErrorMapService();
+        }
+    }
+
+
     /**
      * 传参错误
      *
