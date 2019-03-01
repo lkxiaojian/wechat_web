@@ -23,4 +23,6 @@ public interface ReleaseManagementDao {
     Map<String,java.lang.Object> getAricleTmpCheckById(String articleId, String type);
 
     Map<String,java.lang.Object> updateAricleTmpMesage(Map<String, java.lang.Object> data);
+
+    Map<String,java.lang.Object> pushAricleTmpById(String articleIds, String type);
 }

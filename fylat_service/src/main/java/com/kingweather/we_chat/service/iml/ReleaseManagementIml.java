@@ -3,6 +3,7 @@ package com.kingweather.we_chat.service.iml;
 import com.kingweather.we_chat.dao.ReleaseManagementDao;
 import com.kingweather.we_chat.service.ReleaseManagementService;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +17,10 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     public List getTypeMenuTree() {
 
         List<Map> list = releaseManagementDao.getTypeMenuTree("-1");
-        for(Map s:list) {
+        for (Map s : list) {
             List childrenList = getMenuTreeChildren(s.get("article_type_id").toString());
-            if(childrenList!=null){
-                s.put("children",childrenList);
+            if (childrenList != null) {
+                s.put("children", childrenList);
             }
         }
         return list;
@@ -29,17 +30,14 @@ public class ReleaseManagementIml implements ReleaseManagementService {
 
     @Override
     public Map getTypeMessage(String article_type_id) {
-        Map map =releaseManagementDao.getTypeMessage(article_type_id);
+        Map map = releaseManagementDao.getTypeMessage(article_type_id);
         return map;
     }
 
     @Override
-    public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack,String parentid) {
+    public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack, String parentid) {
 
-        int i = releaseManagementDao.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack,parentid);
-
-
-
+        int i = releaseManagementDao.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack, parentid);
 
 
         return i;
@@ -47,7 +45,7 @@ public class ReleaseManagementIml implements ReleaseManagementService {
 
     @Override
     public int updateTypeParentId(String article_type_id, String parentid) {
-        int i=releaseManagementDao.updateTypeParentId(article_type_id,parentid);
+        int i = releaseManagementDao.updateTypeParentId(article_type_id, parentid);
 
         return i;
     }
@@ -63,13 +61,13 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map<String, Object> getAricleTmpMessageById(String articleId,String type) {
-        return releaseManagementDao.getAricleTmpMessageById(articleId,type);
+    public Map<String, Object> getAricleTmpMessageById(String articleId, String type) {
+        return releaseManagementDao.getAricleTmpMessageById(articleId, type);
     }
 
     @Override
     public Map<String, Object> getAricleTmpCheckById(String articleId, String type) {
-        return releaseManagementDao.getAricleTmpCheckById(articleId,type);
+        return releaseManagementDao.getAricleTmpCheckById(articleId, type);
     }
 
     @Override
@@ -78,13 +76,19 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
 
+    @Override
+    public Map<String, Object> pushAricleTmpById(String articleIds, String type) {
+        return releaseManagementDao.pushAricleTmpById(articleIds, type);
+    }
+
+
     private List getMenuTreeChildren(String parentId) {
 
         List<Map> list = releaseManagementDao.getTypeMenuTree(parentId);
-        for (Map s:list) {
+        for (Map s : list) {
             List childrenList = getMenuTreeChildren(s.get("article_type_id").toString());
-            if(childrenList!=null){
-                s.put("children",childrenList);
+            if (childrenList != null) {
+                s.put("children", childrenList);
             }
         }
         return list;

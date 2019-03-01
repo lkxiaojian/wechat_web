@@ -372,8 +372,8 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         Object details_div = data.get("details_div");
 //        Object details_size = data.get("details_size");
         Object article_score = data.get("article_score");
-        if (type == null || article_id == null||article_type_id == null || article_title == null||article_keyword == null || create_time == null
-                ||content_excerpt == null || details_txt == null||details_div == null ||article_score == null) {
+        if (type == null || article_id == null || article_type_id == null || article_title == null || article_keyword == null || create_time == null
+                || content_excerpt == null || details_txt == null || details_div == null || article_score == null) {
             return getErrorMap();
         }
 
@@ -382,11 +382,11 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         Object source = data.get("source");
 
-
+        String currentTimeString = DateUtil.getCurrentTimeString();
         if ("0".equals(type)) {
             String sql = "update zz_wechat.article_tmp set article_type_id=?,article_title=?,article_keyword=?,author=?,source=?," +
                     "content_excerpt=?,details_txt=?,details_div=?,details_size=?,status=?,article_score=?,del_type=?," +
-                    "set create_time=date_format(?,'%Y-%m-%d %H:%i:%s'),set update_time=date_format(?,'%Y-%m-%d %H:%i:%s') where article_id=?";
+                    " create_time=date_format(?,'%Y-%m-%d %H:%i:%s'),  update_time=date_format(?,'%Y-%m-%d %H:%i:%s') where article_id=?";
 
             int update = jdbcTemplate.update(sql, new Object[]{
                     article_type_id.toString(),
@@ -397,17 +397,87 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                     content_excerpt.toString(),
                     details_txt.toString(),
                     details_div.toString(),
-                    Integer.parseInt(details_txt.toString()),
+                    details_txt.toString().length(),
                     "1",
                     Integer.parseInt(article_score.toString()),
                     "0",
                     create_time,
-                    DateUtil.getCurrentTimeString(),
+                    currentTimeString,
                     article_id.toString()
             });
             HashMap<String, Object> map = new HashMap<>();
             map.put("code", 0);
-            map.put("message", "更新！");
+            map.put("message", "更新成功！");
+            return map;
+        } else {
+            //论文
+        }
+
+
+        return null;
+    }
+    @Override
+    public Map<String, Object> pushAricleTmpById(String articleIds, String type) {
+        if (articleIds == null || type == null) {
+            return getErrorMap();
+        }
+        String idList = "";
+        String[] split = articleIds.split(",");
+        for (int i = 0; i < split.length; i++) {
+            idList = idList + "'" + split[i].toString() + "',";
+        }
+        idList = idList.substring(0, idList.length() - 1);
+        if ("0".equals(type)) {
+            String sql = "select article_id,article_type_id,article_title,article_keyword,author,create_time,source,content_excerpt,details_txt,details_div,details_size,article_score from zz_wechat.article_tmp where " +
+                    " article_id in(" + idList + " )";
+
+            List<Map<String, Object>> articleTmpMaps = jdbcTemplate.queryForList(sql);
+            for (int i = 0; i < articleTmpMaps.size(); i++) {
+                Map<String, Object> articleTmp = articleTmpMaps.get(i);
+
+
+                String insertSql = "insert into zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source" +
+                        ",share_count,collect_count,collect_initcount,share_initcount,content_type,content_manual,content_excerpt," +
+                        "details_txt,del_type,word_count,state " +
+                        ",create_time,update_time) values(?,?,?,?,?,?," +
+                        "?,?,?,?,?,?,?,?," +
+                        "?,?,?" +
+                        ",date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d %H:%i:%s'))";
+                int update = jdbcTemplate.update(insertSql, new Object[]{
+                        articleTmp.get("article_id"),
+                        articleTmp.get("article_type_id"),
+                        articleTmp.get("article_title"),
+                        articleTmp.get("article_keyword"),
+                        articleTmp.get("author"),
+                        articleTmp.get("source"),
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        articleTmp.get("details_div"),
+                        articleTmp.get("content_excerpt"),
+                        articleTmp.get("details_txt"),
+                        0,
+                        Integer.parseInt(articleTmp.get("details_size").toString()),
+                        1,
+                        articleTmp.get("create_time"),
+                        DateUtil.getCurrentTimeString()
+                });
+
+                if(update==1){
+                    String delSql="DELETE  from zz_wechat.article_tmp where article_id=?";
+                    jdbcTemplate.update(delSql,new Object[]{
+                            articleTmp.get("article_id")
+                    });
+                }
+
+
+            }
+
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "更新成功！");
             return map;
         }
 

@@ -21,4 +21,6 @@ public interface ReleaseManagementService {
     Map<String,Object> getAricleTmpCheckById(String articleId, String type);
 
     Map<String,Object> updateAricleTmpMesage(Map<String, Object> data);
+
+    Map<String,Object> pushAricleTmpById(String articleIds, String type);
 }

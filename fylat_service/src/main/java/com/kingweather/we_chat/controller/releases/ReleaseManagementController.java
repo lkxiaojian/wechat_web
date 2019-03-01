@@ -214,7 +214,7 @@ public class ReleaseManagementController extends BaseController {
      */
 
     @RequestMapping(value = "/getAricleTmpCheckById/rest", method = RequestMethod.GET)
-    public Map<String, Object> getAricleTmpCheckById(String articleIds, String type) {
+    public Map<String, Object> checkAricleTmpCheckById(String articleIds, String type) {
         try {
             return releaseManagementService.getAricleTmpCheckById(articleIds,type);
         } catch (Exception e) {
@@ -225,19 +225,39 @@ public class ReleaseManagementController extends BaseController {
 
 
 
+
+
+
     /**
-     * 更新文章或者论文列表
+     * 更新文章或者论文
      *
      * @param data
      * @return
      */
 
     @RequestMapping(value = "/updateAricleTmpMesage/rest", method = RequestMethod.POST)
-    public Map<String, Object> updateAricleTmpMesage(@RequestBody Map<String, Object> data) {
+    public Map<String, Object> updateAricleTmpMesage(@RequestParam Map<String, Object> data) {
         try {
             return releaseManagementService.updateAricleTmpMesage(data);
         } catch (Exception e) {
 
+            return getErrorMapService();
+        }
+    }
+
+
+    /**
+     * 根据文章的id  进行发布
+     * @param articleIds
+     * @param type  type 0  文章 1 论文
+     * @return
+     */
+
+    @RequestMapping(value = "/pushAricleTmpById/rest", method = RequestMethod.GET)
+    public Map<String, Object> pushAricleTmpCheckById(String articleIds, String type) {
+        try {
+            return releaseManagementService.pushAricleTmpById(articleIds,type);
+        } catch (Exception e) {
             return getErrorMapService();
         }
     }
