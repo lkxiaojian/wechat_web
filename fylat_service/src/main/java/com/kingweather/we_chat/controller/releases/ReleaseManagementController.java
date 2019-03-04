@@ -156,6 +156,31 @@ public class ReleaseManagementController extends BaseController {
         }
     }
 
+
+    /**
+     * 根据id 合并类型
+     *
+     * @param data
+     * @return
+     */
+
+    @RequestMapping(value = "/mergeTypeById/rest",method = RequestMethod.POST)
+    public Map  mergeTypeById(@RequestBody Map<String, Object> data) {
+        Map map = new HashMap();
+        try {
+            releaseManagementService.mergeTypeById(data);
+
+            map.put("code", 0);
+            map.put("message", "更新成功");
+            return map;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getErrorMapService();
+        }
+    }
+
+
     /**
      * 文章或者论文列表
      *

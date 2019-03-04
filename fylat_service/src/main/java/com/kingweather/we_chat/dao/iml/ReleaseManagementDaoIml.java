@@ -24,7 +24,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     @Override
     public List<Map> getTypeMenuTree(String parent_id) {
 
-        String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+        String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
                 1, parent_id
 
@@ -36,7 +36,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     @Override
     public Map getTypeMessage(String article_type_id) {
 
-        String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid from zz_wechat.article_type_tmp where del_type!=? and article_type_id=?";
+        String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type_tmp where del_type!=? and article_type_id=?";
 
         Map maps = jdbcTemplate.queryForMap(sql, new Object[]{
                 1, article_type_id
@@ -416,6 +416,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         return null;
     }
+
     @Override
     public Map<String, Object> pushAricleTmpById(String articleIds, String type) {
         if (articleIds == null || type == null) {
@@ -465,9 +466,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         DateUtil.getCurrentTimeString()
                 });
 
-                if(update==1){
-                    String delSql="DELETE  from zz_wechat.article_tmp where article_id=?";
-                    jdbcTemplate.update(delSql,new Object[]{
+                if (update == 1) {
+                    String delSql = "DELETE  from zz_wechat.article_tmp where article_id=?";
+                    jdbcTemplate.update(delSql, new Object[]{
                             articleTmp.get("article_id")
                     });
                 }
@@ -483,6 +484,65 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
         return null;
+    }
+
+    /**
+     * 合并文章类型
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public int mergeTypeById(Map<String, Object> data) {
+        try {
+
+
+            Object article_type_id = data.get("article_type_id");
+            Object parent_id = data.get("parent_id");
+            Object merge_type_id = data.get("merge_type_id");
+//        Object merge_type_childId = data.get("merge_type_childId");
+            if (article_type_id == null || parent_id == null || merge_type_id == null) {
+                return 0;
+            }
+            //要合并的id
+            String[] merge_type_idList = merge_type_id.toString().split(",");
+            String mergeIdList = "";
+
+            for (int i = 0; i < merge_type_idList.length; i++) {
+                mergeIdList = mergeIdList + "'" + merge_type_idList[i].toString() + "',";
+            }
+            mergeIdList = mergeIdList.substring(0, mergeIdList.length() - 1);
+
+
+//        String tmpChildSql="select parentid from zz_wecaht.article_type_tmp where article_type_id in ("+mergeIdList+" )";
+//        String childSql="select parentid from zz_wecaht.article_type where article_type_id in ("+mergeIdList+" )";
+            String tmpChildSql = "update zz_wecaht.article_type_tmp set parentid='" + parent_id + "' where parentid in(" +
+                    " select parentid from zz_wecaht.article_type_tmp where article_type_id in (" +
+                    "" + mergeIdList +
+                    " ))";
+
+            String childSql = "update zz_wecaht.article_type set parentid='" + parent_id + "' where parentid in(" +
+                    " select parentid from zz_wecaht.article_type where article_type_id in (" +
+                    "" + mergeIdList +
+                    " ))";
+
+            jdbcTemplate.update(tmpChildSql);
+            jdbcTemplate.update(childSql);
+            String deltmpChildSql = "delete from zz_wecaht.article_type_tmp where article_type_id=?";
+            jdbcTemplate.update(deltmpChildSql, new Object[]{
+                    article_type_id.toString()
+            });
+
+            String delChildSql = "update zz_wechat.article_type set del_type=? where article_type_id=?";
+            jdbcTemplate.update(delChildSql, new Object[]{
+                    1,
+                    article_type_id.toString()
+            });
+
+        } catch (Exception e) {
+            return 0;
+        }
+        return 1;
     }
 
     /**

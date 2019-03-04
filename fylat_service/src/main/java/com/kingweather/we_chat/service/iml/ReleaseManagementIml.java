@@ -81,6 +81,12 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         return releaseManagementDao.pushAricleTmpById(articleIds, type);
     }
 
+    @Override
+    public int mergeTypeById(Map<String, Object> data) {
+
+        return releaseManagementDao.mergeTypeById(data);
+    }
+
 
     private List getMenuTreeChildren(String parentId) {
 

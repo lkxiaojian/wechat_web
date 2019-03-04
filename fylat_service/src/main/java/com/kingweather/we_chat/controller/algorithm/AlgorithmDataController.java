@@ -85,8 +85,8 @@ public class AlgorithmDataController extends BaseController {
         //插入新的类型
         if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0
                 && !type_id.isEmpty() && !typeName.isEmpty() && !articleKeyword.isEmpty()) {
-            String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status) values " +
-                    "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+            String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state) values " +
+                    "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?)";
             int update = jdbcTemplate.update(insertTypeSql, new Object[]{
                     type_id,
                     typeName,
@@ -94,6 +94,9 @@ public class AlgorithmDataController extends BaseController {
                     currentTime,
                     parent_id,
                     0,
+                    0,
+                    typeName,
+                    articleKeyword,
                     0
             });
 
@@ -105,8 +108,8 @@ public class AlgorithmDataController extends BaseController {
 
         div = div.replaceAll("data-src=", "src=");
         div = div.replaceAll("webp", "png");
-        div = div.substring(0,div.indexOf("<script nonce"));
-        div =div+"</div>";
+        div = div.substring(0, div.indexOf("<script nonce"));
+        div = div + "</div>";
         int update = jdbcTemplate.update(insertArticleSql, new Object[]{
                 data.get("article_id").toString(),
                 type_id,
@@ -143,14 +146,15 @@ public class AlgorithmDataController extends BaseController {
             path = path.replaceAll("home", "resources");
 
             String create_time = req.getParameter("create_time");
-            String author = req.getParameter("author").replaceAll("/r/n","").replaceAll("/r","").replaceAll("/n","");
+            String author = req.getParameter("author").replaceAll("/r/n", "").replaceAll("/r", "").replaceAll("/n", "");
             String FILE_PATH = req.getParameter("FILE_PATH");
             String seach_keyword = req.getParameter("seach_keyword");
             String FILE_NAME = req.getParameter("FILE_NAME");
             String article_id = req.getParameter("article_id");
             String reference = req.getParameter("reference");
             String article_title = req.getParameter("article_title");
-            String article_keyword = req.getParameter("article_keyword").replaceAll("/r/n","").replaceAll("/r","").replaceAll("/n","");;
+            String article_keyword = req.getParameter("article_keyword").replaceAll("/r/n", "").replaceAll("/r", "").replaceAll("/n", "");
+            ;
             String posting_name = req.getParameter("posting_name");
             String article_keyword_e = req.getParameter("article_keyword_e");
             String publication_date = req.getParameter("publication_date");

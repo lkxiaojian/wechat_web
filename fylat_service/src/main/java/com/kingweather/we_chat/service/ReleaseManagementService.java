@@ -23,4 +23,6 @@ public interface ReleaseManagementService {
     Map<String,Object> updateAricleTmpMesage(Map<String, Object> data);
 
     Map<String,Object> pushAricleTmpById(String articleIds, String type);
+
+    int mergeTypeById(Map<String, Object> data);
 }
