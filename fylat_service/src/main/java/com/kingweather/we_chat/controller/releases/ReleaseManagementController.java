@@ -168,11 +168,14 @@ public class ReleaseManagementController extends BaseController {
     public Map  mergeTypeById(@RequestBody Map<String, Object> data) {
         Map map = new HashMap();
         try {
-            releaseManagementService.mergeTypeById(data);
-
-            map.put("code", 0);
-            map.put("message", "更新成功");
-            return map;
+            int i = releaseManagementService.mergeTypeById(data);
+            if (i == 1) {
+                map.put("code", 0);
+                map.put("message", "更新成功");
+                return map;
+            } else {
+                return getErrorMap();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -286,6 +289,10 @@ public class ReleaseManagementController extends BaseController {
             return getErrorMapService();
         }
     }
+
+
+
+
 
 
     /**

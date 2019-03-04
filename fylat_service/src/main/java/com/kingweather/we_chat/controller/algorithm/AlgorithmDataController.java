@@ -198,6 +198,29 @@ public class AlgorithmDataController extends BaseController {
 
             articleKeyword = articleKeyword.substring(0, articleKeyword.length() - 1);
 
+
+
+
+            //根据posting_name
+            String countPostSql = "select count(*) as  count from zz_wechat.posting_paper where posting_name=?";
+            Map<String, Object> countPostmap = null;
+            try {
+                countPostmap = jdbcTemplate.queryForMap(countPostSql, new Object[]{
+                        posting_name
+                });
+            } catch (Exception e) {
+
+            }
+
+            if (countPostmap != null && countPostmap.get("count") != null && Integer.parseInt(countPostmap.get("count").toString()) == 0) {
+                //插入posting_name
+
+                String insertPostingSql="insert into zz_wechat.posting_paper (posting_name) values (?)";
+                jdbcTemplate.update(insertPostingSql,new Object[]{
+                        posting_name
+                });
+            }
+
             //根据typeid查询是否存在id
             String countTypeSql = "select count(*) as  count from zz_wechat.article_type_tmp where article_type_id=?";
             Map<String, Object> map = null;
@@ -212,8 +235,8 @@ public class AlgorithmDataController extends BaseController {
             //插入新的类型
             if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0
                     && !type_id.isEmpty() && !typeName.isEmpty() && !articleKeyword.isEmpty()) {
-                String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status) values " +
-                        "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+                String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state) values " +
+                        "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?)";
                 int update = jdbcTemplate.update(insertTypeSql, new Object[]{
                         type_id,
                         typeName,
@@ -221,7 +244,10 @@ public class AlgorithmDataController extends BaseController {
                         currentTime,
                         parent_id,
                         0,
-                        0
+                        0,
+                        typeName,
+                        articleKeyword,
+                        1
                 });
 
             }
@@ -236,7 +262,7 @@ public class AlgorithmDataController extends BaseController {
             int update = jdbcTemplate.update(insertPaperSql, new Object[]{
                     article_id,
                     article_title,
-                    article_keyword,
+                    article_keyword.substring(0,article_keyword.length()-1),
                     author,
                     currentTime,
                     create_time,
@@ -248,7 +274,7 @@ public class AlgorithmDataController extends BaseController {
                     article_title_e,
                     content_excerpt_e,
                     path,
-                    article_keyword_e,
+                    article_keyword_e.substring(0,article_keyword.length()-1),
                     author_e,
                     reference,
                     site_number,
