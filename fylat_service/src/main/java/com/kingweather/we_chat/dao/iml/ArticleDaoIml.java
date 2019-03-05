@@ -748,15 +748,32 @@ public class ArticleDaoIml implements ArticleDao {
 
         String create_time = DateUtil.getCurrentTimeString();
         String sql = "insert into zz_wechat.keyword (id,keyword_name,create_time,last_time,del_type,parent_id) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'),?,?)";
-        int errorCount = 0;
+
         int successCount = 0;
 
-        String countSql = "select count(*) as count from zz_wechat.keyword where keyword_name=?";
+        String countSql = "select count(*) as count,id  from zz_wechat.keyword where keyword_name=?";
 
         String uUid = UuidUtils.getUUid();
         Map<String, Object> map = jdbcTemplate.queryForMap(countSql, new Object[]{keywords.toString()});
         if (map != null && map.get("count") != null && "1".equals(map.get("count").toString())) {
-            errorCount = errorCount + 1;
+
+            String upsql = "update zz_wechat.keyword set keyword_name=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'), parent_id=?,del_type=? where id=?";
+
+            int update = jdbcTemplate.update(upsql, new Object[]{
+                    keywords.toString(),
+                    create_time,
+                    parent_id,
+                    0,
+                    map.get("id")
+
+            });
+
+            String url = urlPath + "article/updateKeyword";
+            try {
+                HttpRequest.sendGet(url, "id=" + map.get("id") + "&keyword_name=" + URLEncoder.encode(keywords.toString(), "utf-8").trim() + "&parent_id=" + parent_id + "&del_type=0");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         } else {
             jdbcTemplate.update(sql, new Object[]{
                     uUid,
@@ -780,10 +797,10 @@ public class ArticleDaoIml implements ArticleDao {
         }
 
         Map<String, Object> remap = new HashMap<>();
-        if (successCount > 0) {
-            remap.put("code", 0);
-            remap.put("message", "添加成功");
-        }
+
+        remap.put("code", 0);
+        remap.put("message", "添加成功");
+
 
         return remap;
     }
@@ -929,9 +946,9 @@ public class ArticleDaoIml implements ArticleDao {
             sql = sql + " and a.keyword_name like '%" + message.toString() + "%' ";
         }
 
-        if(parent_id!=null&&!"".equals(parent_id.toString())){
-            countSql=countSql+" and a.parent_id='"+parent_id+"'";
-            sql=sql+" and a.parent_id='"+parent_id+"'";
+        if (parent_id != null && !"".equals(parent_id.toString())) {
+            countSql = countSql + " and a.parent_id='" + parent_id + "'";
+            sql = sql + " and a.parent_id='" + parent_id + "'";
         }
         sql = sql + " ORDER BY a.update_time desc";
 

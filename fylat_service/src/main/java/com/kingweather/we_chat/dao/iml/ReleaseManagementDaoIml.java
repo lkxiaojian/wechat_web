@@ -586,28 +586,57 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 //        String tmpChildSql="select parentid from zz_wecaht.article_type_tmp where article_type_id in ("+mergeIdList+" )";
 //        String childSql="select parentid from zz_wecaht.article_type where article_type_id in ("+mergeIdList+" )";
-            String tmpChildSql = "update zz_wecaht.article_type_tmp set parentid='" + parent_id + "' where parentid in(" +
-                    " select parentid from zz_wecaht.article_type_tmp where article_type_id in (" +
-                    "" + mergeIdList +
-                    " ))";
 
-            String childSql = "update zz_wecaht.article_type set parentid='" + parent_id + "' where parentid in(" +
-                    " select parentid from zz_wecaht.article_type where article_type_id in (" +
-                    "" + mergeIdList +
-                    " ))";
-
+            //更新临时表中的子节点 的parendid
+            String tmpChildSql = "update zz_wechat.article_type_tmp set parentid='" + parent_id + "' where parentid in(" +
+                    mergeIdList +
+                    " )";
+            //更新正式表中的子节点 的parendid
+            String childSql = "update zz_wechat.article_type set parentid='" + parent_id + "' where parentid in(" +
+                    mergeIdList +
+                    " )";
             jdbcTemplate.update(tmpChildSql);
             jdbcTemplate.update(childSql);
-            String deltmpChildSql = "delete from zz_wecaht.article_type_tmp where article_type_id=?";
-            jdbcTemplate.update(deltmpChildSql, new Object[]{
-                    article_type_id.toString()
-            });
 
-            String delChildSql = "update zz_wechat.article_type set del_type=? where article_type_id=?";
-            jdbcTemplate.update(delChildSql, new Object[]{
-                    1,
-                    article_type_id.toString()
-            });
+            //更新临时文章表中 类型id
+            String updateArticleTmpSql = "update zz_wechat.article_tmp set article_type_id='" +
+                    parent_id +
+                    "' WHERE article_id  " +
+                    "in ( SELECT article_id from (SELECT article_id from zz_wechat.article_tmp WHERE article_type_id in (" +
+                    mergeIdList +
+                    "))as  a)";
+
+            jdbcTemplate.update(updateArticleTmpSql);
+
+
+            //更新临时表论文中的 类型id
+            String updatePaperTmpSql = "update zz_wechat.academic_paper set article_type_id='" +
+                    parent_id +
+                    "' WHERE article_id  " +
+                    "in ( SELECT article_id from (SELECT article_id from zz_wechat.academic_paper WHERE article_type_id in (" +
+                    mergeIdList +
+                    "))as  a)";
+
+            jdbcTemplate.update(updatePaperTmpSql);
+
+
+            //更新正式文章表中 类型id
+            String updateArticleSql = "update zz_wechat.article set article_type_id='" +
+                    parent_id +
+                    "' WHERE article_id  " +
+                    "in ( SELECT article_id from (SELECT article_id from zz_wechat.article WHERE article_type_id in (" +
+                    mergeIdList +
+                    "))as  a)";
+
+            jdbcTemplate.update(updateArticleSql);
+
+
+            //删除临时表中的合并的id
+            String deltmpChildSql = "delete from zz_wechat.article_type_tmp where article_type_id in (" + mergeIdList + ")";
+            jdbcTemplate.update(deltmpChildSql);
+            //删除正式表中的合并的id
+            String delChildSql = "update zz_wechat.article_type set del_type=1 where article_type_id  in (" + mergeIdList + ")";
+            jdbcTemplate.update(delChildSql);
 
         } catch (Exception e) {
             return 0;
@@ -681,6 +710,66 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 Integer.parseInt(posting_id)
         });
         return update;
+    }
+
+    @Override
+    public Map<String, Object> delArticleTypeById(String article_type_id) {
+        if (article_type_id == null) {
+            return getErrorMap();
+        }
+
+        try {
+            String childList = "SELECT article_type_id FROM\n" +
+                    "  (\n" +
+                    "    SELECT * FROM article_type_tmp where parentid > 0 ORDER BY parentid, article_type_id DESC\n" +
+                    "  ) realname_sorted,\n" +
+                    "  (SELECT @pv :='" +
+                    article_type_id +
+                    "') initialisation\n" +
+                    "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";
+            String idString = "'" +
+                    article_type_id +
+                    "',";
+            List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(childList);
+            if (idlistMaps != null && idlistMaps.size() > 0) {
+                for (int i = 0; i < idlistMaps.size(); i++) {
+                    idString = idString + "'" + idlistMaps.get(i).get("article_type_id").toString() + "',";
+                }
+
+            }
+
+            if (idString.length() > 0) {
+                idString = idString.substring(0, idString.length() - 1);
+            }
+            //删除类型的临时表
+            String delTypeTmpsql = "delete from zz_wechat.article_type_tmp where article_type_id in(" + idString + ")";
+
+            //删除文章的临时表
+            String delArticleTmpsql = "delete from zz_wechat.article_tmp where article_type_id in(" + idString + ")";
+
+            //删除论文的临时表
+            String delPaperTmpsql = "delete from zz_wechat.academic_paper where article_type_id in(" + idString + ")";
+
+            // 更新正式表类型del_type
+            String updateTypeSql = "update zz_wechat.article_type set del_type=1 where article_type_id in (" + idString + ")";
+
+
+            // 更新正式表类型del_type
+            String updateArticleSql = "update zz_wechat.article set del_type=1 where article_type_id in (" + idString + ")";
+
+            int update = jdbcTemplate.update(delTypeTmpsql);
+            int update1 = jdbcTemplate.update(delArticleTmpsql);
+            int update2 = jdbcTemplate.update(delPaperTmpsql);
+            int update3 = jdbcTemplate.update(updateTypeSql);
+            int update4 = jdbcTemplate.update(updateArticleSql);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "更新成功！");
+            return map;
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
+
     }
 
     /**

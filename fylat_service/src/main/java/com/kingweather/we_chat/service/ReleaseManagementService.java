@@ -31,4 +31,6 @@ public interface ReleaseManagementService {
     Map<String,Object> getPostingMessage(String posting_id);
 
     int updatePostingImage(String posting_id, String pathICon);
+
+    Map<String,Object> delArticleTypeById(String article_type_id);
 }

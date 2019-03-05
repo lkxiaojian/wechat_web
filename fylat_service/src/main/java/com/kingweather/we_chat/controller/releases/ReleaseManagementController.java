@@ -5,6 +5,7 @@ import com.kingweather.common.util.DateUtil;
 import com.kingweather.we_chat.service.ReleaseManagementService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -165,7 +166,8 @@ public class ReleaseManagementController extends BaseController {
      */
 
     @RequestMapping(value = "/mergeTypeById/rest", method = RequestMethod.POST)
-    public Map mergeTypeById(@RequestBody Map<String, Object> data) {
+    @Transactional
+    public Map mergeTypeById(@RequestParam Map<String, Object> data) {
         Map map = new HashMap();
         try {
             int i = releaseManagementService.mergeTypeById(data);
@@ -353,6 +355,22 @@ public class ReleaseManagementController extends BaseController {
         }
 
 
+    }
+
+    /**
+     * 根据id删除文章类型
+     * @param article_type_id
+     * @return
+     */
+
+    @RequestMapping(value = "/delArticleTypeById/rest", method = RequestMethod.GET)
+    @Transactional
+    public Map<String, Object> delArticleTypeById(String article_type_id) {
+        try {
+            return releaseManagementService.delArticleTypeById(article_type_id);
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
     }
 
 

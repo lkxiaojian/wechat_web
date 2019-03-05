@@ -102,6 +102,11 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         return releaseManagementDao.updatePostingImage( posting_id,  pathICon);
     }
 
+    @Override
+    public Map<String, Object> delArticleTypeById(String article_type_id) {
+        return releaseManagementDao.delArticleTypeById(article_type_id);
+    }
+
 
     private List getMenuTreeChildren(String parentId) {
 
