@@ -87,6 +87,21 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         return releaseManagementDao.mergeTypeById(data);
     }
 
+    @Override
+    public Map<String, Object> getPostingList(Map<String, Object> data) {
+        return releaseManagementDao.getPostingList(data);
+    }
+
+    @Override
+    public Map<String, Object> getPostingMessage(String posting_id) {
+        return releaseManagementDao.getPostingMessage(posting_id);
+    }
+
+    @Override
+    public int updatePostingImage(String posting_id, String pathICon) {
+        return releaseManagementDao.updatePostingImage( posting_id,  pathICon);
+    }
+
 
     private List getMenuTreeChildren(String parentId) {
 

@@ -80,7 +80,7 @@ public class ReleaseManagementController extends BaseController {
      */
 
     @RequestMapping(value = "/updateTypeMessage/rest", method = RequestMethod.POST)
-    public Map<String, Object> updateTypeMessage(@RequestParam(value="file[0]",required = false) MultipartFile file1, @RequestParam(value="file[1]",required = false) MultipartFile file2, HttpServletRequest req) {
+    public Map<String, Object> updateTypeMessage(@RequestParam(value = "file[0]", required = false) MultipartFile file1, @RequestParam(value = "file[1]", required = false) MultipartFile file2, HttpServletRequest req) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         String pathICon = "";
         String pathBack = "";
@@ -164,8 +164,8 @@ public class ReleaseManagementController extends BaseController {
      * @return
      */
 
-    @RequestMapping(value = "/mergeTypeById/rest",method = RequestMethod.POST)
-    public Map  mergeTypeById(@RequestBody Map<String, Object> data) {
+    @RequestMapping(value = "/mergeTypeById/rest", method = RequestMethod.POST)
+    public Map mergeTypeById(@RequestBody Map<String, Object> data) {
         Map map = new HashMap();
         try {
             int i = releaseManagementService.mergeTypeById(data);
@@ -211,10 +211,8 @@ public class ReleaseManagementController extends BaseController {
     @RequestMapping(value = "/delAricleTmpList/rest", method = RequestMethod.GET)
     public Map<String, Object> delAricleTmpList(String articleIdList) {
         try {
-
             return releaseManagementService.delAricleTmpList(articleIdList);
         } catch (Exception e) {
-
             return getErrorMapService();
         }
     }
@@ -228,7 +226,7 @@ public class ReleaseManagementController extends BaseController {
     @RequestMapping(value = "/getAricleTmpMessageById/rest", method = RequestMethod.GET)
     public Map<String, Object> getAricleTmpMessageById(String articleId, String type) {
         try {
-            return releaseManagementService.getAricleTmpMessageById(articleId,type);
+            return releaseManagementService.getAricleTmpMessageById(articleId, type);
         } catch (Exception e) {
             return getErrorMapService();
         }
@@ -236,24 +234,20 @@ public class ReleaseManagementController extends BaseController {
 
     /**
      * 根据文章的id  进行审核
+     *
      * @param articleIds
-     * @param type  type 0  文章 1 论文
+     * @param type       type 0  文章 1 论文
      * @return
      */
 
     @RequestMapping(value = "/getAricleTmpCheckById/rest", method = RequestMethod.GET)
     public Map<String, Object> checkAricleTmpCheckById(String articleIds, String type) {
         try {
-            return releaseManagementService.getAricleTmpCheckById(articleIds,type);
+            return releaseManagementService.getAricleTmpCheckById(articleIds, type);
         } catch (Exception e) {
             return getErrorMapService();
         }
     }
-
-
-
-
-
 
 
     /**
@@ -276,23 +270,90 @@ public class ReleaseManagementController extends BaseController {
 
     /**
      * 根据文章的id  进行发布
+     *
      * @param articleIds
-     * @param type  type 0  文章 1 论文
+     * @param type       type 0  文章 1 论文
      * @return
      */
 
     @RequestMapping(value = "/pushAricleTmpById/rest", method = RequestMethod.GET)
     public Map<String, Object> pushAricleTmpCheckById(String articleIds, String type) {
         try {
-            return releaseManagementService.pushAricleTmpById(articleIds,type);
+            return releaseManagementService.pushAricleTmpById(articleIds, type);
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
+    }
+
+    /**
+     * 查询 论文posting列表
+     *
+     * @param data
+     * @return
+     */
+    @RequestMapping(value = "/getPostingList/rest", method = RequestMethod.POST)
+    public Map<String, Object> getPostingList(@RequestParam Map<String, Object> data) {
+        try {
+            return releaseManagementService.getPostingList(data);
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
+    }
+
+    /**
+     * 根据id 获取论文posting 详细信息
+     *
+     * @param posting_id
+     * @return
+     */
+
+    @RequestMapping(value = "/getPostingMessage/rest", method = RequestMethod.GET)
+    public Map<String, Object> getPostingMessage(String posting_id) {
+        try {
+            return releaseManagementService.getPostingMessage(posting_id);
         } catch (Exception e) {
             return getErrorMapService();
         }
     }
 
 
+    /**
+     * 更改posting 图片
+     *
+     * @param file1
+     * @param req
+     * @return
+     */
+
+    @RequestMapping(value = "/updatePostingImage/rest", method = RequestMethod.POST)
+    public Map<String, Object> updatePostingImage(@RequestParam("file[0]") MultipartFile file1, HttpServletRequest req) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        String savePathIcon = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file1.getOriginalFilename();
+        File fICon = new File(realpath + savePathIcon);
+        String posting_id = req.getParameter("posting_id");
+        if (posting_id == null) {
+            return getErrorMap();
+        }
+        try {
+            FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
+            String pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
+            int i = releaseManagementService.updatePostingImage(posting_id, pathICon);
+
+            if (i == 1) {
+                map.put("code", 0);
+                map.put("message", "更新成功");
+                return map;
+            } else {
+                return getErrorMap();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return getErrorMapService();
+        }
 
 
+    }
 
 
     /**

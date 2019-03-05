@@ -27,4 +27,10 @@ public interface ReleaseManagementDao {
     Map<String,java.lang.Object> pushAricleTmpById(String articleIds, String type);
 
     int mergeTypeById(Map<String, java.lang.Object> data);
+
+    Map<String,java.lang.Object> getPostingList(Map<String, java.lang.Object> data);
+
+    Map<String,java.lang.Object> getPostingMessage(String posting_id);
+
+    int updatePostingImage(String posting_id, String pathICon);
 }

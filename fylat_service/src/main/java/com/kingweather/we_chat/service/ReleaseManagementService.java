@@ -25,4 +25,10 @@ public interface ReleaseManagementService {
     Map<String,Object> pushAricleTmpById(String articleIds, String type);
 
     int mergeTypeById(Map<String, Object> data);
+
+    Map<String,Object> getPostingList(Map<String, Object> data);
+
+    Map<String,Object> getPostingMessage(String posting_id);
+
+    int updatePostingImage(String posting_id, String pathICon);
 }

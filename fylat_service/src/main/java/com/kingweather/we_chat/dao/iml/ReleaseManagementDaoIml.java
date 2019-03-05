@@ -236,7 +236,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 sqlCount = sqlCount + " and details_size<=" + Integer.parseInt(details_size_less.toString());
                 sqlMessage = sqlMessage + " and details_size<=" + Integer.parseInt(details_size_less.toString());
             }
-             //分数
+            //分数
             if (article_score_more != null) {
                 sqlCount = sqlCount + " and article_score>=" + Integer.parseInt(article_score_more.toString());
                 sqlMessage = sqlMessage + " and article_score>=" + Integer.parseInt(article_score_more.toString());
@@ -278,7 +278,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                     "from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type !=1" +
                     " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
 
-            if(language!=null&&"1".equals(language)){
+            if (language != null && "1".equals(language)) {
                 sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,a.article_score,b.article_type_name  " +
                         "from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type !=1" +
                         " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
@@ -312,8 +312,8 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
             if (createTime != null) {
-                sqlCount = sqlCount + " and create_time like '%" + createTime+"%'";
-                sqlMessage = sqlMessage + " and create_time like '%" + createTime+"%'";
+                sqlCount = sqlCount + " and create_time like '%" + createTime + "%'";
+                sqlMessage = sqlMessage + " and create_time like '%" + createTime + "%'";
             }
 
             sqlMessage = sqlMessage + " ORDER BY update_time asc";
@@ -613,6 +613,74 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             return 0;
         }
         return 1;
+    }
+
+    /**
+     * 得到posting 列表
+     *
+     * @param data
+     * @return
+     */
+    @Override
+    public Map<String, Object> getPostingList(Map<String, Object> data) {
+
+        Object startNum = data.get("pageNumber");
+        Object pageSize = data.get("pageSize");
+        Object message = data.get("message");
+
+        if (startNum == null || pageSize == null) {
+            return getErrorMap();
+        }
+
+        String countSql = "select count(*) as count from zz_wechat.posting_paper ";
+
+        String sqlMessage = "select posting_id,posting_name,image_path from zz_wechat.posting_paper ";
+        if (message != null) {
+            countSql = countSql + " where posting_name like '%" + message.toString() + "%'";
+            sqlMessage = sqlMessage + " where posting_name like '%" + message.toString() + "%'";
+        }
+        Map<String, Object> map = new HashMap<>();
+        sqlMessage = sqlMessage + " ORDER BY posting_id asc";
+        Page<Map<String, Object>> page = jdbc.queryForPage(Integer.parseInt(startNum.toString()), Integer.parseInt(pageSize.toString()), countSql, sqlMessage, new Object[]{});
+        map.put("code", 0);
+        map.put("message", "查询成功");
+        map.put("total", page.getTotalCount());
+        map.put("result", page.getResult());
+        return map;
+
+    }
+
+    @Override
+    public Map<String, Object> getPostingMessage(String posting_id) {
+        try {
+            if (posting_id == null) {
+                return getErrorMap();
+            }
+            Map<String, Object> resultMap = new HashMap<>();
+            String sql = "select posting_id,posting_name,image_path from zz_wechat.posting_paper where posting_id=?";
+            Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{
+                    Integer.parseInt(posting_id)
+
+            });
+            resultMap.put("code", 0);
+            resultMap.put("message", "查询成功");
+
+            resultMap.put("result", map);
+            return resultMap;
+        } catch (Exception e) {
+            return getErrorMap();
+        }
+    }
+
+    @Override
+    public int updatePostingImage(String posting_id, String pathICon) {
+
+        String updateSql = "update zz_wechat.posting_paper set image_path=? where posting_id=?";
+        int update = jdbcTemplate.update(updateSql, new Object[]{
+                pathICon,
+                Integer.parseInt(posting_id)
+        });
+        return update;
     }
 
     /**
