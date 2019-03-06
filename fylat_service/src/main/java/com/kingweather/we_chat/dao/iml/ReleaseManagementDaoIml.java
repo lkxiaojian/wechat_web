@@ -471,12 +471,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         Object article_keyword = data.get("article_keyword");
         Object create_time = data.get("create_time");
         Object content_excerpt = data.get("content_excerpt");
-        Object details_txt = data.get("details_txt");
-        Object details_div = data.get("details_div");
-//        Object details_size = data.get("details_size");
         Object article_score = data.get("article_score");
         if (type == null || article_id == null || article_type_id == null || article_title == null || article_keyword == null || create_time == null
-                || content_excerpt == null || details_txt == null || details_div == null || article_score == null) {
+                || content_excerpt == null ) {
             return getErrorMap();
         }
 
@@ -487,6 +484,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         String currentTimeString = DateUtil.getCurrentTimeString();
         if ("0".equals(type)) {
+            Object details_txt = data.get("details_txt");
+            Object details_div = data.get("details_div");
+
             String sql = "update zz_wechat.article_tmp set article_type_id=?,article_title=?,article_keyword=?,author=?,source=?," +
                     "content_excerpt=?,details_txt=?,details_div=?,details_size=?,status=?,article_score=?,del_type=?," +
                     " create_time=date_format(?,'%Y-%m-%d %H:%i:%s'),  update_time=date_format(?,'%Y-%m-%d %H:%i:%s') where article_id=?";
@@ -513,11 +513,52 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             map.put("message", "更新成功！");
             return map;
         } else {
-            //论文
+            //论文更新
+
+            Object article_title_e = data.get("article_title_e");
+            Object content_excerpt_e = data.get("content_excerpt_e");
+            Object article_keyword_e = data.get("article_keyword_e");
+            Object author_e = data.get("author_e");
+            Object reference = data.get("reference");
+            Object site_number = data.get("site_number");
+            Object publication_date = data.get("publication_date");
+
+
+            String sql = "update zz_wechat.article_tmp set article_type_id=?,article_title=?,article_keyword=?,author=?,source=?," +
+                    "content_excerpt=?,status=?,article_score=?,del_type=?," +
+                    " paper_create_time=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s') ,article_title_e=?,content_excerpt_e=?,article_keyword_e=?" +
+                    ",author_e=?,reference=?,site_number=?,publication_date=?,article_score=? " +
+                    "where article_id=?";
+
+            int update = jdbcTemplate.update(sql, new Object[]{
+                    article_type_id.toString(),
+                    article_title.toString(),
+                    article_keyword.toString(),
+                    author,
+                    source,
+                    content_excerpt.toString(),
+                    "1",
+                    Integer.parseInt(article_score.toString()),
+                    "0",
+                    create_time,
+                    currentTimeString,
+                    article_title_e,
+                    content_excerpt_e,
+                    article_keyword_e,
+                    author_e,
+                    reference,
+                    site_number,
+                    publication_date,
+                    article_score,
+                    article_id.toString()
+            });
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "更新成功！");
+            return map;
+
         }
 
-
-        return null;
     }
 
     @Override
@@ -567,7 +608,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         0,
                         articleTmp.get("create_time"),
                         DateUtil.getCurrentTimeString()
-            });
+                });
 
                 if (update == 1) {
                     String delSql = "DELETE  from zz_wechat.article_tmp where article_id=?";
@@ -583,10 +624,10 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             map.put("code", 0);
             map.put("message", "更新成功！");
             return map;
-        }else {
+        } else {
             //论文发表
 
-            String sql="select * from zz_wechat.academic_paper where article_id in(" +idList+ ")";
+            String sql = "select * from zz_wechat.academic_paper where article_id in(" + idList + ")";
             List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
             for (int i = 0; i < mapList.size(); i++) {
 
@@ -649,7 +690,6 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             map.put("message", "更新成功！");
             return map;
         }
-
 
 
     }
