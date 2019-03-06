@@ -636,8 +636,8 @@ public class ArticleDaoIml implements ArticleDao {
             }
             String article_id = UuidUtils.getUUid();
             String create_time = DateUtil.getCurrentTimeString();
-            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count,del_type) " +
-                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?)";
+            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count,del_type,state) " +
+                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?)";
 
             int update = jdbcTemplate.update(sql, new Object[]{
 
@@ -656,6 +656,7 @@ public class ArticleDaoIml implements ArticleDao {
                     details_txt.toString(),
                     create_time,
                     content_excerpt,
+                    0,
                     0,
                     0,
                     0

@@ -257,8 +257,8 @@ public class AlgorithmDataController extends BaseController {
                     "author,update_time,create_time,source" +
                     ",content_excerpt,article_type_id,status,posting_name" +
                     ",article_title_e,content_excerpt_e," +
-                    "pdf_path,article_keyword_e,author_e,reference,site_number,seach_keyword,publication_date) " +
-                    "values(?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "pdf_path,article_keyword_e,author_e,reference,site_number,seach_keyword,publication_date,check_type,article_score,del_type) " +
+                    "values(?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             int update = jdbcTemplate.update(insertPaperSql, new Object[]{
                     article_id,
                     article_title,
@@ -279,7 +279,10 @@ public class AlgorithmDataController extends BaseController {
                     reference,
                     site_number,
                     seach_keyword,
-                    publication_date
+                    publication_date,
+                    0,
+                    0,
+                    0
             });
 
 
