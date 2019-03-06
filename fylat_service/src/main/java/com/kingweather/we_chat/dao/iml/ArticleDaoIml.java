@@ -83,6 +83,8 @@ public class ArticleDaoIml implements ArticleDao {
                 messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
             }
 
+
+
             String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
             jdbcTemplate.update(sql, new Object[]{
                     articleId,
