@@ -167,7 +167,7 @@ public class ReleaseManagementController extends BaseController {
 
     @RequestMapping(value = "/mergeTypeById/rest", method = RequestMethod.POST)
     @Transactional
-    public Map mergeTypeById(@RequestParam Map<String, Object> data) {
+    public Map mergeTypeById(@RequestBody Map<String, Object> data) {
         Map map = new HashMap();
         try {
             int i = releaseManagementService.mergeTypeById(data);
@@ -194,7 +194,7 @@ public class ReleaseManagementController extends BaseController {
      */
 
     @RequestMapping(value = "/selectAricleTmpList/rest", method = RequestMethod.POST)
-    public Map<String, Object> selectAricleTmpList(@RequestParam Map<String, Object> data) {
+    public Map<String, Object> selectAricleTmpList(@RequestBody Map<String, Object> data) {
         try {
 
             return releaseManagementService.selectAricleTmpList(data);
@@ -260,7 +260,7 @@ public class ReleaseManagementController extends BaseController {
      */
 
     @RequestMapping(value = "/updateAricleTmpMesage/rest", method = RequestMethod.POST)
-    public Map<String, Object> updateAricleTmpMesage(@RequestParam Map<String, Object> data) {
+    public Map<String, Object> updateAricleTmpMesage(@RequestBody Map<String, Object> data) {
         try {
             return releaseManagementService.updateAricleTmpMesage(data);
         } catch (Exception e) {
@@ -294,7 +294,7 @@ public class ReleaseManagementController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/getPostingList/rest", method = RequestMethod.POST)
-    public Map<String, Object> getPostingList(@RequestParam Map<String, Object> data) {
+    public Map<String, Object> getPostingList(@RequestBody Map<String, Object> data) {
         try {
             return releaseManagementService.getPostingList(data);
         } catch (Exception e) {
