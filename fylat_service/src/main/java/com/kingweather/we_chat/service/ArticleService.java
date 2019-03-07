@@ -40,11 +40,13 @@ public interface ArticleService {
 
     Map<String,Object> updateKeyword(String id,String keyword_name,String parent_id);
 
-    Map<String,Object> delKeyword(String id);
+    Map<String,Object> delKeyword(String id,String type);
 
     Map<String,Object>  getConditionDomain(Map<String, Object> conditions);
 
     Map<String,Object> delDomainById(String id);
 
     Map<String,Object> updateDomainById(Map<String, Object> data);
+
+    Map<String,Object> recoverKeyword(String id, String type);
 }

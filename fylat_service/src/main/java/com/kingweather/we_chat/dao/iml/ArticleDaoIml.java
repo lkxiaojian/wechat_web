@@ -84,7 +84,6 @@ public class ArticleDaoIml implements ArticleDao {
             }
 
 
-
             String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
             jdbcTemplate.update(sql, new Object[]{
                     articleId,
@@ -939,12 +938,24 @@ public class ArticleDaoIml implements ArticleDao {
         Integer pageSize = Integer.valueOf(map.get("pageSize").toString());
         Object message = map.get("message");
         Object parent_id = map.get("parent_id");
+        Object type = map.get("type");
+
 
         String countSql = "select count(*) from zz_wechat.keyword a,zz_wechat.article_type b where a.del_type !='1' and a.parent_id=b.article_type_id ";
+
+        if (type != null && "1".equals(type.toString())) {
+            countSql = "select count(*) from zz_wechat.keyword a,zz_wechat.article_type b where a.del_type ='1' and a.parent_id=b.article_type_id ";
+
+        }
         if (message != null && !"".equals(message.toString())) {
             countSql = countSql + " and a.keyword_name like '%" + message.toString() + "%' ";
         }
         String sql = "select a.id,a.keyword_name,a.parent_id,b.article_type_name from zz_wechat.keyword a,zz_wechat.article_type b where  a.del_type !='1' and a.parent_id=b.article_type_id ";
+
+        if (type != null && "1".equals(type.toString())) {
+            sql = "select a.id,a.keyword_name,a.parent_id,b.article_type_name from zz_wechat.keyword a,zz_wechat.article_type b where  a.del_type ='1' and a.parent_id=b.article_type_id ";
+
+        }
         if (message != null && !"".equals(message.toString())) {
             sql = sql + " and a.keyword_name like '%" + message.toString() + "%' ";
         }
@@ -1004,27 +1015,39 @@ public class ArticleDaoIml implements ArticleDao {
      * @return
      */
     @Override
-    public Map<String, Object> delKeyword(String id) {
+    public Map<String, Object> delKeyword(String id, String type) {
         if ("".equals(id) || id == null) {
             return getErrorMap();
         }
-//        String sql = "DELETE FROM zz_wechat.keyword where id=?";
-
-        String sql = "UPDATE  zz_wechat.keyword set del_type=? where id=?";
-        int update = jdbcTemplate.update(sql, new Object[]{
-                1,
-                id
-        });
-
-
-        String url = urlPath + "article/delKeyword";
-        HttpRequest.sendGet(url, "id=" + id);
         HashMap<String, Object> map = new HashMap<>();
-        if (update == 1) {
+        if (type != null && "1".equals(type)) {
+
+            String idList = "";
+            String[] split = id.split(",");
+
+            for (int i = 0; i < split.length; i++) {
+                idList = idList + "'" + split[i].toString() + "',";
+            }
+            idList= idList.substring(0,idList.length()-1);
+            String sql = "DELETE FROM zz_wechat.keyword where id in(" + idList + ")";
+            jdbcTemplate.update(sql);
             map.put("code", 0);
             map.put("message", "删除成功！");
+
         } else {
-            return getErrorMap();
+            String sql = "UPDATE  zz_wechat.keyword set del_type=? where id=?";
+            int update = jdbcTemplate.update(sql, new Object[]{
+                    1,
+                    id
+            });
+            String url = urlPath + "article/delKeyword";
+            HttpRequest.sendGet(url, "id=" + id);
+            if (update == 1) {
+                map.put("code", 0);
+                map.put("message", "删除成功！");
+            } else {
+                return getErrorMap();
+            }
         }
         return map;
     }
@@ -1151,6 +1174,34 @@ public class ArticleDaoIml implements ArticleDao {
         }
 
         return getErrorMap();
+    }
+
+    /**
+     * 关键词恢复
+     *
+     * @param id
+     * @param type
+     * @return
+     */
+    @Override
+    public Map<String, Object> recoverKeyword(String id, String type) {
+        if (id == null) {
+            return getErrorMap();
+        }
+
+        String idList = "";
+        String[] split = id.split(",");
+
+        for (int i = 0; i < split.length; i++) {
+            idList = idList + "'" + split[i].toString() + "',";
+        }
+        idList= idList.substring(0,idList.length()-1);
+        String sql = "update zz_wechat.keyword set del_type=0 where id in(" + idList + ")";
+        jdbcTemplate.update(sql);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "恢复成功！");
+        return map;
     }
 
 

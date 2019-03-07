@@ -99,8 +99,8 @@ public class ArticleServiceIml implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> delKeyword(String id) {
-        return articleDao.delKeyword( id);
+    public Map<String, Object> delKeyword(String id,String type) {
+        return articleDao.delKeyword( id,type);
     }
 
     @Override
@@ -116,5 +116,10 @@ public class ArticleServiceIml implements ArticleService {
     @Override
     public Map<String, Object> updateDomainById(Map<String, Object> data) {
         return articleDao.updateDomainById(data);
+    }
+
+    @Override
+    public Map<String, Object> recoverKeyword(String id, String type) {
+        return articleDao.recoverKeyword(id,type);
     }
 }

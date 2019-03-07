@@ -69,7 +69,7 @@ public class ExceptiongAspect {
     public void doBeforeController(JoinPoint joinPoint) throws Throwable {
         if (!joinPoint.toString().contains("UserManage.UserManageController")
                 && !joinPoint.toString().contains("ArticleManage.ArticleManageController")
-                && !joinPoint.toString().contains("other.UploadController")
+//                && !joinPoint.toString().contains("other.UploadController")
                 && !joinPoint.toString().contains("statistics.StatisticsController")
                 && !joinPoint.toString().contains("usermenu.UserMenuController")
                 && !joinPoint.toString().contains("websysuser.WebSysUserController")

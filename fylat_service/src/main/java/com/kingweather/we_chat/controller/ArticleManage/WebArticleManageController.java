@@ -314,6 +314,7 @@ public class WebArticleManageController extends BaseController {
         conditions.put("pageSize", pageSize);
         conditions.put("message", request.getParameter("message"));
         conditions.put("parent_id", request.getParameter("parent_id"));
+        conditions.put("type", request.getParameter("type"));
         Map<String, Object> maps = articleService.keywordQuery(conditions);
         return maps;
     }
@@ -334,9 +335,9 @@ public class WebArticleManageController extends BaseController {
      * 关键词的删除
      */
     @RequestMapping(value = "/article/delKeyword", method = RequestMethod.GET)
-    public Map<String, Object> updateKeyword(String id) {
+    public Map<String, Object> updateKeyword(String id,String type) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        map = articleService.delKeyword(id);
+        map = articleService.delKeyword(id,type);
         return map;
     }
 
@@ -381,6 +382,16 @@ public class WebArticleManageController extends BaseController {
 
         Map<String, Object> maps = articleService.updateDomainById(data);
         return maps;
+    }
+
+    /**
+     * 关键词的恢复
+     */
+    @RequestMapping(value = "/article/recoverKeyword", method = RequestMethod.GET)
+    public Map<String, Object> recoverKeyword(String id,String type) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        map = articleService.recoverKeyword(id,type);
+        return map;
     }
 
 
