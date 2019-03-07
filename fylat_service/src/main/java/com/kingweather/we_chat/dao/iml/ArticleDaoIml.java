@@ -714,18 +714,33 @@ public class ArticleDaoIml implements ArticleDao {
      * @return
      */
     @Override
-    public Map<String, Object> deletedById(String article_id) {
+    public Map<String, Object> deletedById(String article_id, String type) {
         if (article_id == null || "".equals(article_id)) {
             return getErrorMap();
 
         }
-//        String sql = "DELETE from zz_wechat.article  where article_id =?";
 
-        String sql = "UPDATE  zz_wechat.article set del_type=? where article_id =?";
-        jdbcTemplate.update(sql, new Object[]{
-                1,
-                article_id,
-        });
+        if (type != null && "1".equals(type)) {
+            String idList = "";
+            String[] split = article_id.split(",");
+
+            for (int i = 0; i < split.length; i++) {
+                idList = idList + "'" + split[i].toString() + "',";
+            }
+            idList = idList.substring(0, idList.length() - 1);
+
+            String sql = "DELETE from zz_wechat.article  where article_id in("+idList+")";
+            jdbcTemplate.update(sql);
+
+        } else {
+
+            String sql = "UPDATE  zz_wechat.article set del_type=? where article_id =?";
+            jdbcTemplate.update(sql, new Object[]{
+                    1,
+                    article_id,
+            });
+
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("code", 0);
         map.put("message", "删除成功");
@@ -1028,7 +1043,7 @@ public class ArticleDaoIml implements ArticleDao {
             for (int i = 0; i < split.length; i++) {
                 idList = idList + "'" + split[i].toString() + "',";
             }
-            idList= idList.substring(0,idList.length()-1);
+            idList = idList.substring(0, idList.length() - 1);
             String sql = "DELETE FROM zz_wechat.keyword where id in(" + idList + ")";
             jdbcTemplate.update(sql);
             map.put("code", 0);
@@ -1177,7 +1192,7 @@ public class ArticleDaoIml implements ArticleDao {
     }
 
     /**
-     * 关键词恢复
+     * 关键词 文章论文恢复
      *
      * @param id
      * @param type
@@ -1195,8 +1210,12 @@ public class ArticleDaoIml implements ArticleDao {
         for (int i = 0; i < split.length; i++) {
             idList = idList + "'" + split[i].toString() + "',";
         }
-        idList= idList.substring(0,idList.length()-1);
+        idList = idList.substring(0, idList.length() - 1);
         String sql = "update zz_wechat.keyword set del_type=0 where id in(" + idList + ")";
+        if("1".equals(type)){
+             sql = "update zz_wechat.article set del_type=0 where article_id in(" + idList + ")";
+        }
+
         jdbcTemplate.update(sql);
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", 0);

@@ -28,7 +28,7 @@ public interface ArticleService {
 
     Map<String,Object> getAllArticle(Map<String, Object> conditions);
 
-    Map<String,Object> deletedById(String article_id);
+    Map<String,Object> deletedById(String article_id,String type);
 
     Map<String,Object> addKeyword(Map<String, Object> data);
 

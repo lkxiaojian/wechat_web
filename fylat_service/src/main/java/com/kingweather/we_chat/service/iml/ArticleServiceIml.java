@@ -69,8 +69,8 @@ public class ArticleServiceIml implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> deletedById(String article_id) {
-        return articleDao.deletedById( article_id);
+    public Map<String, Object> deletedById(String article_id,String type) {
+        return articleDao.deletedById( article_id,type);
     }
 
     @Override

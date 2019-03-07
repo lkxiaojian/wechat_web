@@ -22,12 +22,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     private JdbcUtil jdbc;
 
     @Override
-    public List<Map> getTypeMenuTree(String parent_id,String type) {
+    public List<Map> getTypeMenuTree(String parent_id, String type) {
 
         String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
 
-        if("1".equals(type)){
-             sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type where del_type!=? and parentid=?";
+        if ("1".equals(type)) {
+            sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type where del_type!=? and parentid=?";
 
         }
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
@@ -39,11 +39,11 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
-    public Map getTypeMessage(String article_type_id,String type) {
+    public Map getTypeMessage(String article_type_id, String type) {
 
 
         String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type_tmp where del_type!=? and article_type_id=?";
-        if("1".equals(type)){
+        if ("1".equals(type)) {
             sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type where del_type!=? and article_type_id=?";
         }
         Map maps = jdbcTemplate.queryForMap(sql, new Object[]{
@@ -174,6 +174,10 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         //查询的是论文还是文章 0 文章  1 论文
         Object type = data.get("type");
+        //查看的是否是回收站 0不是 1是
+        Object del_type = data.get("del_type");
+        //查询的是否是临时表 1是 0不是
+        Object tmp_type = data.get("tmp_type");
         //查询的类型的id
         Object article_type_id = data.get("article_type_id");
 
@@ -190,6 +194,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         Object checkType = data.get("checkType");
         //搜索内容
         Object message = data.get("message");
+
+        String delTypeSql = " !=1 ";
+
+        if (del_type != null && "1".equals(del_type.toString())) {
+            delTypeSql = " =1 ";
+        }
+
 
         //查询的是文章
         if ("0".equals(type.toString())) {
@@ -208,12 +219,25 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             Object article_score_less = data.get("article_score_less");
 
 
-            String sqlCount = "select count(*) as count from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type !=1 " +
+            String sqlCount = "select count(*) as count from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type  " + delTypeSql +
                     "AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
 
             String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt,a.details_size,a.check_type,a.article_score,b.article_type_name  " +
-                    "from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type !=1" +
+                    "from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
                     " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+
+
+            if (tmp_type != null && "1".equals(tmp_type.toString())) {
+
+                sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
+                        "AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+
+                sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt,a.word_count,a.article_score,b.article_type_name  " +
+                        "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
+                        " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+
+            }
+
 
             if (updateTimeStart != null) {
 //                String update_time = DateUtil.getCurrentTimeString(updateTimeStart.toString());
@@ -284,17 +308,40 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             Object language = data.get("language");//0  中文  1 英文
 
             //查询的是论文
-            String sqlCount = "select count(*) as count from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type !=1 " +
-                    "AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
-
-            String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
-                    "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type !=1" +
+            String sqlCount = "select count(*) as count from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type  " + delTypeSql +
                     " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
 
-            if (language != null && "1".equals(language)) {
-                sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,b.article_type_name  " +
-                        "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type !=1" +
+            String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
+                    "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
+                    " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+
+
+            if (tmp_type != null && "1".equals(tmp_type.toString())) {
+
+                sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
+                        "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
                         " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+
+                if (language != null && "1".equals(language)) {
+                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,a.content_excerpt_e,a.reference,a.article_score,b.article_type_name  " +
+                            "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
+                            " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                }
+
+
+                sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
+                        " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+
+
+            } else {
+
+                if (language != null && "1".equals(language)) {
+                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,b.article_type_name  " +
+                            "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
+                            " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                }
+
+
             }
 
             //入库时间
@@ -325,8 +372,15 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
             if (createTime != null) {
-                sqlCount = sqlCount + " and a.create_time like '%" + createTime + "%'";
-                sqlMessage = sqlMessage + " and a.create_time like '%" + createTime + "%'";
+
+                if (tmp_type != null && "1".equals(tmp_type.toString())) {
+                    sqlCount = sqlCount + " and a.paper_create_time like '%" + createTime + "%'";
+                    sqlMessage = sqlMessage + " and a.paper_create_time like '%" + createTime + "%'";
+                }else {
+                    sqlCount = sqlCount + " and a.create_time like '%" + createTime + "%'";
+                    sqlMessage = sqlMessage + " and a.create_time like '%" + createTime + "%'";
+                }
+
             }
 
             sqlMessage = sqlMessage + " ORDER BY a.update_time asc";
@@ -482,7 +536,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         Object content_excerpt = data.get("content_excerpt");
         Object article_score = data.get("article_score");
         if (type == null || article_id == null || article_type_id == null || article_title == null || article_keyword == null || create_time == null
-                || content_excerpt == null ) {
+                || content_excerpt == null) {
             return getErrorMap();
         }
 

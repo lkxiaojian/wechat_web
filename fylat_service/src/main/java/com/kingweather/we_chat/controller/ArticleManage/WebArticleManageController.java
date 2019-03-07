@@ -227,9 +227,9 @@ public class WebArticleManageController extends BaseController {
      * 文章删除
      */
     @RequestMapping(value = "/article/deletedById", method = RequestMethod.GET)
-    public Map<String, Object> deletedById(String article_id) {
+    public Map<String, Object> deletedById(String article_id,String type) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
-        map = articleService.deletedById(article_id);
+        map = articleService.deletedById(article_id,type);
         return map;
     }
 
