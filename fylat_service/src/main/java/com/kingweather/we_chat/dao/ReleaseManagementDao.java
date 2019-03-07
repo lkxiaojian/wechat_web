@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReleaseManagementDao {
-    List<Map> getTypeMenuTree(String s);
+    List<Map> getTypeMenuTree(String s,String type);
 
-    Map getTypeMessage(String article_type_id);
+    Map getTypeMessage(String article_type_id,String type);
 
-    int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack,String parentid);
+    int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack,String parentid, String type);
 
     int updateTypeParentId(String article_type_id, String parentid);
 

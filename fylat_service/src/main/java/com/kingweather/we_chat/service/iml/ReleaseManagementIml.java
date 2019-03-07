@@ -14,11 +14,11 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     private ReleaseManagementDao releaseManagementDao;
 
     @Override
-    public List getTypeMenuTree() {
+    public List getTypeMenuTree(String type) {
 
-        List<Map> list = releaseManagementDao.getTypeMenuTree("-1");
+        List<Map> list = releaseManagementDao.getTypeMenuTree("-1",type);
         for (Map s : list) {
-            List childrenList = getMenuTreeChildren(s.get("article_type_id").toString());
+            List childrenList = getMenuTreeChildren(s.get("article_type_id").toString(),type);
             if (childrenList != null) {
                 s.put("children", childrenList);
             }
@@ -29,15 +29,15 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map getTypeMessage(String article_type_id) {
-        Map map = releaseManagementDao.getTypeMessage(article_type_id);
+    public Map getTypeMessage(String article_type_id,String type) {
+        Map map = releaseManagementDao.getTypeMessage(article_type_id,type);
         return map;
     }
 
     @Override
-    public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack, String parentid) {
+    public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack, String parentid, String type) {
 
-        int i = releaseManagementDao.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack, parentid);
+        int i = releaseManagementDao.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack, parentid,type);
 
 
         return i;
@@ -108,11 +108,11 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
 
-    private List getMenuTreeChildren(String parentId) {
+    private List getMenuTreeChildren(String parentId,String type) {
 
-        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId);
+        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId,type);
         for (Map s : list) {
-            List childrenList = getMenuTreeChildren(s.get("article_type_id").toString());
+            List childrenList = getMenuTreeChildren(s.get("article_type_id").toString(),type);
             if (childrenList != null) {
                 s.put("children", childrenList);
             }

@@ -22,9 +22,14 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     private JdbcUtil jdbc;
 
     @Override
-    public List<Map> getTypeMenuTree(String parent_id) {
+    public List<Map> getTypeMenuTree(String parent_id,String type) {
 
         String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+
+        if("1".equals(type)){
+             sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type where del_type!=? and parentid=?";
+
+        }
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
                 1, parent_id
 
@@ -34,10 +39,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
-    public Map getTypeMessage(String article_type_id) {
+    public Map getTypeMessage(String article_type_id,String type) {
+
 
         String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type_tmp where del_type!=? and article_type_id=?";
-
+        if("1".equals(type)){
+            sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type where del_type!=? and article_type_id=?";
+        }
         Map maps = jdbcTemplate.queryForMap(sql, new Object[]{
                 1, article_type_id
 
@@ -46,8 +54,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
-    public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack, String parentid) {
+    public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack, String parentid, String type) {
         try {
+
             String updateSqlTmp = "update  zz_wechat.article_type_tmp set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=?  where article_type_id=?";
             int update = jdbcTemplate.update(updateSqlTmp, new Object[]{
                     name,

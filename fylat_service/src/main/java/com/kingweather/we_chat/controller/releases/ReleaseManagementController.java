@@ -29,11 +29,14 @@ public class ReleaseManagementController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/getTypeMenuTree/rest")
-    public Map getTypeMenuTree() {
+    public Map getTypeMenuTree(String type) {
 
+        if (type == null || "".equals(type)) {
+            type = "0";
+        }
         Map map = new HashMap();
         try {
-            List list = releaseManagementService.getTypeMenuTree();
+            List list = releaseManagementService.getTypeMenuTree(type);
             map.put("code", 0);
             map.put("message", "查询成功");
             map.put("data", list);
@@ -49,16 +52,19 @@ public class ReleaseManagementController extends BaseController {
     /**
      * 根据id 来算法的获取类型的详情
      *
-     * @param article_type_id
+     * @param article_type_id type 1 为真是表中的信息  0 或者null 查询临时表
      * @return
      */
 
     @RequestMapping(value = "/getTypeMessage/rest")
-    public Map getTypeMessage(String article_type_id) {
+    public Map getTypeMessage(String article_type_id, String type) {
+        if (type == null || "".equals(type)) {
+            type = "0";
+        }
 
         Map map = new HashMap();
         try {
-            Map list = releaseManagementService.getTypeMessage(article_type_id);
+            Map list = releaseManagementService.getTypeMessage(article_type_id,type);
             map.put("code", 0);
             map.put("message", "查询成功");
             map.put("data", list);
@@ -116,7 +122,8 @@ public class ReleaseManagementController extends BaseController {
         String keyword = req.getParameter("keyword");
         String artcicle_type_id = req.getParameter("artcicle_type_id");
         String parentid = req.getParameter("parentid");
-        int i = releaseManagementService.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack, parentid);
+        String type = req.getParameter("type");
+        int i = releaseManagementService.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack, parentid,type);
 
         if (i == 1) {
             map.put("code", 0);
@@ -359,6 +366,7 @@ public class ReleaseManagementController extends BaseController {
 
     /**
      * 根据id删除文章类型
+     *
      * @param article_type_id
      * @return
      */
