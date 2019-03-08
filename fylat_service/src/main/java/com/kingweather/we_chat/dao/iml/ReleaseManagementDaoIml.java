@@ -830,19 +830,20 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 //插入
                 if (changeMap != null && changeMap.get("count") != null
                         && Integer.parseInt(changeMap.get("count").toString()) == 0) {
-                    String insertChangeTypeSql = "insert into zz_wechat.change_article_type(article_type_id,parent_id,type,update_time) values(?,?,0,now())";
+                    String insertChangeTypeSql = "insert into zz_wechat.change_article_type(article_type_id,parent_id,type,update_time,keep_type_id) values(?,?,0,now(),article_type_id)";
                     jdbcTemplate.update(insertChangeTypeSql, new Object[]{
                             merge_type_idList[i].toString(),
                             parent_id
                     });
 
                 } else {
-                    //更新,parent_id,type,update_time) values(?,?,0,now())
+                    //更新
 
-                    String insertChangeTypeSql = "UPDATE  zz_wechat.change_article_type SET parent_id=?,update_time=? where article_type_id=? AND type=? ";
+                    String insertChangeTypeSql = "UPDATE  zz_wechat.change_article_type SET parent_id=?,update_time=? ,keep_type_id=? where article_type_id=? AND type=? ";
                     jdbcTemplate.update(insertChangeTypeSql, new Object[]{
                             parent_id,
                             DateUtil.getCurrentTimeString(),
+                            article_type_id,
                             merge_type_idList[i].toString(),
                             0
                     });

@@ -71,6 +71,22 @@ public class AlgorithmDataController extends BaseController {
 
         articleKeyword = articleKeyword.substring(0, articleKeyword.length() - 1);
 
+
+
+        //查询关联表中是否存在
+
+        String sql = "select parent_id,type,keep_type_id from zz_wechat.change_article_type where article_type_id=? ORDER BY update_time DESC LIMIT 0,1";
+        Map<String, Object> parentIdMap = jdbcTemplate.queryForMap(sql, new Object[]{
+                type_id
+        });
+        if (parentIdMap != null && parentIdMap.get("parent_id") != null) {
+            if (Integer.parseInt(parentIdMap.get("type").toString()) == 0) {
+                type_id=parentIdMap.get("keep_type_id").toString();
+            }
+            parent_id = parentIdMap.get("parent_id").toString();
+        }
+
+
         //根据typeid查询是否存在id
         String countTypeSql = "select count(*) as  count from zz_wechat.article_type_tmp where article_type_id=?";
         Map<String, Object> map = null;
@@ -82,9 +98,14 @@ public class AlgorithmDataController extends BaseController {
 
         }
 
+
+
+
         //插入新的类型
         if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0
                 && !type_id.isEmpty() && !typeName.isEmpty() && !articleKeyword.isEmpty()) {
+
+
             String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state) values " +
                     "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?)";
             int update = jdbcTemplate.update(insertTypeSql, new Object[]{
@@ -198,8 +219,17 @@ public class AlgorithmDataController extends BaseController {
 
             articleKeyword = articleKeyword.substring(0, articleKeyword.length() - 1);
 
-
-
+            //查询关联表中是否存在
+            String sql = "select parent_id,type,keep_type_id from zz_wechat.change_article_type where article_type_id=? ORDER BY update_time DESC LIMIT 0,1";
+            Map<String, Object> parentIdMap = jdbcTemplate.queryForMap(sql, new Object[]{
+                    type_id
+            });
+            if (parentIdMap != null && parentIdMap.get("parent_id") != null) {
+                if (Integer.parseInt(parentIdMap.get("type").toString()) == 0) {
+                    type_id=parentIdMap.get("keep_type_id").toString();
+                }
+                parent_id = parentIdMap.get("parent_id").toString();
+            }
 
             //根据posting_name
             String countPostSql = "select count(*) as  count from zz_wechat.posting_paper where posting_name=?";
@@ -215,8 +245,8 @@ public class AlgorithmDataController extends BaseController {
             if (countPostmap != null && countPostmap.get("count") != null && Integer.parseInt(countPostmap.get("count").toString()) == 0) {
                 //插入posting_name
 
-                String insertPostingSql="insert into zz_wechat.posting_paper (posting_name) values (?)";
-                jdbcTemplate.update(insertPostingSql,new Object[]{
+                String insertPostingSql = "insert into zz_wechat.posting_paper (posting_name) values (?)";
+                jdbcTemplate.update(insertPostingSql, new Object[]{
                         posting_name
                 });
             }
@@ -262,7 +292,7 @@ public class AlgorithmDataController extends BaseController {
             int update = jdbcTemplate.update(insertPaperSql, new Object[]{
                     article_id,
                     article_title,
-                    article_keyword.substring(0,article_keyword.length()-1),
+                    article_keyword.substring(0, article_keyword.length() - 1),
                     author,
                     currentTime,
                     create_time,
@@ -274,7 +304,7 @@ public class AlgorithmDataController extends BaseController {
                     article_title_e,
                     content_excerpt_e,
                     path,
-                    article_keyword_e.substring(0,article_keyword.length()-1),
+                    article_keyword_e.substring(0, article_keyword.length() - 1),
                     author_e,
                     reference,
                     site_number,
