@@ -70,7 +70,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             });
 
             String typeSql = "select type_state from zz_wechat.article_type_tmp where article_type_id=?";
-            Map<String, Object> typeMap = jdbcTemplate.queryForMap(typeSql);
+            Map<String, Object> typeMap = jdbcTemplate.queryForMap(typeSql,new Object[]{
+                    artcicle_type_id
+            });
 
             try {
                 String sqlCount = "select count(*) as count from zz_wechat.article_type where article_type_id=?";
