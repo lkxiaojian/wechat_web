@@ -1041,6 +1041,17 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
     }
 
+    @Override
+    public List<Map<String, Object>> combinedScore(int i) {
+        String sql = "select  article_type_id,article_type_name_old from zz_wechat.article_type_tmp where del_type !=? and parentid !=? and type_state=?";
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
+                1,
+                -1,
+                i
+        });
+        return maps;
+    }
+
     /**
      * 传参错误
      *

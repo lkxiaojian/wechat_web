@@ -382,6 +382,21 @@ public class ReleaseManagementController extends BaseController {
     }
 
 
+
+
+    @RequestMapping(value = "/combinedScore/rest", method = RequestMethod.GET)
+
+    public Map<String, Object> combinedScore() {
+        try {
+            return releaseManagementService.combinedScore();
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
+    }
+
+
+
+
     /**
      * 传参错误
      *
