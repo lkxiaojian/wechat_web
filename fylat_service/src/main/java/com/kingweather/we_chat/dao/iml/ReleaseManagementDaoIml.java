@@ -70,7 +70,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             });
 
             String typeSql = "select type_state from zz_wechat.article_type_tmp where article_type_id=?";
-            Map<String, Object> typeMap = jdbcTemplate.queryForMap(typeSql,new Object[]{
+            Map<String, Object> typeMap = jdbcTemplate.queryForMap(typeSql, new Object[]{
                     artcicle_type_id
             });
 
@@ -145,6 +145,33 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 article_type_id
 
         });
+
+        //对要合并的类型插入到临时表
+        String Changesql = "select count(*) as count from zz_wechat.change_article_type where article_type_id=? and type=?";
+        Map<String, Object> changeMap = jdbcTemplate.queryForMap(Changesql, new Object[]{
+                article_type_id,
+                1
+        });
+
+        //插入
+        if (changeMap != null && changeMap.get("count") != null
+                && Integer.parseInt(changeMap.get("count").toString()) == 0) {
+            String insertChangeTypeSql = "insert into zz_wechat.change_article_type(article_type_id,parent_id,type,update_time) values(?,?,1,now())";
+            jdbcTemplate.update(insertChangeTypeSql, new Object[]{
+                    article_type_id,
+                    parentid
+            });
+
+        } else {
+            //更新
+            String insertChangeTypeSql = "UPDATE  zz_wechat.change_article_type SET parent_id=?,update_time=? where article_type_id=? AND type=? ";
+            jdbcTemplate.update(insertChangeTypeSql, new Object[]{
+                    parentid,
+                    DateUtil.getCurrentTimeString(),
+                    article_type_id,
+                    0
+            });
+        }
 
 
         try {
@@ -378,7 +405,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 if (tmp_type != null && "1".equals(tmp_type.toString())) {
                     sqlCount = sqlCount + " and a.paper_create_time like '%" + createTime + "%'";
                     sqlMessage = sqlMessage + " and a.paper_create_time like '%" + createTime + "%'";
-                }else {
+                } else {
                     sqlCount = sqlCount + " and a.create_time like '%" + createTime + "%'";
                     sqlMessage = sqlMessage + " and a.create_time like '%" + createTime + "%'";
                 }
@@ -597,7 +624,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                     ",author_e=?,reference=?,site_number=?,publication_date=?,article_score=? " +
                     "where article_id=?";
 
-            if("1".equals(tmp_type)){
+            if ("1".equals(tmp_type)) {
 
                 sql = "update zz_wechat.article set article_type_id=?,article_title=?,article_keyword=?,author=?,source=?," +
                         "content_excerpt=?,status=?,article_score=?,del_type=?," +
@@ -792,6 +819,36 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             for (int i = 0; i < merge_type_idList.length; i++) {
                 mergeIdList = mergeIdList + "'" + merge_type_idList[i].toString() + "',";
+
+
+                //对要合并的类型插入到临时表
+                String Changesql = "select count(*) as count from zz_wechat.change_article_type where article_type_id=? and type=?";
+                Map<String, Object> changeMap = jdbcTemplate.queryForMap(Changesql, new Object[]{
+                        merge_type_idList[i].toString(),
+                        0
+                });
+                //插入
+                if (changeMap != null && changeMap.get("count") != null
+                        && Integer.parseInt(changeMap.get("count").toString()) == 0) {
+                    String insertChangeTypeSql = "insert into zz_wechat.change_article_type(article_type_id,parent_id,type,update_time) values(?,?,0,now())";
+                    jdbcTemplate.update(insertChangeTypeSql, new Object[]{
+                            merge_type_idList[i].toString(),
+                            parent_id
+                    });
+
+                } else {
+                    //更新,parent_id,type,update_time) values(?,?,0,now())
+
+                    String insertChangeTypeSql = "UPDATE  zz_wechat.change_article_type SET parent_id=?,update_time=? where article_type_id=? AND type=? ";
+                    jdbcTemplate.update(insertChangeTypeSql, new Object[]{
+                            parent_id,
+                            DateUtil.getCurrentTimeString(),
+                            merge_type_idList[i].toString(),
+                            0
+                    });
+                }
+
+
             }
             mergeIdList = mergeIdList.substring(0, mergeIdList.length() - 1);
 
