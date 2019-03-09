@@ -201,7 +201,7 @@ public class ReleaseManagementController extends BaseController {
      */
 
     @RequestMapping(value = "/selectAricleTmpList/rest", method = RequestMethod.POST)
-    public Map<String, Object> selectAricleTmpList(@RequestParam Map<String, Object> data) {
+    public Map<String, Object> selectAricleTmpList(@RequestBody Map<String, Object> data) {
         try {
 
             return releaseManagementService.selectAricleTmpList(data);
