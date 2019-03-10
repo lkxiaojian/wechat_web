@@ -19,8 +19,14 @@ public class ArticleServiceIml implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> getArticleMessage(String articleId,String wechatid) {
-        return articleDao.getArticleMessage(articleId,wechatid);
+    public Map<String, Object> getArticleMessage(String articleId,String wechatid,String state) {
+
+        if("1".equals(state)){
+            return articleDao.getPaperMessage(articleId,wechatid);
+
+        }else{
+            return articleDao.getArticleMessage(articleId,wechatid);
+        }
     }
 
     @Override

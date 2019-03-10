@@ -7,6 +7,7 @@ public interface ArticleDao {
     Map<String, Object> getArticleTrait(String articleId,int page);
 
     Map<String,Object> getArticleMessage(String articleId,String wechatid);
+    Map<String,Object> getPaperMessage(String articleId,String wechatid);
 
     Map<String,Object> collectingAndShare(Map<String, Object> data);
 

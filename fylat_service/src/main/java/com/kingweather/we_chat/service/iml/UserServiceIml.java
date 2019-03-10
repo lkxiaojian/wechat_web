@@ -28,7 +28,7 @@ public class UserServiceIml implements UserService {
     }
 
     @Override
-    public Map getIndexMessageLast(String wechatid, int page, String article_type_id,int type,String time,String article_id) {
-        return userDao.getIndexMessageLast(wechatid,page,article_type_id,type,time,article_id);
+    public Map getIndexMessageLast(String state,String wechatid, int page, String article_type_id,int type,String time,String article_id) {
+        return userDao.getIndexMessageLast(state,wechatid,page,article_type_id,type,time,article_id);
     }
 }

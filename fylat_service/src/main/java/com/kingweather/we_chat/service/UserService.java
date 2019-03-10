@@ -17,5 +17,5 @@ public interface UserService {
 
     Map<String, Object> setAttention(String wechatid, String attentions,String type);
 
-    Map getIndexMessageLast(String wechatid, int page, String article_type_id,int type,String time,String article_id);
+    Map getIndexMessageLast(String state,String wechatid, int page, String article_type_id,int type,String time,String article_id);
 }

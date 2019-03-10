@@ -6,7 +6,7 @@ import java.util.Map;
 public interface ArticleService {
     Map<String, Object> getArticleTrait(String articleId,int page);
 
-    Map<String,Object> getArticleMessage(String articleId,String wechatid);
+    Map<String,Object> getArticleMessage(String articleId,String wechatid,String state);
 
     Map<String,Object> collectingAndShare(Map<String, Object> data);
 
