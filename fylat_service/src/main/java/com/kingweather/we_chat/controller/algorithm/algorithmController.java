@@ -56,15 +56,15 @@ public class algorithmController extends BaseController {
             byte[] details_divbytes = (byte[]) details_div;
             if (details_div != null && article_title != null) {
                 try {
-                    String s = new String(details_divbytes, "UTF-8").replaceAll(" ","").replaceAll("\\s","").replaceAll(",","，").replaceAll("!","！").replaceAll("\\.","。").replaceAll("\\[","】")
-                            .replaceAll("]","】").replaceAll("\\(","（").replaceAll("\\)","）").replaceAll("\\|","|")
-                            .replaceAll("-","—");
-                    String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!","！").replaceAll("\\.","。").replaceAll("\\[","】")
-                            .replaceAll("]","】").replaceAll("\\(","（").replaceAll("\\)","）").replaceAll("\\|","|")
-                            .replaceAll("-","—").replaceAll(" ","").replaceAll("\\s","");
-                    s =s.replaceAll(s1, "");
+                    String s = new String(details_divbytes, "UTF-8").replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
+                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
+                            .replaceAll("-", "—");
+                    String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
+                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
+                            .replaceAll("-", "—").replaceAll(" ", "").replaceAll("\\s", "");
+                    s = s.replaceAll(s1, "");
                     resultList.add(s);
-                    maps.get(i).put("details_txt",s);
+                    maps.get(i).put("details_txt", s);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -96,13 +96,13 @@ public class algorithmController extends BaseController {
             byte[] details_divbytes = (byte[]) details_div;
             if (details_div != null && article_title != null) {
                 try {
-                    String s = new String(details_divbytes, "UTF-8").replaceAll(" ","").replaceAll("\\s","").replaceAll(",","，").replaceAll("!","！").replaceAll("\\.","。").replaceAll("\\[","】")
-                            .replaceAll("]","】").replaceAll("\\(","（").replaceAll("\\)","）").replaceAll("\\|","|")
-                            .replaceAll("-","—");
-                    String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!","！").replaceAll("\\.","。").replaceAll("\\[","】")
-                            .replaceAll("]","】").replaceAll("\\(","（").replaceAll("\\)","）").replaceAll("\\|","|")
-                            .replaceAll("-","—").replaceAll(" ","").replaceAll("\\s","");
-                    s =s.replaceAll(s1, "");
+                    String s = new String(details_divbytes, "UTF-8").replaceAll(" ", "").replaceAll("\\s", "").replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
+                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
+                            .replaceAll("-", "—");
+                    String s1 = article_title.toString().replaceAll(",", "，").replaceAll("!", "！").replaceAll("\\.", "。").replaceAll("\\[", "】")
+                            .replaceAll("]", "】").replaceAll("\\(", "（").replaceAll("\\)", "）").replaceAll("\\|", "|")
+                            .replaceAll("-", "—").replaceAll(" ", "").replaceAll("\\s", "");
+                    s = s.replaceAll(s1, "");
                     maps.get(i).put("details_txt", s);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -117,6 +117,17 @@ public class algorithmController extends BaseController {
         resultMap.put("txt", maps);
         map.put("code", 0);
         map.put("result", resultMap);
+        return map;
+    }
+
+
+    @RequestMapping(value = "/reptile/getDominData/rest", method = RequestMethod.GET)
+    public Map<String, Object> getDominData() {
+        String sql = "select article_type_id,article_type_name,article_type_keyword from article_type where del_type !=1 AND parentid='0'";
+        Map<String, Object> map = new HashMap<>();
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        map.put("code", 0);
+        map.put("result", maps);
         return map;
     }
 

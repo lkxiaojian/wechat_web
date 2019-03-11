@@ -29,7 +29,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.domain_Manage', {
             url: '/domainManage',
             templateUrl: 'insure/template/zz_wechat/domainManage.html',
-            pageTitle: '领域管理',
+            pageTitle: '领域新增',
             controller: 'domainManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -151,5 +151,94 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             }
         })
 
+        .state('app.insure.publishManage', {
+            url: '/publishManage',
+            // params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/publishManage.html',
+            pageTitle: '发布管理',
+            controller: 'publishManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/publishManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.domainList', {
+            url: '/domainList',
+            // params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/domainList.html',
+            pageTitle: '领域管理',
+            controller: 'domainListManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/domainListManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.modifyDomain', {
+            url: '/modifyDomain',
+            params: {param: null, article_type_id: null, article_type_name: null, article_type_keyword: null},
+            templateUrl: 'insure/template/zz_wechat/modifitionDomaim.html',
+            pageTitle: '领域修改',
+            controller: 'modifitionDomainManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            // 'vendor/jquery/wangEditor.js',
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/modifitionDomainManageController.js',
+                            'ui.select',
+                            // 'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.keywordList', {
+            url: '/keywordList',
+            // params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/keywordList.html',
+            pageTitle: '关键词管理',
+            controller: 'keywordListManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/keywordListManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.modifyKeyword', {
+            url: '/modifyKeyword',
+            params: {id: null, keyword_name: null, parent_id: null, article_type_name: null},
+            templateUrl: 'insure/template/zz_wechat/modifitionKeyword.html',
+            pageTitle: '关键词修改',
+            controller: 'modifitionKeywordManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            // 'vendor/jquery/wangEditor.js',
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/modifitionKeywordManageController.js',
+                            'ui.select',
+                            // 'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
 
 }]);

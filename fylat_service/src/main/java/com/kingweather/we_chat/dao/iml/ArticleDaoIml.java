@@ -209,6 +209,7 @@ public class ArticleDaoIml implements ArticleDao {
                 messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
             }
 
+
             String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
             jdbcTemplate.update(sql, new Object[]{
                     articleId,
@@ -634,9 +635,24 @@ public class ArticleDaoIml implements ArticleDao {
                 key = keyword.toString();
             }
             String sysTime = DateUtil.getCurrentTimeString();
-            String insertSql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+            String insertSql = "insert into zz_wechat.article_type (article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type) values(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+
+
+            String insertSqlTMp = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type) values(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+
 
             int update = jdbcTemplate.update(insertSql, new Object[]{
+                    UuidUtils.getUUid(),
+                    name.toString(),
+                    key,
+                    sysTime,
+                    path,
+                    0,
+                    0
+            });
+
+            int updateTmp = jdbcTemplate.update(insertSqlTMp, new Object[]{
+                    UuidUtils.getUUid(),
                     name.toString(),
                     key,
                     sysTime,
@@ -748,8 +764,8 @@ public class ArticleDaoIml implements ArticleDao {
             }
             String article_id = UuidUtils.getUUid();
             String create_time = DateUtil.getCurrentTimeString();
-            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count,del_type) " +
-                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?)";
+            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count,del_type,state) " +
+                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?)";
 
             int update = jdbcTemplate.update(sql, new Object[]{
 
@@ -768,6 +784,7 @@ public class ArticleDaoIml implements ArticleDao {
                     details_txt.toString(),
                     create_time,
                     content_excerpt,
+                    0,
                     0,
                     0,
                     0
@@ -824,18 +841,33 @@ public class ArticleDaoIml implements ArticleDao {
      * @return
      */
     @Override
-    public Map<String, Object> deletedById(String article_id) {
+    public Map<String, Object> deletedById(String article_id, String type) {
         if (article_id == null || "".equals(article_id)) {
             return getErrorMap();
 
         }
-//        String sql = "DELETE from zz_wechat.article  where article_id =?";
 
-        String sql = "UPDATE  zz_wechat.article set del_type=? where article_id =?";
-        jdbcTemplate.update(sql, new Object[]{
-                1,
-                article_id,
-        });
+        if (type != null && "1".equals(type)) {
+            String idList = "";
+            String[] split = article_id.split(",");
+
+            for (int i = 0; i < split.length; i++) {
+                idList = idList + "'" + split[i].toString() + "',";
+            }
+            idList = idList.substring(0, idList.length() - 1);
+
+            String sql = "DELETE from zz_wechat.article  where article_id in("+idList+")";
+            jdbcTemplate.update(sql);
+
+        } else {
+
+            String sql = "UPDATE  zz_wechat.article set del_type=? where article_id =?";
+            jdbcTemplate.update(sql, new Object[]{
+                    1,
+                    article_id,
+            });
+
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("code", 0);
         map.put("message", "删除成功");
@@ -852,30 +884,48 @@ public class ArticleDaoIml implements ArticleDao {
     @Override
     public Map<String, Object> addKeyword(Map<String, Object> data) {
         Object keywords = data.get("keyword");
-        if (keywords == null || "".equals(keywords)) {
+        Object parent_id = data.get("parent_id");
+        if (keywords == null || "".equals(keywords) || parent_id == null || "".equals(parent_id)) {
             return getErrorMap();
 
         }
 
-//        String[] split = keywords.toString().split(",");
         String create_time = DateUtil.getCurrentTimeString();
-        String sql = "insert into zz_wechat.keyword (id,keyword_name,create_time,last_time,del_type) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'),?)";
-        int errorCount = 0;
+        String sql = "insert into zz_wechat.keyword (id,keyword_name,create_time,last_time,del_type,parent_id) values(?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d'),?,?)";
+
         int successCount = 0;
 
-        String countSql = "select count(*) as count from zz_wechat.keyword where keyword_name=?";
+        String countSql = "select count(*) as count,id  from zz_wechat.keyword where keyword_name=?";
 
         String uUid = UuidUtils.getUUid();
         Map<String, Object> map = jdbcTemplate.queryForMap(countSql, new Object[]{keywords.toString()});
         if (map != null && map.get("count") != null && "1".equals(map.get("count").toString())) {
-            errorCount = errorCount + 1;
+
+            String upsql = "update zz_wechat.keyword set keyword_name=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'), parent_id=?,del_type=? where id=?";
+
+            int update = jdbcTemplate.update(upsql, new Object[]{
+                    keywords.toString(),
+                    create_time,
+                    parent_id,
+                    0,
+                    map.get("id")
+
+            });
+
+            String url = urlPath + "article/updateKeyword";
+            try {
+                HttpRequest.sendGet(url, "id=" + map.get("id") + "&keyword_name=" + URLEncoder.encode(keywords.toString(), "utf-8").trim() + "&parent_id=" + parent_id + "&del_type=0");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         } else {
             jdbcTemplate.update(sql, new Object[]{
                     uUid,
                     keywords.toString(),
                     create_time,
                     "2017-01-01",
-                    0
+                    0,
+                    parent_id.toString()
             });
             successCount = successCount + 1;
         }
@@ -883,7 +933,7 @@ public class ArticleDaoIml implements ArticleDao {
         if (successCount > 0) {
             String url = urlPath + "article/addKeyword";
             try {
-                HttpRequest.sendGet(url, "param=" +  URLEncoder.encode(keywords.toString(), "utf-8").trim()+ "&uUid=" + uUid);
+                HttpRequest.sendGet(url, "param=" + URLEncoder.encode(keywords.toString(), "utf-8").trim() + "&uUid=" + uUid + "&parent_id=" + parent_id);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -891,10 +941,10 @@ public class ArticleDaoIml implements ArticleDao {
         }
 
         Map<String, Object> remap = new HashMap<>();
-        if (successCount > 0) {
-            remap.put("code", 0);
-            remap.put("message", "添加成功");
-        }
+
+        remap.put("code", 0);
+        remap.put("message", "添加成功");
+
 
         return remap;
     }
@@ -909,7 +959,8 @@ public class ArticleDaoIml implements ArticleDao {
     public Map<String, Object> getwebmessage(String article_id) {
 
         //获取文章的详细信息 content_manual
-        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time ,a.collect_initcount,a.share_initcount ,a.collect_initcount ,a.content_type,a.content_crawl,a.details_div,a.content_manual,a.content_excerpt,b.article_type_id,b.article_type_name FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
+        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time ,a.collect_initcount,a.share_initcount ,a.collect_initcount ,a.content_type,a.content_crawl,a.details_div,a.content_manual,a.content_excerpt,b.article_type_id,b.article_type_name ," +
+                " a.posting_name,a.article_title_e,a.content_excerpt_e,a.pdf_path,a.article_keyword_e,a.author_e,a.reference,a.site_number,a.publication_date,a.article_score,a.paper_create_time    FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{article_id});
 
         Object details_div = messageMap.get("details_div");
@@ -987,7 +1038,7 @@ public class ArticleDaoIml implements ArticleDao {
                     "details_txt=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'),content_excerpt=? WHERE article_id=? ";
             int update = jdbcTemplate.update(sql, new Object[]{
 
-                    Integer.parseInt(article_type_id.toString()),
+                    article_type_id,
                     article_title.toString(),
                     article_keyword.toString(),
                     author.toString(),
@@ -1029,15 +1080,34 @@ public class ArticleDaoIml implements ArticleDao {
         Integer startNum = Integer.valueOf(map.get("startNum").toString());
         Integer pageSize = Integer.valueOf(map.get("pageSize").toString());
         Object message = map.get("message");
-        String countSql = "select count(*) from zz_wechat.keyword where del_type !='1' ";
-        if (message != null && !"".equals(message.toString())) {
-            countSql = countSql + " and keyword_name like '%" + message.toString() + "%' ";
+        Object parent_id = map.get("parent_id");
+        Object type = map.get("type");
+
+
+        String countSql = "select count(*) from zz_wechat.keyword a,zz_wechat.article_type b where a.del_type !='1' and a.parent_id=b.article_type_id ";
+
+        if (type != null && "1".equals(type.toString())) {
+            countSql = "select count(*) from zz_wechat.keyword a,zz_wechat.article_type b where a.del_type ='1' and a.parent_id=b.article_type_id ";
+
         }
-        String sql = "select id,keyword_name from zz_wechat.keyword where  del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
-            sql = sql + " and keyword_name like '%" + message.toString() + "%' ";
+            countSql = countSql + " and a.keyword_name like '%" + message.toString() + "%' ";
         }
-        sql = sql + " ORDER BY update_time desc";
+        String sql = "select a.id,a.keyword_name,a.parent_id,b.article_type_name from zz_wechat.keyword a,zz_wechat.article_type b where  a.del_type !='1' and a.parent_id=b.article_type_id ";
+
+        if (type != null && "1".equals(type.toString())) {
+            sql = "select a.id,a.keyword_name,a.parent_id,b.article_type_name from zz_wechat.keyword a,zz_wechat.article_type b where  a.del_type ='1' and a.parent_id=b.article_type_id ";
+
+        }
+        if (message != null && !"".equals(message.toString())) {
+            sql = sql + " and a.keyword_name like '%" + message.toString() + "%' ";
+        }
+
+        if (parent_id != null && !"".equals(parent_id.toString())) {
+            countSql = countSql + " and a.parent_id='" + parent_id + "'";
+            sql = sql + " and a.parent_id='" + parent_id + "'";
+        }
+        sql = sql + " ORDER BY a.update_time desc";
 
         Page<Map<String, Object>> page = jdbc.queryForPage(startNum, pageSize, countSql, sql, new Object[]{});
         resultmap.put("code", 0);
@@ -1048,30 +1118,31 @@ public class ArticleDaoIml implements ArticleDao {
     }
 
     @Override
-    public Map<String, Object> updateKeyword(String id, String keyword_name) {
+    public Map<String, Object> updateKeyword(String id, String keyword_name, String parent_id) {
 
-        if ("".equals(id) || id == null || "".equals(keyword_name) || keyword_name == null) {
+        if ("".equals(id) || id == null || "".equals(keyword_name) || keyword_name == null || parent_id == null || "".equals(parent_id)) {
             return getErrorMap();
         }
 
         String create_time = DateUtil.getCurrentTimeString();
-        String sql = "update zz_wechat.keyword set keyword_name=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s') where id=?";
+        String sql = "update zz_wechat.keyword set keyword_name=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'), parent_id=? where id=?";
 
         int update = jdbcTemplate.update(sql, new Object[]{
                 keyword_name,
                 create_time,
+                parent_id,
                 id
 
         });
 
         String url = urlPath + "article/updateKeyword";
         try {
-            HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + URLEncoder.encode(keyword_name.toString(), "utf-8").trim());
+            HttpRequest.sendGet(url, "id=" + id + "&keyword_name=" + URLEncoder.encode(keyword_name.toString(), "utf-8").trim() + "&parent_id=" + parent_id);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         HashMap<String, Object> map = new HashMap<>();
-        if (update == 0) {
+        if (update == 1) {
             map.put("code", 0);
             map.put("message", "更新成功！");
             return map;
@@ -1087,27 +1158,39 @@ public class ArticleDaoIml implements ArticleDao {
      * @return
      */
     @Override
-    public Map<String, Object> delKeyword(String id) {
+    public Map<String, Object> delKeyword(String id, String type) {
         if ("".equals(id) || id == null) {
             return getErrorMap();
         }
-//        String sql = "DELETE FROM zz_wechat.keyword where id=?";
-
-        String sql = "UPDATE  zz_wechat.keyword set del_type=? where id=?";
-        int update = jdbcTemplate.update(sql, new Object[]{
-                1,
-                id
-        });
-
-
-        String url = urlPath + "article/delKeyword";
-        HttpRequest.sendGet(url, "id=" + id);
         HashMap<String, Object> map = new HashMap<>();
-        if (update == 1) {
+        if (type != null && "1".equals(type)) {
+
+            String idList = "";
+            String[] split = id.split(",");
+
+            for (int i = 0; i < split.length; i++) {
+                idList = idList + "'" + split[i].toString() + "',";
+            }
+            idList = idList.substring(0, idList.length() - 1);
+            String sql = "DELETE FROM zz_wechat.keyword where id in(" + idList + ")";
+            jdbcTemplate.update(sql);
             map.put("code", 0);
             map.put("message", "删除成功！");
+
         } else {
-            return getErrorMap();
+            String sql = "UPDATE  zz_wechat.keyword set del_type=? where id=?";
+            int update = jdbcTemplate.update(sql, new Object[]{
+                    1,
+                    id
+            });
+            String url = urlPath + "article/delKeyword";
+            HttpRequest.sendGet(url, "id=" + id);
+            if (update == 1) {
+                map.put("code", 0);
+                map.put("message", "删除成功！");
+            } else {
+                return getErrorMap();
+            }
         }
         return map;
     }
@@ -1213,7 +1296,15 @@ public class ArticleDaoIml implements ArticleDao {
 
         String sql = "update zz_wechat.article_type set article_type_name=?  ,article_type_keyword=? where article_type_id=?";
 
+
+        String sqlTmp = "update zz_wechat.article_type_tmp set article_type_name=?  ,article_type_keyword=? where article_type_id=?";
+
         int update = jdbcTemplate.update(sql, new Object[]{
+                article_type_name.toString(),
+                article_type_keyword.toString(),
+                article_type_id.toString()
+        });
+        jdbcTemplate.update(sqlTmp, new Object[]{
                 article_type_name.toString(),
                 article_type_keyword.toString(),
                 article_type_id.toString()
@@ -1221,11 +1312,43 @@ public class ArticleDaoIml implements ArticleDao {
         if (update == 1) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("code", 0);
-            map.put("message", "跟新成功！");
+            map.put("message", "更新成功！");
             return map;
         }
 
         return getErrorMap();
+    }
+
+    /**
+     * 关键词 文章论文恢复
+     *
+     * @param id
+     * @param type
+     * @return
+     */
+    @Override
+    public Map<String, Object> recoverKeyword(String id, String type) {
+        if (id == null) {
+            return getErrorMap();
+        }
+
+        String idList = "";
+        String[] split = id.split(",");
+
+        for (int i = 0; i < split.length; i++) {
+            idList = idList + "'" + split[i].toString() + "',";
+        }
+        idList = idList.substring(0, idList.length() - 1);
+        String sql = "update zz_wechat.keyword set del_type=0 where id in(" + idList + ")";
+        if("1".equals(type)){
+             sql = "update zz_wechat.article set del_type=0 where article_id in(" + idList + ")";
+        }
+
+        jdbcTemplate.update(sql);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "恢复成功！");
+        return map;
     }
 
 

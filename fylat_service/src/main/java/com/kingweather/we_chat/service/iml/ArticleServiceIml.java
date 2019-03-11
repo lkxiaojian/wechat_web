@@ -75,8 +75,8 @@ public class ArticleServiceIml implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> deletedById(String article_id) {
-        return articleDao.deletedById( article_id);
+    public Map<String, Object> deletedById(String article_id,String type) {
+        return articleDao.deletedById( article_id,type);
     }
 
     @Override
@@ -100,13 +100,13 @@ public class ArticleServiceIml implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> updateKeyword(String id,String keyword_name) {
-        return articleDao.updateKeyword(id,keyword_name);
+    public Map<String, Object> updateKeyword(String id,String keyword_name,String parent_id) {
+        return articleDao.updateKeyword(id,keyword_name,parent_id);
     }
 
     @Override
-    public Map<String, Object> delKeyword(String id) {
-        return articleDao.delKeyword( id);
+    public Map<String, Object> delKeyword(String id,String type) {
+        return articleDao.delKeyword( id,type);
     }
 
     @Override
@@ -122,5 +122,10 @@ public class ArticleServiceIml implements ArticleService {
     @Override
     public Map<String, Object> updateDomainById(Map<String, Object> data) {
         return articleDao.updateDomainById(data);
+    }
+
+    @Override
+    public Map<String, Object> recoverKeyword(String id, String type) {
+        return articleDao.recoverKeyword(id,type);
     }
 }

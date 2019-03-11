@@ -1,0 +1,66 @@
+<!--头部导航信息-->
+<div class="modal-header">
+    <div class="btn pull-right m-t-n-xs m-l-n list-icon">
+        <a ui-sref="app.insure.integration_processManage"> <i
+                class="fa fa-mail-reply-all"></i>
+        </a>
+    </div>
+    <div style="margin: 0px 15px">
+        <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
+    </div>
+</div>
+<div class="" style="margin-top: 20px;">
+
+    <div class="col-md-10 col-sm-12 padder-l-0 m-b-md">
+
+        <label class="col-sm-1 control-label" style="width:5%;margin-top: 3px;margin-left: 20px">领域</label>
+        <div class="col-md-3">
+            <ui-select ng-model="listObj.region.selected"
+                       on-select="listObj.getTypeSelect($item)"
+                       theme="bootstrap">
+                <ui-select-match
+                        placeholder="{{'请选择领域' | translate}}">
+                    {{$select.selected.article_type_name}}
+                </ui-select-match>
+                <ui-select-choices group-by="'group'"
+                                   repeat="item in listObj.projectData | filter: $select.search">
+                    <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+
+        <label class=" col-sm-1 control-label padder-l-0" style="width:6%;margin-top: 3px;margin-left: 20px">关键词</label>
+        <div class="col-md-3 col-sm-16 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.seachMessage">
+        </div>
+
+        <button class="btn m-b-xs w-xs btn-default"
+                ng-disabled="searchuserForm.$invalid"
+                ng-click="listObj.seach()"
+                style="position: relative; left: 15px;">搜索
+        </button>
+        <button class="btn m-b-xs w-xs btn-default"
+                ng-disabled="searchuserForm.$invalid"
+                ng-click="listObj.clear()"
+                style="position: relative; left: 15px;">清空
+        </button>
+        <button class="btn m-b-xs w-xs btn-default"
+                ng-disabled="searchuserForm.$invalid"
+                ng-click="listObj.add()"
+                style="position: relative; left: 15px;">新增
+        </button>
+    </div>
+</div>
+
+
+<!--内容区-->
+<div class="wrapper-md">
+    <table table-directive tableoption="testOption" id="testArticle" instance="testInstance"
+           style="height: 286px"></table>
+</div>
+
+
+<script type="text/ng-template" id="myModalContent.html">
+    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
+</script>

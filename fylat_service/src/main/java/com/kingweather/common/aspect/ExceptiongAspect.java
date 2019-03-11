@@ -69,11 +69,12 @@ public class ExceptiongAspect {
     public void doBeforeController(JoinPoint joinPoint) throws Throwable {
         if (!joinPoint.toString().contains("UserManage.UserManageController")
                 && !joinPoint.toString().contains("ArticleManage.ArticleManageController")
-                && !joinPoint.toString().contains("other.UploadController")
+//                && !joinPoint.toString().contains("other.UploadController")
                 && !joinPoint.toString().contains("statistics.StatisticsController")
                 && !joinPoint.toString().contains("usermenu.UserMenuController")
                 && !joinPoint.toString().contains("websysuser.WebSysUserController")
-                &&!joinPoint.toString().contains("algorithm.algorithmController")){
+                &&!joinPoint.toString().contains("algorithm.algorithmController")
+                &&!joinPoint.toString().contains("algorithm.AlgorithmDataController")){
             String method = joinPoint.getSignature().getName();
             if (session.getAttribute("user") == null && !method.equals("userLogin") && !method.equals("articleImageUpload") && !method.equals("addArticle")) {
                 logger.error("session失效");

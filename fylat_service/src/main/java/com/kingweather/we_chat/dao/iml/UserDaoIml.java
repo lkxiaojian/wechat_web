@@ -418,12 +418,6 @@ public class UserDaoIml implements userDao {
 
         String oneStartTime = oneDay + " 00:00:00";
         String oneEndTime = oneDay + " 23:59:59";
-//        String twoDay = DateUtil.getbeforeDayCurrentDateString(2);
-//        String twoStartTime = twoDay + " 00:00:00";
-//        String twoEndTime = twoDay + " 23:59:59";
-//        String threeDay = DateUtil.getbeforeDayCurrentDateString(3);
-//        String threeStartTime = threeDay + " 00:00:00";
-//        String threeEndTime = threeDay + " 23:59:59";
         List<Object> list = new ArrayList();
         String sql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(sql);
@@ -471,7 +465,7 @@ public class UserDaoIml implements userDao {
         List<Map<String, Object>> rulust = new ArrayList<>();
         for (int i = 0; i < maps.size(); i++) {
             for (int j = 0; j < attentionList.size(); j++) {
-                if (maps.get(i).get("article_type_id") == attentionList.get(j).get("article_type_id")) {
+                if (maps.get(i).get("article_type_id") .equals( attentionList.get(j).get("article_type_id"))) {
                     rulust.add(maps.get(i));
                 }
             }
@@ -493,7 +487,7 @@ public class UserDaoIml implements userDao {
                 wechatid +
                 "' \n" +
                 "ORDER BY c.update_time DESC) t \n" +
-                "GROUP BY article_type_id,date_format(update_time, '%Y-%m-%d'),state ORDER BY update_time DESC )m";
+                "GROUP BY article_type_id,date_format(update_time, '%Y-%m-%d') ORDER BY update_time DESC )m";
 
         Map<String, Object> countMap = jdbcTemplate.queryForMap(countSql);
         int count = 0;
@@ -546,7 +540,7 @@ public class UserDaoIml implements userDao {
             List<Map<String, Object>> oneDayList = jdbcTemplate.queryForList(oneDaySql);
             list.addAll(oneDayList);
         }
-        if (page > 0 && count > 0 && pageSize * (page + 1) < count) {
+        if (page >= 0 && count > 0 && pageSize * (page + 1) < count) {
             String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.state,c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
@@ -602,7 +596,7 @@ public class UserDaoIml implements userDao {
             if (num < 0) {
                 num = 0;
             }
-            if (num == 0) {
+            if (num == 0||page==0) {
                 //小时分类
                 String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.state,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
@@ -629,7 +623,7 @@ public class UserDaoIml implements userDao {
             }
 
 
-            if (page > 0 && noLoveCount > 0 && pageSize * num < noLoveCount) {
+            if (page >=0  && noLoveCount > 0 && pageSize * num < noLoveCount) {
 
                 String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.state, c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +

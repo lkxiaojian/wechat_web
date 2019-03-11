@@ -28,7 +28,7 @@ public interface ArticleService {
 
     Map<String,Object> getAllArticle(Map<String, Object> conditions);
 
-    Map<String,Object> deletedById(String article_id);
+    Map<String,Object> deletedById(String article_id,String type);
 
     Map<String,Object> addKeyword(Map<String, Object> data);
 
@@ -38,13 +38,15 @@ public interface ArticleService {
 
     Map<String,Object> keywordQuery(Map<String, Object> map);
 
-    Map<String,Object> updateKeyword(String id,String keyword_name);
+    Map<String,Object> updateKeyword(String id,String keyword_name,String parent_id);
 
-    Map<String,Object> delKeyword(String id);
+    Map<String,Object> delKeyword(String id,String type);
 
     Map<String,Object>  getConditionDomain(Map<String, Object> conditions);
 
     Map<String,Object> delDomainById(String id);
 
     Map<String,Object> updateDomainById(Map<String, Object> data);
+
+    Map<String,Object> recoverKeyword(String id, String type);
 }
