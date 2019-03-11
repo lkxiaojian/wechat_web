@@ -500,7 +500,7 @@ public class UserDaoIml implements userDao {
         //有关注的文章且 查询的都是关注的文章
 //        if (count > 0 && pageSize * page < count || count < 10) {
         if (page == 0) {
-            String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.state, c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+            String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.content_type,c.state, c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time>date_format('" +
@@ -521,7 +521,7 @@ public class UserDaoIml implements userDao {
                     "ORDER BY update_time DESC ";
             List<Map<String, Object>> hoursDay = jdbcTemplate.queryForList(hoursSql);
             list.addAll(hoursDay);
-            String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.state c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+            String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.content_type,c.state c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time<=date_format('" +
@@ -541,7 +541,7 @@ public class UserDaoIml implements userDao {
             list.addAll(oneDayList);
         }
         if (page >= 0 && count > 0 && pageSize * (page + 1) < count) {
-            String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.state,c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+            String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT  c.content_type, c.state,c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time<=date_format('" +
@@ -568,7 +568,7 @@ public class UserDaoIml implements userDao {
         if (list == null || list.size() < pageSize || pageSize * (page + 1) >= count) {
 
 
-            String noCount = "SELECT  count(*) as noCount from ( SELECT 2 as  type from (SELECT c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+            String noCount = "SELECT  count(*) as noCount from ( SELECT 2 as  type from (SELECT c.content_type,c.state,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                     "zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE d.del_type !=1 and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                     "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -598,7 +598,7 @@ public class UserDaoIml implements userDao {
             }
             if (num == 0||page==0) {
                 //小时分类
-                String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.state,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.content_type,c.state,c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.del_type !=1  and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -625,7 +625,7 @@ public class UserDaoIml implements userDao {
 
             if (page >=0  && noLoveCount > 0 && pageSize * num < noLoveCount) {
 
-                String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.state, c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
+                String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.content_type,c.state, c.article_id,c.article_type_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.del_type !=1 and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +

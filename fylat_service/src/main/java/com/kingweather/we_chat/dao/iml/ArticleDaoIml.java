@@ -192,23 +192,9 @@ public class ArticleDaoIml implements ArticleDao {
                 +"a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,a.create_time,"
                 +"(a.share_count+a.collect_initcount) AS share_count,"
                 +"(a.collect_count+a.collect_initcount) AS collect_count ,"
-                +"a.publication_date,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual,a.content_type "
+                +"a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type "
                 +"FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
-
-        Object details_div = messageMap.get("details_div");
-        Object content_manual = messageMap.get("content_manual");
-        byte[] bytes = (byte[]) details_div;
-        byte[] content_manualbytes = (byte[]) content_manual;
-        try {
-            if (details_div != null) {
-                messageMap.put("details_div", new String(bytes, "UTF-8"));
-            }
-
-            if (content_manual != null) {
-                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
-            }
-
 
             String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
             jdbcTemplate.update(sql, new Object[]{
@@ -217,9 +203,7 @@ public class ArticleDaoIml implements ArticleDao {
                     messageMap.get("article_type_id").toString()
             });
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+
 
 
         //获取相关文章（后期改成随机三遍文章）
