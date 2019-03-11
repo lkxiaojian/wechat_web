@@ -777,26 +777,6 @@ public class UserDaoIml implements userDao {
                 if (objCount != null) {
                     count = Integer.parseInt(objCount.toString());
                 }
-
-//                String sqlPaperCount = "SELECT count(*) as count FROM " +
-//                        " zz_wechat.article_type a,zz_wechat.article b WHERE b.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND  a.parentid !='-1' AND a.article_type_id=b.article_type_id \n" +
-//                        " AND a.article_type_id='" +
-//                        Integer.parseInt(article_type_id) +
-//                        "' AND b.update_time<date_format('" +
-//                        threeDay +
-//                        "','%Y-%m-%d %H:%i:%s') and b.state=1 " +
-//                        "AND b.article_id NOT in(SELECT article_id from zz_wechat.user_article WHERE user_id ='" +
-//                        user_id +
-//                        "' AND type_id='1' ) " +
-//                        "ORDER BY b.create_time DESC";
-//                Map<String, Object> mapPaperCount = jdbcTemplate.queryForMap(sqlPaperCount);
-//                int paperCount = 0;
-//                Object objPaperCount = mapPaperCount.get("count");
-//                if (objPaperCount != null) {
-//                    paperCount = Integer.parseInt(objPaperCount.toString());
-//                }
-
-
                 int pageSize = 10;
                 String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
                         " zz_wechat.article_type a,zz_wechat.article b WHERE b.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
@@ -821,13 +801,7 @@ public class UserDaoIml implements userDao {
                     num = 0;
                 }
 
-//                int paperNum = paperCount - (page + 1) * pageSize - 1;
-//                if (paperNum < 0) {
-//                    paperNum = 0;
-//                }
-
                 mapresult.put("count", num);
-//                mapresult.put("paperCount", paperNum);
                 mapresult.put("article", mapList);
                 Map<String, Object> map = new HashMap<>();
                 map.put("code", 0);
