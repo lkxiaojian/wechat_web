@@ -192,7 +192,7 @@ public class ArticleDaoIml implements ArticleDao {
                 +"a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,a.create_time,"
                 +"(a.share_count+a.collect_initcount) AS share_count,"
                 +"(a.collect_count+a.collect_initcount) AS collect_count ,"
-                +"a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type "
+                +"a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path  "
                 +"FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 

@@ -409,6 +409,9 @@ public class UserDaoIml implements userDao {
 
     @Override
     public Map<String, Object> getIndexMessage(String wechatid, int page) {
+        try {
+
+
 
         if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
@@ -521,7 +524,7 @@ public class UserDaoIml implements userDao {
                     "ORDER BY update_time DESC ";
             List<Map<String, Object>> hoursDay = jdbcTemplate.queryForList(hoursSql);
             list.addAll(hoursDay);
-            String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.content_type,c.state c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
+            String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.content_type,c.state, c.article_type_id,c.article_id,c.article_keyword,c.create_time,c.content_excerpt,c.article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,d.iamge_icon,d.article_type_name \n" +
                     "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                     "WHERE d.del_type !=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                     " AND c.update_time<=date_format('" +
@@ -659,6 +662,14 @@ public class UserDaoIml implements userDao {
         map.put("message", "查询成功");
         map.put("result", result);
         return map;
+
+        }catch (Exception e){
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 1);
+            map.put("message", "服务器内部错误");
+            return map;
+
+        }
     }
 
     /**
