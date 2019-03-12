@@ -72,16 +72,19 @@ public class AlgorithmDataController extends BaseController {
         articleKeyword = articleKeyword.substring(0, articleKeyword.length() - 1);
 
 
-
         //查询关联表中是否存在
+        Map<String, Object> parentIdMap = null;
+        try {
+            String sql = "select parent_id,type,keep_type_id from zz_wechat.change_article_type where article_type_id=? ORDER BY update_time DESC LIMIT 0,1";
+            parentIdMap = jdbcTemplate.queryForMap(sql, new Object[]{
+                    type_id
+            });
+        } catch (Exception e) {
 
-        String sql = "select parent_id,type,keep_type_id from zz_wechat.change_article_type where article_type_id=? ORDER BY update_time DESC LIMIT 0,1";
-        Map<String, Object> parentIdMap = jdbcTemplate.queryForMap(sql, new Object[]{
-                type_id
-        });
+        }
         if (parentIdMap != null && parentIdMap.get("parent_id") != null) {
             if (Integer.parseInt(parentIdMap.get("type").toString()) == 0) {
-                type_id=parentIdMap.get("keep_type_id").toString();
+                type_id = parentIdMap.get("keep_type_id").toString();
             }
             parent_id = parentIdMap.get("parent_id").toString();
         }
@@ -97,8 +100,6 @@ public class AlgorithmDataController extends BaseController {
         } catch (Exception e) {
 
         }
-
-
 
 
         //插入新的类型
@@ -156,15 +157,21 @@ public class AlgorithmDataController extends BaseController {
 
 
     @RequestMapping(value = "/weatherData/fileUpload", method = RequestMethod.POST)
-    public int copyFiletoDB(@RequestParam MultipartFile file, HttpServletRequest req) {
-        String fileName = file.getOriginalFilename();
-        String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + fileName;
+    public int copyFiletoDB(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest req) {
 
-        String path = pafpath + savePath;
-        File f = new File(path);
+
         try {
-            FileUtils.copyInputStreamToFile(file.getInputStream(), f);
-            path = path.replaceAll("home", "resources");
+            String path = "";
+            if (file != null) {
+                String fileName = file.getOriginalFilename();
+                String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + fileName;
+
+                path = pafpath + savePath;
+                File f = new File(path);
+                FileUtils.copyInputStreamToFile(file.getInputStream(), f);
+                path = path.replaceAll("home", "resources");
+            }
+
 
             String create_time = req.getParameter("create_time");
             String author = req.getParameter("author").replaceAll("/r/n", "").replaceAll("/r", "").replaceAll("/n", "");
@@ -220,13 +227,19 @@ public class AlgorithmDataController extends BaseController {
             articleKeyword = articleKeyword.substring(0, articleKeyword.length() - 1);
 
             //查询关联表中是否存在
-            String sql = "select parent_id,type,keep_type_id from zz_wechat.change_article_type where article_type_id=? ORDER BY update_time DESC LIMIT 0,1";
-            Map<String, Object> parentIdMap = jdbcTemplate.queryForMap(sql, new Object[]{
-                    type_id
-            });
+            Map<String, Object> parentIdMap = null;
+            try {
+                String sql = "select parent_id,type,keep_type_id from zz_wechat.change_article_type where article_type_id=? ORDER BY update_time DESC LIMIT 0,1";
+                parentIdMap = jdbcTemplate.queryForMap(sql, new Object[]{
+                        type_id
+                });
+            } catch (Exception e) {
+
+            }
+
             if (parentIdMap != null && parentIdMap.get("parent_id") != null) {
                 if (Integer.parseInt(parentIdMap.get("type").toString()) == 0) {
-                    type_id=parentIdMap.get("keep_type_id").toString();
+                    type_id = parentIdMap.get("keep_type_id").toString();
                 }
                 parent_id = parentIdMap.get("parent_id").toString();
             }
