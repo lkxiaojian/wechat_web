@@ -3,9 +3,13 @@ package com.kingweather.we_chat.controller.algorithm;
 import com.alibaba.fastjson.JSON;
 import com.kingweather.common.controller.BaseController;
 import com.kingweather.common.util.DateUtil;
+import com.kingweather.fylat_service.controller.other.DataManageController;
+import com.kingweather.system.manager.domain.Log;
 import com.kingweather.we_chat.bean.ArticleTmp;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +31,7 @@ public class AlgorithmDataController extends BaseController {
 
     @Value("${upload.pafpath}")
     private String pafpath;
-
+    Logger log = LoggerFactory.getLogger(DataManageController.class);
 
     @RequestMapping(value = "/algorithm/wxdata", method = RequestMethod.POST)
     public int collectingAndShare(@RequestBody Map<String, Object> data) {
@@ -132,24 +136,31 @@ public class AlgorithmDataController extends BaseController {
         div = div.replaceAll("webp", "png");
         div = div.substring(0, div.indexOf("<script nonce"));
         div = div + "</div>";
-        int update = jdbcTemplate.update(insertArticleSql, new Object[]{
-                data.get("article_id").toString(),
-                type_id,
-                data.get("article_title").toString(),
-                articleKeyword,
-                author.toString(),
-                source.toString(),
-                data.get("summary").toString(),
-                data.get("article_txt").toString(),
-                div,
-                data.get("article_txt").toString().length(),
-                create_time,
-                currentTime,
-                0,
-                0,
-                0
+        try {
+            int update = jdbcTemplate.update(insertArticleSql, new Object[]{
+                    data.get("article_id").toString(),
+                    type_id,
+                    data.get("article_title").toString(),
+                    articleKeyword,
+                    author.toString(),
+                    source.toString(),
+                    data.get("summary").toString(),
+                    data.get("article_txt").toString(),
+                    div,
+                    data.get("article_txt").toString().length(),
+                    create_time,
+                    currentTime,
+                    0,
+                    0,
+                    0
 
-        });
+            });
+
+        }catch (Exception e){
+            System.out.print(e);
+
+        }
+
         return 0;
 
 
@@ -164,8 +175,8 @@ public class AlgorithmDataController extends BaseController {
             String path = "";
             if (file != null) {
                 String fileName = file.getOriginalFilename();
+                log.info("pdf-----fileName--->" + fileName);
                 String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + fileName;
-
                 path = pafpath + savePath;
                 File f = new File(path);
                 FileUtils.copyInputStreamToFile(file.getInputStream(), f);

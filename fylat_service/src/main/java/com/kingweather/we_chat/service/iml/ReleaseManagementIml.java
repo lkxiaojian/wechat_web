@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.kingweather.we_chat.constants.HttpUtils;
 import com.kingweather.we_chat.dao.ReleaseManagementDao;
 import com.kingweather.we_chat.service.ReleaseManagementService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -16,6 +17,8 @@ import java.util.Map;
 public class ReleaseManagementIml implements ReleaseManagementService {
     @Resource
     private ReleaseManagementDao releaseManagementDao;
+    @Value("${urlTypePath}")
+    private String urlTypePath;
 
     @Override
     public List getTypeMenuTree(String type) {
@@ -112,7 +115,7 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map<String, Object> combinedScore() {
+    public String combinedScore() {
         Map<String, Object> jsonMap = new HashMap<>();
         //文章
         List<Map<String, Object>> articleList = releaseManagementDao.combinedScore(0);
@@ -122,11 +125,12 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         List<Map<String, Object>> paperList = releaseManagementDao.combinedScore(1);
         Map artileMap1 = getArtileMap(paperList);
         jsonMap.put("cluster_B", artileMap1);
-        jsonMap.put("Topn", 5);
+        jsonMap.put("Topn", 1);
 
         String json = JSON.toJSONString(jsonMap);
-        String sendAbstractsPost = HttpUtils.doPost("", "");
-        return null;
+        String sendAbstractsPost = HttpUtils.doPost(urlTypePath + "similarity", json);
+
+        return sendAbstractsPost;
     }
 
 
@@ -148,9 +152,12 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         for (int i = 0; i < list.size(); i++) {
             Map<String, Object> mapTmp = new HashMap<>();
             Map<String, Object> resultMap = list.get(i);
-            String[] article_type_name_olds = resultMap.get("article_type_name_old").toString().split(",");
-            mapTmp.put(resultMap.get("article_type_id").toString(), article_type_name_olds);
-            map.putAll(mapTmp);
+            if (resultMap.get("article_type_name_old") != null) {
+                String[] article_type_name_olds = resultMap.get("article_type_name_old").toString().split(",");
+                mapTmp.put(resultMap.get("article_type_id").toString(), article_type_name_olds);
+                map.putAll(mapTmp);
+            }
+
         }
 
         return map;
