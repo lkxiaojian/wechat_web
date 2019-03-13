@@ -25,9 +25,9 @@ public class ReleaseManagementIml implements ReleaseManagementService {
 
         List<Map> list = releaseManagementDao.getTypeMenuTree("-1", type);
         for (Map s : list) {
-            List childrenList = getMenuTreeChildren(s.get("article_type_id").toString(), type);
+            List childrenList = getMenuTreeChildren(s.get("id").toString(), type);
             if (childrenList != null) {
-                s.put("children", childrenList);
+                s.put("item", childrenList);
             }
         }
         return list;
@@ -138,9 +138,9 @@ public class ReleaseManagementIml implements ReleaseManagementService {
 
         List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type);
         for (Map s : list) {
-            List childrenList = getMenuTreeChildren(s.get("article_type_id").toString(), type);
+            List childrenList = getMenuTreeChildren(s.get("id").toString(), type);
             if (childrenList != null) {
-                s.put("children", childrenList);
+                s.put("item", childrenList);
             }
         }
         return list;

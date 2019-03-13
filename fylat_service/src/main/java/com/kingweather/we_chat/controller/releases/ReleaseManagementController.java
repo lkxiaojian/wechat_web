@@ -3,6 +3,7 @@ package com.kingweather.we_chat.controller.releases;
 import com.kingweather.common.controller.BaseController;
 import com.kingweather.common.util.DateUtil;
 import com.kingweather.we_chat.service.ReleaseManagementService;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,7 @@ public class ReleaseManagementController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/getTypeMenuTree/rest")
-    public Map getTypeMenuTree(String type) {
+    public Object getTypeMenuTree(String type) {
 
         if (type == null || "".equals(type)) {
             type = "0";
@@ -37,15 +38,17 @@ public class ReleaseManagementController extends BaseController {
         Map map = new HashMap();
         try {
             List list = releaseManagementService.getTypeMenuTree(type);
-            map.put("code", 0);
-            map.put("message", "查询成功");
-            map.put("data", list);
-            return map;
+            map.put("id", 0);
+            List<Map> listResult=new ArrayList<>();
+            listResult.add(0,map);
+            map.put("item", list);
+            Object o = listResult.get(0);
+            return o;
         } catch (Exception e) {
             map.put("code", 2);
             map.put("message", "系统异常，请联系管理员！");
             e.printStackTrace();
-            return map;
+            return null;
         }
     }
 

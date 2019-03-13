@@ -240,5 +240,24 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
+        .state('app.insure.test', {
+            url: '/test',
+            templateUrl: 'insure/template/zz_wechat/typeMangeTmp.html',
+            pageTitle: '测试',
+            controller: 'testManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'insure/directives/system_directives.js',
+                            // 'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/testManageController.js',
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css'
+                        ]);
+                    }]
+            }
+        })
 
 }]);
