@@ -9,7 +9,15 @@
         <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
     </div>
 </div>
-<div class="" style="margin-top: 20px;margin-left: 20px;">
+
+<div class="TabNav">
+    <ul ng-init='activeTab=1'>
+        <li ng-class='{active:activeTab==1}' ng-click='activeTab=1'>文章</li>
+        <li ng-class='{active:activeTab==2}' ng-click='activeTab=2'>论文</li>
+    </ul>
+</div>
+
+<div class="" style="margin-top: 20px;margin-left: 20px;" ng-show='activeTab==1'>
     <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
         <label class="col-md-3 col-sm-2 control-label padder-l-0">入库时间：</label>
         <div class="col-md-9 col-sm-10 padder-l-0">
@@ -33,7 +41,6 @@
     </div>
     <div class="col-md-12 col-sm-12 padder-l-0 m-b-md">
     </div>
-
     <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
         <label class="col-md-5 col-sm-4 control-label padder-l-0">是否审核：</label>
         <div class="col-md-7 col-sm-8 padder-l-0">
@@ -62,44 +69,12 @@
                    ng-model="listObj.integrationQuery.domain_name">
         </div>
     </div>
-    <!--<div class="col-md-8 col-sm-12 padder-l-0 m-b-md">-->
-        <!--<label class=" col-sm-2 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">入库时间：</label>-->
-        <!--<div class="col-md-6 col-sm-16 padder-l-0">-->
-            <!--<input type="text" class="form-control" ng-model="listObj.seachMessage">-->
-        <!--</div>-->
-        <!--<label class=" col-sm-2 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">发表时间：</label>-->
-        <!--<div class="col-md-6 col-sm-16 padder-l-0">-->
-            <!--<input type="text" class="form-control" ng-model="listObj.seachMessage">-->
-        <!--</div>-->
-        <!--<label class=" col-sm-2 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">分数：</label>-->
-        <!--<div class="col-md-6 col-sm-16 padder-l-0">-->
-            <!--<input type="text" class="form-control" ng-model="listObj.seachMessage">-->
-        <!--</div>-->
-        <!--<label class=" col-sm-2 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">是否审核：</label>-->
-        <!--<div class="col-md-6 col-sm-16 padder-l-0">-->
-            <!--<input type="text" class="form-control" ng-model="listObj.seachMessage">-->
-        <!--</div>-->
-        <!--<label class=" col-sm-2 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">语言：</label>-->
-        <!--<div class="col-md-6 col-sm-16 padder-l-0">-->
-            <!--<input type="text" class="form-control" ng-model="listObj.seachMessage">-->
-        <!--</div>-->
-        <!--<label class=" col-sm-2 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">字数：</label>-->
-        <!--<div class="col-md-6 col-sm-16 padder-l-0">-->
-            <!--<input type="text" class="form-control" ng-model="listObj.seachMessage">-->
-        <!--</div>-->
-    <!--</div>-->
     <div class="col-md-8 col-sm-12 padder-l-0 m-b-md">
-        <!--<label class=" col-sm-2 control-label padder-l-0" style="width:8.7%;margin-top: 3px;margin-left: 20px">搜索内容</label>-->
-        <!--<div class="col-md-6 col-sm-16 padder-l-0">-->
-            <!--<input type="text" class="form-control"-->
-                   <!--ng-model="listObj.seachMessage">-->
-        <!--</div>-->
         <label class="col-md-2 col-sm-2 control-label padder-l-0">搜索内容：</label>
         <div class="col-md-4 col-sm-4 padder-l-0">
             <input type="text" class="form-control"
                    ng-model="listObj.seachMessage">
         </div>
-
         <button class="btn m-b-xs w-xs btn-default"
                 ng-disabled="searchuserForm.$invalid"
                 ng-click="listObj.seach()"
@@ -115,11 +90,112 @@
 
 
 <!--内容区-->
-<div class="wrapper-md">
+<div class="wrapper-md"  ng-show='activeTab==1'>
     <table table-directive tableoption="testOption" id="testArticle" instance="testInstance"
            style="height: 286px"></table>
 </div>
 
+<div class="" style="margin-top: 20px;margin-left: 20px;" ng-show='activeTab==2'>
+    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
+        <label class="col-md-3 col-sm-2 control-label padder-l-0">入库时间：</label>
+        <div class="col-md-9 col-sm-10 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.integrationQuery.domain_name">
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
+        <label class="col-md-3 col-sm-2 control-label padder-l-0">发表时间：</label>
+        <div class="col-md-9 col-sm-10 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.integrationQuery.domain_name">
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
+        <label class="col-md-3 col-sm-2 control-label padder-l-0">分数：</label>
+        <div class="col-md-9 col-sm-10 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.integrationQuery.domain_name">
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12 padder-l-0 m-b-md">
+    </div>
+    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
+        <label class="col-md-5 col-sm-4 control-label padder-l-0">是否审核：</label>
+        <div class="col-md-7 col-sm-8 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.integrationQuery.domain_name">
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
+        <label class="col-md-3 col-sm-2 control-label padder-l-0">语言：</label>
+        <div class="col-md-9 col-sm-10 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.integrationQuery.domain_name">
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
+        <label class="col-md-3 col-sm-2 control-label padder-l-0">字数：</label>
+        <div class="col-md-9 col-sm-10 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.integrationQuery.domain_name">
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
+        <label class="col-md-3 col-sm-2 control-label padder-l-0">类型：</label>
+        <div class="col-md-9 col-sm-10 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.integrationQuery.domain_name">
+        </div>
+    </div>
+    <div class="col-md-8 col-sm-12 padder-l-0 m-b-md">
+        <label class="col-md-2 col-sm-2 control-label padder-l-0">搜索内容：</label>
+        <div class="col-md-4 col-sm-4 padder-l-0">
+            <input type="text" class="form-control"
+                   ng-model="listObj.seachMessage">
+        </div>
+        <button class="btn m-b-xs w-xs btn-default"
+                ng-disabled="searchuserForm.$invalid"
+                ng-click="listObj.seach()"
+                style="position: relative; left: 15px;">搜索
+        </button>
+        <button class="btn m-b-xs w-xs btn-default"
+                ng-disabled="searchuserForm.$invalid"
+                ng-click="listObj.clear()"
+                style="position: relative; left: 15px;">清空
+        </button>
+    </div>
+</div>
+
+
+<!--内容区-->
+<div class="wrapper-md"  ng-show='activeTab==2'>
+    <table table-directive tableoption="testOption1" id="testArticle1" instance="testInstance"
+           style="height: 286px"></table>
+</div>
+
+<style>
+    .TabNav{
+        height: 48px;
+        position: relative;
+        /*margin-left: 100px;*/
+        /*margin-top: 100px;*/
+    }
+    .TabNav ul li{
+        float: left;
+        background: -webkit-gradient(linear,left top,left bottom, from(#fefefe), to(#ededed));
+        border: 1px solid #ccc;
+        padding: 5px 0;
+        width: 100px;
+        text-align: center;
+        margin-left: -1px;
+        position: relative;
+        cursor: pointer;
+    }
+    .TabNav ul li.active{
+        background: #FFFFFF;
+        border-bottom: none;
+    }
+</style>
 
 <script type="text/ng-template" id="myModalContent.html">
     <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
