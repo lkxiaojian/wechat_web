@@ -51,12 +51,12 @@ public class ArticleManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/article/message/rest", method = RequestMethod.GET)
-    public Map<String, Object> getArticleMessage(String articleId, String wechatid) {
+    public Map<String, Object> getArticleMessage(String articleId, String wechatid,String state) {
         if(wechatid==null||"".equals(wechatid)){
             wechatid="1";
         }
 
-        return articleService.getArticleMessage(articleId, wechatid);
+        return articleService.getArticleMessage(articleId, wechatid,state);
     }
 
     /**

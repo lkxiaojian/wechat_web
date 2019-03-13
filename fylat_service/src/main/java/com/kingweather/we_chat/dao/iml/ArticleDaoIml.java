@@ -39,17 +39,30 @@ public class ArticleDaoIml implements ArticleDao {
         }
         int pageSize = 10;
 
-        String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back,b.article_keyword,b.article_title,b.content_excerpt " +
+        String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back,b.article_keyword,b.article_title,b.content_excerpt ,b.content_type,b.state " +
                 "FROM zz_wechat.article_type a,zz_wechat.article b where b.del_type !=1 and a.del_type !=1 and a.article_type_id=b.article_type_id and b.article_type_id=? ORDER BY b.create_time DESC LIMIT ?,?";
 
 
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql, new Object[]{
-                Integer.parseInt(articleId),
+                articleId,
+//                Integer.parseInt(articleId),
                 page * pageSize,
                 pageSize
 
         });
+
         HashMap<String, Object> map = new HashMap<>();
+//        if(mapList.size()>0){
+//            Map map1 = mapList.get(0);
+            int articleNum=  jdbcTemplate.queryForObject("SELECT COUNT(article_id) FROM article WHERE article_type_id = ? AND  state=0  ",Integer.class,new Object[]{articleId});
+            int paperNum =  jdbcTemplate.queryForObject("SELECT COUNT(article_id) FROM article WHERE article_type_id = ? AND  state=1  ",Integer.class,new Object[]{articleId});
+
+            map.put("articleNum", articleNum);
+            map.put("paperCount", paperNum);
+//        }else{
+//            map.put("articleNum", 0);
+//            map.put("paperCount", 0);
+//        }
         map.put("code", 0);
         map.put("message", "查询成功");
         map.put("result", mapList);
@@ -66,7 +79,7 @@ public class ArticleDaoIml implements ArticleDao {
         //获取文章的详细信息 content_manual
 //        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
-        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
+        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual,a.content_type FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
@@ -83,7 +96,6 @@ public class ArticleDaoIml implements ArticleDao {
                 messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
             }
 
-
             String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
             jdbcTemplate.update(sql, new Object[]{
                     articleId,
@@ -97,7 +109,106 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         //获取相关文章（后期改成随机三遍文章）
-        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? ORDER BY a.create_time DESC limit 0,3";
+        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? and a.state=0 ORDER BY a.create_time DESC limit 0,3";
+        List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{articleId,
+                messageMap.get("article_type_id").toString()
+        });
+
+
+        //插入数据，代表文章已读
+
+        String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
+        Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
+        Object objId = userMap.get("user_id");
+        if (objId == null) {
+            return getErrorMap();
+        }
+        String user_id = objId.toString();
+
+        //查询该文章是否已经收藏
+        String cSql = "select count(*) as count from user_article where article_id=? and user_id =? and type_id=?";
+        Map<String, Object> cMap = jdbcTemplate.queryForMap(cSql, new Object[]{
+                articleId,
+                user_id,
+                3
+        });
+        if (cMap != null && cMap.get("count") != null && Integer.parseInt(cMap.get("count").toString()) > 0) {
+            messageMap.put("collect_state", 0);
+        } else {
+            messageMap.put("collect_state", 1);
+        }
+
+
+        boolean isFlag = false;
+
+        try {
+            String selectSqlFora = "select count(*) as count from zz_wechat.user_article where type_id=? and article_id=? and article_type_id=? AND user_id=?";
+            Map<String, Object> forMap = jdbcTemplate.queryForMap(selectSqlFora, new Object[]{
+                    1,
+                    articleId,
+                    Integer.parseInt(messageMap.get("article_type_id").toString()),
+                    user_id
+            });
+            if (forMap.get("count") == null || "0".equals(forMap.get("count").toString())) {
+                isFlag = true;
+            }
+
+
+        } catch (Exception e) {
+            isFlag = true;
+        }
+        if (isFlag) {
+            String insertSql = "INSERT INTO zz_wechat.user_article (type_id,article_id,user_id,article_type_id) values (?,?,?,?)";
+            jdbcTemplate.update(insertSql, new Object[]{
+                    1,
+                    articleId,
+                    user_id,
+                    Integer.parseInt(messageMap.get("article_type_id").toString())
+
+            });
+        }
+
+
+        messageMap.put("related", mapList);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "查询成功");
+        map.put("result", messageMap);
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> getPaperMessage(String articleId, String wechatid) {
+        if (articleId == null || articleId.isEmpty() || wechatid == null || wechatid.isEmpty()) {
+            return getErrorMap();
+        }
+
+
+        //获取文章的详细信息 content_manual
+//        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
+
+        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title, a.article_title_e,a.content_excerpt,a.content_excerpt_e,"
+                +"a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,a.create_time,"
+                +"(a.share_count+a.collect_initcount) AS share_count,"
+                +"(a.collect_count+a.collect_initcount) AS collect_count ,"
+                +"a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path  "
+                +"FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
+        Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
+
+            String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
+            jdbcTemplate.update(sql, new Object[]{
+                    articleId,
+                    wechatid,
+                    messageMap.get("article_type_id").toString()
+            });
+
+
+
+
+        //获取相关文章（后期改成随机三遍文章）
+        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,(SELECT c.image_path FROM posting_paper c WHERE c.posting_name=a.posting_name) image_path \n" +
+                " FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? and a.state=1  ORDER BY a.create_time DESC limit 0,3";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{articleId,
                 messageMap.get("article_type_id").toString()
         });

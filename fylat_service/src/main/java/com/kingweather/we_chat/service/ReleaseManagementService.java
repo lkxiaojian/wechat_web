@@ -34,7 +34,7 @@ public interface ReleaseManagementService {
 
     Map<String,Object> delArticleTypeById(String article_type_id);
 
-    Map<String,Object> combinedScore();
+    String  combinedScore();
 
 
 }
