@@ -19,5 +19,11 @@
     <div class="col-sm-7">
         <div area-tree id="dataTree" tree-instance="dataACL.ptreeInstance"  style="height:374px; background-color:#f5f5f5;border :1px solid Silver; overflow:auto;"></div>
     </div>
+    <div class="modal-footer">
+        <span class="_color_red pull-left">{{error_msg}}</span>
+        <button class="btn btn-blue" style="margin-right: 100px" ng-click="ok($event)">{{"确定" | translate}}</button>
+    </div>
 </div>
+
+
 

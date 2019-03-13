@@ -1,34 +1,33 @@
 app.controller('testManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile', '$timeout',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip) {
-        $scope.title = '数据权限';
+        $scope.title = '领域管理';
         $scope.dataACL = {
-            // 区域权限
             ptreeInstance: {},
-            // 火点区域权限
-            fireTreeInstance: {},
-            userId: $stateParams.param,
-            adcode: '',
+            id: '',
             // 获取区域权限
             getTreeData: function (treeInstance) {
                 var adcodeArray = new Array();
                 // 所有选中的节点id
-                var treelist = treeInstance.getSubItems(1);
+                var treelist = treeInstance.getAllChecked();
                 var checkidArray = treelist.split(",");
-                var isFirstParendId = false;
                 for (var i = 0; i < checkidArray.length; i++) {
 
                     var checkId = checkidArray[i];
-                    //判断是否选中全部
-                    if (checkId == 1) {
-                        isFirstParendId = true;
+                    //判断是否选中全部 提示用户不能全部选择
+                    if (checkId == 100) {
+                        modalTip({
+                            tip: switchLang.switchLang('不能全部选择'),
+                            type: true
+                        });
+                        return;
                     }
                     //父节点的id
                     var parentId = treeInstance.getParentId(checkId);
                     var parIscheck = treeInstance.isItemChecked(checkId);
                     if (parentId == 1 && parIscheck != 0) {
                         var adcodeObj = {};
-                        var adcode99 = treeInstance.getUserData(checkId, "id");
-                        adcodeObj['adcode99'] = adcode99;
+                        var id = treeInstance.getUserData(checkId, "id");
+                        adcodeObj['id'] = id;
                         adcodeObj['parendId'] = checkId;
                         //获取该id 下面的节点
                         var getAllSubItems = treeInstance.getAllSubItems(checkId);
@@ -59,34 +58,31 @@ app.controller('testManageController', ['$scope', '$modal', '$http', 'fylatServi
 
         $scope.ok = function (e) {
             var areaData = $scope.dataACL.getTreeData($scope.dataACL.ptreeInstance);
-            var allAreaData = {
-                'areaDataTree': areaData,
-            };
-            $scope.dataACL.adcode = JSON.stringify(allAreaData);
+            // var allAreaData = {
+            //     'areaDataTree': areaData,
+            // };
+            // $scope.dataACL.adcode = JSON.stringify(allAreaData);
 
             $http({
                 method: 'GET',
-                url: 'areaData?view=toDb',
+                url: 'releaseManagement/getTypeMessage/rest',
                 params: {
-                    adcode: $scope.dataACL.adcode,
-                    userId: $scope.dataACL.userId
+                   "article_type_id":areaData,
+                    "type" :0
                 }
             }).success(function (data) {
                 if (data.success) {
                     modalTip({
-                        tip: switchLang.switchLang('添加成功'),
+                        tip: switchLang.switchLang('成功'),
                         type: true,
                         callback: function () {
-                            $state.go('app.insure.sysManage_userRightsManange');
+                            $state.go('app.insure.');
                         }
                     });
                 } else {
                     modalTip({
-                        tip: switchLang.switchLang('添加失败'),
-                        type: true,
-                        callback: function () {
-                            $state.go('app.insure.sysManage_userRightsManange');
-                        }
+                        tip: switchLang.switchLang('失败'),
+                        type: true
                     });
                 }
             })
