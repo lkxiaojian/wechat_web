@@ -3,15 +3,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         var artcicle_type_id = $stateParams.type_id;
         $scope.listObj = {
             navigationMsg: '管理平台 >发布管理',
-            artcicle_type_id: $stateParams.type_id,
-            seachMessage: '',
-            activeTab: 1,
-            type: 0,
-            del_type: 0,
-            tmp_type: 1,
-            checkType: 0,
-            message: null,
-
+            artcicle_type_id: $stateParams.type_id,//类型id
+            seachMessage: '',//搜索内容
+            type: 0,//0 微信文章  1 论文
+            del_type: 0,// 查看的是否是回收站 0不是 1是
+            tmp_type: 1,//查询的是否是发布管理的内容 1是 0不是
+            checkType: 0,//是否审核0 未审核 1 审核过
             seach: function () {
                 var a = $scope.listObj.seachMessage;
                 $scope.articleTmpOption.bootstrapTable('refresh')
@@ -26,12 +23,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         //文章列表
         $scope.listAritcle= function () {
             $scope.articleTmpOption = {
-                url: 'releaseManagement/selectAricleTmpList/rest',
+                url: 'releaseManagement/selectAricleTmpList/rest',//url
                 method: 'GET',
                 pageList: ['All'],
                 resultTag: 'result',
-                pageSize: 10,
-                queryParams: function (params) {
+                pageSize: 10,//每页请求以的数量
+                queryParams: function (params) {//参数
                     $.extend(params, {
                         view: 'select',
                         message: $scope.listObj.seachMessage,
@@ -47,7 +44,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     {
                         title: '文章/论文名称',
                         class: 'col-md-1',
-                        field: 'article_title',
+                        field: 'article_title',//与返回的字段需要对应
                         align: 'center',
                         width: "4%"
                     },
@@ -65,6 +62,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         align: 'center',
                         width: "4%",
                         formatter: function (value, row, index) {
+                            //可以做些点击事件，详细用法参考 controllers\zz_wechat\domainListManageController.js  zz_wechat\articleListManageController.js
                             if (value) {
                                 return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
                             }
