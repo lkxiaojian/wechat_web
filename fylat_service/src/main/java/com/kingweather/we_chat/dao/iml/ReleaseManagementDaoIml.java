@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -199,30 +200,30 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
-    public Map selectAricleTmpList(Map<String, java.lang.Object> data) {
+    public Map selectAricleTmpList(HttpServletRequest req) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         //查询的是论文还是文章 0 文章  1 论文
-        Object type = data.get("type");
+        Object type = req.getParameter("type");
         //查看的是否是回收站 0不是 1是
-        Object del_type = data.get("del_type");
+        Object del_type = req.getParameter("del_type");
         //查询的是否是临时表 1是 0不是
-        Object tmp_type = data.get("tmp_type");
+        Object tmp_type = req.getParameter("tmp_type");
         //查询的类型的id
-        Object article_type_id = data.get("article_type_id");
+        Object article_type_id = req.getParameter("article_type_id");
 
-        Object startNum = data.get("pageNumber");
-        Object pageSize = data.get("pageSize");
+        Object startNum = req.getParameter("pageNumber");
+        Object pageSize = req.getParameter("pageSize");
         if (type == null || article_type_id == null || startNum == null || pageSize == null) {
             return getErrorMap();
         }
         //入库的开始时间
-        Object updateTimeStart = data.get("updateTimeStart");
+        Object updateTimeStart = req.getParameter("updateTimeStart");
         //入库的结束时间
-        Object updateTimeEnd = data.get("updateTimeEnd");
+        Object updateTimeEnd = req.getParameter("updateTimeEnd");
         //是否审核 0 未审核  1 审核
-        Object checkType = data.get("checkType");
+        Object checkType = req.getParameter("checkType");
         //搜索内容
-        Object message = data.get("message");
+        Object message = req.getParameter("message");
 
         String delTypeSql = " !=1 ";
 
@@ -234,18 +235,18 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         //查询的是文章
         if ("0".equals(type.toString())) {
             //创建的开始时间
-            Object createTimeStart = data.get("createTimeStart");
+            Object createTimeStart =req.getParameter("createTimeStart");
             //创建的结束时间
-            Object createTimeEnd = data.get("createTimeEnd");
+            Object createTimeEnd = req.getParameter("createTimeEnd");
             //字数大于多少
-            Object details_size_more = data.get("details_size_more");
+            Object details_size_more = req.getParameter("details_size_more");
             //字数少于多少
-            Object details_size_less = data.get("details_size_less");
+            Object details_size_less = req.getParameter("details_size_less");
 
             //分数大于多少
-            Object article_score_more = data.get("article_score_more");
+            Object article_score_more = req.getParameter("article_score_more");
             //分数小于多少
-            Object article_score_less = data.get("article_score_less");
+            Object article_score_less = req.getParameter("article_score_less");
 
 
             String sqlCount = "select count(*) as count from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type  " + delTypeSql +
@@ -268,54 +269,54 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
 
-            if (updateTimeStart != null) {
+            if (updateTimeStart != null&&!updateTimeStart.toString().equals("")) {
 //                String update_time = DateUtil.getCurrentTimeString(updateTimeStart.toString());
                 sqlCount = sqlCount + " and a.update_time>=date_format('" + updateTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time>=date_format('" + updateTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
 
-            if (updateTimeEnd != null) {
+            if (updateTimeEnd != null&&!updateTimeEnd.toString().equals("")) {
 //                String updateTime = DateUtil.getCurrentTimeString(updateTimeEnd.toString());
                 sqlCount = sqlCount + " and a.update_time<=date_format('" + updateTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time<=date_format('" + updateTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
 
-            if (createTimeStart != null) {
+            if (createTimeStart != null&&!createTimeStart.toString().equals("")) {
 //                String createTime = DateUtil.getCurrentTimeString(createTimeStart.toString());
                 sqlCount = sqlCount + " and a.update_time>=date_format('" + createTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time>=date_format('" + createTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
-            if (createTimeEnd != null) {
+            if (createTimeEnd != null&&!createTimeEnd.toString().equals("")) {
 //                String createTime = DateUtil.getCurrentTimeString(createTimeEnd.toString());
                 sqlCount = sqlCount + " and a.update_time<=date_format('" + createTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time<=date_format('" + createTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
-            if (details_size_more != null) {
+            if (details_size_more != null&&!details_size_more.toString().equals("")) {
                 sqlCount = sqlCount + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
                 sqlMessage = sqlMessage + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
             }
-            if (details_size_less != null) {
+            if (details_size_less != null&&!details_size_less.toString().equals("")) {
                 sqlCount = sqlCount + " and details_size<=" + Integer.parseInt(details_size_less.toString());
                 sqlMessage = sqlMessage + " and a.details_size<=" + Integer.parseInt(details_size_less.toString());
             }
             //分数
-            if (article_score_more != null) {
+            if (article_score_more != null&&!article_score_more.toString().equals("")) {
                 sqlCount = sqlCount + " and a.article_score>=" + Integer.parseInt(article_score_more.toString());
                 sqlMessage = sqlMessage + " and a.article_score>=" + Integer.parseInt(article_score_more.toString());
             }
-            if (article_score_less != null) {
+            if (article_score_less != null&&!article_score_less.toString().equals("")) {
                 sqlCount = sqlCount + " and a.article_score<=" + Integer.parseInt(article_score_less.toString());
                 sqlMessage = sqlMessage + " and a.article_score<=" + Integer.parseInt(article_score_less.toString());
             }
-            if (message != null) {
+            if (message != null&&!message.toString().equals("")) {
                 sqlCount = sqlCount + " and (a.article_title like '%" + message.toString() + "%' or a.author like '%" + message.toString() + "%' or a.source like '%" + message.toString() + "%' )";
                 sqlMessage = sqlMessage + " and (a.article_title like '%" + message.toString() + "%' or a.author like '%" + message.toString() + "%' or a.source like '%" + message.toString() + "%' )";
             }
-            if (checkType != null) {
+            if (checkType != null&&!checkType.toString().equals("")) {
                 sqlCount = sqlCount + " and a.check_type=" + Integer.parseInt(checkType.toString());
                 sqlMessage = sqlMessage + " and a.check_type=" + Integer.parseInt(checkType.toString());
             }
@@ -332,9 +333,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         } else {
             //创建时间
-            Object createTime = data.get("createTime");
+            Object createTime = req.getParameter("createTime");
 
-            Object language = data.get("language");//0  中文  1 英文
+            Object language = req.getParameter("language");//0  中文  1 英文
 
             //查询的是论文
             String sqlCount = "select count(*) as count from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type  " + delTypeSql +
@@ -374,33 +375,33 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
             //入库时间
-            if (updateTimeStart != null) {
+            if (updateTimeStart != null&&!updateTimeStart.toString().equals("")) {
 //                String update_time = DateUtil.getCurrentTimeString(updateTimeStart.toString());
                 sqlCount = sqlCount + " and a.update_time>=date_format('" + updateTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time>=date_format('" + updateTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
 
-            if (updateTimeEnd != null) {
+            if (updateTimeEnd != null&&!updateTimeEnd.toString().equals("")) {
 //                String updateTime = DateUtil.getCurrentTimeString(updateTimeEnd.toString());
                 sqlCount = sqlCount + " and a.update_time<=date_format('" + updateTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time<=date_format('" + updateTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
 
-            if (message != null) {
+            if (message != null&&!message.toString().equals("")) {
                 sqlCount = sqlCount + " and (a.article_title like '%" + message.toString() + "%' or a.author like '%" + message.toString() + "%' or a.source like '%" + message.toString() + "%' )";
                 sqlMessage = sqlMessage + " and (a.article_title like '%" + message.toString() + "%' or a.author like '%" + message.toString() + "%' or a.source like '%" + message.toString() + "%' )";
             }
 
 
-            if (checkType != null) {
+            if (checkType != null&&!checkType.toString().equals("")) {
                 sqlCount = sqlCount + " and a.check_type=" + Integer.parseInt(checkType.toString());
                 sqlMessage = sqlMessage + " and a.check_type=" + Integer.parseInt(checkType.toString());
             }
 
 
-            if (createTime != null) {
+            if (createTime != null&&!createTime.toString().equals("")) {
 
                 if (tmp_type != null && "1".equals(tmp_type.toString())) {
                     sqlCount = sqlCount + " and a.paper_create_time like '%" + createTime + "%'";

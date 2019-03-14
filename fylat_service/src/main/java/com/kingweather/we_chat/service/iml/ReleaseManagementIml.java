@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +59,8 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map selectAricleTmpList(Map<String, java.lang.Object> data) {
-        return releaseManagementDao.selectAricleTmpList(data);
+    public Map selectAricleTmpList(HttpServletRequest req) {
+        return releaseManagementDao.selectAricleTmpList(req);
     }
 
     @Override

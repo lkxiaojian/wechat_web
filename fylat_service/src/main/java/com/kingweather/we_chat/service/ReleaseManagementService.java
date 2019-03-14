@@ -1,5 +1,6 @@
 package com.kingweather.we_chat.service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ public interface ReleaseManagementService {
 
     int updateTypeParentId(String article_type_id, String parentid);
 
-    Map selectAricleTmpList(Map<String,Object> data);
+    Map selectAricleTmpList(HttpServletRequest req);
 
     Map<String,Object> delAricleTmpList(String articleIdList);
 

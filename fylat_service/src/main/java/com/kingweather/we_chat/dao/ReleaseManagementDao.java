@@ -2,6 +2,7 @@ package com.kingweather.we_chat.dao;
 
 import org.omg.CORBA.Object;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ public interface ReleaseManagementDao {
 
     int updateTypeParentId(String article_type_id, String parentid);
 
-    Map<String,Object> selectAricleTmpList(Map<String, java.lang.Object> data);
+    Map<String,Object> selectAricleTmpList(HttpServletRequest req);
 
     Map<String,java.lang.Object> delAricleTmpList(String articleIdList);
 

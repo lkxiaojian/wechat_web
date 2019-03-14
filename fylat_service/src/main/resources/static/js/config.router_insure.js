@@ -153,8 +153,8 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.publishManage', {
             url: '/publishManage',
-            // params: {param: null, data: null},
-            templateUrl: 'insure/template/zz_wechat/publishManage.html',
+            params: {param: null, type_id: null},
+            templateUrl: 'insure/template/zz_wechat/articleTmpList.html',
             pageTitle: '发布管理',
             controller: 'publishManageController',
             resolve: {
@@ -164,6 +164,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                             'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/publishManageController.js',
                             'ui.select'
+                            // publishManage
                         ]);
                     }]
             }
@@ -259,5 +260,25 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
+        .state('app.insure.articleTypeTmp', {
+            url: '/test2',
+            params: {param: null, type_id: null},
+            templateUrl: 'insure/template/zz_wechat/articleTypeManageTmp.html',
+            pageTitle: '测试',
+            controller: 'articleTypeManageTmpController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'insure/controllers/zz_wechat/articleTypeTmpController.js',
+                            'ui.select',
+                            'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
+
+
+
 
 }]);

@@ -129,7 +129,7 @@ public class AlgorithmDataController extends BaseController {
         }
         String create_time = data.get("create_time").toString();
         String insertArticleSql = "insert into zz_wechat.article_tmp (article_id,article_type_id,article_title,article_keyword,author,source,content_excerpt,details_txt" +
-                ",details_div,details_size,create_time,update_time,status,check_type,article_score) values(?,?,?,?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+                ",details_div,details_size,create_time,update_time,status,check_type,article_score,del_type) values(?,?,?,?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?)";
         String div = data.get("article_div").toString();
 
         div = div.replaceAll("data-src=", "src=");
@@ -152,11 +152,11 @@ public class AlgorithmDataController extends BaseController {
                     currentTime,
                     0,
                     0,
+                    0,
                     0
-
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.print(e);
 
         }

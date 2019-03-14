@@ -1,0 +1,80 @@
+<div style="margin: 10px 15px">
+    <h3 class="m-n font-thin h5" ng-bind="listObj.navigationMsg"></h3>
+</div>
+
+<!--进程-->
+<div class="clearfix m-b-md"
+     style="border: solid 1px #dee5e7; border-left: 0px; border-right: 0px; margin-top: 0px; margin-bottom: 5px">
+    <div style="margin-left:20px"><h4>文章类型：</h4></div>
+    <form class="form-horizontal" name="searchuserForm"
+          style="margin-top: 5px;padding-bottom: 30px">
+
+        <div class="" style="margin-top: 20px;">
+
+            <div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+                <label class="col-md-3 col-sm-2 control-label padder-l-0">类型名称</label>
+                <div class="col-md-9 col-sm-10 padder-l-0">
+                    <input type="text" class="form-control"
+                           ng-model="listObj.integrationQuery.domain_name">
+                </div>
+            </div>
+            <div class="col-md-5 col-sm-12 padder-l-0 m-b-md">
+                <label class="col-md-3 col-sm-2 control-label padder-l-0">关键词</label>
+                <div class="col-md-9 col-sm-10 padder-l-0">
+                    <input type="text" class="form-control"
+                           ng-model="listObj.integrationQuery.domain_keyword">
+                </div>
+            </div>
+
+
+
+            <!--..图标-->
+            <div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md"
+                 style="margin: 0px 15px 0px 0px;">
+                <label class="col-md-3 col-sm-2 control-label padder-l-0">图标</label>
+                <div>
+
+                    <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
+                         ngf-multiple="false" ng-model="data.file_icon">
+                        选择文件
+                    </div>
+                    <img ngf-src="data.file_icon || data.defaultImage" class="img-responsive" style="max-width: 50%"/>
+
+
+                </div>
+            </div>
+
+
+            <!--背景图-->
+            <div class="form-group col-md-5 col-sm-12 padder-l-0 m-b-md"
+                 style="margin: 0px 15px 0px 0px;">
+                <label class="col-md-3 col-sm-2 control-label padder-l-0">背景图</label>
+
+
+                <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
+                     ngf-multiple="false" ng-model="data.file_back">
+                    选择文件
+                </div>
+
+                <img ngf-src="data.file_back || data.defaultImage" class="img-responsive" style="max-width: 50%"/>
+
+
+            </div>
+
+        </div>
+
+
+        <div class="row-row pull-right-xs text-center padder-l-0" style="margin-bottom:20px">
+            <button class="btn m-b-xs w-xs btn-default"
+                    ng-disabled="searchuserForm.$invalid"
+                    ng-click="update()"
+                    style="position: relative; left: -15px; top: 53px">添加
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<div>
+
+</div>

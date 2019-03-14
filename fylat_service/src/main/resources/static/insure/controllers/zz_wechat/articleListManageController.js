@@ -21,12 +21,7 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                 url: 'article/query',
                 resultTag: 'result',
                 method: 'get',
-                // params: {
-                //     view: 'select',
-                //     message: $scope.listObj.seachMessage
-                // },
                 queryParams: function (params) {
-                    // console.log(params);
                     $.extend(params, {
                         view: 'select',
                         message: $scope.listObj.seachMessage
@@ -118,9 +113,6 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                                                 tip: data.message,
                                                 type: true
                                             });
-
-                                            // angular.element('#getAllArticle').bootstrapTable('selectPage', 1);
-                                            // angular.element('#getAllArticle').bootstrapTable('refresh');
                                             $scope.testInstance.bootstrapTable('refresh');
                                         } else {
                                             modalTip({

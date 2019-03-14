@@ -90,6 +90,7 @@ public class ReleaseManagementController extends BaseController {
      */
 
     @RequestMapping(value = "/updateTypeMessage/rest", method = RequestMethod.POST)
+    @Transactional
     public Map<String, Object> updateTypeMessage(@RequestParam(value = "file[0]", required = false) MultipartFile file1, @RequestParam(value = "file[1]", required = false) MultipartFile file2, HttpServletRequest req) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         String pathICon = "";
@@ -199,15 +200,15 @@ public class ReleaseManagementController extends BaseController {
     /**
      * 文章或者论文列表
      *
-     * @param data
+     * @param
      * @return
      */
 
-    @RequestMapping(value = "/selectAricleTmpList/rest", method = RequestMethod.POST)
-    public Map<String, Object> selectAricleTmpList(@RequestBody Map<String, Object> data) {
+    @RequestMapping(value = "/selectAricleTmpList/rest", method = {RequestMethod.POST,RequestMethod.GET})
+    public Map<String, Object> selectAricleTmpList(HttpServletRequest req) {
         try {
 
-            return releaseManagementService.selectAricleTmpList(data);
+            return releaseManagementService.selectAricleTmpList(req);
         } catch (Exception e) {
 
             return getErrorMapService();

@@ -38,17 +38,11 @@ app.controller('keywordListManageController', ['$scope', '$modal', '$http', 'fyl
 
         //领域列表
         $scope.listDomain = function () {
-
             $scope.testOption = {
                 url: 'article/keywordQuery',
                 resultTag: 'result',
                 method: 'get',
-                // params: {
-                //     view: 'select',
-                //     message: $scope.listObj.seachMessage
-                // },
                 queryParams: function (params) {
-                    // console.log(params);
                     $.extend(params, {
                         view: 'select',
                         message: $scope.listObj.seachMessage,

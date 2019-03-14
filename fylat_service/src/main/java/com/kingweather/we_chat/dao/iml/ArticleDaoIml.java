@@ -665,7 +665,7 @@ public class ArticleDaoIml implements ArticleDao {
         String doNameSql = "select count(*) as count from zz_wechat.article_type where article_type_name=? and parentid=?";
         Map<String, Object> countMap = jdbcTemplate.queryForMap(doNameSql, new Object[]{
                 name.toString(),
-                Integer.parseInt(artcicle_type_id)
+                artcicle_type_id
         });
         //没有查找到
         if (countMap == null || countMap.get("count") == null || "0".equals(countMap.get("count").toString())) {
@@ -678,7 +678,7 @@ public class ArticleDaoIml implements ArticleDao {
                     keyword,
                     sysTime,
                     pathICon,
-                    Integer.parseInt(artcicle_type_id),
+                    artcicle_type_id,
                     pathback,
                     0
             });
