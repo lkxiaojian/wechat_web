@@ -30,6 +30,8 @@ app.controller('modificationArticleManageController', ['$scope', '$modal', '$htt
 
         $scope.listObj = {
             navigationMsg: '管理平台 >文章修改',
+            pre_location: '',
+            operate_type: '',
             region: {selected: undefined},//领域
             regionType: {selected: undefined},//文章类型
             dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),
@@ -203,7 +205,8 @@ app.controller('modificationArticleManageController', ['$scope', '$modal', '$htt
                         }
 
                         editor.txt.clear();
-                        $state.go('app.insure.article_list');
+                        $state.go($scope.pre_location);
+                        // $state.go('app.insure.article_list');
                     } else {
                         modalTip({
                             tip: switchLang.switchLang('更新失败'),
@@ -231,6 +234,9 @@ app.controller('modificationArticleManageController', ['$scope', '$modal', '$htt
 
             getAtirlceMessage: function () {
                 $scope.listObj.article_id = $stateParams.article_id;
+                // $scope.listObj.pre_location = 'app.insure.article_manage';
+                $scope.listObj.pre_location = $stateParams.pre_location;
+                $scope.listObj.operate_type = $stateParams.operate_type;
 
                 $http({
                     url: 'article/webMessage',
@@ -262,6 +268,9 @@ app.controller('modificationArticleManageController', ['$scope', '$modal', '$htt
                             editor.txt.html($scope.listObj.integrationQuery.content_manual)
                         } else if (editor != null && $scope.listObj.integrationQuery.content_type == 1) {
                             editor.txt.html($scope.listObj.integrationQuery.details_div)
+                        }
+                        if($scope.listObj.operate_type == 'view'){
+                            $("#add_integration input,#add_integration button,#add_integration select,#add_integration textarea").attr("disabled", "disabled");
                         }
                     } else {
 

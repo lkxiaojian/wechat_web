@@ -388,6 +388,31 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
                 }
             }
         }
+        //TODO 测试方便加的
+        var menu = {};
+        menu.icon = 'icon-info';
+        menu.name = '测试用';
+        menu.submenus = [];
+
+        var sub_menu = {};
+        sub_menu.name = '文章管理';
+        sub_menu.href = 'app.insure.article_manage';
+        sub_menu.isLeaf = '1';
+        menu.submenus.push(sub_menu);
+       /* var sub_menu = {};
+        sub_menu.name = '论文管理';
+        sub_menu.href = 'app.insure.paper_manage';
+        sub_menu.isLeaf = '1';
+        menu.submenus.push(sub_menu);
+        var sub_menu = {};
+        sub_menu.name = '分类管理';
+        sub_menu.href = 'app.insure.type_manage';
+        sub_menu.isLeaf = '1';
+        menu.submenus.push(sub_menu);*/
+
+        menus.push(menu);
+        //TODO 测试方便加的
+
         $scope.insure.menus = menus;
     }
 }]);
