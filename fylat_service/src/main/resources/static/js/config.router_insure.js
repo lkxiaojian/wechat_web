@@ -301,8 +301,8 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             }
         })
 
-        /*.state('app.insure.article_manage', {
-            url: '/articleManage',
+        .state('app.insure.paper_manage', {
+            url: '/paperManage',
             params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/paperManage.html',
             pageTitle: '论文管理',
@@ -318,8 +318,8 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
-        .state('app.insure.article_manage', {
-            url: '/articleManage',
+        .state('app.insure.type_manage', {
+            url: '/typeManage',
             params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
             pageTitle: '分类管理',
@@ -334,6 +334,6 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                         ]);
                     }]
             }
-        })*/
+        })
 
 }]);

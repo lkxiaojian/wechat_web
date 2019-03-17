@@ -399,16 +399,16 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
         sub_menu.href = 'app.insure.article_manage';
         sub_menu.isLeaf = '1';
         menu.submenus.push(sub_menu);
-       /* var sub_menu = {};
-        sub_menu.name = '论文管理';
-        sub_menu.href = 'app.insure.paper_manage';
-        sub_menu.isLeaf = '1';
-        menu.submenus.push(sub_menu);
-        var sub_menu = {};
-        sub_menu.name = '分类管理';
-        sub_menu.href = 'app.insure.type_manage';
-        sub_menu.isLeaf = '1';
-        menu.submenus.push(sub_menu);*/
+        var sub_menu1 = {};
+        sub_menu1.name = '论文管理';
+        sub_menu1.href = 'app.insure.paper_manage';
+        sub_menu1.isLeaf = '1';
+        menu.submenus.push(sub_menu1);
+        var sub_menu2 = {};
+        sub_menu2.name = '分类管理';
+        sub_menu2.href = 'app.insure.type_manage';
+        sub_menu2.isLeaf = '1';
+        menu.submenus.push(sub_menu2);
 
         menus.push(menu);
         //TODO 测试方便加的
