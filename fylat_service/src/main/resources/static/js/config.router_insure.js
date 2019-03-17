@@ -155,7 +155,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
-
+/*
         .state('app.insure.publishManage', {
             url: '/publishManage',
             params: {param: null, type_id: null},
@@ -173,7 +173,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                         ]);
                     }]
             }
-        })
+        })*/
         .state('app.insure.domainList', {
             url: '/domainList',
             // params: {param: null, data: null},
@@ -333,6 +333,24 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                             'ui.select',
                             'vendor/dhtmlx/dhtmlx.js',
                             'vendor/dhtmlx/dhtmlx.css'
+                        ]);
+                    }]
+            }
+        })
+
+        .state('app.insure.publish_manage', {
+            url: '/publishManage',
+            params: {param: null, data: null,type_id: null,pre_location: null},
+            templateUrl: 'insure/template/zz_wechat/publishManage.html',
+            pageTitle: '发布管理',
+            controller: 'publishManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/publishManageController.js',
+                            'ui.select'
                         ]);
                     }]
             }

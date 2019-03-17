@@ -1,7 +1,8 @@
 app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile', '$timeout',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip) {
         $scope.listObj ={
-            navigationMsg: "管理平台 >分类管理"
+            navigationMsg: "管理平台 >分类管理",
+            current_location: "app.insure.type_manage"
         }
 
         $scope.publish = function(){
@@ -26,6 +27,10 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         }
         $scope.refresh = function(){
             $scope.myTree.refreshItem();
+        }
+        $scope.goPubView = function(){
+            $state.go('app.insure.publish_manage',
+                {pre_location:$scope.listObj.current_location});
         }
 
         $scope.createTree = function () {
