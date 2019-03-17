@@ -3,112 +3,169 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         $scope.listObj ={
             navigationMsg: "管理平台 >分类管理"
         }
-        $scope.dataACL = {
-            ptreeInstance: {},
-            id: '',
-            // 获取区域权限
-            getTreeData: function (treeInstance) {
-                var adcodeArray = new Array();
-                // 所有选中的节点id
-                var treelist = treeInstance.getAllChecked();
-                var checkidArray = treelist.split(",");
 
-                if (checkidArray == null || checkidArray.length == 0) {
+        $scope.publish = function(){
+            debugger
+            layer.msg("待完成发布功能")
+            var treelist = $scope.myTree.getAllChecked();
+            var checkidArray = treelist.split(",");
 
-                    modalTip({
-                        tip: switchLang.switchLang('至少选择一个'),
-                        type: true
-                    });
-                    return;
+            if (checkidArray == null || checkidArray.length == 0) {
 
-
-                }
-
-                if (checkidArray != null && checkidArray.length > 1) {
-
-                    modalTip({
-                        tip: switchLang.switchLang('不能多选'),
-                        type: true
-                    });
-                    return;
-
-
-                }
-
-                // for (var i = 0; i < checkidArray.length; i++) {
-                //
-                //     var checkId = checkidArray[i];
-                //     //判断是否选中全部 提示用户不能全部选择
-                //     if (checkId == 100) {
-                //         modalTip({
-                //             tip: switchLang.switchLang('不能全部选择'),
-                //             type: true
-                //         });
-                //         return;
-                //     }
-                //     //父节点的id
-                //     var parentId = treeInstance.getParentId(checkId);
-                //     var parIscheck = treeInstance.isItemChecked(checkId);
-                //     if (parentId == 1 && parIscheck != 0) {
-                //         var adcodeObj = {};
-                //         var id = treeInstance.getUserData(checkId, "id");
-                //         adcodeObj['id'] = id;
-                //         adcodeObj['parendId'] = checkId;
-                //         //获取该id 下面的节点
-                //         var getAllSubItems = treeInstance.getAllSubItems(checkId);
-                //         var chrildArray = getAllSubItems.split(",");
-                //         var chrildCheckList = new Array();
-                //         for (var j = 0; j < chrildArray.length; j++) {
-                //             //根据id判断改节点是否选择 (0 - unchecked,1 - checked, 2 - third state)
-                //             var isChecked = treeInstance.isItemChecked(chrildArray[j]);
-                //             if (isChecked != 0 && chrildArray[j] != "") {
-                //                 chrildCheckList.push(chrildArray[j]);
-                //             }
-                //         }
-                //         adcodeObj['chrild'] = chrildCheckList;
-                //         adcodeArray.push(adcodeObj);
-                //     }
-                // }
-
-                return checkidArray;
-            }
-        };
-
-        $scope.ok = function (e) {
-            var areaData = $scope.dataACL.getTreeData($scope.dataACL.ptreeInstance);
-
-            if (areaData == null) {
+                modalTip({
+                    tip: switchLang.switchLang('至少选择一个'),
+                    type: true
+                });
                 return;
+
             }
-
-            // $state.go('app.insure.publishManage',{type_id:areaData});
-            $state.go('app.insure.articleTypeTmp',{type_id: areaData});
-
-            //以后改用弹框
-            /*     $http({
-                     method: 'GET',
-                     url: 'releaseManagement/getTypeMessage/rest',
-                     params: {
-                         "article_type_id": areaData[0],
-                         "type": 0
-                     }
-                 }).success(function (data) {
-                     if (data.code == 0) {
-                         modalTip({
-                             tip: switchLang.switchLang('成功'),
-                             type: true,
-                             callback: function () {
-                                 $state.go('app.insure.');
-                             }
-                         });
-                     } else {
-                         modalTip({
-                             tip: switchLang.switchLang('失败'),
-                             type: true
-                         });
-                     }
-                 })*/
         }
+
+        $scope.query = function(){
+            $scope.myTree.findItem($scope.typeName,0,1);
+        }
+        $scope.refresh = function(){
+            $scope.myTree.refreshItem();
+        }
+
+        $scope.createTree = function () {
+            $scope.myTree = new dhtmlXTreeObject("dataTree", '100%', '100%', 0);
+            // 设置皮肤
+            $scope.myTree.setImagePath("./vendor/dhtmlx/imgs/dhxtree_skyblue/");
+            // 设置复选框
+            $scope.myTree.enableCheckBoxes(1);
+            // 允许半选状态
+            $scope.myTree.enableThreeStateCheckboxes(true);
+            $scope.myTree.enableTreeImages(false);
+            $scope.myTree.enableThreeStateCheckboxes(false);// 是否级联选中
+
+            $scope.myTree.enableDragAndDrop(true);
+            $scope.myTree.enableDragAndDropScrolling(true);//在拖放操作中启用自动滚动
+            $scope.myTree.enableItemEditor(true); //开启允许编辑条目的文本
+            // $scope.myTree.enableKeySearch(true); //开启允许编辑条目的文本
+
+            // 设置是否允许显示树图片
+            // setOnLoadingStart   setOnLoadingEnd
+            $scope.myTree.setOnLoadingEnd(function () {
+                //设置字体，以区分菜单节点和功能节点
+                var array = $scope.myTree.getAllSubItems(0).split(',');
+
+                for (var i = 0; i < array.length; i++) {
+                    var level = $scope.myTree.getLevel(array[i]);
+                    //展开所有一级节点
+                    if(level == 1){
+                        $scope.myTree.openAllItems(array[i]);
+                    }
+                    if (level == 1 || level == 2) {
+                        $scope.myTree.setItemStyle(array[i], 'color:#616b88; font-weight: bold;');
+                    }
+                }
+
+                //聚焦
+                if($scope.focusNode){
+                    $scope.myTree.findItem($scope.focusNode,0,1);
+
+                }
+            });
+            // // 设置允许动态加载xml文件（异步加载）
+            $scope.myTree.setXMLAutoLoading("releaseManagement/getTypeMenuTree/rest?type=0");
+            $scope.myTree.setDataMode("json");
+
+            $scope.myTree.loadJSON('releaseManagement/getTypeMenuTree/rest?type=0',function(){
+                $scope.myTree.openAllItems();
+
+            });
+            $scope.myTree.setDragHandler(function(srcNode,tarNode){
+                debugger
+                layer.confirm('请选择操作？', {
+                    btn: ['作为目标子类','合并到目标'] //按钮
+                }, function(){
+                    debugger
+                    return true;
+                    $http({
+                        method: 'GET',
+                        url: '/releaseManagement/updateTypeParentId/rest',
+                        params: {
+                            article_type_id: srcNode,
+                            parentid:tarNode
+                        }
+                    }).success(function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.message);
+                            $scope.focusNode = tarNode;
+                            $scope.refresh();
+                        } else {
+                            layer.alert(data.message,{icon:2})
+                        }
+                    }).error(function (data) {
+                        modalTip({
+                            tip: "删除失败",
+                            type: false
+                        });
+                    })
+                }, function(){
+                    debugger
+                    return true;
+                    $http({
+                        method: 'GET',
+                        url: 'releaseManagement/mergeTypeById/rest',
+                        params: {
+                            article_type_id:srcNode,// 要合并的保留的类型的id
+                            parent_id:'',// 要合并的保留的类型的父级id
+                            merge_type_id:tarNode//  要被合并 的类型id（传递一个最高的节点）
+                        }
+                    }).success(function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.message);
+                            $scope.focusNode = tarNode;
+                            $scope.refresh();
+                        } else {
+                            layer.alert(data.message,{icon:2})
+                        }
+                    }).error(function (data) {
+                        layer.alert("请求失败",{icon:2})
+                    })
+                });
+
+            });
+            $scope.myTree.setOnEditHandler(function(state,id,tree,value){
+                debugger
+
+                //保存
+                if(state ==2){
+                    if(!value){
+                        layer.msg("名称不能为空")
+                        return false;
+                    }
+                    $http({
+                        method: 'GET',
+                        url: 'releaseManagement/updateTypeMessage/rest',
+                        params: {
+                            article_type_id:id,// 类型id
+                            name:value// 类型名称
+                        }
+                    }).success(function (data) {
+                        if (data.code == 0) {
+                            layer.msg(data.message);
+                            $scope.focusNode = id;
+                            $scope.refresh();
+                        } else {
+                            layer.alert(data.message,{icon:2})
+                        }
+                    }).error(function (data) {
+                        layer.alert("请求失败",{icon:2})
+                    })
+                }
+                return true;
+            });
+
+            // $scope.myTree.attachEvent("onDragIn", function(sId, tId, sObject, tObject){
+            //     debugger
+            //     return true;
+            // });
+        };
+        //
+        $scope.createTree();
 
 
     }])
