@@ -38,4 +38,12 @@ public interface ReleaseManagementDao {
     Map<String,java.lang.Object> delArticleTypeById(String article_type_id);
 
     List<Map<String, java.lang.Object>> combinedScore(int i);
+
+    Map getAllIssueArticleType(String table);
+
+    Map seachArticleType(String type, String message);
+
+    Map pushArticleType(String typeId);
+
+    String getArticleNameById(String id1);
 }
