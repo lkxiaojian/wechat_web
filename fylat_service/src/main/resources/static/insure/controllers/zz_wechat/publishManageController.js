@@ -321,10 +321,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
 
         $scope.queryArticle=function () {
             if(!$("#queryArticleForm [name=article_type_id]").val()){
-                modalTip({
-                    tip: "文章类型不能为空",
-                    type: true
-                });
+                layer.msg("文章类型不能为空");
                 return;
             }
             $scope.articleTmpInstance.bootstrapTable('refresh');
@@ -338,10 +335,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
 
         $scope.queryPager=function () {
             if(!$("#queryPaperForm [name=article_type_id]").val()){
-                modalTip({
-                    tip: "论文类型不能为空",
-                    type: true
-                });
+                layer.msg("论文类型不能为空");
                 return;
             }
             $scope.paperTmpInstance.bootstrapTable('refresh');

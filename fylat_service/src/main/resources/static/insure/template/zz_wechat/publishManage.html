@@ -1,8 +1,11 @@
 <!--头部导航信息-->
 <div class="modal-header">
     <div class="btn pull-right m-t-n-xs m-l-n list-icon">
-        <a ui-sref="app.insure.type_manage"> <i
-                class="fa fa-mail-reply-all"></i>
+        <!--
+                <a ui-sref="app.insure.article_list">
+        -->
+        <a ui-sref="{{listObj.pre_location}}">
+            <i class="fa fa-mail-reply-all"></i>
         </a>
     </div>
     <div style="margin: 0px 15px">
@@ -10,18 +13,18 @@
     </div>
 </div>
 
-<div class="TabNav">
-    <ul ng-init='activeTab=1'>
-        <li ng-class='{active:activeTab==1}' ng-click='activeTab=1'>文章</li>
-        <li ng-class='{active:activeTab==2}' ng-click='activeTab=2'>论文</li>
-    </ul>
-</div>
-
-<div class="" style="margin-top: 20px;margin-left: 20px;" ng-show='activeTab==1'>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box-header with-border">
-                <form class="navbar-form navbar-left" role="search" id = "queryArticleForm">
+<!--内容区-->
+<div style="padding: 5px;">
+    <tabset class="tab-container">
+        <tab active="steps.step1" select="steps.percent=50">
+            <tab-heading>
+                文章管理
+            </tab-heading>
+            <!--
+                        <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
+            -->
+            <div class="modal-body">
+                <form class="form-horizontal m-b-md" role="search" id = "queryArticleForm">
                     <div class="search-con">
                         <div class="form-group form-inline" style = "width:460px;">
                             <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
@@ -74,34 +77,30 @@
                             <input name="message" class="form-control input-sm" placeholder="请输入">
                         </div>
                         <div class="form-group form-inline">
-                            <a class="btn btn-default" ng-click="queryArticle()">查询</a>
+                            <a class="btn btn-info" ng-click="queryArticle()">查询</a>
                             <a class="btn btn-default" ng-click="resetArticle()">清除</a>
                         </div>
                     </div>
-
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish()">批量发布</button>
+                        <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
+                    </div>
+                    <table table-directive tableoption="articleTmpOption" id="ArticleTmp" instance="articleTmpInstance" style="height: 286px"></table>
                 </form>
             </div>
-            <div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default" ng-click="checkAll()">全部选择</button>
-                    <button type="button" class="btn btn-default" ng-click="uncheckAll()">全部取消</button>
-                    <button type="button" class="btn btn-default" ng-click="batchPublish()">批量发布</button>
-                    <button type="button" class="btn btn-default" ng-click="batchDelete()">批量删除</button>
-                </div>
-            </div>
-            <div class="box-body">
-                <table table-directive tableoption="articleTmpOption" id="ArticleTmp" instance="articleTmpInstance" style="height: 286px"></table>
-            </div>
-        </div>
-    </div>
-</div>
 
-
-<div class="" style="margin-top: 20px;margin-left: 20px;" ng-show='activeTab==2'>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="box-header with-border">
-                <form class="navbar-form navbar-left" role="search" id = "queryPaperForm">
+        </tab>
+        <tab>
+            <tab-heading>
+                论文管理
+            </tab-heading>
+<!--
+            <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
+-->
+            <div class="modal-body">
+                <form class="form-horizontal m-b-md" role="search" id = "queryPaperForm">
                     <div class="search-con">
                         <div class="form-group form-inline" style = "width:460px;">
                             <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
@@ -155,46 +154,21 @@
             </div>
             <div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default" ng-click="checkAll()">全部选择</button>
-                    <button type="button" class="btn btn-default" ng-click="uncheckAll()">全部取消</button>
-                    <button type="button" class="btn btn-default" ng-click="batchPublish()">批量发布</button>
-                    <button type="button" class="btn btn-default" ng-click="batchDelete()">批量删除</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish()">批量发布</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
                 </div>
-            </div>
-            <div class="box-body">
                 <table table-directive tableoption="paperTmpOption" id="PaperTmp" instance="paperTmpInstance"
                        style="height: 286px"></table>
             </div>
-        </div>
-    </div>
+        </tab>
+    </tabset>
 </div>
 
-
 <style>
-    .TabNav{
-        height: 20px;
-        position: relative;
-        /*margin-left: 100px;*/
-        /*margin-top: 100px;*/
-    }
-    .TabNav ul li{
-        float: left;
-        background: -webkit-gradient(linear,left top,left bottom, from(#fefefe), to(#ededed));
-        border: 1px solid #ccc;
-        padding: 5px 0;
-        width: 100px;
-        text-align: center;
-        margin-left: -1px;
-        position: relative;
-        cursor: pointer;
-    }
-    .TabNav ul li.active{
-        background: #FFFFFF;
-        border-bottom: none;
+    .tab-container .tab-content{
+        padding: 0px;
     }
 </style>
-
-<script type="text/ng-template" id="myModalContent.html">
-    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
-</script>
 
