@@ -631,7 +631,7 @@ public class ArticleDaoIml implements ArticleDao {
                     key,
                     sysTime,
                     path,
-                    0,
+                    100,
                     0
             });
 
@@ -641,7 +641,7 @@ public class ArticleDaoIml implements ArticleDao {
                     key,
                     sysTime,
                     path,
-                    0,
+                    100,
                     0
             });
             if (update == 1) {

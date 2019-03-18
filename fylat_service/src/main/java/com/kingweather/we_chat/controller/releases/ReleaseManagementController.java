@@ -39,8 +39,8 @@ public class ReleaseManagementController extends BaseController {
         try {
             List list = releaseManagementService.getTypeMenuTree(type);
             map.put("id", 0);
-            List<Map> listResult=new ArrayList<>();
-            listResult.add(0,map);
+            List<Map> listResult = new ArrayList<>();
+            listResult.add(0, map);
             map.put("item", list);
             Object o = listResult.get(0);
             return o;
@@ -67,7 +67,7 @@ public class ReleaseManagementController extends BaseController {
 
         Map map = new HashMap();
         try {
-            Map list = releaseManagementService.getTypeMessage(article_type_id,type);
+            Map list = releaseManagementService.getTypeMessage(article_type_id, type);
             map.put("code", 0);
             map.put("message", "查询成功");
             map.put("data", list);
@@ -127,7 +127,7 @@ public class ReleaseManagementController extends BaseController {
         String artcicle_type_id = req.getParameter("artcicle_type_id");
         String parentid = req.getParameter("parentid");
         String type = req.getParameter("type");
-        int i = releaseManagementService.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack, parentid,type);
+        int i = releaseManagementService.updateTypeMessage(name, keyword, artcicle_type_id, pathICon, pathBack, parentid, type);
 
         if (i == 1) {
             map.put("code", 0);
@@ -204,7 +204,7 @@ public class ReleaseManagementController extends BaseController {
      * @return
      */
 
-    @RequestMapping(value = "/selectAricleTmpList/rest", method = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/selectAricleTmpList/rest", method = {RequestMethod.POST, RequestMethod.GET})
     public Map<String, Object> selectAricleTmpList(HttpServletRequest req) {
         try {
 
@@ -386,20 +386,63 @@ public class ReleaseManagementController extends BaseController {
     }
 
 
-
-
     @RequestMapping(value = "/combinedScore/rest", method = RequestMethod.GET)
-
-    public String  combinedScore() {
+    public Map combinedScore() {
         try {
             return releaseManagementService.combinedScore();
         } catch (Exception e) {
-            return "";
+            return getErrorMapService();
+        }
+    }
+
+    /**
+     * 查询所有已发布的类型
+     *
+     * @param type
+     * @return
+     */
+
+    @RequestMapping(value = "/getAllIssueArticleType/rest", method = RequestMethod.GET)
+    public Map getAllIssueArticleType(String type) {
+        try {
+            return releaseManagementService.getAllIssueArticleType(type);
+        } catch (Exception e) {
+            return getErrorMapService();
         }
     }
 
 
+    /**
+     * 模糊查询所有的类型
+     *
+     * @param type
+     * @return
+     */
 
+    @RequestMapping(value = "/seachArticleType/rest", method = RequestMethod.GET)
+    public Map seachArticleType(String type, String message) {
+        try {
+            return releaseManagementService.seachArticleType(type, message);
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
+    }
+    /**
+     * 多个文章类型发布
+     *
+     * @param typeId
+     * @return
+     */
+
+    @RequestMapping(value = "/pushArticleType/rest", method = RequestMethod.GET)
+    @Transactional
+    public Map pushArticleType(String typeId) {
+        try {
+            return releaseManagementService.pushArticleType(typeId);
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
+    }
 
     /**
      * 传参错误

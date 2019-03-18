@@ -2,6 +2,7 @@ package com.kingweather.we_chat.service.iml;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonParser;
+import com.kingweather.we_chat.bean.ArticleTypeSouce;
 import com.kingweather.we_chat.constants.HttpUtils;
 import com.kingweather.we_chat.dao.ReleaseManagementDao;
 import com.kingweather.we_chat.service.ReleaseManagementService;
@@ -116,7 +117,7 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public String combinedScore() {
+    public Map combinedScore() {
         Map<String, Object> jsonMap = new HashMap<>();
         //文章
         List<Map<String, Object>> articleList = releaseManagementDao.combinedScore(0);
@@ -126,12 +127,42 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         List<Map<String, Object>> paperList = releaseManagementDao.combinedScore(1);
         Map artileMap1 = getArtileMap(paperList);
         jsonMap.put("cluster_B", artileMap1);
-        jsonMap.put("Topn", 1);
+        jsonMap.put("Topn", 3);
 
         String json = JSON.toJSONString(jsonMap);
         String sendAbstractsPost = HttpUtils.doPost(urlTypePath + "similarity", json);
 
-        return sendAbstractsPost;
+        ArticleTypeSouce articleTypeSouce = JSON.parseObject(sendAbstractsPost, ArticleTypeSouce.class);
+        List<ArticleTypeSouce.ResultBean> result = articleTypeSouce.getResult();
+        if (result != null) {
+            for(int i=0;i<result.size();i++){
+                String id1Name=releaseManagementDao.getArticleNameById(result.get(i).getId1());
+                String id2Name=releaseManagementDao.getArticleNameById(result.get(i).getId2());
+                result.get(i).setId1Name(id1Name);
+                result.get(i).setId2Name(id2Name);
+
+            }
+
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("code",0);
+        map.put("result",result);
+        return map;
+    }
+
+    @Override
+    public Map getAllIssueArticleType(String type) {
+        return releaseManagementDao.getAllIssueArticleType(type);
+    }
+
+    @Override
+    public Map seachArticleType(String type, String message) {
+        return releaseManagementDao.seachArticleType(type, message);
+    }
+
+    @Override
+    public Map pushArticleType(String typeId) {
+        return releaseManagementDao.pushArticleType(typeId);
     }
 
 

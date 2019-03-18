@@ -1,5 +1,6 @@
 package com.kingweather.we_chat.dao.iml;
 
+import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer;
 import com.kingweather.common.jdbc.JdbcUtil;
 import com.kingweather.common.util.DateUtil;
 import com.kingweather.common.util.Page;
@@ -25,10 +26,10 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     @Override
     public List<Map> getTypeMenuTree(String parent_id, String type) {
 
-        String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+        String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
 
         if ("1".equals(type)) {
-            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type where del_type!=? and parentid=?";
+            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,1 as issue  from zz_wechat.article_type where del_type!=? and parentid=?";
 
         }
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
@@ -81,7 +82,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         artcicle_type_id
                 });
                 if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
-                    //插入实际的类型表
+                /*    //插入实际的类型表
                     String currentTime = DateUtil.getCurrentTimeString();
                     String insertSqlt = "insert into (artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state) values " +
                             "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?)";
@@ -96,7 +97,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                             currentTime,
                             Integer.parseInt(typeMap.get("type_state").toString())
 
-                    });
+                    });*/
 
                 } else {
                     String updateSql = "update zz_wechat.article_type set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?, parentid=? ,del_type=?   where article_type_id=?";
@@ -108,13 +109,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                             pathBack,
                             parentid,
                             0,
-                            artcicle_type_id,
+                            artcicle_type_id
 
 
                     });
                 }
             } catch (Exception e) {
-                //插入实际的类型表
+           /*     //插入实际的类型表
                 String currentTime = DateUtil.getCurrentTimeString();
                 String insertSqlt = "insert into zz_wechat.article_type(article_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time) values " +
                         "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s') )";
@@ -127,7 +128,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         parentid,
                         0,
                         currentTime
-                });
+                });*/
             }
 
             return update;
@@ -235,7 +236,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         //查询的是文章
         if ("0".equals(type.toString())) {
             //创建的开始时间
-            Object createTimeStart =req.getParameter("createTimeStart");
+            Object createTimeStart = req.getParameter("createTimeStart");
             //创建的结束时间
             Object createTimeEnd = req.getParameter("createTimeEnd");
             //字数大于多少
@@ -269,54 +270,54 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
 
-            if (updateTimeStart != null&&!updateTimeStart.toString().equals("")) {
+            if (updateTimeStart != null && !updateTimeStart.toString().equals("")) {
 //                String update_time = DateUtil.getCurrentTimeString(updateTimeStart.toString());
                 sqlCount = sqlCount + " and a.update_time>=date_format('" + updateTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time>=date_format('" + updateTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
 
-            if (updateTimeEnd != null&&!updateTimeEnd.toString().equals("")) {
+            if (updateTimeEnd != null && !updateTimeEnd.toString().equals("")) {
 //                String updateTime = DateUtil.getCurrentTimeString(updateTimeEnd.toString());
                 sqlCount = sqlCount + " and a.update_time<=date_format('" + updateTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time<=date_format('" + updateTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
 
-            if (createTimeStart != null&&!createTimeStart.toString().equals("")) {
+            if (createTimeStart != null && !createTimeStart.toString().equals("")) {
 //                String createTime = DateUtil.getCurrentTimeString(createTimeStart.toString());
                 sqlCount = sqlCount + " and a.update_time>=date_format('" + createTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time>=date_format('" + createTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
-            if (createTimeEnd != null&&!createTimeEnd.toString().equals("")) {
+            if (createTimeEnd != null && !createTimeEnd.toString().equals("")) {
 //                String createTime = DateUtil.getCurrentTimeString(createTimeEnd.toString());
                 sqlCount = sqlCount + " and a.update_time<=date_format('" + createTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time<=date_format('" + createTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
-            if (details_size_more != null&&!details_size_more.toString().equals("")) {
+            if (details_size_more != null && !details_size_more.toString().equals("")) {
                 sqlCount = sqlCount + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
                 sqlMessage = sqlMessage + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
             }
-            if (details_size_less != null&&!details_size_less.toString().equals("")) {
+            if (details_size_less != null && !details_size_less.toString().equals("")) {
                 sqlCount = sqlCount + " and details_size<=" + Integer.parseInt(details_size_less.toString());
                 sqlMessage = sqlMessage + " and a.details_size<=" + Integer.parseInt(details_size_less.toString());
             }
             //分数
-            if (article_score_more != null&&!article_score_more.toString().equals("")) {
+            if (article_score_more != null && !article_score_more.toString().equals("")) {
                 sqlCount = sqlCount + " and a.article_score>=" + Integer.parseInt(article_score_more.toString());
                 sqlMessage = sqlMessage + " and a.article_score>=" + Integer.parseInt(article_score_more.toString());
             }
-            if (article_score_less != null&&!article_score_less.toString().equals("")) {
+            if (article_score_less != null && !article_score_less.toString().equals("")) {
                 sqlCount = sqlCount + " and a.article_score<=" + Integer.parseInt(article_score_less.toString());
                 sqlMessage = sqlMessage + " and a.article_score<=" + Integer.parseInt(article_score_less.toString());
             }
-            if (message != null&&!message.toString().equals("")) {
+            if (message != null && !message.toString().equals("")) {
                 sqlCount = sqlCount + " and (a.article_title like '%" + message.toString() + "%' or a.author like '%" + message.toString() + "%' or a.source like '%" + message.toString() + "%' )";
                 sqlMessage = sqlMessage + " and (a.article_title like '%" + message.toString() + "%' or a.author like '%" + message.toString() + "%' or a.source like '%" + message.toString() + "%' )";
             }
-            if (checkType != null&&!checkType.toString().equals("")) {
+            if (checkType != null && !checkType.toString().equals("")) {
                 sqlCount = sqlCount + " and a.check_type=" + Integer.parseInt(checkType.toString());
                 sqlMessage = sqlMessage + " and a.check_type=" + Integer.parseInt(checkType.toString());
             }
@@ -375,33 +376,33 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
             //入库时间
-            if (updateTimeStart != null&&!updateTimeStart.toString().equals("")) {
+            if (updateTimeStart != null && !updateTimeStart.toString().equals("")) {
 //                String update_time = DateUtil.getCurrentTimeString(updateTimeStart.toString());
                 sqlCount = sqlCount + " and a.update_time>=date_format('" + updateTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time>=date_format('" + updateTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
 
-            if (updateTimeEnd != null&&!updateTimeEnd.toString().equals("")) {
+            if (updateTimeEnd != null && !updateTimeEnd.toString().equals("")) {
 //                String updateTime = DateUtil.getCurrentTimeString(updateTimeEnd.toString());
                 sqlCount = sqlCount + " and a.update_time<=date_format('" + updateTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
                 sqlMessage = sqlMessage + " and a.update_time<=date_format('" + updateTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
 
-            if (message != null&&!message.toString().equals("")) {
+            if (message != null && !message.toString().equals("")) {
                 sqlCount = sqlCount + " and (a.article_title like '%" + message.toString() + "%' or a.author like '%" + message.toString() + "%' or a.source like '%" + message.toString() + "%' )";
                 sqlMessage = sqlMessage + " and (a.article_title like '%" + message.toString() + "%' or a.author like '%" + message.toString() + "%' or a.source like '%" + message.toString() + "%' )";
             }
 
 
-            if (checkType != null&&!checkType.toString().equals("")) {
+            if (checkType != null && !checkType.toString().equals("")) {
                 sqlCount = sqlCount + " and a.check_type=" + Integer.parseInt(checkType.toString());
                 sqlMessage = sqlMessage + " and a.check_type=" + Integer.parseInt(checkType.toString());
             }
 
 
-            if (createTime != null&&!createTime.toString().equals("")) {
+            if (createTime != null && !createTime.toString().equals("")) {
 
                 if (tmp_type != null && "1".equals(tmp_type.toString())) {
                     sqlCount = sqlCount + " and a.paper_create_time like '%" + createTime + "%'";
@@ -1051,6 +1052,143 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 i
         });
         return maps;
+    }
+
+    @Override
+    public Map getAllIssueArticleType(String type) {
+
+        String sql = "";
+        if ("0".equals(type)) {
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where issue=1 and del_type=0 and parentid !='100' and parentid !='1'";
+        } else {
+            sql = "select article_type_id,article_type_name,parentid,type_state from zz_wechat.article_type where del_type=0 and parentid !='100' and parentid !='1'";
+        }
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "查询成功！");
+        map.put("result", maps);
+        return map;
+    }
+
+    @Override
+    public Map seachArticleType(String type, String message) {
+
+        String sql = "";
+        if ("0".equals(type)) {
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where 1=1 ";
+        } else {
+            sql = "select article_type_id,article_type_name,parentid,type_state from zz_wechat.article_type where 1=1 ";
+        }
+
+        if (message != null && !"".equals(message)) {
+            sql = sql + " and article_type_name like '%" + message + "%'";
+        }
+
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "查询成功！");
+        map.put("result", maps);
+        return map;
+    }
+
+    @Override
+    public Map pushArticleType(String typeId) {
+        if (typeId == null || "".equals(typeId)) {
+            return getErrorMap();
+        }
+
+        String[] split = typeId.split(",");
+        try {
+            for (int i = 0; i < split.length; i++) {
+                String artcicle_type_id = split[i];
+                String updateTypeSql = "update zz_wechat.article_type_tmp set issue=? where article_type_id =?";
+                jdbcTemplate.update(updateTypeSql, new Object[]{
+                        1,
+                        artcicle_type_id
+                });
+                String typeSql = "select * from zz_wechat.article_type_tmp where article_type_id=?";
+                Map<String, Object> typeMap = jdbcTemplate.queryForMap(typeSql, new Object[]{
+                        artcicle_type_id
+                });
+
+                try {
+                    String sqlCount = "select count(*) as count from zz_wechat.article_type where article_type_id=?";
+                    Map<String, Object> map = jdbcTemplate.queryForMap(sqlCount, new Object[]{
+                            artcicle_type_id
+                    });
+                    if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
+                        //插入实际的类型表
+                        String currentTime = DateUtil.getCurrentTimeString();
+                        String insertSqlt = "insert into (artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state) values " +
+                                "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?)";
+                        jdbcTemplate.update(insertSqlt, new Object[]{
+                                artcicle_type_id,
+                                typeMap.get("article_type_keyword"),
+                                typeMap.get("article_type_name"),
+                                typeMap.get("iamge_icon"),
+                                typeMap.get("iamge_back"),
+                                typeMap.get("parentid"),
+                                0,
+                                currentTime,
+                                Integer.parseInt(typeMap.get("type_state").toString())
+
+                        });
+
+                    }
+
+             /*       else {
+                        String updateSql = "update zz_wechat.article_type set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?, parentid=? ,del_type=?   where article_type_id=?";
+                        jdbcTemplate.update(updateSql, new Object[]{
+                                typeMap.get("article_type_keyword"),
+                                typeMap.get("article_type_name"),
+                                typeMap.get("iamge_icon"),
+                                typeMap.get("iamge_back"),
+                                typeMap.get("parentid"),
+                                0,
+                                artcicle_type_id
+
+
+                        });
+                    }*/
+                } catch (Exception e) {
+                    //插入实际的类型表
+                    String currentTime = DateUtil.getCurrentTimeString();
+                    String insertSqlt = "insert into zz_wechat.article_type(article_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time) values " +
+                            "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s') )";
+                    jdbcTemplate.update(insertSqlt, new Object[]{
+                            artcicle_type_id,
+                            typeMap.get("article_type_keyword"),
+                            typeMap.get("article_type_name"),
+                            typeMap.get("iamge_icon"),
+                            typeMap.get("iamge_back"),
+                            typeMap.get("parentid"),
+                            0,
+                            currentTime
+                    });
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "发布成功！");
+        return map;
+    }
+
+    @Override
+    public String getArticleNameById(String id1) {
+
+        String sql = "select article_type_name from zz_wechat.article_type_tmp where article_type_id=?";
+        Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{
+                id1
+        });
+        return map.get("article_type_name") == null ? "" : map.get("article_type_name").toString();
     }
 
     /**

@@ -35,7 +35,11 @@ public interface ReleaseManagementService {
 
     Map<String,Object> delArticleTypeById(String article_type_id);
 
-    String  combinedScore();
+    Map  combinedScore();
 
+    Map getAllIssueArticleType(String type);
 
+    Map seachArticleType(String type, String message);
+
+    Map pushArticleType(String typeId);
 }
