@@ -46,13 +46,7 @@
                     <div class="form-group form-inline">
                         <label class="control-label input-sm">文章分类：</label>
                         <select name="article_type_id" id = "article_type_id" class="form-control input-sm" required>
-<!--
-                            <option ng-repeat="x in typeList" value="{{x.id}}">{{x.name}}</option>
--->
-                            <option value="48">分类1</option>
-                            <option value="5">分类2</option>
-                            <option value="4">分类3</option>
-                            <option value="9">分类4</option>
+                            <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                         </select>
                     </div>
                 </div>

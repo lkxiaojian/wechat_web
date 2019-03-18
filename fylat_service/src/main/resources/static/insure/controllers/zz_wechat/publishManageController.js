@@ -7,7 +7,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             seachMessage: '',//搜索内容
             type: 0,//0 微信文章  1 论文
             del_type: 0,// 查看的是否是回收站 0不是 1是
-            tmp_type: 1,//查询的是否是发布管理的内容 1是 0不是
+            tmp_type: 0,//查询的是否是发布管理的内容 1是 0不是
             checkType: 0,//是否审核0 未审核 1 审核过
             seach: function () {
                 var a = $scope.listObj.seachMessage;
@@ -20,124 +20,316 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
 
         };
 
-        //文章列表
-        $scope.listAritcle= function () {
+        //论文列表
+        $scope.listAritcle = function () {
+
             $scope.articleTmpOption = {
-                url: 'releaseManagement/selectAricleTmpList/rest',//url
-                method: 'GET',
-                pageList: ['All'],
+                url: 'releaseManagement/selectAricleTmpList/rest',
                 resultTag: 'result',
-                pageSize: 10,//每页请求以的数量
-                queryParams: function (params) {//参数
+                method: 'get',
+                queryParams: function (params) {
+                    serializeJson(params, "queryArticleForm");
                     $.extend(params, {
                         view: 'select',
-                        message: $scope.listObj.seachMessage,
-                        article_type_id: $scope.listObj.artcicle_type_id,
-                        type: $scope.listObj.type
+                        type: "0", //文章
+                        del_type: "0", //非删除
+                        tmp_type: "0" //非正式发布的
                     });
                     return params;
                 },
+                pageList: ['All'],
+                pageSize: 10,
                 onLoadSuccess: function (data) {
-                    console.log(data)
+                    if (data.code != 0) {
+                        layer.msg(data.message);
+                    }
                 },
-                columns: [
-                    {
-                        title: '文章/论文名称',
-                        class: 'col-md-1',
-                        field: 'article_title',//与返回的字段需要对应
-                        align: 'center',
-                        width: "4%"
-                    },
-                    {
-                        title: '所属分类',
-                        class: 'col-md-1',
-                        field: 'article_type_name',
-                        align: 'center',
-                        width: "4%"
-                    },
-                    {
-                        title: '发表时间',
-                        class: 'col-md-1',
-                        field: 'create_time',
-                        align: 'center',
-                        width: "4%",
-                        formatter: function (value, row, index) {
-                            //可以做些点击事件，详细用法参考 controllers\zz_wechat\domainListManageController.js  zz_wechat\articleListManageController.js
-                            if (value) {
-                                return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
-                            }
-                            return '';
+                columns: [{
+                    checkbox: true
+                }, {
+                    title: '标题',
+                    class: 'col-md-1',
+                    field: 'article_title',
+                    align: 'center',
+                    titleTooltip: 'title',
+                    // width: "15%",
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
                         }
-                    },
-                    {
-                        title: '关键词',
-                        class: 'col-md-1',
-                        field: 'article_keyword',
-                        align: 'center',
-                        width: "4%"
-                    },
-                    {
-                        title: '摘要',
-                        class: 'col-md-1',
-                        field: 'content_excerpt',
-                        align: 'center',
-                        width: "4%",
-                        formatter: function (value, row, index) {
-                            if (value.length>10) {
-                                return value.substring(0,10);
-                            }
-                            return value;
+                    }
+                }, {
+                    title: '所属分类',
+                    class: 'col-md-1',
+                    field: 'article_type_name',
+                    align: 'center'
+                }, {
+                    title: '发表时间',
+                    class: 'col-md-1',
+                    field: 'create_time',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
                         }
-                    },
-                    {
-                        title: '爬取网址/公众号',
-                        class: 'col-md-1',
-                        field: 'source',
-                        align: 'center',
-                        width: "4%"
-                    },
-                    {
-                        title: '作者',
-                        class: 'col-md-1',
-                        field: 'author',
-                        align: 'center',
-                        width: "4%"
-                    },
-                    {
-                        title: '分数',
-                        class: 'col-md-1',
-                        field: 'article_score',
-                        align: 'center',
-                        width: "4%"
-                    },
-                    {
-                        title: '审核',
-                        class: 'col-md-1',
-                        field: 'check_type',
-                        align: 'center',
-                        width: "4%"
-                    },
-                    {
-                        title: '发布',
-                        class: 'col-md-1',
-                        field: 'word_count',
-                        align: 'center',
-                        width: "4%"
-                    },
-                    {
-                        title: '操作',
-                        class: 'col-md-1',
-                        field: 'word_count',
-                        align: 'center',
-                        width: "4%"
-                    },
+                        return '';
+                    }
+                }, {
+                    title: '入库时间',
+                    class: 'col-md-1',
+                    field: 'update_time',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
+                        }
+                        return '';
+                    }
 
+                }, {
+                    title: '关键词',
+                    class: 'col-md-1',
+                    field: 'article_keyword',
+                    align: 'center'
+
+                }, {
+                    title: '摘要',
+                    class: 'col-md-1',
+                    field: 'content_excerpt',
+                    align: 'center',
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
+                        },
+                        classes: ["overflow"]
+                    }
+                }, {
+                    title: '来源',
+                    class: 'col-md-1',
+                    field: 'source',
+                    align: 'center',
+                    sortable: false
+                }, {
+                    title: '作者',
+                    class: 'col-md-1',
+                    field: 'author',
+                    align: 'center'
+
+                }, {
+                    title: '字数',
+                    class: 'col-md-1',
+                    field: 'word_count',
+                    align: 'center',
+                    width: "100px"
+                }, {
+                    title: '操作',
+                    class: 'col-md-1',
+                    align: 'center',
+                    width: '100px',
+                    formatter: function (value, row, index) {
+
+                        return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
+                            '<a class="a-edit a-blue" href="javascript:;">修改</a>&nbsp;' +
+                            '<a class="a-delete a-red" href="javascript:;"> 删除</a>';
+                    },
+                    events: {
+                        'click .a-view': function (e, value, row, index) {
+                            $state.go('app.insure.modify_article', {
+                                article_id: row.article_id,
+                                pre_location: $scope.listObj.current_location,
+                                operate_type: "view",
+                                article_type: "article"
+                            });
+                            // $scope.tableInstance.bootstrapTable('refresh');
+                        },
+                        'click .a-edit': function (e, value, row, index) {
+                            $state.go('app.insure.modify_article', {
+                                article_id: row.article_id,
+                                pre_location: $scope.listObj.current_location,
+                                operate_type: "edit",
+                                article_type: "article"
+                            });
+                            // $scope.tableInstance.bootstrapTable('refresh');
+                        },
+                        'click .a-delete': function (e, value, row, index) {
+                            deleteData(row.article_id);
+                        }
+                    }
+                }
                 ]
             };
-        };
-
+        }
         $scope.listAritcle();
 
-    }])
-;
+
+        //论文列表
+        $scope.listPaper = function () {
+
+            $scope.paperTmpOption = {
+                url: 'releaseManagement/selectAricleTmpList/rest',
+                resultTag: 'result',
+                method: 'get',
+                queryParams: function (params) {
+                    serializeJson(params, "queryPaperForm");
+                    $.extend(params, {
+                        view: 'select',
+                        type: "1", //论文
+                        del_type: "0", //非删除
+                        tmp_type: "0" //非正式发布的
+                    });
+                    return params;
+                },
+                pageList: ['All'],
+                pageSize: 10,
+                onLoadSuccess: function (data) {
+                    if (data.code != 0) {
+                        layer.msg(data.message);
+                    }
+                },
+                columns: [{
+                    checkbox: true
+                }, {
+                    title: '标题',
+                    class: 'col-md-1',
+                    field: 'article_title',
+                    align: 'center',
+                    titleTooltip: 'title',
+                    // width: "15%",
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
+                        }
+                    }
+                }, {
+                    title: '所属分类',
+                    class: 'col-md-1',
+                    field: 'article_type_name',
+                    align: 'center'
+                }, {
+                    title: '发表时间',
+                    class: 'col-md-1',
+                    field: 'create_time',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
+                        }
+                        return '';
+                    }
+                }, {
+                    title: '入库时间',
+                    class: 'col-md-1',
+                    field: 'update_time',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
+                        }
+                        return '';
+                    }
+
+                }, {
+                    title: '关键词',
+                    class: 'col-md-1',
+                    field: 'article_keyword',
+                    align: 'center'
+
+                }, {
+                    title: '摘要',
+                    class: 'col-md-1',
+                    field: 'content_excerpt',
+                    align: 'center',
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
+                        },
+                        classes: ["overflow"]
+                    }
+                }, {
+                    title: '来源',
+                    class: 'col-md-1',
+                    field: 'source',
+                    align: 'center',
+                    sortable: false
+                }, {
+                    title: '作者',
+                    class: 'col-md-1',
+                    field: 'author',
+                    align: 'center'
+
+                }, {
+                    title: '字数',
+                    class: 'col-md-1',
+                    field: 'word_count',
+                    align: 'center',
+                    width: "100px"
+                }, {
+                    title: '操作',
+                    class: 'col-md-1',
+                    align: 'center',
+                    width: '100px',
+                    formatter: function (value, row, index) {
+
+                        return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
+                            '<a class="a-edit a-blue" href="javascript:;">修改</a>&nbsp;' +
+                            '<a class="a-delete a-red" href="javascript:;"> 删除</a>';
+                    },
+                    events: {
+                        'click .a-view': function (e, value, row, index) {
+                            $state.go('app.insure.modify_article', {
+                                article_id: row.article_id,
+                                pre_location: $scope.listObj.current_location,
+                                operate_type: "view",
+                                article_type: "article"
+                            });
+                            // $scope.tableInstance.bootstrapTable('refresh');
+                        },
+                        'click .a-edit': function (e, value, row, index) {
+                            $state.go('app.insure.modify_article', {
+                                article_id: row.article_id,
+                                pre_location: $scope.listObj.current_location,
+                                operate_type: "edit",
+                                article_type: "article"
+                            });
+                            // $scope.tableInstance.bootstrapTable('refresh');
+                        },
+                        'click .a-delete': function (e, value, row, index) {
+                            deleteData(row.article_id);
+                        }
+                    }
+                }
+                ]
+            };
+        }
+        $scope.listPaper();
+
+
+        //获取所有已发布的类型
+        $scope.getAllPublishedType = function () {
+            $http({
+                method: 'GET',
+                url: '/releaseManagement/getAllIssueArticleType/rest',
+                params: {
+                    type: "1"
+                }
+            }).success(function (data) {
+                if (data.code == 0) {
+                    $scope.publishedTypeList = data.result;
+                } else {
+                    layer.msg(data.message)
+                }
+            }).error(function (data) {
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
+        $scope.getAllPublishedType();
+    }]);
 

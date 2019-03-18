@@ -1,7 +1,7 @@
 <!--头部导航信息-->
 <div class="modal-header">
     <div class="btn pull-right m-t-n-xs m-l-n list-icon">
-        <a ui-sref="app.insure.integration_processManage"> <i
+        <a ui-sref="app.insure.type_manage"> <i
                 class="fa fa-mail-reply-all"></i>
         </a>
     </div>
@@ -18,160 +18,165 @@
 </div>
 
 <div class="" style="margin-top: 20px;margin-left: 20px;" ng-show='activeTab==1'>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">入库时间：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-header with-border">
+                <form class="navbar-form navbar-left" role="search" id = "queryArticleForm">
+                    <div class="search-con">
+                        <div class="form-group form-inline" style = "width:460px;">
+                            <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeStart" name="updateTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd" name="updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'2010-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        </div>
+                        <div class="form-group form-inline" style = "width:460px;">
+                            <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeStart" name="createTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeEnd" name="createTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'2010-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        </div>
+                    </div>
+
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">是否审核：</label>
+                            <select name="checkType" class="form-control input-sm" >
+                                <option value="">--请选择--</option>
+                                <option value="0">未审核</option>
+                                <option value="1">已审核</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">语言：</label>
+                            <select name="language" class="form-control input-sm" >
+                                <option value="">--请选择--</option>
+                                <option value="0">中文</option>
+                                <option value="1">英文</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline" style = "width:380px;">
+                            <label style=" padding-left:13px;width:120px;" class="control-label input-sm">字数：</label>
+                            <input size="16" type="text" name="details_size_more" style = "width:100px;" class="form-control input-sm"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input size="16" type="text" name="details_size_less" style = "width:100px;"  class="form-control input-sm"/>
+                        </div>
+                    </div>
+
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">文章分类：</label>
+                            <select name="article_type_id" class="form-control input-sm" required>
+                                <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">内容：</label>
+                            <input name="message" class="form-control input-sm" placeholder="请输入">
+                        </div>
+                        <div class="form-group form-inline">
+                            <a class="btn btn-default" ng-click="query()">查询</a>
+                            <a class="btn btn-default" ng-click="reset()">清除</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" ng-click="checkAll()">全部选择</button>
+                    <button type="button" class="btn btn-default" ng-click="uncheckAll()">全部取消</button>
+                    <button type="button" class="btn btn-default" ng-click="batchPublish()">批量发布</button>
+                    <button type="button" class="btn btn-default" ng-click="batchDelete()">批量删除</button>
+                </div>
+            </div>
+            <div class="box-body">
+                <table table-directive tableoption="articleTmpOption" id="ArticleTmp" instance="articleTmpInstance" style="height: 286px"></table>
+            </div>
         </div>
-    </div>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">发表时间：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">分数：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-12 col-sm-12 padder-l-0 m-b-md">
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-5 col-sm-4 control-label padder-l-0">是否审核：</label>
-        <div class="col-md-7 col-sm-8 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">语言：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">字数：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">类型：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-8 col-sm-12 padder-l-0 m-b-md">
-        <label class="col-md-2 col-sm-2 control-label padder-l-0">搜索内容：</label>
-        <div class="col-md-4 col-sm-4 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.seachMessage">
-        </div>
-        <button class="btn m-b-xs w-xs btn-default"
-                ng-disabled="searchuserForm.$invalid"
-                ng-click="listObj.seach()"
-                style="position: relative; left: 15px;">搜索
-        </button>
-        <button class="btn m-b-xs w-xs btn-default"
-                ng-disabled="searchuserForm.$invalid"
-                ng-click="listObj.clear()"
-                style="position: relative; left: 15px;">清空
-        </button>
     </div>
 </div>
 
-
-<!--内容区-->
-<div class="wrapper-md"  ng-show='activeTab==1'>
-    <table table-directive tableoption="articleTmpOption" id="ArticleTmp" instance="articleTmpInstance"
-           style="height: 286px"></table>
-</div>
 
 <div class="" style="margin-top: 20px;margin-left: 20px;" ng-show='activeTab==2'>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">入库时间：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box-header with-border">
+                <form class="navbar-form navbar-left" role="search" id = "queryPaperForm">
+                    <div class="search-con">
+                        <div class="form-group form-inline" style = "width:460px;">
+                            <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeStart2" name="updateTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd2" name="updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'2010-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        </div>
+                        <div class="form-group form-inline" style = "width:460px;">
+                            <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeStart2" name="createTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'2010-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeEnd2" name="createTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'2010-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        </div>
+                    </div>
+
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">是否审核：</label>
+                            <select name="checkType" class="form-control input-sm" >
+                                <option value="">--请选择--</option>
+                                <option value="0">未审核</option>
+                                <option value="1">已审核</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">语言：</label>
+                            <select name="language" class="form-control input-sm" >
+                                <option value="">--请选择--</option>
+                                <option value="0">中文</option>
+                                <option value="1">英文</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline" style = "width:380px;">
+                            <label style=" padding-left:13px;width:120px;" class="control-label input-sm">字数：</label>
+                            <input size="16" type="text" name="details_size_more" style = "width:100px;" class="form-control input-sm"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input size="16" type="text" name="details_size_less" style = "width:100px;"  class="form-control input-sm"/>
+                        </div>
+                    </div>
+
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">论文分类：</label>
+                            <select name="article_type_id" class="form-control input-sm" required>
+                                <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">内容：</label>
+                            <input name="message" class="form-control input-sm" placeholder="请输入">
+                        </div>
+                        <div class="form-group form-inline">
+                            <a class="btn btn-default" ng-click="query()">查询</a>
+                            <a class="btn btn-default" ng-click="reset()">清除</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" ng-click="checkAll()">全部选择</button>
+                    <button type="button" class="btn btn-default" ng-click="uncheckAll()">全部取消</button>
+                    <button type="button" class="btn btn-default" ng-click="batchPublish()">批量发布</button>
+                    <button type="button" class="btn btn-default" ng-click="batchDelete()">批量删除</button>
+                </div>
+            </div>
+            <div class="box-body">
+                <table table-directive tableoption="paperTmpOption" id="PaperTmp" instance="paperTmpInstance"
+                       style="height: 286px"></table>
+            </div>
         </div>
-    </div>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">发表时间：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">分数：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-12 col-sm-12 padder-l-0 m-b-md">
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-5 col-sm-4 control-label padder-l-0">是否审核：</label>
-        <div class="col-md-7 col-sm-8 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">语言：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">字数：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">类型：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-8 col-sm-12 padder-l-0 m-b-md">
-        <label class="col-md-2 col-sm-2 control-label padder-l-0">搜索内容：</label>
-        <div class="col-md-4 col-sm-4 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.seachMessage">
-        </div>
-        <button class="btn m-b-xs w-xs btn-default"
-                ng-disabled="searchuserForm.$invalid"
-                ng-click="listObj.seach()"
-                style="position: relative; left: 15px;">搜索
-        </button>
-        <button class="btn m-b-xs w-xs btn-default"
-                ng-disabled="searchuserForm.$invalid"
-                ng-click="listObj.clear()"
-                style="position: relative; left: 15px;">清空
-        </button>
     </div>
 </div>
 
-
-<!--内容区-->
-<div class="wrapper-md"  ng-show='activeTab==2'>
-    <table table-directive tableoption="testOption1" id="testArticle1" instance="testInstance"
-           style="height: 286px"></table>
-</div>
 
 <style>
     .TabNav{

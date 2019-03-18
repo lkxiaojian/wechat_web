@@ -332,7 +332,8 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                             'insure/controllers/zz_wechat/typeManageController.js',
                             'ui.select',
                             'vendor/dhtmlx/dhtmlx.js',
-                            'vendor/dhtmlx/dhtmlx.css'
+                            'vendor/dhtmlx/dhtmlx.css',
+                            'ngFileUpload'
                         ]);
                     }]
             }

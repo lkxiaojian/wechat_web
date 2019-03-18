@@ -238,22 +238,24 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 })
             }
         }
-    }]);
 
-function serializeJson(serializeObj, formId) {
-    var array = $("#" + formId).serializeArray();
-    $(array).each(
-        function() {
-            if (serializeObj[this.name]) {
-                if ($.isArray(serializeObj[this.name])) {
-                    serializeObj[this.name].push(this.value);
-                } else {
-                    serializeObj[this.name] = [ serializeObj[this.name],
-                        this.value ];
+        //获取所有已发布的类型
+        $scope.getAllPublishedType = function(){
+            $http({
+                method: 'GET',
+                url: '/releaseManagement/getAllIssueArticleType/rest',
+                params: {
+                    type: "1"
                 }
-            } else {
-                serializeObj[this.name] = this.value;
-            }
-        });
-    return serializeObj;
-}
+            }).success(function (data) {
+                if (data.code == 0) {
+                    $scope.publishedTypeList = data.result;
+                } else {
+                    layer.msg(data.message)
+                }
+            }).error(function (data) {
+                layer.alert("请求失败",{icon:2})
+            })
+        }
+        $scope.getAllPublishedType();
+    }]);
