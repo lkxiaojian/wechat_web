@@ -4,20 +4,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         $scope.listObj = {
             navigationMsg: '管理平台 >发布管理',
             artcicle_type_id: $stateParams.type_id,//类型id
-            seachMessage: '',//搜索内容
-            type: 0,//0 微信文章  1 论文
-            del_type: 0,// 查看的是否是回收站 0不是 1是
-            tmp_type: 0,//查询的是否是发布管理的内容 1是 0不是
-            checkType: 0,//是否审核0 未审核 1 审核过
-            seach: function () {
-                var a = $scope.listObj.seachMessage;
-                $scope.articleTmpOption.bootstrapTable('refresh')
-            },
-            clear: function () {
-                $scope.listObj.seachMessage = '';
-            },
-
-
+            current_location: "app.insure.publish_manage"
         };
 
         //论文列表
@@ -331,5 +318,40 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             })
         }
         $scope.getAllPublishedType();
+
+        $scope.queryArticle=function () {
+            if(!$("#queryArticleForm [name=article_type_id]").val()){
+                modalTip({
+                    tip: "文章类型不能为空",
+                    type: true
+                });
+                return;
+            }
+            $scope.articleTmpInstance.bootstrapTable('refresh');
+        }
+        $scope.resetArticle=function () {
+            $.each($("#queryArticleForm select,#queryArticleForm input"),
+                function(i, n) {
+                    $(n).val('');
+                });
+        }
+
+        $scope.queryPager=function () {
+            if(!$("#queryPaperForm [name=article_type_id]").val()){
+                modalTip({
+                    tip: "论文类型不能为空",
+                    type: true
+                });
+                return;
+            }
+            $scope.paperTmpInstance.bootstrapTable('refresh');
+        }
+        $scope.resetPager=function () {
+            $.each($("#queryPaperForm select,#queryPaperForm input"),
+                function(i, n) {
+                    $(n).val('');
+                });
+        }
+
     }]);
 
