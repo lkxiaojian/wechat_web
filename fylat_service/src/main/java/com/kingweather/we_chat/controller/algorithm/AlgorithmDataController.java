@@ -111,8 +111,8 @@ public class AlgorithmDataController extends BaseController {
                 && !type_id.isEmpty() && !typeName.isEmpty() && !articleKeyword.isEmpty()) {
 
 
-            String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state) values " +
-                    "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?)";
+            String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue) values " +
+                    "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?)";
             int update = jdbcTemplate.update(insertTypeSql, new Object[]{
                     type_id,
                     typeName,
@@ -123,6 +123,7 @@ public class AlgorithmDataController extends BaseController {
                     0,
                     typeName,
                     articleKeyword,
+                    0,
                     0
             });
 
@@ -289,8 +290,8 @@ public class AlgorithmDataController extends BaseController {
             //插入新的类型
             if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0
                     && !type_id.isEmpty() && !typeName.isEmpty() && !articleKeyword.isEmpty()) {
-                String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state) values " +
-                        "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?)";
+                String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue) values " +
+                        "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?)";
                 int update = jdbcTemplate.update(insertTypeSql, new Object[]{
                         type_id,
                         typeName,
@@ -301,7 +302,8 @@ public class AlgorithmDataController extends BaseController {
                         0,
                         typeName,
                         articleKeyword,
-                        1
+                        1,
+                        0
                 });
 
             }
