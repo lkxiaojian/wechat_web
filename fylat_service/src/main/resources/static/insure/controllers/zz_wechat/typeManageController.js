@@ -44,6 +44,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             $scope.myTree = new dhtmlXTreeObject("dataTree", '100%', '100%', 0);
             // 设置皮肤
             $scope.myTree.setImagePath("./vendor/dhtmlx/imgs/dhxtree_skyblue/");
+            // $scope.myTree.enableTreeImages(document.getElementById('a1').checked);
+            $scope.myTree.enableTreeLines(true);
             // 设置复选框
             $scope.myTree.enableCheckBoxes(1);
             // 允许半选状态
@@ -69,7 +71,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         $scope.myTree.openAllItems(array[i]);
                     }
                     if (level == 1 || level == 2) {
-                        $scope.myTree.setItemStyle(array[i], 'color:#616b88; font-weight: bold;');
+                        $scope.myTree.setItemStyle(array[i], 'color:#616b88; font-weight: bold;text-al');
                     }
                 }
 
@@ -152,6 +154,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         url: url,
                         data: data
                     }).success(function (data) {
+                        // $scope.myTree.setItemText(value);
                         debugger
                         if (data.code == 0) {
                             layer.msg(data.message);
