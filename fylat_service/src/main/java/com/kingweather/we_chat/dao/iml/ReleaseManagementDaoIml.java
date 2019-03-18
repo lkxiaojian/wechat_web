@@ -810,14 +810,24 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     public int mergeTypeById(Map<String, Object> data) {
         try {
             Object article_type_id = data.get("article_type_id");
-            Object parent_id = data.get("parent_id");
+            Object type = data.get("type");
             Object merge_type_id = data.get("merge_type_id");
-            if (article_type_id == null || parent_id == null || merge_type_id == null) {
+            if (article_type_id == null || merge_type_id == null) {
                 return 0;
             }
             //要合并的id
             String[] merge_type_idList = merge_type_id.toString().split(",");
             String mergeIdList = "";
+            String sql = "";
+            if ("0".equals(type) || type == null) {
+                sql = "select parentid from zz_wechat.article_type_tmp where article_type_id=?";
+            } else {
+                sql = "select parentid from zz_wechat.article_type where article_type_id=?";
+            }
+            Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{
+                    article_type_id.toString()
+            });
+            String parent_id = map.get("parentid").toString();
 
             for (int i = 0; i < merge_type_idList.length; i++) {
                 mergeIdList = mergeIdList + "'" + merge_type_idList[i].toString() + "',";
@@ -855,15 +865,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
             mergeIdList = mergeIdList.substring(0, mergeIdList.length() - 1);
 
-//        String tmpChildSql="select parentid from zz_wecaht.article_type_tmp where article_type_id in ("+mergeIdList+" )";
-//        String childSql="select parentid from zz_wecaht.article_type where article_type_id in ("+mergeIdList+" )";
-
             //更新临时表中的子节点 的parendid
-            String tmpChildSql = "update zz_wechat.article_type_tmp set parentid='" + parent_id + "' where parentid in(" +
+            String tmpChildSql = "update zz_wechat.article_type_tmp set parentid='" + article_type_id + "' where parentid in(" +
                     mergeIdList +
                     " )";
             //更新正式表中的子节点 的parendid
-            String childSql = "update zz_wechat.article_type set parentid='" + parent_id + "' where parentid in(" +
+            String childSql = "update zz_wechat.article_type set parentid='" + article_type_id + "' where parentid in(" +
                     mergeIdList +
                     " )";
             jdbcTemplate.update(tmpChildSql);
@@ -871,7 +878,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             //更新临时文章表中 类型id
             String updateArticleTmpSql = "update zz_wechat.article_tmp set article_type_id='" +
-                    parent_id +
+                    article_type_id +
                     "' WHERE article_id  " +
                     "in ( SELECT article_id from (SELECT article_id from zz_wechat.article_tmp WHERE article_type_id in (" +
                     mergeIdList +
@@ -882,7 +889,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             //更新临时表论文中的 类型id
             String updatePaperTmpSql = "update zz_wechat.academic_paper set article_type_id='" +
-                    parent_id +
+                    article_type_id +
                     "' WHERE article_id  " +
                     "in ( SELECT article_id from (SELECT article_id from zz_wechat.academic_paper WHERE article_type_id in (" +
                     mergeIdList +
@@ -893,7 +900,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             //更新正式文章表中 类型id
             String updateArticleSql = "update zz_wechat.article set article_type_id='" +
-                    parent_id +
+                    article_type_id +
                     "' WHERE article_id  " +
                     "in ( SELECT article_id from (SELECT article_id from zz_wechat.article WHERE article_type_id in (" +
                     mergeIdList +
