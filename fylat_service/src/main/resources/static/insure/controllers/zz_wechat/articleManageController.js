@@ -184,9 +184,9 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 });
                 return;
             }
-            for(var i = 0;i<array.length;i++){
+            // tablesToExcel(['articleTb'], ['ProductDay1'], 'TestBook.xls', 'Excel');
+            method5('articleTb')
 
-            }
         }
         $scope.batchDelete = function(){
             var array = $scope.tableInstance.bootstrapTable('getSelections');

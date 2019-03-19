@@ -184,9 +184,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                 });
                 return;
             }
-            for(var i = 0;i<array.length;i++){
-
-            }
+            tablesToExcel(['paperTb'], ['ProductDay1'], 'TestBook.xls', 'Excel');
         }
         $scope.batchDelete = function(){
             var array = $scope.tableInstance.bootstrapTable('getSelections');
