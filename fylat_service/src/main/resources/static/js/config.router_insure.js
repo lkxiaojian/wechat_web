@@ -300,6 +300,23 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
+        .state('app.insure.article_data', {
+            url: '/articleData',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/articleData.html',
+            pageTitle: '文章统计',
+            controller: 'articleDataController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/articleDataController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
 
         .state('app.insure.paper_manage', {
             url: '/paperManage',
@@ -313,6 +330,23 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                         return $ocLazyLoad.load([
                             'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/paperManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.paper_data', {
+            url: '/paperData',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/paperData.html',
+            pageTitle: '论文统计',
+            controller: 'paperDataController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/paperDataController.js',
                             'ui.select'
                         ]);
                     }]
