@@ -2,39 +2,32 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload, insureUtil, $window, modalTip) {
         $scope.listObj = {
             navigationMsg: "管理平台 >分类管理",
-            // type: "0",
-            domainList: [],//领域列表
+            type: $stateParams.type,
             current_location: "app.insure.type_manage",
-            //查询参数
-            integrationQuery: {
-                domain_name: null,
-                domain_keyword: null,
-                file_name: null,
-                artcicle_type_id: null
-            },
-            projectData: [],
-            region: {selected: undefined},
-            getTypeSelect: function (item) {
-                $scope.listObj.region.selected = item;
-            },
-            postDownload: function () {
-                $http({
-                    url: 'article/getAllDomain',
-                    method: "GET"
-                }).success(function (data) {
-                    $scope.listObj.domainList = data;
-                }).error(function (data) {
-                    layer.alert("服务器请求错误")
-                });
-            }
-
         };
-        $scope.listObj.postDownload();
+        //获取所有已发布的类型
+        $scope.getAllType = function () {
+            $http({
+                method: 'GET',
+                url: '/releaseManagement/getAllIssueArticleType/rest',
+                params: {
+                    type: $scope.listObj.type
+                }
+            }).success(function (data) {
+                if (data.code == 0) {
+                    $scope.typeList = data.result;
+                } else {
+                    layer.alert(data.message)
+                }
+            }).error(function (data) {
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
+        $scope.getAllType();
 
         $scope.data = {
             file_icon: null,
             file_back: null
-
         };
         $scope.mulImages = [];
         $scope.cancel = function(){
@@ -54,11 +47,11 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 layer.msg("关键词为空！！！")
                 return;
             }
-            /*if (!$scope.typeForm.iamge_icon || !$scope.typeForm.iamge_back) {
+            if (!$scope.typeForm.iamge_icon || !$scope.typeForm.iamge_back) {
                 layer.msg("有图片还没有选择")
                 $scope.mulImages = [];
                 return;
-            }*/
+            }
 
             var url = '/releaseManagement/updateTypeMessage/rest';
             var data = angular.copy({
@@ -71,13 +64,16 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 type: $scope.listObj.type
             });
             debugger
+            //TODO 图片的回显问题
             $scope.mulImages.push($scope.typeForm.iamge_icon_file);
             $scope.mulImages.push($scope.typeForm.iamge_back_file);
             data.file = $scope.mulImages;
+            layer.load(2);
             Upload.upload({
                 url: url,
                 data: data
             }).success(function (data) {
+                layer.closeAll('loading');
                 if(data.code == '0'){
                     layer.alert("修改成功");
                     $scope.mulImages = [];
@@ -88,6 +84,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     layer.alert(data.message);
                 }
             }).error(function () {
+                layer.closeAll('loading');
                 layer.alert("修改失败");
                 $scope.mulImages = [];
             });
@@ -99,6 +96,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 layer.msg('至少勾选一个节点');
                 return;
             }
+            layer.load(2);
             $http({
                 method: 'GET',
                 url: 'releaseManagement/pushArticleType/rest',
@@ -106,6 +104,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     typeId: treelist
                 }
             }).success(function (data) {
+                layer.closeAll('loading');
                 if (data.code == 0) {
                     layer.msg(data.message);
                     $scope.refresh();
@@ -113,11 +112,16 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     layer.alert(data.message, {icon: 2})
                 }
             }).error(function (data) {
+                layer.closeAll('loading');
                 layer.alert("请求失败", {icon: 2})
             })
         }
 
         $scope.query = function () {
+            if(!$scope.typeName){
+                layer.msg("请填写类型名称");
+                return;
+            }
             $scope.myTree.findItem($scope.typeName, 0, 1);
         }
         $scope.refresh = function () {
@@ -166,7 +170,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 //聚焦
                 if ($scope.focusNode) {
                     $scope.myTree.findItem($scope.focusNode, 0, 1);
-
                 }
             });
             // // 设置允许动态加载xml文件（异步加载）
@@ -225,7 +228,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
 
             });
             $scope.myTree.setOnEditHandler(function (state, id, tree, value) {
-                debugger
                 //保存
                 if (state == 2) {
                     if (!value) {
@@ -260,7 +262,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             });
             $scope.typeForm = {}
             $scope.myTree.setOnDblClickHandler(function(nodeId){
-                debugger
                 $http({
                     method: 'GET',
                     url: 'releaseManagement/getTypeMessage/rest',
@@ -289,11 +290,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 })
 
             });
-
-            // $scope.myTree.attachEvent("onDragIn", function(sId, tId, sObject, tObject){
-            //     debugger
-            //     return true;
-            // });
         };
         //
         $scope.createTree();

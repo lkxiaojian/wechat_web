@@ -354,7 +354,27 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         })
         .state('app.insure.type_manage', {
             url: '/typeManage',
-            params: {param: null, data: null},
+            params: {param: null, data: null,type:'0'},
+            templateUrl: 'insure/template/zz_wechat/typeManage.html',
+            pageTitle: '分类管理',
+            controller: 'typeManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/typeManageController.js',
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css',
+                            'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.pub_type_manage', {
+            url: '/pubTypeManage',
+            params: {param: null, data: null,type:'1'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
             pageTitle: '分类管理',
             controller: 'typeManageController',

@@ -419,6 +419,11 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
         sub_menu2.href = 'app.insure.type_manage';
         sub_menu2.isLeaf = '1';
         menu.submenus.push(sub_menu2);
+        var sub_menu5 = {};
+        sub_menu5.name = '精品名称管理';
+        sub_menu5.href = 'app.insure.pub_type_manage';
+        sub_menu5.isLeaf = '1';
+        menu.submenus.push(sub_menu5);
 
         menus.push(menu);
         //TODO 测试方便加的
