@@ -1,9 +1,103 @@
-app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'Upload', 'insureUtil', '$window', 'modalTip', '$compile', '$timeout',
-    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, Upload, insureUtil, $window, modalTip) {
+app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'FileUploader', 'Upload', 'insureUtil', '$window', 'modalTip', '$compile', '$timeout',
+    function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload, insureUtil, $window, modalTip) {
         $scope.listObj = {
             navigationMsg: "管理平台 >分类管理",
-            current_location: "app.insure.type_manage"
+            type: "0",
+            domainList: [],//领域列表
+            current_location: "app.insure.type_manage",
+            //查询参数
+            integrationQuery: {
+                domain_name: null,
+                domain_keyword: null,
+                file_name: null,
+                artcicle_type_id: null
+            },
+            projectData: [],
+            region: {selected: undefined},
+            getTypeSelect: function (item) {
+                $scope.listObj.region.selected = item;
+            },
+            postDownload: function () {
+                $http({
+                    url: 'article/getAllDomain',
+                    method: "GET"
+                }).success(function (data) {
+                    $scope.listObj.domainList = data;
+                }).error(function (data) {
+                    layer.alert("服务器请求错误")
+                });
+            }
+
+        };
+        $scope.listObj.postDownload();
+
+        $scope.data = {
+            file_icon: null,
+            file_back: null
+
+        };
+        $scope.mulImages = [];
+        $scope.cancel = function(){
+            $("#editModal").modal("hide");
         }
+        $scope.update = function () {
+            $scope.mulImages = [];
+            if ($scope.listObj.region.selected == null) {
+                layer.msg("领域未选择！！！");
+                return;
+            }
+
+            if ($scope.listObj.integrationQuery.domain_name == null) {
+                layer.msg("文章类型名字为空！！！")
+                return;
+            }
+
+            if ($scope.listObj.integrationQuery.domain_keyword == null) {
+                layer.msg("关键词为空！！！")
+                return;
+            }
+            if (!$scope.data.file_icon || !$scope.data.file_back) {
+                layer.msg("有图片还没有选择")
+                $scope.mulImages = [];
+                return;
+            }
+
+            var url = '/releaseManagement/updateTypeMessage/rest';
+            var data = angular.copy({
+                name: $scope.listObj.integrationQuery.domain_name,
+                keyword: $scope.listObj.integrationQuery.domain_keyword,
+                artcicle_type_id: $scope.listObj.region.selected.article_type_id,
+                num_id: 0
+            });
+            $scope.mulImages.push($scope.data.file_icon);
+            $scope.mulImages.push($scope.data.file_back);
+            data.file = $scope.mulImages;
+            Upload.upload({
+                url: url,
+                data: data
+            }).success(function (data) {
+                $scope.data = {
+                    file_icon: null,
+                    file_back: null
+
+                };
+                $scope.listObj.integrationQuery= {
+                    domain_name: null,
+                    domain_keyword: null,
+                    file_name: null,
+                    artcicle_type_id: null
+                };
+                layer.alert("修改成功");
+                $("#editModal").modal("hide");
+            }).error(function () {
+                $scope.mulImages = [];
+                layer.alert("修改失败");
+            });
+        };
+
+
+
+
 
         $scope.publish = function () {
             var treelist = $scope.myTree.getAllChecked();
@@ -55,7 +149,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
 
             $scope.myTree.enableDragAndDrop(true);
             $scope.myTree.enableDragAndDropScrolling(true);//在拖放操作中启用自动滚动
-            $scope.myTree.enableItemEditor(true); //开启允许编辑条目的文本
+            // $scope.myTree.enableItemEditor(true); //开启允许编辑条目的文本
             // $scope.myTree.enableKeySearch(true); //开启允许编辑条目的文本
 
             // 设置是否允许显示树图片
@@ -82,10 +176,10 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 }
             });
             // // 设置允许动态加载xml文件（异步加载）
-            $scope.myTree.setXMLAutoLoading("releaseManagement/getTypeMenuTree/rest?type=0");
+            $scope.myTree.setXMLAutoLoading("releaseManagement/getTypeMenuTree/rest?type="+$scope.listObj.type);
             $scope.myTree.setDataMode("json");
 
-            $scope.myTree.loadJSON('releaseManagement/getTypeMenuTree/rest?type=0', function () {
+            $scope.myTree.loadJSON('releaseManagement/getTypeMenuTree/rest?type='+$scope.listObj.type, function () {
                 $scope.myTree.openAllItems();
 
             });
@@ -119,7 +213,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         url: 'releaseManagement/mergeTypeById/rest',
                         params: {
                             article_type_id: srcNode,// 要合并的保留的类型的id
-                            type: '0',// type为0
+                            type: $scope.listObj.type,// type为0
                             merge_type_id: tarNode//  要被合并 的类型id（传递一个最高的节点）
                         }
                     }).success(function (data) {
@@ -169,6 +263,37 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
 
                 }
                 return true;
+            });
+            $scope.myTree.setOnDblClickHandler(function(nodeId){
+                debugger
+                $http({
+                    method: 'GET',
+                    url: 'releaseManagement/getTypeMessage/rest',
+                    params: {
+                        type: $scope.listObj.type,// type为0
+                        article_type_id: nodeId
+                    }
+                }).success(function (data) {
+                    if (data.code == 0) {
+                        debugger
+                        $scope.typeForm.name = data.data.article_type_name;
+                        $scope.typeForm.keyword = data.data.article_type_keyword;
+                        $scope.typeForm.article_type_id = data.data.article_type_id;
+                        $scope.typeForm.iamge_icon = data.data.iamge_icon;
+                        $scope.typeForm.iamge_back = data.data.iamge_back;
+                        $scope.typeForm.parentid = data.data.parentid;
+
+                        $("#editModal").modal({
+                            backdrop:'static',
+                            keyboard : false
+                        });
+                    } else {
+                        layer.alert(data.message, {icon: 2})
+                    }
+                }).error(function (data) {
+                    layer.alert("请求失败", {icon: 2})
+                })
+
             });
 
             // $scope.myTree.attachEvent("onDragIn", function(sId, tId, sObject, tObject){

@@ -31,8 +31,86 @@
                 </div>
             </form>
         </div>
-
     </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="editModal">
+        <div class="modal-dialog modal-lg" role="document" style = "width:800px;">
+            <div class="modal-content">
+                <div class="modal-header" style = "background-color:#355da5;">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" style = "color:#FFFFFF;">修改类型</h4>
+                </div>
+
+                <form class="navbar-form navbar-left" role="search" name = "searchuserForm">
+                    <input name="parentid" class="form-control input-sm" ng-model="typeForm.parentid">
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">领域：</label>
+                            <ui-select ng-model="listObj.region.selected"
+                                       on-select="listObj.getTypeSelect($item)"
+                                       theme="bootstrap">
+                                <ui-select-match placeholder="{{'请选择领域' | translate}}"> {{$select.selected.article_type_name}}</ui-select-match>
+                                <ui-select-choices group-by="'group'"
+                                                   repeat="item in listObj.projectData | filter: $select.search">
+                                    <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                            <select name="language" class="form-control input-sm" ng-model="listObj.region.selected"
+                                    on-select="listObj.getTypeSelect($item)">
+                                <option value="">--请选择--</option>
+                                <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">论文类型：</label>
+                            <select name="article_type_id" id = "article_type_id" class="form-control input-sm" required>
+                                <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">类型名称：</label>
+                            <input name="keyword" class="form-control input-sm" ng-model="typeForm.name">
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">关键词：</label>
+                            <input name="keyword" class="form-control input-sm" ng-model="typeForm.keyword">
+                        </div>
+                    </div>
+                    <div class="search-con">
+                        <!--..图标-->
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">图标：</label>
+                            <div>
+                                <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
+                                     ngf-multiple="false" ng-model="typeForm.iamge_icon">选择文件</div>
+                                <img ngf-src="data.iamge_icon || data.defaultImage" class="img-responsive" style="max-width: 50%"/>
+                            </div>
+                        </div>
+                        <!--背景图-->
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">背景图：</label>
+                            <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
+                                 ngf-multiple="false" ng-model="typeForm.iamge_back">选择文件</div>
+                            <img ngf-src="data.iamge_back || data.defaultImage" class="img-responsive" style="max-width: 50%"/>
+                        </div>
+                    </div>
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <button class="btn btn-info" ng-disabled="searchuserForm.$invalid" ng-click="update()">添加</button>
+                            <button class="btn btn-default" ng-click="cancel()">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
