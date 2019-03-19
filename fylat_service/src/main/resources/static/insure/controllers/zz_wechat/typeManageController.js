@@ -2,7 +2,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload, insureUtil, $window, modalTip) {
         $scope.listObj = {
             navigationMsg: "管理平台 >分类管理",
-            type: "0",
+            // type: "0",
             domainList: [],//领域列表
             current_location: "app.insure.type_manage",
             //查询参数
@@ -40,64 +40,58 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         $scope.cancel = function(){
             $("#editModal").modal("hide");
         }
+        $('#editModal').on('hidden.bs.modal', function () {
+            $scope.mulImages = [];
+        })
         $scope.update = function () {
             $scope.mulImages = [];
-            if ($scope.listObj.region.selected == null) {
-                layer.msg("领域未选择！！！");
+            if (!$scope.typeForm.name) {
+                layer.msg("类型名字为空！！！")
                 return;
             }
 
-            if ($scope.listObj.integrationQuery.domain_name == null) {
-                layer.msg("文章类型名字为空！！！")
-                return;
-            }
-
-            if ($scope.listObj.integrationQuery.domain_keyword == null) {
+            if (!$scope.typeForm.keyword) {
                 layer.msg("关键词为空！！！")
                 return;
             }
-            if (!$scope.data.file_icon || !$scope.data.file_back) {
+            /*if (!$scope.typeForm.iamge_icon || !$scope.typeForm.iamge_back) {
                 layer.msg("有图片还没有选择")
                 $scope.mulImages = [];
                 return;
-            }
+            }*/
 
             var url = '/releaseManagement/updateTypeMessage/rest';
             var data = angular.copy({
-                name: $scope.listObj.integrationQuery.domain_name,
-                keyword: $scope.listObj.integrationQuery.domain_keyword,
-                artcicle_type_id: $scope.listObj.region.selected.article_type_id,
-                num_id: 0
+                artcicle_type_id: $scope.typeForm.article_type_id,
+                parentid: $scope.typeForm.parentid,
+                name: $scope.typeForm.name,
+                keyword: $scope.typeForm.keyword,
+                iamge_icon:$scope.typeForm.iamge_icon,
+                iamge_back:$scope.typeForm.iamge_back,
+                type: $scope.listObj.type
             });
-            $scope.mulImages.push($scope.data.file_icon);
-            $scope.mulImages.push($scope.data.file_back);
+            debugger
+            $scope.mulImages.push($scope.typeForm.iamge_icon_file);
+            $scope.mulImages.push($scope.typeForm.iamge_back_file);
             data.file = $scope.mulImages;
             Upload.upload({
                 url: url,
                 data: data
             }).success(function (data) {
-                $scope.data = {
-                    file_icon: null,
-                    file_back: null
-
-                };
-                $scope.listObj.integrationQuery= {
-                    domain_name: null,
-                    domain_keyword: null,
-                    file_name: null,
-                    artcicle_type_id: null
-                };
-                layer.alert("修改成功");
-                $("#editModal").modal("hide");
+                if(data.code == '0'){
+                    layer.alert("修改成功");
+                    $scope.mulImages = [];
+                    $("#editModal").modal("hide");
+                    $scope.focusNode = $scope.typeForm.article_type_id;
+                    $scope.refresh();
+                }else{
+                    layer.alert(data.message);
+                }
             }).error(function () {
-                $scope.mulImages = [];
                 layer.alert("修改失败");
+                $scope.mulImages = [];
             });
         };
-
-
-
-
 
         $scope.publish = function () {
             var treelist = $scope.myTree.getAllChecked();
@@ -264,6 +258,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 }
                 return true;
             });
+            $scope.typeForm = {}
             $scope.myTree.setOnDblClickHandler(function(nodeId){
                 debugger
                 $http({
@@ -275,7 +270,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     }
                 }).success(function (data) {
                     if (data.code == 0) {
-                        debugger
                         $scope.typeForm.name = data.data.article_type_name;
                         $scope.typeForm.keyword = data.data.article_type_keyword;
                         $scope.typeForm.article_type_id = data.data.article_type_id;
