@@ -39,7 +39,7 @@ public class ArticleDaoIml implements ArticleDao {
         }
         int pageSize = 10;
 
-        String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back,b.article_keyword,b.article_title,b.content_excerpt ,b.content_type,b.state " +
+        String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back,b.article_keyword,b.article_title,b.content_excerpt ,b.content_type,b.state,b.pdf_path " +
                 "FROM zz_wechat.article_type a,zz_wechat.article b where b.del_type !=1 and a.del_type !=1 and a.article_type_id=b.article_type_id and b.article_type_id=? ORDER BY b.create_time DESC LIMIT ?,?";
 
 

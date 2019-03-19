@@ -123,7 +123,7 @@ public class algorithmController extends BaseController {
 
     @RequestMapping(value = "/reptile/getDominData/rest", method = RequestMethod.GET)
     public Map<String, Object> getDominData() {
-        String sql = "select article_type_id,article_type_name,article_type_keyword from article_type where del_type !=1 AND parentid='0'";
+        String sql = "select article_type_id,article_type_name,article_type_keyword from article_type where del_type !=1 AND parentid='100'";
         Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         map.put("code", 0);
