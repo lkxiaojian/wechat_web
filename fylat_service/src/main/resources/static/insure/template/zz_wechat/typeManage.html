@@ -20,9 +20,9 @@
                     </div>
                     <div class="form-group form-inline"  style="width: 500px;">
                         <a class="btn btn-default" ng-click="query()">搜索</a>
-                        <a class="btn btn-default" ng-click="publish()">发布</a>
+                        <a class="btn btn-default" ng-click="publish()" ng-show="listObj.type == '0'">发布</a>
                         <a class="btn btn-default" ng-click="refresh()">刷新</a>
-                        <a class="btn btn-default" ng-click="goPubView()">进入文章发布</a>
+                        <a class="btn btn-default" ng-click="goPubView()" ng-show="listObj.type == '0'">进入文章发布</a>
                     </div>
                 </div>
                 <div class="search-con">

@@ -17,12 +17,7 @@
 <div style="padding: 5px;">
     <tabset class="tab-container">
         <tab active="steps.step1" select="steps.percent=50">
-            <tab-heading>
-                文章管理
-            </tab-heading>
-            <!--
-                        <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
-            -->
+            <tab-heading>文章管理</tab-heading>
             <div class="modal-body">
                 <form class="form-horizontal m-b-md" role="search" id = "queryArticleForm">
                     <div class="search-con">
@@ -81,24 +76,21 @@
                             <a class="btn btn-default" ng-click="resetArticle()">清除</a>
                         </div>
                     </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
-                        <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
-                        <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish()">批量发布</button>
-                        <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
-                    </div>
-                    <table table-directive tableoption="articleTmpOption" id="ArticleTmp" instance="articleTmpInstance" style="height: 286px"></table>
                 </form>
+            </div>
+            <div>
+                <div class="btn-group col-lg-12" style="padding-left: 1px;">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish()">批量发布</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
+                </div>
+                <table table-directive tableoption="articleTmpOption" instance="articleTmpInstance" style="height: 286px"></table>
             </div>
 
         </tab>
         <tab>
-            <tab-heading>
-                论文管理
-            </tab-heading>
-<!--
-            <progressbar value="steps.percent" class="progress-xs" type="success"></progressbar>
--->
+            <tab-heading>论文管理</tab-heading>
             <div class="modal-body">
                 <form class="form-horizontal m-b-md" role="search" id = "queryPaperForm">
                     <div class="search-con">
@@ -108,7 +100,7 @@
                             <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
                             <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd2" name="updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
                         </div>
-                        <div class="form-group form-inline" style = "width:460px;">
+                        <div class="form-group form-inline">
                             <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
                             <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTime" name="createTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099\'}'})"/>
                             <!--
@@ -149,17 +141,16 @@
                             <a class="btn btn-default" ng-click="resetPager()">清除</a>
                         </div>
                     </div>
-
                 </form>
             </div>
             <div>
-                <div class="btn-group">
+                <div class="btn-group col-lg-12" style="padding-left: 1px;">
                     <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
                     <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
                     <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish()">批量发布</button>
                     <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
                 </div>
-                <table table-directive tableoption="paperTmpOption" id="PaperTmp" instance="paperTmpInstance"
+                <table table-directive tableoption="paperTmpOption" instance="paperTmpInstance"
                        style="height: 286px"></table>
             </div>
         </tab>

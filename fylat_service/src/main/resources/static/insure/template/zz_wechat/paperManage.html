@@ -64,29 +64,16 @@
 
             </form>
         </div>
-        <div>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default" ng-click="checkAll()">全部选择</button>
-                <button type="button" class="btn btn-default" ng-click="uncheckAll()">全部取消</button>
-                <button type="button" class="btn btn-default" ng-click="batchDownload()">批量下载</button>
-                <button type="button" class="btn btn-default" ng-click="batchDelete()">批量删除</button>
-            </div>
-        </div>
+
         <div class="box-body">
+            <div class="btn-group">
+                <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="batchDownload()">批量下载</button>
+                <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
+            </div>
             <table table-directive tableoption="tableOption" instance="tableInstance"
                    style="height: 286px"></table>
         </div>
     </div>
 </div>
-
-
-<!--内容区-->
-<!--<div class="wrapper-md">
-    <table table-directive tableoption="testOption" id="testArticle" instance="testInstance"
-           style="height: 286px"></table>
-</div>-->
-
-
-<script type="text/ng-template" id="myModalContent.html">
-    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
-</script>
