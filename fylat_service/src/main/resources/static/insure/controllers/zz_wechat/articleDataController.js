@@ -7,7 +7,10 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                 view: 'select',
                 type:"0", //文章
                 del_type:"0", //非删除
-                tmp_type:"1" //正式发布的
+                tmp_type:"1", //正式发布的
+                statisticsType:"1",
+                articleType:"1"
+
             },
         }
 
@@ -16,7 +19,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
         $scope.listAritcle = function () {
 
             $scope.tableOption = {
-                url: 'releaseManagement/selectAricleTmpList/rest',
+                url: 'statistics/selStatisticsInfo/rest',
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
@@ -34,9 +37,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                         });
                     }
                 },
-                columns: [{
-                  checkbox: true
-                    }, {
+                columns: [ {
                         title: '标题',
                         class: 'col-md-1',
                         field: 'article_title',
@@ -50,11 +51,37 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                                 }
                         }
                     }, {
-                        title: '所属分类',
-                        class: 'col-md-1',
-                        field: 'article_type_name',
-                        align: 'center'
-                    }, {
+                    title: '摘要',
+                    class: 'col-md-1',
+                    field: 'content_excerpt',
+                    align: 'center',
+                    cellStyle:{
+                        css:{
+                            "min-width":"100px",
+                            "max-width":"200px"
+                        },
+                        classes:["overflow"]
+                    }
+                },  {
+                    title: '关键词',
+                    class: 'col-md-1',
+                    field: 'article_keyword',
+                    align: 'center'
+
+                },  {
+                    title: '入库时间',
+                    class: 'col-md-1',
+                    field: 'update_time',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
+                        }
+                        return '';
+                    }
+
+                }, {
                         title: '发表时间',
                         class: 'col-md-1',
                         field: 'create_time',
@@ -66,38 +93,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                             }
                             return '';
                         }
-                    }, {
-                        title: '入库时间',
-                        class: 'col-md-1',
-                        field: 'update_time',
-                        align: 'center',
-                        width: "150px",
-                        formatter: function (value, row, index) {
-                            if (value) {
-                                return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
-                            }
-                            return '';
-                        }
-
-                    }, {
-                        title: '关键词',
-                        class: 'col-md-1',
-                        field: 'article_keyword',
-                        align: 'center'
-
-                    }, {
-                        title: '摘要',
-                        class: 'col-md-1',
-                        field: 'content_excerpt',
-                        align: 'center',
-                        cellStyle:{
-                            css:{
-                                "min-width":"100px",
-                                "max-width":"200px"
-                            },
-                            classes:["overflow"]
-                        }
-                    }, {
+                    },{
                         title: '来源',
                         class: 'col-md-1',
                         field: 'source',
@@ -115,42 +111,33 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                         field: 'word_count',
                         align: 'center',
                         width: "100px"
-                    }, {
-                        title: '正文',
+                    },
+                    {
+                        title: '转发数',
                         class: 'col-md-1',
-                        field: 'details_txt',
+                        field: 'word_count',
                         align: 'center',
-                        cellStyle:{
-                            css:{
-                                "min-width":"100px",
-                                "max-width":"200px"
-                            },
-                            classes:["overflow"]
-                        }
-                    }, {
-                        title: '操作',
+                        width: "100px"
+                    },
+                    {
+                        title: '阅读数',
                         class: 'col-md-1',
+                        field: 'word_count',
                         align: 'center',
-                        width: '100px',
-                        formatter: function (value, row, index) {
-
-                            return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
-                                '<a class="a-edit a-blue" href="javascript:;">修改</a>&nbsp;' +
-                                '<a class="a-delete a-red" href="javascript:;"> 删除</a>';
-                        },
-                        events: {
-                            'click .a-view': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {article_id: row.article_id,pre_location:$scope.listObj.current_location,operate_type:"view",article_type: "article"});
-                                // $scope.tableInstance.bootstrapTable('refresh');
-                            },
-                            'click .a-edit': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {article_id: row.article_id,pre_location:$scope.listObj.current_location,operate_type:"edit",article_type: "article"});
-                                // $scope.tableInstance.bootstrapTable('refresh');
-                            },
-                            'click .a-delete': function (e, value, row, index) {
-                                deleteData(row.article_id);
-                            }
-                        }
+                        width: "100px"
+                    },
+                    {
+                        title: '阅读进度',
+                        class: 'col-md-1',
+                        field: 'word_count',
+                        align: 'center',
+                        width: "100px"
+                    },{
+                        title: '留存时间',
+                        class: 'col-md-1',
+                        field: 'word_count',
+                        align: 'center',
+                        width: "100px"
                     }
                 ]
             };
@@ -175,66 +162,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
         $scope.uncheckAll = function(){
             $scope.tableInstance.bootstrapTable('uncheckAll');
         }
-        $scope.batchDownload = function(){
-            var array = $scope.tableInstance.bootstrapTable('getSelections');
-            if(!array || array.length == 0){
-                modalTip({
-                    tip: "请至少勾选一条数据",
-                    type: true
-                });
-                return;
-            }
-            for(var i = 0;i<array.length;i++){
 
-            }
-        }
-        $scope.batchDelete = function(){
-            var array = $scope.tableInstance.bootstrapTable('getSelections');
-            if(!array || array.length == 0){
-                modalTip({
-                    tip: "请至少勾选一条数据",
-                    type: true
-                });
-                return;
-            }
-            var ids = "";
-            for(var i = 0;i<array.length;i++){
-                ids += array[i].article_id;
-                ids += ",";
-            }
-            deleteData(ids);
-        }
-
-        function deleteData(rowIds){
-            if (confirm(switchLang.switchLang('确认删除勾选的数据吗？'))) {
-                $http({
-                    method: 'GET',
-                    url: 'releaseManagement/delAricleTmpList/rest',
-                    params: {
-                        articleIdList: rowIds
-                    }
-                }).success(function (data) {
-                    if (data.code == 0) {
-                        modalTip({
-                            tip: data.message,
-                            type: true
-                        });
-                        $scope.tableInstance.bootstrapTable('refresh');
-                    } else {
-                        modalTip({
-                            tip: data.message,
-                            type: false
-                        });
-                    }
-
-                }).error(function (data) {
-                    modalTip({
-                        tip: "删除失败",
-                        type: false
-                    });
-                })
-            }
-        }
 
         //获取所有已发布的类型
         $scope.getAllPublishedType = function(){
