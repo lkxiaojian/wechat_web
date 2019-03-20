@@ -71,10 +71,10 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             });
 
-            String typeSql = "select type_state from zz_wechat.article_type_tmp where article_type_id=?";
-            Map<String, Object> typeMap = jdbcTemplate.queryForMap(typeSql, new Object[]{
-                    artcicle_type_id
-            });
+//            String typeSql = "select type_state from zz_wechat.article_type_tmp where article_type_id=?";
+//            Map<String, Object> typeMap = jdbcTemplate.queryForMap(typeSql, new Object[]{
+//                    artcicle_type_id
+//            });
 
             try {
                 String sqlCount = "select count(*) as count from zz_wechat.article_type where article_type_id=?";
@@ -82,22 +82,6 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         artcicle_type_id
                 });
                 if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
-                /*    //插入实际的类型表
-                    String currentTime = DateUtil.getCurrentTimeString();
-                    String insertSqlt = "insert into (artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state) values " +
-                            "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?)";
-                    jdbcTemplate.update(insertSqlt, new Object[]{
-                            artcicle_type_id,
-                            keyword,
-                            name,
-                            pathICon,
-                            pathBack,
-                            parentid,
-                            0,
-                            currentTime,
-                            Integer.parseInt(typeMap.get("type_state").toString())
-
-                    });*/
 
                 } else {
                     String updateSql = "update zz_wechat.article_type set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?, parentid=? ,del_type=?   where article_type_id=?";
@@ -115,20 +99,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                     });
                 }
             } catch (Exception e) {
-           /*     //插入实际的类型表
-                String currentTime = DateUtil.getCurrentTimeString();
-                String insertSqlt = "insert into zz_wechat.article_type(article_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time) values " +
-                        "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s') )";
-                jdbcTemplate.update(insertSqlt, new Object[]{
-                        artcicle_type_id,
-                        keyword,
-                        name,
-                        pathICon,
-                        pathBack,
-                        parentid,
-                        0,
-                        currentTime
-                });*/
+
             }
 
             return update;

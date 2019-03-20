@@ -653,7 +653,7 @@ public class ArticleDaoIml implements ArticleDao {
 
     @Override
     public List<Map<String, Object>> getAllDomain() {
-        String sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid='0' AND del_type !=1 ORDER BY create_time DESC";
+        String sql = "select article_type_id,article_type_name from zz_wechat.article_type where parentid='100' AND del_type !=1 ORDER BY create_time DESC";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         return maps;
     }
