@@ -110,7 +110,7 @@ public class StatisticsDaoIml implements StatisticsDao {
         sql.append(" 	a.article_keyword articleKeyword,	  ");
         sql.append(" 	a.author author,	  ");
         sql.append(" 	a.create_time createTime,	  ");
-        sql.append(" 	a.statistics_type statisticsType,	  ");
+        sql.append(" 	b.statistics_type statisticsType,	  ");
         sql.append(" 	a.source source,	  ");
         sql.append(" 	SUM(b.count_num) num	  ");
         sql.append(" 	FROM article a , statistics_info b,article_type c	  ");
@@ -136,7 +136,7 @@ public class StatisticsDaoIml implements StatisticsDao {
             sql.append("  and DATE_FORMAT (b.dispose_time,'%k') = ?  	 ");
             parameterList.add(hour);
         }
-        sql.append(" 	GROUP BY a.article_id,statistics_type	  ");
+        sql.append(" 	GROUP BY a.article_id,b.statistics_type	  ");
 
 
         Number number =  jdbcTemplate.queryForObject("select count(1) from ("+sql.toString()+") c",parameterList.toArray(),Long.class);
@@ -149,7 +149,7 @@ public class StatisticsDaoIml implements StatisticsDao {
 
         Map map = new HashMap();
         map.put("data",obj);
-        map.put("num",number.longValue());
+        map.put("count",number.longValue());
 
         return map;
     }
