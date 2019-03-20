@@ -999,27 +999,37 @@ public class ArticleDaoIml implements ArticleDao {
 
         Object word_count = data.get("word_count");
         Object details_txt = data.get("details_txt");
-        if (content_manual == null || article_type_id == null ||
-                source == null || article_title == null
-                || article_keyword == null || share_initcount == null || collect_count == null
-                || content_excerpt == null || word_count == null || details_txt == null || article_id == null) {
+
+
+
+        Object article_title_e = data.get("article_title_e");
+        Object content_excerpt_e = data.get("content_excerpt_e");
+        Object article_keyword_e = data.get("article_keyword_e");
+        Object author_e = data.get("author_e");
+        Object reference = data.get("reference");
+        Object site_number = data.get("site_number");
+        Object publication_date = data.get("publication_date");
+
+        if ( article_id == null) {
             return getErrorMap();
         }
-        content_manual = content_manual.toString().replaceAll("webp", "png");
+        if(content_manual!=null){
+            content_manual = content_manual.toString().replaceAll("webp", "png");
+        }
+
         try {
             if (author == null) {
                 author = "";
             }
 
             String create_time = DateUtil.getCurrentTimeString();
-//            String sql = "insert into  zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source,create_time,share_initcount,collect_initcount,content_type,content_manual,word_count,details_txt,update_time,content_excerpt,share_count,collect_count) " +
-//                    "values(?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
-
-
             String sql = "UPDATE zz_wechat.article SET article_type_id=?,article_title=?,article_keyword=?," +
                     "author=?,source=?,create_time=date_format(?,'%Y-%m-%d %H:%i:%s')," +
                     "share_initcount=?,collect_initcount=?,content_type=?,content_manual=?,word_count=?," +
-                    "details_txt=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'),content_excerpt=? WHERE article_id=? ";
+                    "details_txt=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s'),content_excerpt=?" +
+                    ",article_title_e=?,content_excerpt_e=?,article_keyword_e=?,author_e=?" +
+                    ",reference=?,site_number=?,publication_date=?" +
+                    "  WHERE article_id=? ";
             int update = jdbcTemplate.update(sql, new Object[]{
 
                     article_type_id,
@@ -1036,6 +1046,13 @@ public class ArticleDaoIml implements ArticleDao {
                     details_txt.toString(),
                     create_time,
                     content_excerpt,
+                    article_title_e,
+                    content_excerpt_e,
+                    article_keyword_e,
+                    author_e,
+                    reference,
+                    site_number,
+                    publication_date,
                     article_id.toString()
 
 
