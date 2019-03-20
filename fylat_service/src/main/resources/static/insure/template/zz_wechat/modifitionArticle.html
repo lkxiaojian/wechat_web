@@ -1,11 +1,8 @@
 <!--头部导航信息-->
 <div class="modal-header">
     <div class="btn pull-right m-t-n-xs m-l-n list-icon">
-<!--
-        <a ui-sref="app.insure.article_list">
--->
-        <a ui-sref="{{listObj.pre_location}}">
-            <i class="fa fa-mail-reply-all"></i>
+        <a ui-sref="app.insure.article_list"> <i
+                class="fa fa-mail-reply-all"></i>
         </a>
     </div>
     <div style="margin: 0px 15px">
@@ -127,10 +124,10 @@
                             <input type="text" class="form-control" value="{{listObj.dataTime}}"
                                    ng-click="listObj.setTIme('time', '%y-%M-%d', 'yyyy-MM-dd ')"
                                    id="time" require/>
-                         <!--   <span class="input-group-btn"><button type="button" class="btn btn-default"
-                            ng-click="listObj.setTIme('time', '%y/%M/%d', 'yyyy/MM/dd')">
-                            <i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>-->
+                            <!--   <span class="input-group-btn"><button type="button" class="btn btn-default"
+                               ng-click="listObj.setTIme('time', '%y/%M/%d', 'yyyy/MM/dd')">
+                               <i class="glyphicon glyphicon-calendar"></i></button>
+                               </span>-->
                         </div>
 
                     </div>
@@ -193,7 +190,7 @@
                     <div class="form-group">
                         <div class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0">
                             <button class="button"  ngf-select="uploadImage($files)" ngf-pattern="'image/*'"
-                                    ngf-multiple="false"  ng-hide="listObj.operate_type == 'view'">
+                                    ngf-multiple="false">
                                 选择文件
                             </button>
                         </div>
@@ -226,7 +223,7 @@
             <div class="modal-footer">
                 <!--<span class="_color_red pull-left">{{error_msg}}</span>-->
                 <button type="button" class="btn btn-default btn-rounded"
-                        ng-click="listObj.addMessageCommit()" ng-hide="listObj.operate_type == 'view'">提交
+                        ng-click="listObj.addMessageCommit()">提交
                 </button>
             </div>
         </tab>

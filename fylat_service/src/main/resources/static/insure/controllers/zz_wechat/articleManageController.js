@@ -140,11 +140,23 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         events: {
                             'click .a-view': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {article_id: row.article_id,pre_location:$scope.listObj.current_location,operate_type:"view",article_type: "article"});
+                                $state.go('app.insure.modify_article', {
+                                    article_id: row.article_id,
+                                    pre_location:$scope.listObj.current_location,
+                                    operate_type:"view",
+                                    type: "0",//文章
+                                    tmp_type: "1"//查正式表
+                                });
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },
                             'click .a-edit': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {article_id: row.article_id,pre_location:$scope.listObj.current_location,operate_type:"edit",article_type: "article"});
+                                $state.go('app.insure.modify_article', {
+                                    article_id: row.article_id,
+                                    pre_location:$scope.listObj.current_location,
+                                    operate_type:"edit",
+                                    type:"0",//文章
+                                    tmp_type: "1"
+                                });
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },
                             'click .a-delete': function (e, value, row, index) {
@@ -178,10 +190,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
         $scope.batchDownload = function(){
             var array = $scope.tableInstance.bootstrapTable('getSelections');
             if(!array || array.length == 0){
-                modalTip({
-                    tip: "请至少勾选一条数据",
-                    type: true
-                });
+                layer.msg("请至少勾选一条数据");
                 return;
             }
             // tablesToExcel(['articleTb'], ['ProductDay1'], 'TestBook.xls', 'Excel');
@@ -191,10 +200,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
         $scope.batchDelete = function(){
             var array = $scope.tableInstance.bootstrapTable('getSelections');
             if(!array || array.length == 0){
-                modalTip({
-                    tip: "请至少勾选一条数据",
-                    type: true
-                });
+                layer.msg("请至少勾选一条数据");
                 return;
             }
             var ids = "";
@@ -207,6 +213,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
 
         function deleteData(rowIds){
             if (confirm(switchLang.switchLang('确认删除勾选的数据吗？'))) {
+                layer.load(2);
                 $http({
                     method: 'GET',
                     url: 'releaseManagement/delAricleTmpList/rest',
@@ -214,24 +221,17 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         articleIdList: rowIds
                     }
                 }).success(function (data) {
+                    layer.closeAll('loading');
                     if (data.code == 0) {
-                        modalTip({
-                            tip: data.message,
-                            type: true
-                        });
+                        layer.msg(data.message);
                         $scope.tableInstance.bootstrapTable('refresh');
                     } else {
-                        modalTip({
-                            tip: data.message,
-                            type: false
-                        });
+                        layer.alert(data.message);
                     }
 
                 }).error(function (data) {
-                    modalTip({
-                        tip: "删除失败",
-                        type: false
-                    });
+                    layer.closeAll('loading');
+                    layer.alert("删除失败");
                 })
             }
         }

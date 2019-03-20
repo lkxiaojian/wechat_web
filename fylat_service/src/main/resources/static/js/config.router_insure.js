@@ -121,10 +121,11 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                 article_id: null,
                 pre_location: null,
                 operate_type: null,
-                article_type: null
+                type: null,//论文OR文章
+                tmp_type: null //1查询已发布的，0查询未发布的
             },
             templateUrl: 'insure/template/zz_wechat/modifitionArticle.html',
-            pageTitle: '修改文章',
+            pageTitle: '修改',
             controller: 'modificationArticleManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
