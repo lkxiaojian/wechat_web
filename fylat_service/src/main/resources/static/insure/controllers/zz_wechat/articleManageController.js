@@ -140,7 +140,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         events: {
                             'click .a-view': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {
+                                $state.go('app.insure.modify_paper', {
                                     article_id: row.article_id,
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"view",
@@ -150,7 +150,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },
                             'click .a-edit': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {
+                                $state.go('app.insure.modify_paper', {
                                     article_id: row.article_id,
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"edit",
