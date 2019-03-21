@@ -209,6 +209,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             },
             publish:function () {
                 //TODO 后台没有提供发布功能啊
+                layer.load(2);
                 $scope.save(function(){
                     $http({
                         method: 'GET',
