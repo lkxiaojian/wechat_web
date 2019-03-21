@@ -402,7 +402,7 @@ public class ArticleDaoIml implements ArticleDao {
         List<Map<String, Object>> gzList = jdbcTemplate.queryForList(gzSql, new Object[]{
                 1,
                 wechatid,
-                0,
+                100,
                 -1
         });
 
@@ -422,7 +422,7 @@ public class ArticleDaoIml implements ArticleDao {
                 user_id,
                 wechatid,
                 1,
-                0,
+                100,
                 -1
         });
 
