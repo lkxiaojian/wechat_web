@@ -2,7 +2,6 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         var editor;
         $scope.listObj = {
-            current_location: 'app.insure.article_list',
             navigationMsg: '管理平台 >文章管理',
             seachMessage: '',
             seach: function () {
@@ -92,7 +91,7 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                         },
                         events: {
                             'click .a-edit': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {article_id: row.article_id,pre_location:$scope.listObj.current_location,operate_type:"edit",article_type: "article"});
+                                $state.go('app.insure.modify_article', {article_id: row.article_id});
                                 $scope.testInstance.bootstrapTable('refresh');
                                 // modalTip({
                                 //     tip: '开发中',

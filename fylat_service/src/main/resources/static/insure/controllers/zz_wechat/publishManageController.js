@@ -4,6 +4,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         $scope.listObj = {
             navigationMsg: '管理平台 >发布管理',
             artcicle_type_id: $stateParams.type_id,//类型id
+            pre_location: $stateParams.pre_location,
             current_location: "app.insure.publish_manage"
         };
 

@@ -1,0 +1,189 @@
+<!--头部导航信息-->
+<div class="modal-header">
+    <div class="btn pull-right m-t-n-xs m-l-n list-icon">
+        <a ui-sref="{{listObj.pre_location}}"> <i
+                class="fa fa-mail-reply-all"></i>
+        </a>
+    </div>
+    <div style="margin: 0px 15px">
+        <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
+    </div>
+</div>
+
+<!--内容区-->
+<div class="wrapper-md">
+<!--
+            <tab-heading>修改文章</tab-heading>
+-->
+    <div class="modal-body" style="padding: 0;">
+        <form class="form-horizontal m-b-md" id="add_integration"
+              name="addIntegrationFormValidate" novalidate>
+
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star">*</span>标题</label>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input type="text" class="form-control"
+                           ng-model="listObj.integrationQuery.article_title" value="请输入标题"
+                           ng-maxlength="50" id="article_title" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star">*</span>类型</label>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <ui-select ng-model="listObj.regionType.selected" id = "article_type"
+                               on-select="listObj.getRegionTypeSelect($item)"
+                               theme="bootstrap">
+
+                        <ui-select-match
+                                placeholder="{{'请选择类型' | translate}}">
+                            {{$select.selected.article_type_name}}
+                        </ui-select-match>
+                        <ui-select-choices group-by="'group'"
+                                           repeat="item in listObj.articleTypeData | filter: $select.search">
+                            <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star">*</span>来源</label>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <input type="text" class="form-control" id="source"
+                           ng-model="listObj.integrationQuery.source" value="请输入来源"
+                           required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>发表时间</label>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+
+<!--
+                    <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd2" name="updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+-->
+
+                    <!--<input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;"
+                           id="create_time" class="Wdate" readonly="readonly"  value="{{listObj.integrationQuery.create_time}}"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'1900',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099\'}'})"/>
+                    -->
+                  <!--  <input type="text" class="form-control" value="{{listObj.dataTime}}"
+                           ng-click="listObj.setTime('time', '%y-%M-%d', 'yyyy-MM-dd ')"
+                           id="time" require/>-->
+                    <input type="text" class="form-control" value="{{listObj.integrationQuery.create_time}}"
+                           ng-click="listObj.setTime('create_time', '%y-%M-%d', 'yyyy-MM-dd ')"
+                           id="create_time" readonly/>
+                </div>
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>入库时间</label>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <input type="text" class="form-control" value="{{listObj.integrationQuery.update_time}}"
+                           ng-click="listObj.setTime('update_time', '%y-%M-%d', 'yyyy-MM-dd ')"
+                           id="update_time" readonly/>
+                    <!--
+                    <input type="text" class="form-control" value="{{listObj.integrationQuery.update_time}}"
+                           ng-click="listObj.setTime('time', '%y-%M-%d', 'yyyy-MM-dd ')"
+                           id="update_time" require/>-->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>作者</label>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <input type="text" class="form-control" name="itName"
+                           ng-model="listObj.integrationQuery.author" value="请输入作者"
+                           required/>
+                </div>
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>字数</label>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <input type="number" class="form-control" name="itName"
+                           ng-model="listObj.integrationQuery.word_count" value="请输入字数"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star">*</span>关键词</label>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input type="text" class="form-control" id="article_keyword"
+                           ng-maxlength="50" id="policy_code" value="请输入关键词"
+                           ng-model="listObj.integrationQuery.article_keyword" required/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star">*</span>摘要</label>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                   <textarea class="form-control" rows="3"
+                             ng-model="listObj.integrationQuery.content_excerpt"
+                             value="请输入摘要" id="content_excerpt"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"><span
+                        class="text-danger m-r-xs font-bold as-star">*</span>正文</label>
+                <div class="col-sm-10">
+                    <div id="weEditor" ng-model="listObj.integrationQuery.content" id ="content"></div>
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="listObj.type == '1'">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>参考文献</label>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                   <textarea class="form-control" rows="3"
+                             ng-model="listObj.integrationQuery.reference" value="请输入参考文献"
+                             name="special_appointment" id="reference"></textarea>
+                </div>
+            </div>
+
+            <!-- 分享基数 收藏基数-->
+            <!--
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>领域</label>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <ui-select ng-model="listObj.region.selected"
+                               on-select="listObj.getRegionSelect($item)"
+                               theme="bootstrap">
+                        <ui-select-match
+                                placeholder="{{'请选择领域' | translate}}">
+                            {{$select.selected.article_type_name}}
+                        </ui-select-match>
+                        <ui-select-choices group-by="'group'"
+                                           repeat="item in listObj.projectData | filter: $select.search">
+                            <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>分享基数</label>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="number" class="form-control" name="itName"
+                           ng-model="listObj.integrationQuery.share_initcount" value="请输入分享基数"
+                           required/>
+                </div>
+
+                <label class="col-lg-1 col-md-1 col-sm-1 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>收藏基数</label>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <input type="number" class="form-control" name="itName"
+                           ng-model="listObj.integrationQuery.collect_count" value="请输入收藏基数"
+                           required/>
+                </div>
+            </div>-->
+
+        </form>
+    </div>
+    <div class="modal-footer"  ng-show="listObj.operate_type == 'edit'">
+        <!--<span class="_color_red pull-left">{{error_msg}}</span>-->
+        <button type="button" class="btn btn-default btn-danger" ng-click="operate.delete()">删除</button>
+        <button type="button" class="btn btn-default btn-success" ng-click="operate.check()">审核</button>
+        <button type="button" class="btn btn-default btn-warning" ng-click="operate.save()">保存</button>
+        <button type="button" class="btn btn-default btn-info" ng-click="operate.publish()">发布</button>
+    </div>
+
+</div>

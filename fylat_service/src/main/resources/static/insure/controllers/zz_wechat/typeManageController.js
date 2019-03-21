@@ -34,6 +34,9 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             $("#editModal").modal("hide");
         }
         $('#editModal').on('hidden.bs.modal', function () {
+            debugger
+            $scope.typeForm.iamge_icon_file = "";
+            $scope.typeForm.iamge_back_file = "";
             $scope.mulImages = [];
         })
         $scope.update = function () {
@@ -47,7 +50,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 layer.msg("关键词为空！！！")
                 return;
             }
-            if (!$scope.typeForm.iamge_icon || !$scope.typeForm.iamge_back) {
+            if ((!$scope.typeForm.iamge_icon && !$scope.typeForm.iamge_icon_file)
+                || (!$scope.typeForm.iamge_back && !$scope.typeForm.iamge_back_file)) {
                 layer.msg("有图片还没有选择")
                 $scope.mulImages = [];
                 return;
@@ -75,7 +79,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             }).success(function (data) {
                 layer.closeAll('loading');
                 if(data.code == '0'){
-                    layer.alert("修改成功");
+                    layer.msg("修改成功");
                     $scope.mulImages = [];
                     $("#editModal").modal("hide");
                     $scope.focusNode = $scope.typeForm.article_type_id;
@@ -169,7 +173,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
 
                 //聚焦
                 if ($scope.focusNode) {
-                    $scope.myTree.findItem($scope.focusNode, 0, 1);
+                    $scope.myTree.selectItem($scope.focusNode, 0, 1);
                 }
             });
             // // 设置允许动态加载xml文件（异步加载）
