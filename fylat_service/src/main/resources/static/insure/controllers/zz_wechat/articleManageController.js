@@ -212,7 +212,11 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
 
         function deleteData(rowIds){
-            if (confirm(switchLang.switchLang('确认删除勾选的数据吗？'))) {
+            var confirm = layer.confirm('确认删除勾选的数据吗？', {
+                btn: ['取消','确认'] //按钮
+            }, function(){
+                layer.close(confirm);
+            }, function(){
                 layer.load(2);
                 $http({
                     method: 'GET',
@@ -233,7 +237,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     layer.closeAll('loading');
                     layer.alert("删除失败");
                 })
-            }
+            });
         }
 
         //获取所有已发布的类型

@@ -161,13 +161,23 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
 
         $scope.operate = {
             delete:function(){
-                if (confirm(switchLang.switchLang('确认删除数据吗？'))) {
+                var confirm = layer.confirm('确认删除勾选的数据吗？', {
+                    btn: ['取消','确认'] //按钮
+                }, function(){
+                    layer.close(confirm);
+                }, function(){
+                    var url = "releaseManagement/delAricleTmpList/rest";
+                    if($scope.listObj.tmp_type == '1'){
+                        url = 'article/deletedById';
+                    }
                     layer.load(2);
                     $http({
                         method: 'GET',//TODO 后台没支持已发布的删除
-                        url: 'releaseManagement/delAricleTmpList/rest',
+                        url: url,
                         params: {
-                            articleIdList: $scope.listObj.article_id
+                            articleIdList: $scope.listObj.article_id,
+                            article_id: $scope.listObj.article_id,
+                            type: $scope.listObj.type
                         }
                     }).success(function (data) {
                         layer.closeAll('loading');
@@ -182,10 +192,10 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         layer.closeAll('loading');
                         layer.alert("删除失败");
                     })
-                }
+                });
             },
             check:function(){
-                var confirm = layer.confirm('确认发布勾选的数据吗？', {
+                var confirm = layer.confirm('确认审核勾选的数据吗？', {
                     btn: ['取消','确认'] //按钮
                 }, function(){
                     layer.close(confirm);
@@ -289,7 +299,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             }
             layer.load(2);
             $http({
-                url: 'releaseManagement/updateAricleTmpMesage/rest',
+                url: url,
                 method: 'POST',
                 data: {
                     type: $scope.listObj.type,
