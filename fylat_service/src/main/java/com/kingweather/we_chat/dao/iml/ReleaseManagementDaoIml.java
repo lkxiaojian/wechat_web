@@ -26,11 +26,10 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     @Override
     public List<Map> getTypeMenuTree(String parent_id, String type) {
 
-        String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+        String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
 
         if ("1".equals(type)) {
             sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,1 as issue  from zz_wechat.article_type where del_type!=? and parentid=?";
-
         }
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
                 1, parent_id

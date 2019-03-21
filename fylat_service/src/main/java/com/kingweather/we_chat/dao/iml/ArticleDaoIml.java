@@ -189,10 +189,10 @@ public class ArticleDaoIml implements ArticleDao {
 //        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
         String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title, a.article_title_e,a.content_excerpt,a.content_excerpt_e,"
-                + "a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,a.create_time,"
+                + "a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,"
                 + "(a.share_count+a.collect_initcount) AS share_count,"
                 + "(a.collect_count+a.collect_initcount) AS collect_count ,"
-                + "a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path  "
+                + "a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path,a.reference ,a.paper_create_time,a.site_number "
                 + "FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
