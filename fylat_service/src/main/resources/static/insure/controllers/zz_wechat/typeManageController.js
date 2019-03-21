@@ -131,6 +131,31 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         $scope.refresh = function () {
             $scope.myTree.refreshItem();
         }
+        //相似度
+        $scope.similarity = function () {
+            layer.load(2);
+            $http({
+                method: 'GET',
+                url: 'releaseManagement/combinedScore/rest'
+            }).success(function (data) {
+                layer.closeAll('loading');
+                if (data.code == 0) {
+                    $scope.similarityList = data.result;
+
+                    $("#similarityModal").modal({
+/*
+                        backdrop:'static',
+*/
+                        keyboard : false
+                    });
+                } else {
+                    layer.alert(data.message, {icon: 2})
+                }
+            }).error(function (data) {
+                layer.closeAll('loading');
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
         $scope.goPubView = function () {
             $state.go('app.insure.publish_manage',
                 {pre_location: $scope.listObj.current_location});
