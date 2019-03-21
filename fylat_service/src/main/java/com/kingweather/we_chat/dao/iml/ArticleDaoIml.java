@@ -54,11 +54,11 @@ public class ArticleDaoIml implements ArticleDao {
         HashMap<String, Object> map = new HashMap<>();
 //        if(mapList.size()>0){
 //            Map map1 = mapList.get(0);
-            int articleNum=  jdbcTemplate.queryForObject("SELECT COUNT(article_id) FROM article WHERE article_type_id = ? AND  state=0  ",Integer.class,new Object[]{articleId});
-            int paperNum =  jdbcTemplate.queryForObject("SELECT COUNT(article_id) FROM article WHERE article_type_id = ? AND  state=1  ",Integer.class,new Object[]{articleId});
+        int articleNum = jdbcTemplate.queryForObject("SELECT COUNT(article_id) FROM article WHERE article_type_id = ? AND  state=0  ", Integer.class, new Object[]{articleId});
+        int paperNum = jdbcTemplate.queryForObject("SELECT COUNT(article_id) FROM article WHERE article_type_id = ? AND  state=1  ", Integer.class, new Object[]{articleId});
 
-            map.put("articleNum", articleNum);
-            map.put("paperCount", paperNum);
+        map.put("articleNum", articleNum);
+        map.put("paperCount", paperNum);
 //        }else{
 //            map.put("articleNum", 0);
 //            map.put("paperCount", 0);
@@ -189,21 +189,19 @@ public class ArticleDaoIml implements ArticleDao {
 //        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
         String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title, a.article_title_e,a.content_excerpt,a.content_excerpt_e,"
-                +"a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,a.create_time,"
-                +"(a.share_count+a.collect_initcount) AS share_count,"
-                +"(a.collect_count+a.collect_initcount) AS collect_count ,"
-                +"a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path  "
-                +"FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
+                + "a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,a.create_time,"
+                + "(a.share_count+a.collect_initcount) AS share_count,"
+                + "(a.collect_count+a.collect_initcount) AS collect_count ,"
+                + "a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path  "
+                + "FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
-            String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
-            jdbcTemplate.update(sql, new Object[]{
-                    articleId,
-                    wechatid,
-                    messageMap.get("article_type_id").toString()
-            });
-
-
+        String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
+        jdbcTemplate.update(sql, new Object[]{
+                articleId,
+                wechatid,
+                messageMap.get("article_type_id").toString()
+        });
 
 
         //获取相关文章（后期改成随机三遍文章）
@@ -454,12 +452,16 @@ public class ArticleDaoIml implements ArticleDao {
         if (objId == null) {
             return getErrorMap();
         }
+
+        if (message != null) {
+            message = message.replaceAll(" ", "");
+        }
         String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
-        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=0 AND  parentid !=-1 AND (article_type_name LIKE '%" +
+        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=0 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
                 message +
-                "%' or article_type_keyword  LIKE '%" +
+                "%' or binary article_type_keyword  LIKE '%" +
                 message +
                 "%') AND article_type_id in (SELECT article_type_id FROM user_articletype WHERE user_id='" +
                 user_id +
@@ -467,7 +469,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         List<Map<String, Object>> gzMapList = jdbcTemplate.queryForList(gzSeachSql);
 
-        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=0 AND  parentid !=-1 AND (article_type_name LIKE '%" +
+        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=0 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -482,22 +484,39 @@ public class ArticleDaoIml implements ArticleDao {
         resultMap.put("articleType", list);
         String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                 user_id +
-                "' ) AND (article_title LIKE '%" +
+                "' ) AND (binary article_title LIKE '%" +
                 message +
-                "%' OR article_keyword LIKE '%" +
+                "%' OR binary article_keyword LIKE '%" +
                 message +
-                "%' OR author LIKE '%" +
+                "%' OR binary author LIKE '%" +
                 message +
-                "%' OR source LIKE '%" +
+                "%' OR binary source LIKE '%" +
                 message +
-                "%' OR content_crawl LIKE '%" +
+                "%' OR binary content_crawl LIKE '%" +
                 message +
                 "%'" +
-                "OR content_manual LIKE '%" +
+                "OR binary content_manual LIKE '%" +
                 message +
-                "%' OR content_excerpt LIKE '%" +
+                "%' OR binary content_excerpt LIKE '%" +
                 message +
-                "%')";
+                "%' "+
+                " OR binary posting_name LIKE '%" +
+                message +
+                "%' OR binary article_title_e LIKE '%" +
+                message +
+                "%'"+
+                " OR binary content_excerpt_e LIKE '%" +
+                message +
+                "%' OR binary article_keyword_e LIKE '%" +
+                message +
+                "%' "
+                +
+                "OR binary reference LIKE '%" +
+                message +
+                "%' OR binary site_number LIKE '%" +
+                message +
+                "%')"
+                ;
 
         Map<String, Object> map = jdbcTemplate.queryForMap(gzArticleSqlCount);
         Object objCount = map.get("count");
@@ -511,22 +530,39 @@ public class ArticleDaoIml implements ArticleDao {
 
             String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
-                    "' ) AND (article_title LIKE '%" +
+                    "' ) AND (binary article_title LIKE '%" +
                     message +
-                    "%' OR article_keyword LIKE '%" +
+                    "%' OR binary article_keyword LIKE '%" +
                     message +
-                    "%' OR author LIKE '%" +
+                    "%' OR binary author LIKE '%" +
                     message +
-                    "%' OR source LIKE '%" +
+                    "%' OR binary source LIKE '%" +
                     message +
-                    "%' OR content_crawl LIKE '%" +
+                    "%' OR binary content_crawl LIKE '%" +
                     message +
                     "%'" +
-                    "OR content_manual LIKE '%" +
+                    "OR binary content_manual LIKE '%" +
                     message +
-                    "%' OR content_excerpt LIKE '%" +
+                    "%' OR binary content_excerpt LIKE '%" +
                     message +
-                    "%') ORDER BY create_time desc LIMIT " +
+                    "%'" +
+                    "OR binary posting_name LIKE '%" +
+                    message +
+                    "%' OR binary article_title_e LIKE '%" +
+                    message +
+                    "%'"+
+                    "OR binary content_excerpt_e LIKE '%" +
+                    message +
+                    "%' OR binary article_keyword_e LIKE '%" +
+                    message +
+                    "%'"
+                    +
+                    "OR binary reference LIKE '%" +
+                    message +
+                    "%' OR binary site_number LIKE '%" +
+                    message +
+                    "%'"+
+                    ") ORDER BY create_time desc LIMIT " +
                     page * pageSize +
                     "," +
                     pageSize;
@@ -567,7 +603,7 @@ public class ArticleDaoIml implements ArticleDao {
                     "%' OR content_crawl LIKE '%" +
                     message +
                     "%'" +
-                    "OR content_manual LIKE '%" +
+                    " OR content_manual LIKE '%" +
                     message +
                     "%' OR content_excerpt LIKE '%" +
                     message +
@@ -840,7 +876,7 @@ public class ArticleDaoIml implements ArticleDao {
             }
             idList = idList.substring(0, idList.length() - 1);
 
-            String sql = "DELETE from zz_wechat.article  where article_id in("+idList+")";
+            String sql = "DELETE from zz_wechat.article  where article_id in(" + idList + ")";
             jdbcTemplate.update(sql);
 
         } else {
@@ -1001,7 +1037,6 @@ public class ArticleDaoIml implements ArticleDao {
         Object details_txt = data.get("details_txt");
 
 
-
         Object article_title_e = data.get("article_title_e");
         Object content_excerpt_e = data.get("content_excerpt_e");
         Object article_keyword_e = data.get("article_keyword_e");
@@ -1010,10 +1045,10 @@ public class ArticleDaoIml implements ArticleDao {
         Object site_number = data.get("site_number");
         Object publication_date = data.get("publication_date");
 
-        if ( article_id == null) {
+        if (article_id == null) {
             return getErrorMap();
         }
-        if(content_manual!=null){
+        if (content_manual != null) {
             content_manual = content_manual.toString().replaceAll("webp", "png");
         }
 
@@ -1341,8 +1376,8 @@ public class ArticleDaoIml implements ArticleDao {
         }
         idList = idList.substring(0, idList.length() - 1);
         String sql = "update zz_wechat.keyword set del_type=0 where id in(" + idList + ")";
-        if("1".equals(type)){
-             sql = "update zz_wechat.article set del_type=0 where article_id in(" + idList + ")";
+        if ("1".equals(type)) {
+            sql = "update zz_wechat.article set del_type=0 where article_id in(" + idList + ")";
         }
 
         jdbcTemplate.update(sql);
