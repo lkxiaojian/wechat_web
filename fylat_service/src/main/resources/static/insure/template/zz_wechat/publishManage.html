@@ -25,9 +25,7 @@
 
     <ul id="myTab" class="nav nav-tabs">
         <li class="active" ng-init="activeTab=1">
-            <a ng-click='activeTab=1' data-toggle="tab">
-                文章管理
-            </a>
+            <a ng-click='activeTab=1' data-toggle="tab">文章管理</a>
         </li>
         <li><a ng-click='activeTab=2' data-toggle="tab">论文管理</a></li>
 
@@ -96,10 +94,10 @@
             </div>
             <div>
                 <div class="btn-group col-lg-12" style="padding-left: 1px;">
-                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
-                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
-                    <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish()">批量发布</button>
-                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll(0)">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll(0)">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish(0)">批量发布</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete(0)">批量删除</button>
                 </div>
                 <table table-directive tableoption="articleTmpOption" instance="articleTmpInstance" style="height: 286px"></table>
             </div>
@@ -159,10 +157,10 @@
             </div>
             <div>
                 <div class="btn-group col-lg-12" style="padding-left: 1px;">
-                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
-                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
-                    <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish()">批量发布</button>
-                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll(1)">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll(1)">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish(1)">批量发布</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete(1)">批量删除</button>
                 </div>
                 <table table-directive tableoption="paperTmpOption" instance="paperTmpInstance"
                        style="height: 286px"></table>
