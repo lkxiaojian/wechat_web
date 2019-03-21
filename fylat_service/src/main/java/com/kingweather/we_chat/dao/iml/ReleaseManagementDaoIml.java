@@ -587,8 +587,6 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             Object reference = data.get("reference");
             Object site_number = data.get("site_number");
             Object publication_date = data.get("publication_date");
-
-
             Object tmp_type = data.get("tmp_type");
 
             String sql = "update zz_wechat.academic_paper set article_type_id=?,article_title=?,article_keyword=?,author=?,source=?," +
