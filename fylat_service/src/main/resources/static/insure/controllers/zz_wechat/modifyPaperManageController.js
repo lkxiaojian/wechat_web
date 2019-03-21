@@ -101,12 +101,17 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                 $scope.listObj.operate_type = $stateParams.operate_type;
                 $scope.listObj.type = $stateParams.type;
                 $scope.listObj.tmp_type = $stateParams.tmp_type;
-
+                var url = "releaseManagement/getAricleTmpMessageById/rest";
+                if($scope.listObj.tmp_type == '1'){
+                    url = 'article/webMessage';
+                }
                 $http({
-                    url: 'article/webMessage',
+                    url: url,
                     method: "GET",
                     params: {
-                        article_id: $scope.listObj.article_id
+                        articleId : $scope.listObj.article_id,
+                        article_id: $scope.listObj.article_id,
+                        type : $scope.listObj.type
                     }
                 }).success(function (data) {
                     debugger
@@ -180,7 +185,11 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                 }
             },
             check:function(){
-                if (confirm(switchLang.switchLang('确认审批通过吗？'))) {
+                var confirm = layer.confirm('确认发布勾选的数据吗？', {
+                    btn: ['取消','确认'] //按钮
+                }, function(){
+                    layer.close(confirm);
+                }, function(){
                     layer.load(2);
                     $http({
                         method: 'GET',//TODO 后台没支持已发布的审核啊
@@ -202,7 +211,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         layer.closeAll('loading');
                         layer.alert("删除失败");
                     })
-                }
+                });
             },
             save:function(){
                 $scope.save();
@@ -274,6 +283,10 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             }
 
             $scope.listObj.dataTime = angular.element('#time').val();
+            var url = "releaseManagement/updateAricleTmpMesage/rest";
+            if($scope.listObj.tmp_type == '1'){
+                url = 'article/updateArticle';
+            }
             layer.load(2);
             $http({
                 url: 'releaseManagement/updateAricleTmpMesage/rest',

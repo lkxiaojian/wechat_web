@@ -8,7 +8,6 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             current_location: "app.insure.publish_manage"
         };
 
-        //论文列表
         $scope.listAritcle = function () {
 
             $scope.articleTmpOption = {
@@ -119,7 +118,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     align: 'center',
                     width: "100px",
                     formatter: function (value, row, index) {
-                        return '<button type="button" class="btn btn-default btn-sm" ng-click="check(row.article.id,0)">审核</button>';
+                        return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
+                    },
+                    events: {
+                        'click .a-check': function (e, value, row, index) {
+                            check(row.article_id, 0);
+                        }
                     }
                 }, {
                     title: '发布',
@@ -127,7 +131,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     align: 'center',
                     width: "100px",
                     formatter: function (value, row, index) {
-                        return '<button type="button" class="btn btn-default btn-sm" ng-click="publish(row.article.id,0)">发布</button>';
+                        return '<a class="a-publish a-blue btn btn-default btn-sm" href="javascript:;">发布</a>';
+                    },
+                    events: {
+                        'click .a-publish': function (e, value, row, index) {
+                            publish(row.article_id, 0);
+                        }
                     }
                 }, {
                     title: '操作',
@@ -142,22 +151,22 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     },
                     events: {
                         'click .a-view': function (e, value, row, index) {
-                            $state.go('app.insure.modify_article', {
+                            $state.go('app.insure.modify_paper', {
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
                                 type: "0",//文章
-                                tmp_type: "1"
+                                tmp_type: "0"
                             });
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
                         'click .a-edit': function (e, value, row, index) {
-                            $state.go('app.insure.modify_article', {
+                            $state.go('app.insure.modify_paper', {
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"edit",
                                 type: "0",//文章
-                                tmp_type: "1"
+                                tmp_type: "0"
                             });
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
@@ -277,7 +286,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     align: 'center',
                     width: "100px",
                     formatter: function (value, row, index) {
-                        return '<button type="button" class="btn btn-default btn-sm" ng-click="check(row.article.id,1)">审核</button>';
+                        return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
+                    },
+                    events: {
+                        'click .a-check': function (e, value, row, index) {
+                            check(row.article_id, 1);
+                        }
                     }
                 }, {
                     title: '发布',
@@ -285,7 +299,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     align: 'center',
                     width: "100px",
                     formatter: function (value, row, index) {
-                        return '<button type="button" class="btn btn-default btn-sm" ng-click="publish(row.article.id,1)">发布</button>';
+                        return '<a class="a-publish a-blue btn btn-default btn-sm" href="javascript:;">发布</a>';
+                    },
+                    events: {
+                        'click .a-publish': function (e, value, row, index) {
+                            publish(row.article_id, 1);
+                        }
                     }
                 }, {
                     title: '操作',
@@ -300,7 +319,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     },
                     events: {
                         'click .a-view': function (e, value, row, index) {
-                            $state.go('app.insure.modify_article', {
+                            $state.go('app.insure.modify_paper', {
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
@@ -310,7 +329,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
                         'click .a-edit': function (e, value, row, index) {
-                            $state.go('app.insure.modify_article', {
+                            $state.go('app.insure.modify_paper', {
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"edit",
@@ -411,35 +430,37 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             publish(ids,type);
         }
         function publish(rowIds,type){
-            if (confirm(switchLang.switchLang('确认发布所选的数据吗？'))) {
+            var confirm = layer.confirm('确认发布勾选的数据吗？', {
+                btn: ['取消','确认'] //按钮
+            }, function(){
+                layer.close(confirm);
+            }, function(){
                 layer.load(2);
-                $scope.save(function(){
-                    $http({
-                        method: 'GET',
-                        url: 'releaseManagement/pushAricleTmpById/rest',
-                        params: {
-                            articleIds: ids,
-                            type:type
+                $http({
+                    method: 'GET',
+                    url: 'releaseManagement/pushAricleTmpById/rest',
+                    params: {
+                        articleIds: rowIds,
+                        type:type
+                    }
+                }).success(function (data) {
+                    layer.closeAll('loading');
+                    if (data.code == 0) {
+                        layer.msg(data.message);
+                        if(type=='0'){
+                            $scope.articleTmpInstance.bootstrapTable('refresh');
+                        }else{
+                            $scope.paperTmpInstance.bootstrapTable('refresh');
                         }
-                    }).success(function (data) {
-                        layer.closeAll('loading');
-                        if (data.code == 0) {
-                            layer.msg(data.message);
-                            if(type=='0'){
-                                $scope.articleTmpInstance.bootstrapTable('refresh');
-                            }else{
-                                $scope.paperTmpInstance.bootstrapTable('refresh');
-                            }
-                        } else {
-                            layer.alert(data.message);
-                        }
+                    } else {
+                        layer.alert(data.message);
+                    }
 
-                    }).error(function (data) {
-                        layer.closeAll('loading');
-                        layer.alert("发布失败");
-                    })
-                });
-            }
+                }).error(function (data) {
+                    layer.closeAll('loading');
+                    layer.alert("发布失败");
+                })
+            });
         }
         $scope.batchDelete=function (type) {
             var array;
@@ -461,7 +482,11 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
 
         function deleteData(rowIds){
-            if (confirm(switchLang.switchLang('确认删除勾选的数据吗？'))) {
+            var confirm = layer.confirm('确认删除勾选的数据吗？', {
+                btn: ['取消','确认'] //按钮
+            }, function(){
+                layer.close(confirm);
+            }, function(){
                 layer.load(2);
                 $http({
                     method: 'GET',
@@ -486,11 +511,15 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     layer.closeAll('loading');
                     layer.alert("删除失败");
                 })
-            }
+            });
         }
         //审核
         function check(article_id,type){
-            if (confirm(switchLang.switchLang('确认审批通过吗？'))) {
+            var confirm = layer.confirm('确认审核勾选的数据吗？', {
+                btn: ['取消','确认'] //按钮
+            }, function(){
+                layer.close(confirm);
+            }, function(){
                 layer.load(2);
                 $http({
                     method: 'GET',//TODO 后台没支持已发布的审核啊
@@ -516,7 +545,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     layer.closeAll('loading');
                     layer.alert("删除失败");
                 })
-            }
+            });
         }
 
     }]);
