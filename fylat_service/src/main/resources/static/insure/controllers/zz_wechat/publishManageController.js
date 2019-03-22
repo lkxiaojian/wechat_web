@@ -118,7 +118,11 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     align: 'center',
                     width: "100px",
                     formatter: function (value, row, index) {
-                        return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
+                        if(row.check_type == '1'){
+                            return '已审核';
+                        }else {
+                            return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
+                        }
                     },
                     events: {
                         'click .a-check': function (e, value, row, index) {
@@ -142,7 +146,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '操作',
                     class: 'col-md-1',
                     align: 'center',
-                    width: '100px',
+                    width: '115px',
                     formatter: function (value, row, index) {
 
                         return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
@@ -286,7 +290,11 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     align: 'center',
                     width: "100px",
                     formatter: function (value, row, index) {
-                        return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
+                        if(row.check_type == '1'){
+                            return '已审核';
+                        }else{
+                            return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
+                        }
                     },
                     events: {
                         'click .a-check': function (e, value, row, index) {
@@ -310,7 +318,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '操作',
                     class: 'col-md-1',
                     align: 'center',
-                    width: '100px',
+                    width: '115px',
                     formatter: function (value, row, index) {
 
                         return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +

@@ -182,7 +182,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     }).success(function (data) {
                         layer.closeAll('loading');
                         if (data.code == 0) {
-                            layer.msg(data.message);
+                            layer.alert(data.message);
                             $state.go($scope.pre_location);
                         } else {
                             layer.alert(data.message);
@@ -211,7 +211,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     }).success(function (data) {
                         layer.closeAll('loading');
                         if (data.code == 0) {
-                            layer.msg(data.message);
+                            layer.alert(data.message);
                             $state.go($scope.pre_location);
                         } else {
                             layer.alert(data.message);
@@ -240,7 +240,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     }).success(function (data) {
                         layer.closeAll('loading');
                         if (data.code == 0) {
-                            layer.msg(data.message);
+                            layer.alert(data.message);
                             $state.go($scope.pre_location);
                         } else {
                             layer.alert(data.message);
@@ -332,7 +332,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             }).success(function (data) {
                 layer.closeAll('loading');
                 if (data.code == 0) {
-                    layer.msg("保存成功");
+                    layer.alert("保存成功");
                     if(callback){
                         callback();
                     }else{
