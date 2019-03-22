@@ -4,6 +4,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             navigationMsg: "管理平台 >分类管理",
             type: $stateParams.type,
             current_location: "app.insure.type_manage",
+            pic_location: "http://106.2.11.94:7902"
         };
         //获取所有已发布的类型
         $scope.getAllType = function () {
@@ -34,7 +35,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             $("#editModal").modal("hide");
         }
         $('#editModal').on('hidden.bs.modal', function () {
-            debugger
             $scope.typeForm.iamge_icon_file = "";
             $scope.typeForm.iamge_back_file = "";
             $scope.mulImages = [];
@@ -131,6 +131,31 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         $scope.refresh = function () {
             $scope.myTree.refreshItem();
         }
+        //相似度
+        $scope.similarity = function () {
+            layer.load(2);
+            $http({
+                method: 'GET',
+                url: 'releaseManagement/combinedScore/rest'
+            }).success(function (data) {
+                layer.closeAll('loading');
+                if (data.code == 0) {
+                    $scope.similarityList = data.result;
+
+                    $("#similarityModal").modal({
+/*
+                        backdrop:'static',
+*/
+                        keyboard : false
+                    });
+                } else {
+                    layer.alert(data.message, {icon: 2})
+                }
+            }).error(function (data) {
+                layer.closeAll('loading');
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
         $scope.goPubView = function () {
             $state.go('app.insure.publish_manage',
                 {pre_location: $scope.listObj.current_location});
@@ -156,7 +181,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
 
             // 设置是否允许显示树图片
             // setOnLoadingStart   setOnLoadingEnd
-            $scope.myTree.setOnLoadingEnd(function () {
+            $scope.myTree.setOnLoadingEnd(function (node) {
+                debugger
                 //设置字体，以区分菜单节点和功能节点
                 var array = $scope.myTree.getAllSubItems(0).split(',');
 
@@ -180,12 +206,11 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             $scope.myTree.setXMLAutoLoading("releaseManagement/getTypeMenuTree/rest?type="+$scope.listObj.type);
             $scope.myTree.setDataMode("json");
 
-            $scope.myTree.loadJSON('releaseManagement/getTypeMenuTree/rest?type='+$scope.listObj.type, function () {
+            $scope.myTree.loadJSON('releaseManagement/getTypeMenuTree/rest?type='+$scope.listObj.type, function (data) {
                 $scope.myTree.openAllItems();
 
             });
             $scope.myTree.setDragHandler(function (srcNode, tarNode) {
-                debugger
                 layer.confirm('请选择操作？', {
                     btn: ['作为目标子类', '合并到目标'] //按钮
                 }, function () {
@@ -281,6 +306,18 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         $scope.typeForm.iamge_icon = data.data.iamge_icon;
                         $scope.typeForm.iamge_back = data.data.iamge_back;
                         $scope.typeForm.parentid = data.data.parentid;
+                        $scope.typeForm.article_type_name_old = data.data.article_type_name_old;
+                        $scope.typeForm.article_type_keyword_old = data.data.article_type_keyword_old;
+                        if(data.data.iamge_icon){
+                            $scope.iamge_icon_url = $scope.listObj.pic_location+data.data.iamge_icon;
+                        }else{
+                            $scope.iamge_icon_url = "";
+                        }
+                        if(data.data.iamge_back) {
+                            $scope.iamge_back_url = $scope.listObj.pic_location+data.data.iamge_back;
+                        }else{
+                            $scope.iamge_back_url = "";
+                        }
 
                         $("#editModal").modal({
                             backdrop:'static',

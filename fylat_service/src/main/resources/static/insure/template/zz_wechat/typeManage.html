@@ -19,16 +19,17 @@
                         <input class="form-control input-sm" placeholder="请输入" ng-model="typeName">
                     </div>
                     <div class="form-group form-inline"  style="width: 500px;">
-                        <a class="btn btn-default" ng-click="query()">搜索</a>
-                        <a class="btn btn-default" ng-click="publish()" ng-show="listObj.type == '0'">发布</a>
-                        <a class="btn btn-default" ng-click="refresh()">刷新</a>
-                        <a class="btn btn-default" ng-click="goPubView()" ng-show="listObj.type == '0'">进入文章发布</a>
+                        <a class="btn btn-info" ng-click="query()">搜索</a>
+                        <a class="btn btn-success" ng-click="publish()" ng-show="listObj.type == '0'">发布</a>
+                        <a class="btn btn-blue" ng-click="refresh()">刷新</a>
+                        <a class="btn btn-danger" ng-click="similarity()">相似度</a>
+                        <a class="btn btn-warning" ng-click="goPubView()" ng-show="listObj.type == '0'">进入文章发布</a>
                     </div>
                 </div>
-                <div class="search-con">
-                    <div id="dataTree" style="height:400px; border :1px solid Silver; overflow:auto;"></div>
-                </div>
             </form>
+            <div class="form-group">
+                <div id="dataTree" class="col-sm-12" style="margin:5px;height:400px; border :1px solid Silver; overflow:auto;"></div>
+            </div>
         </div>
     </div>
 
@@ -48,14 +49,14 @@
                     <input type="hidden" class="form-control input-sm" ng-model="typeForm.parentid">
 -->
                     <input type="hidden" class="form-control input-sm" ng-model="typeForm.article_type_id">
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label class="col-sm-2 control-label">上级类型:</label>
                         <div class="col-sm-10">
                             <select ng-model="typeForm.parentid" class="form-control input-sm">
                                 <option ng-repeat="x in typeList" value="{{x.article_type_id}}" ngf-select="typeForm.parentid==x.article_type_id">{{x.article_type_name}}</option>
                             </select>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">类型名称:</label>
                         <div class="col-sm-10">
@@ -69,6 +70,18 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">原类型名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="typeForm.article_type_name_old"  ng-disabled="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">原关键词:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="typeForm.article_type_keyword_old" ng-disabled="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-2 control-label">头像图:</label>
                         <div class="col-sm-2">
                             <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
@@ -78,7 +91,7 @@
                         </div>
                         <div class="col-sm-8">
                             <input type="hidden" ng-model="typeForm.iamge_icon"/>
-                            <img ngf-src="typeForm.iamge_icon_file || typeForm.iamge_icon" class="img-responsive" style="max-width: 50%"/>
+                            <img ngf-src="typeForm.iamge_icon_file || iamge_icon_url" class="img-responsive" style="max-width: 80px;max-height: 80px;"/>
                         </div>
                     </div>
                     <div class="form-group">
@@ -91,16 +104,49 @@
                         </div>
                         <div class="col-sm-8">
                             <input type="hidden" ng-model="typeForm.iamge_back"/>
-                            <img ngf-src="typeForm.iamge_back_file || typeForm.iamge_back" class="img-responsive" style="max-width: 50%"/>
+                            <img ngf-src="typeForm.iamge_back_file || iamge_back_url" class="img-responsive" style="max-width: 80px;max-height: 80px;"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
+                        <div class="col-sm-offset-2 col-sm-10" style="text-align: right;padding-right: 50px;">
                             <button class="btn btn-info" ng-disabled="searchuserForm.$invalid" ng-click="update()">保存</button>
                             <button class="btn btn-default" ng-click="cancel()">取消</button>
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="similarityModal">
+        <div class="modal-dialog modal-lg" role="document" style = "width:800px;">
+            <div class="modal-content" style="height: 280px;">
+                <div class="modal-header" style = "background-color:#355da5;">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" style = "color:#FFFFFF;">相似度</h4>
+                </div>
+                <div style="padding: 5px">
+                    <table class="table table-bordered" style="margin-top: 10px;">
+                        <thead>
+                        <tr>
+                            <th>类型1</th>
+                            <th>类型2</th>
+                            <th>分数</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="entity in similarityList">
+                                <td style = "min-width:100px;max-width:200px;" title = "{{entity.id1Name}}" class = "overflow">{{entity.id1Name}}</td>
+                                <td style = "min-width:100px;max-width:200px;" title = "{{entity.id21Name}}" class = "overflow">{{entity.id2Name}}</td>
+                                <td style = "min-width:100px;" title = "{{entity.score}}">{{entity.score}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

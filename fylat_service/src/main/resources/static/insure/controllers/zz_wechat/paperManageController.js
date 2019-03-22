@@ -210,8 +210,11 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
         }
 
         function deleteData(rowIds){
-            if (confirm(switchLang.switchLang('确认删除勾选的数据吗？'))) {
-                layer.load(2);
+            var confirm = layer.confirm('确认删除勾选的数据吗？', {
+                btn: ['取消','确认'] //按钮
+            }, function(){
+                layer.close(confirm);
+            }, function(){                layer.load(2);
                 $http({
                     method: 'GET',
                     url: 'releaseManagement/delAricleTmpList/rest',
@@ -231,7 +234,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                     layer.closeAll('loading');
                     layer.alert("删除失败");
                 })
-            }
+            });
         }
 
         //获取所有已发布的类型
