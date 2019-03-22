@@ -44,7 +44,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
         String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and article_type_id=?";
-        if ("1".equals(type)) {
+        if ("1".equals(type)) {//正式表
             sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type where del_type!=? and article_type_id=?";
         }
         Map maps = jdbcTemplate.queryForMap(sql, new Object[]{
