@@ -1147,13 +1147,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                                 artcicle_type_id
 
 
-                        });
+                        });pushArticleType
                     }*/
                 } catch (Exception e) {
                     //插入实际的类型表
                     String currentTime = DateUtil.getCurrentTimeString();
-                    String insertSqlt = "insert into zz_wechat.article_type(article_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time) values " +
-                            "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s') )";
+                    String insertSqlt = "insert into zz_wechat.article_type(article_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state) values " +
+                            "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),? )";
                     jdbcTemplate.update(insertSqlt, new Object[]{
                             artcicle_type_id,
                             typeMap.get("article_type_keyword"),
@@ -1162,7 +1162,8 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                             typeMap.get("iamge_back"),
                             typeMap.get("parentid"),
                             0,
-                            currentTime
+                            currentTime,
+                            Integer.parseInt(typeMap.get("type_state").toString())
                     });
                 }
             }
