@@ -184,7 +184,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         Object startNum = req.getParameter("pageNumber");
         Object pageSize = req.getParameter("pageSize");
-        if (type == null || article_type_id == null || startNum == null || pageSize == null) {
+        if (type == null ||  startNum == null || pageSize == null) {
             return getErrorMap();
         }
         //入库的开始时间
@@ -221,22 +221,31 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
             String sqlCount = "select count(*) as count from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type  " + delTypeSql +
-                    "AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                    "AND a.article_type_id=b.article_type_id " ;
+//                    "and a.article_type_id='" + article_type_id + "' ";
 
             String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt,a.details_size,a.check_type,a.article_score,b.article_type_name  " +
                     "from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
-                    " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                    " AND a.article_type_id=b.article_type_id " ;
+//                    " and a.article_type_id='" + article_type_id + "' ";
 
 
             if (tmp_type != null && "1".equals(tmp_type.toString())) {
 
                 sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
-                        "AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                        "AND a.article_type_id=b.article_type_id " ;
+//                        "and a.article_type_id='" + article_type_id + "' ";
 
                 sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt,a.word_count,a.article_score,b.article_type_name  " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                        " AND a.article_type_id=b.article_type_id " ;
+//                        "and a.article_type_id='" + article_type_id + "' ";
 
+            }
+
+            if(article_type_id!=null&&!"100".equals(article_type_id)){
+                sqlCount=sqlCount+       " and a.article_type_id='" + article_type_id + "' ";
+                sqlMessage=sqlMessage+       " and a.article_type_id='" + article_type_id + "' ";
             }
 
 
@@ -310,28 +319,33 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             //查询的是论文
             String sqlCount = "select count(*) as count from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type  " + delTypeSql +
-                    " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                    " AND a.article_type_id=b.article_type_id " ;
+//                    "and a.article_type_id='" + article_type_id + "' ";
 
             String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
                     "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
-                    " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                    " AND a.article_type_id=b.article_type_id " ;
+//                    "and a.article_type_id='" + article_type_id + "' ";
 
 
             if (tmp_type != null && "1".equals(tmp_type.toString())) {
 
                 sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                        " AND a.article_type_id=b.article_type_id " ;
+//                        "and a.article_type_id='" + article_type_id + "' ";
 
                 if (language != null && "1".equals(language)) {
                     sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,a.content_excerpt_e,a.reference,a.article_score,b.article_type_name  " +
                             "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                            " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                            " AND a.article_type_id=b.article_type_id " ;
+//                            "and a.article_type_id='" + article_type_id + "' ";
                 }
 
 
                 sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                        " AND a.article_type_id=b.article_type_id " ;
+//                        "and a.article_type_id='" + article_type_id + "' ";
 
 
             } else {
@@ -339,10 +353,17 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 if (language != null && "1".equals(language)) {
                     sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,b.article_type_name  " +
                             "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
-                            " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                            " AND a.article_type_id=b.article_type_id " ;
+//                            "and a.article_type_id='" + article_type_id + "' ";
                 }
 
 
+            }
+
+
+            if(article_type_id!=null&&!"100".equals(article_type_id)){
+                sqlCount=sqlCount+       " and a.article_type_id='" + article_type_id + "' ";
+                sqlMessage=sqlMessage+       " and a.article_type_id='" + article_type_id + "' ";
             }
 
             //入库时间

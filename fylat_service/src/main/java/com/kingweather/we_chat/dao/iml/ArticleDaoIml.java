@@ -453,12 +453,12 @@ public class ArticleDaoIml implements ArticleDao {
         }
 
         if (message != null) {
-            message = message.replaceAll(" ", "");
+            message = message.replaceAll(" ", "").trim();
         }
         String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
-        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=0 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
+        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=100 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
                 message +
                 "%' or binary article_type_keyword  LIKE '%" +
                 message +
@@ -468,7 +468,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         List<Map<String, Object>> gzMapList = jdbcTemplate.queryForList(gzSeachSql);
 
-        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=0 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
+        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=100 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -483,36 +483,36 @@ public class ArticleDaoIml implements ArticleDao {
         resultMap.put("articleType", list);
         String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                 user_id +
-                "' ) AND (binary article_title LIKE '%" +
+                "' ) AND (BINARY article_title LIKE '%" +
                 message +
-                "%' OR binary article_keyword LIKE '%" +
+                "%' OR BINARY article_keyword LIKE '%" +
                 message +
-                "%' OR binary author LIKE '%" +
+                "%' OR BINARY author LIKE '%" +
                 message +
-                "%' OR binary source LIKE '%" +
+                "%' OR BINARY source LIKE '%" +
                 message +
-                "%' OR binary content_crawl LIKE '%" +
+                "%' OR BINARY content_crawl LIKE '%" +
                 message +
                 "%'" +
-                "OR binary content_manual LIKE '%" +
+                "OR BINARY content_manual LIKE '%" +
                 message +
-                "%' OR binary content_excerpt LIKE '%" +
+                "%' OR BINARY content_excerpt LIKE '%" +
                 message +
                 "%' "+
                 " OR binary posting_name LIKE '%" +
                 message +
-                "%' OR binary article_title_e LIKE '%" +
+                "%' OR BINARY article_title_e LIKE '%" +
                 message +
                 "%'"+
-                " OR binary content_excerpt_e LIKE '%" +
+                " OR BINARY content_excerpt_e LIKE '%" +
                 message +
-                "%' OR binary article_keyword_e LIKE '%" +
+                "%' OR BINARY article_keyword_e LIKE '%" +
                 message +
                 "%' "
                 +
-                "OR binary reference LIKE '%" +
+                " OR BINARY reference LIKE '%" +
                 message +
-                "%' OR binary site_number LIKE '%" +
+                "%' OR BINARY site_number LIKE '%" +
                 message +
                 "%')"
                 ;
@@ -529,36 +529,36 @@ public class ArticleDaoIml implements ArticleDao {
 
             String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
-                    "' ) AND (binary article_title LIKE '%" +
+                    "' ) AND (BINARY article_title LIKE '%" +
                     message +
-                    "%' OR binary article_keyword LIKE '%" +
+                    "%' OR BINARY article_keyword LIKE '%" +
                     message +
-                    "%' OR binary author LIKE '%" +
+                    "%' OR BINARY author LIKE '%" +
                     message +
-                    "%' OR binary source LIKE '%" +
+                    "%' OR BINARY source LIKE '%" +
                     message +
-                    "%' OR binary content_crawl LIKE '%" +
-                    message +
-                    "%'" +
-                    "OR binary content_manual LIKE '%" +
-                    message +
-                    "%' OR binary content_excerpt LIKE '%" +
+                    "%' OR BINARY content_crawl LIKE '%" +
                     message +
                     "%'" +
-                    "OR binary posting_name LIKE '%" +
+                    "OR BINARY content_manual LIKE '%" +
                     message +
-                    "%' OR binary article_title_e LIKE '%" +
+                    "%' OR BINARY content_excerpt LIKE '%" +
+                    message +
+                    "%'" +
+                    "OR BINARY posting_name LIKE '%" +
+                    message +
+                    "%' OR BINARY article_title_e LIKE '%" +
                     message +
                     "%'"+
-                    "OR binary content_excerpt_e LIKE '%" +
+                    "OR BINARY content_excerpt_e LIKE '%" +
                     message +
-                    "%' OR binary article_keyword_e LIKE '%" +
+                    "%' OR BINARY article_keyword_e LIKE '%" +
                     message +
                     "%'"
                     +
-                    "OR binary reference LIKE '%" +
+                    "OR BINARY reference LIKE '%" +
                     message +
-                    "%' OR binary site_number LIKE '%" +
+                    "%' OR BINARY site_number LIKE '%" +
                     message +
                     "%'"+
                     ") ORDER BY create_time desc LIMIT " +
@@ -589,24 +589,64 @@ public class ArticleDaoIml implements ArticleDao {
             }
 
 
-            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id NOT in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id NOT in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                    user_id +
+//                    "' ) AND (BINARY article_title LIKE '%" +
+//                    message +
+//                    "%' OR BINARY article_keyword LIKE '%" +
+//                    message +
+//                    "%' OR BINARY author LIKE '%" +
+//                    message +
+//                    "%' OR BINARY source LIKE '%" +
+//                    message +
+//                    "%' OR BINARY content_crawl LIKE '%" +
+//                    message +
+//                    "%'" +
+//                    " OR BINARY content_manual LIKE '%" +
+//                    message +
+//                    "%' OR BINARY content_excerpt LIKE '%" +
+//                    message +
+//                    "%')ORDER BY create_time DESC LIMIT " +
+//                    page * pageSize +
+//                    "," +
+//                    pageSize;
+
+
+            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
-                    "' ) AND (article_title LIKE '%" +
+                    "' ) AND (BINARY article_title LIKE '%" +
                     message +
-                    "%' OR article_keyword LIKE '%" +
+                    "%' OR BINARY article_keyword LIKE '%" +
                     message +
-                    "%' OR author LIKE '%" +
+                    "%' OR BINARY author LIKE '%" +
                     message +
-                    "%' OR source LIKE '%" +
+                    "%' OR BINARY source LIKE '%" +
                     message +
-                    "%' OR content_crawl LIKE '%" +
+                    "%' OR BINARY content_crawl LIKE '%" +
                     message +
                     "%'" +
-                    " OR content_manual LIKE '%" +
+                    "OR BINARY content_manual LIKE '%" +
                     message +
-                    "%' OR content_excerpt LIKE '%" +
+                    "%' OR BINARY content_excerpt LIKE '%" +
                     message +
-                    "%')ORDER BY create_time DESC LIMIT " +
+                    "%'" +
+                    "OR BINARY posting_name LIKE '%" +
+                    message +
+                    "%' OR BINARY article_title_e LIKE '%" +
+                    message +
+                    "%'"+
+                    "OR BINARY content_excerpt_e LIKE '%" +
+                    message +
+                    "%' OR BINARY article_keyword_e LIKE '%" +
+                    message +
+                    "%'"
+                    +
+                    "OR BINARY reference LIKE '%" +
+                    message +
+                    "%' OR BINARY site_number LIKE '%" +
+                    message +
+                    "%'"+
+                    ") ORDER BY create_time desc LIMIT " +
                     page * pageSize +
                     "," +
                     pageSize;
