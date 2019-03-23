@@ -454,7 +454,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
-                        layer.msg(data.message);
+                        layer.alert(data.message);
                         if(type=='0'){
                             $scope.articleTmpInstance.bootstrapTable('refresh');
                         }else{
@@ -505,7 +505,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
-                        layer.msg(data.message);
+                        layer.alert(data.message);
                         if(type=='0'){
                             $scope.articleTmpInstance.bootstrapTable('refresh');
                         }else{
@@ -539,7 +539,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
-                        layer.msg(data.message);
+                        layer.alert(data.message);
                         if(type=='0'){
                             $scope.articleTmpInstance.bootstrapTable('refresh');
                         }else{

@@ -214,17 +214,19 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                 btn: ['取消','确认'] //按钮
             }, function(){
                 layer.close(confirm);
-            }, function(){                layer.load(2);
+            }, function(){
+                layer.load(2);
                 $http({
                     method: 'GET',
-                    url: 'releaseManagement/delAricleTmpList/rest',
+                    url: 'article/deletedById',
                     params: {
-                        articleIdList: rowIds
+                        article_id: rowIds,
+                        type: '0'
                     }
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
-                        layer.msg(data.message);
+                        layer.alert(data.message);
                         $scope.tableInstance.bootstrapTable('refresh');
                     } else {
                         layer.alert(data.message);
