@@ -134,6 +134,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         $scope.listObj.integrationQuery.article_title_e = data.result.article_title_e;
                         $scope.listObj.integrationQuery.publication_date = data.result.publication_date;
                         $scope.listObj.integrationQuery.article_score = data.result.article_score;
+                        $scope.listObj.integrationQuery.reference = data.result.reference;
 
                         $scope.listObj.integrationQuery.create_time = insureUtil.dateToString(new Date(data.result.create_time), "yyyy-MM-dd");
                         $scope.listObj.integrationQuery.update_time = insureUtil.dateToString(new Date(data.result.update_time), "yyyy-MM-dd");
@@ -144,6 +145,10 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         if (editor != null && $scope.listObj.integrationQuery.content_type == 0) {
                             editor.txt.html($scope.listObj.integrationQuery.content_manual)
                         } else if (editor != null && $scope.listObj.integrationQuery.content_type == 1) {
+                            editor.txt.html($scope.listObj.integrationQuery.details_div)
+                        }
+                        //兼容下
+                        if(editor != null && !$scope.listObj.integrationQuery.content_manual){
                             editor.txt.html($scope.listObj.integrationQuery.details_div)
                         }
                         if($scope.listObj.operate_type == 'view'){
@@ -313,7 +318,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     content_excerpt: $scope.listObj.integrationQuery.content_excerpt,
                     // share_initcount: $scope.listObj.integrationQuery.share_initcount,
                     // collect_count: $scope.listObj.integrationQuery.collect_count,
-                    content_manual: html, //TODO 注意后台没存啊
+                    content_manual: html,
+                    details_div: html,
                     details_txt: text,
                     reference:$scope.listObj.integrationQuery.reference,
                     create_time: $scope.listObj.integrationQuery.create_time,
@@ -377,11 +383,14 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             ];
 
             editor.create();
-            if (editor != null && $scope.listObj.integrationQuery.content_type == 0) {
-                editor.txt.html($scope.listObj.integrationQuery.content_manual)
-            } else if (editor != null && $scope.listObj.integrationQuery.content_type == 1) {
-                editor.txt.html($scope.listObj.integrationQuery.details_div)
-            }
+            // if (editor != null && $scope.listObj.integrationQuery.content_type == 0) {
+            //     editor.txt.html($scope.listObj.integrationQuery.content_manual)
+            // } else if (editor != null && $scope.listObj.integrationQuery.content_type == 1) {
+            //     editor.txt.html($scope.listObj.integrationQuery.details_div)
+            // }
+            // if(editor != null && !$scope.listObj.integrationQuery.content_manual){
+            //     editor.txt.html($scope.listObj.integrationQuery.details_div)
+            // }
         }, 0);
     }])
 ;
