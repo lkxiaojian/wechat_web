@@ -24,11 +24,12 @@
                         <a class="btn btn-blue" ng-click="refresh()">刷新</a>
                         <a class="btn btn-danger" ng-click="similarity()">相似度</a>
                         <a class="btn btn-warning" ng-click="goPubView()" ng-show="listObj.type == '0'">进入文章发布</a>
+                        <a class="btn btn-warning" ng-click="delete()" ng-show="listObj.type == '1'">删除</a>
                     </div>
                 </div>
             </form>
             <div class="form-group">
-                <div id="dataTree" class="col-sm-12" style="margin:5px;height:400px; border :1px solid Silver; overflow:auto;"></div>
+                <div id="dataTree" class="col-sm-12" style="margin:5px;height:600px; border :1px solid Silver; overflow:auto;"></div>
             </div>
         </div>
     </div>
