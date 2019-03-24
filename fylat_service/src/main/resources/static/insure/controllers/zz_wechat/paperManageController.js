@@ -11,7 +11,19 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
             },
         }
 
-
+        $scope.query_params = {
+            updateTimeStart:'',
+            updateTimeEnd:'',
+            createTime:'',
+            language:'',
+            article_type_id:'',
+            // details_size_more:'',
+            // details_size_less:'',
+            message:''
+        }
+        if($stateParams.query_params){
+            $scope.query_params = JSON.parse($stateParams.query_params);
+        }
         //论文列表
         $scope.listAritcle = function () {
 
@@ -141,6 +153,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         events: {
                             'click .a-view': function (e, value, row, index) {
                                 $state.go('app.insure.modify_paper', {
+                                    pre_query_params: JSON.stringify($scope.query_params),
                                     article_id: row.article_id,
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"view",
@@ -151,6 +164,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                             },
                             'click .a-edit': function (e, value, row, index) {
                                 $state.go('app.insure.modify_paper', {
+                                    pre_query_params: JSON.stringify($scope.query_params),
                                     article_id: row.article_id,
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"edit",

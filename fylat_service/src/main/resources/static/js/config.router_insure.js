@@ -321,7 +321,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.paper_manage', {
             url: '/paperManage',
-            params: {param: null, data: null},
+            params: {param: null, data: null,query_params:null},
             templateUrl: 'insure/template/zz_wechat/paperManage.html',
             pageTitle: '论文管理',
             controller: 'paperManageController',
@@ -396,7 +396,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.publish_manage', {
             url: '/publishManage',
-            params: {param: null, data: null,type_id: null,pre_location: null,comming_type_id:null},
+            params: {param: null, data: null,type_id: null,pre_location: null,comming_type_id:null,query_params:null},
             templateUrl: 'insure/template/zz_wechat/publishManage.html',
             pageTitle: '发布管理',
             controller: 'publishManageController',

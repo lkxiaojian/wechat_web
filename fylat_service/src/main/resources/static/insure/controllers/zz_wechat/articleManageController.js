@@ -22,7 +22,6 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
             details_size_less:'',
             message:''
         }
-        debugger
         if($stateParams.query_params){
             $scope.query_params = JSON.parse($stateParams.query_params);
         }
