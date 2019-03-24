@@ -128,18 +128,6 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         align: 'center',
                         width: "100px"
                     }, {
-                        title: '正文',
-                        class: 'col-md-1',
-                        field: 'details_txt',
-                        align: 'center',
-                        cellStyle:{
-                            css:{
-                                "min-width":"100px",
-                                "max-width":"200px"
-                            },
-                            classes:["overflow"]
-                        }
-                    }, {
                         title: '操作',
                         class: 'col-md-1',
                         align: 'center',
