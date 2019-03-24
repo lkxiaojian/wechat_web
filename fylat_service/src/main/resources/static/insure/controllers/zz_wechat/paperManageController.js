@@ -169,10 +169,10 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
         }
         $scope.listAritcle();
         $scope.query = function(){
-            if(!$("#article_type_id").val()){
+            /*if(!$("#article_type_id").val()){
                 layer.msg("论文类型不能为空");
                 return;
-            }
+            }*/
             $scope.tableInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){

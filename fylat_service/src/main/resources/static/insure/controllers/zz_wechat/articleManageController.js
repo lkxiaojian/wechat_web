@@ -169,10 +169,10 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
         $scope.listAritcle();
         $scope.query = function(){
-            if(!$("#article_type_id").val()){
+            /*if(!$("#article_type_id").val()){
                 layer.msg("文章类型不能为空");
                 return;
-            }
+            }*/
             $scope.tableInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
