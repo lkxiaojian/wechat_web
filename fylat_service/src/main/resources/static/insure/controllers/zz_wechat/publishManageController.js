@@ -5,6 +5,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             navigationMsg: '管理平台 >发布管理',
             artcicle_type_id: $stateParams.type_id,//类型id
             pre_location: $stateParams.pre_location,
+            comming_type_id: $stateParams.comming_type_id, //带过来的typeId
             current_location: "app.insure.publish_manage"
         };
 

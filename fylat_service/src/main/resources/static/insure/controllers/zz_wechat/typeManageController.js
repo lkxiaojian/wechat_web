@@ -157,8 +157,14 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             })
         }
         $scope.goPubView = function () {
+            debugger
+            var selectedNode = '';
+            if(!$scope.myTree.hasChildren()){
+                selectedNode = $scope.myTree.getSelected();
+            }
             $state.go('app.insure.publish_manage',
-                {pre_location: $scope.listObj.current_location});
+                {pre_location: $scope.listObj.current_location,
+                    comming_type_id: selectedNode});
         }
 
         $scope.delete = function (){

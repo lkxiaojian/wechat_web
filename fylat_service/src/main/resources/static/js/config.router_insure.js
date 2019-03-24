@@ -396,7 +396,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.publish_manage', {
             url: '/publishManage',
-            params: {param: null, data: null,type_id: null,pre_location: null},
+            params: {param: null, data: null,type_id: null,pre_location: null,comming_type_id:null},
             templateUrl: 'insure/template/zz_wechat/publishManage.html',
             pageTitle: '发布管理',
             controller: 'publishManageController',
