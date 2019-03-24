@@ -245,7 +245,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     }).success(function (data) {
                         layer.closeAll('loading');
                         if (data.code == 0) {
-                            layer.alert(data.message);
+                            layer.alert("发布成功");
                             $state.go($scope.pre_location);
                         } else {
                             layer.alert(data.message);
@@ -323,6 +323,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     details_txt: text,
                     reference:$scope.listObj.integrationQuery.reference,
                     create_time: $scope.listObj.integrationQuery.create_time,
+                    dateTIme: $scope.listObj.integrationQuery.create_time,
                     //未更新
                     update_time: $scope.listObj.integrationQuery.update_time,//后台未更新
                     word_count: text.length,
