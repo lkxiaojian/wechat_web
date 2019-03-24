@@ -1,6 +1,7 @@
 app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         var artcicle_type_id = $stateParams.type_id;
+        $scope.activeTab=1;
         $scope.listObj = {
             navigationMsg: '管理平台 >发布管理',
             artcicle_type_id: $stateParams.type_id,//类型id
@@ -8,6 +9,34 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             comming_type_id: $stateParams.comming_type_id, //带过来的typeId
             current_location: "app.insure.publish_manage"
         };
+
+        $scope.query_params = {
+            type:'0',
+            updateTimeStart:'',
+            updateTimeEnd:'',
+            createTimeStart:'',
+            createTimeEnd:'',
+            createTime:'',
+            language:'',
+            checkType:'',
+            article_type_id: $scope.listObj.comming_type_id,
+            details_size_more:'',
+            details_size_less:'',
+            message:''
+        }
+        if($stateParams.query_params){
+            $scope.query_params = JSON.parse($stateParams.query_params);
+        }
+        if($scope.query_params.type == '0'){
+            $scope.article_query_params = $scope.query_params;
+            if(!$scope.paper_query_params){
+                $scope.paper_query_params = $scope.article_query_params;
+            }
+        }else{
+            $scope.paper_query_params = $scope.query_params;
+            $("#tab2Btn").trigger("click");
+            $scope.activeTab=2;
+        }
 
         $scope.listAritcle = function () {
 
@@ -157,6 +186,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     events: {
                         'click .a-view': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
+                                pre_query_params: JSON.stringify($scope.query_params),
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
@@ -167,6 +197,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         'click .a-edit': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
+                                pre_query_params: JSON.stringify($scope.query_params),
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"edit",
@@ -329,6 +360,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     events: {
                         'click .a-view': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
+                                pre_query_params: JSON.stringify($scope.query_params),
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
@@ -339,6 +371,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         'click .a-edit': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
+                                pre_query_params: JSON.stringify($scope.query_params),
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"edit",

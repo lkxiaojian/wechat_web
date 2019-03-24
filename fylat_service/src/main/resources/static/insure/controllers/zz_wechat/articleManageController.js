@@ -16,7 +16,6 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
             updateTimeEnd:'',
             createTimeStart:'',
             createTimeEnd:'',
-            // language:'',
             article_type_id:'',
             details_size_more:'',
             details_size_less:'',
