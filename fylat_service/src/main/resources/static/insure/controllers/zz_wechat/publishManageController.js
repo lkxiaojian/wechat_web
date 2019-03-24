@@ -379,10 +379,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         $scope.getAllPublishedType();
 
         $scope.queryArticle=function () {
-            if(!$("#queryArticleForm [name=article_type_id]").val()){
+            /*if(!$("#queryArticleForm [name=article_type_id]").val()){
                 layer.msg("文章类型不能为空");
                 return;
-            }
+            }*/
             $scope.articleTmpInstance.bootstrapTable('refresh');
         }
         $scope.resetArticle=function () {
@@ -393,10 +393,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
 
         $scope.queryPager=function () {
-            if(!$("#queryPaperForm [name=article_type_id]").val()){
+            /*if(!$("#queryPaperForm [name=article_type_id]").val()){
                 layer.msg("论文类型不能为空");
                 return;
-            }
+            }*/
             $scope.paperTmpInstance.bootstrapTable('refresh');
         }
         $scope.resetPager=function () {
