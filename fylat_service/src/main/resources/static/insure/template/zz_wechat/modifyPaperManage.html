@@ -1,8 +1,11 @@
 <!--头部导航信息-->
 <div class="modal-header">
     <div class="btn pull-right m-t-n-xs m-l-n list-icon">
-        <a ui-sref="{{listObj.pre_location}}"> <i
-                class="fa fa-mail-reply-all"></i>
+<!--
+        <a ui-sref="{{listObj.pre_location}}">
+-->
+        <a ng-click="goPreLocation()">
+            <i class="fa fa-mail-reply-all"></i>
         </a>
     </div>
     <div style="margin: 0px 15px">

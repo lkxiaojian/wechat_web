@@ -11,6 +11,21 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
             },
         }
 
+        $scope.query_params = {
+            updateTimeStart:'',
+            updateTimeEnd:'',
+            createTimeStart:'',
+            createTimeEnd:'',
+            // language:'',
+            article_type_id:'',
+            details_size_more:'',
+            details_size_less:'',
+            message:''
+        }
+        debugger
+        if($stateParams.query_params){
+            $scope.query_params = JSON.parse($stateParams.query_params);
+        }
 
         //文章列表
         $scope.listAritcle = function () {
@@ -141,6 +156,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         events: {
                             'click .a-view': function (e, value, row, index) {
                                 $state.go('app.insure.modify_paper', {
+                                    pre_query_params: JSON.stringify($scope.query_params),
                                     article_id: row.article_id,
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"view",
@@ -151,6 +167,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                             },
                             'click .a-edit': function (e, value, row, index) {
                                 $state.go('app.insure.modify_paper', {
+                                    pre_query_params: JSON.stringify($scope.query_params),
                                     article_id: row.article_id,
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"edit",

@@ -27,13 +27,14 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
 
         $scope.listObj = {
             navigationMsg: '管理平台 >文章修改',
-            pre_location: '',
-            operate_type: '',
-            type: '',
-            tmp_type: '',
+            pre_location: $stateParams.pre_location,
+            operate_type: $stateParams.operate_type,
+            type: $stateParams.type,
+            tmp_type: $stateParams.tmp_type,
             regionType: {selected: undefined},//文章类型
             dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),
-            article_id: null,
+            article_id: $stateParams.article_id,
+            pre_query_params: $stateParams.pre_query_params,
             selectedItem: {
                 article_type_id: null,
                 article_type_name: null
@@ -96,11 +97,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             },
 
             getAtirlceMessage: function () {
-                $scope.listObj.article_id = $stateParams.article_id;
-                $scope.listObj.pre_location = $stateParams.pre_location;
-                $scope.listObj.operate_type = $stateParams.operate_type;
-                $scope.listObj.type = $stateParams.type;
-                $scope.listObj.tmp_type = $stateParams.tmp_type;
+
                 var url = "releaseManagement/getAricleTmpMessageById/rest";
                 if($scope.listObj.tmp_type == '1'){
                     url = 'article/webMessage';
@@ -166,6 +163,14 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             }
         };
 
+        $scope.goPreLocation = function(){
+            debugger
+            $state.go($scope.listObj.pre_location, {
+                query_params: $scope.listObj.pre_query_params
+            });
+
+        }
+
         $scope.operate = {
             delete:function(){
                 var confirm = layer.confirm('确认删除勾选的数据吗？', {
@@ -190,7 +195,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         layer.closeAll('loading');
                         if (data.code == 0) {
                             layer.alert(data.message);
-                            $state.go($scope.listObj.pre_location);
+                            $scope.goPreLocation();
+                            // $state.go($scope.listObj.pre_location);
                         } else {
                             layer.alert(data.message);
                         }
@@ -219,7 +225,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         layer.closeAll('loading');
                         if (data.code == 0) {
                             layer.alert(data.message);
-                            $state.go($scope.listObj.pre_location);
+                            $scope.goPreLocation();
+                            // $state.go($scope.listObj.pre_location);
                         } else {
                             layer.alert(data.message);
                         }
@@ -248,7 +255,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         layer.closeAll('loading');
                         if (data.code == 0) {
                             layer.alert("发布成功");
-                            $state.go($scope.listObj.pre_location);
+                            $scope.goPreLocation();
+                            // $state.go($scope.listObj.pre_location);
                         } else {
                             layer.alert(data.message);
                         }
@@ -357,7 +365,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     if(callback){
                         callback();
                     }else{
-                        $state.go($scope.listObj.pre_location);
+                        $scope.goPreLocation();
+                        // $state.go($scope.listObj.pre_location);
                     }
                 } else {
                     layer.alert("更新失败");

@@ -286,7 +286,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.article_manage', {
             url: '/articleManage',
-            params: {param: null, data: null},
+            params: {param: null, data: null,query_params:null},
             templateUrl: 'insure/template/zz_wechat/articleManage.html',
             pageTitle: '文章管理',
             controller: 'articleManageController',
@@ -415,6 +415,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.modify_paper', {
             url: '/modifyPaperManage',
             params: {param: null,
+                pre_query_params: null,//上级的查询条件
                 article_id: null,
                 pre_location: null,
                 operate_type: null,
