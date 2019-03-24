@@ -422,7 +422,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                 tmp_type: null //1查询已发布的，0查询未发布的
             },
             templateUrl: 'insure/template/zz_wechat/modifyPaperManage.html',
-            pageTitle: '文章修改',
+            pageTitle: '修改',
             controller: 'modifyPaperManageController',
             resolve: {
                 deps: ['$ocLazyLoad',

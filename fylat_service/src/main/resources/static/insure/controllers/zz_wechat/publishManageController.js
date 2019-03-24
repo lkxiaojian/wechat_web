@@ -175,7 +175,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
                         'click .a-delete': function (e, value, row, index) {
-                            deleteData(row.article_id);
+                            deleteData(row.article_id,'0');
                         }
                     }
                 }
@@ -347,7 +347,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
                         'click .a-delete': function (e, value, row, index) {
-                            deleteData(row.article_id);
+                            deleteData(row.article_id,'1');
                         }
                     }
                 }
@@ -454,7 +454,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
-                        layer.msg(data.message);
+                        layer.alert(data.message);
                         if(type=='0'){
                             $scope.articleTmpInstance.bootstrapTable('refresh');
                         }else{
@@ -486,10 +486,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 ids += array[i].article_id;
                 ids += ",";
             }
-            deleteData(ids);
+            deleteData(ids,type);
         }
 
-        function deleteData(rowIds){
+        function deleteData(rowIds,type){
             var confirm = layer.confirm('确认删除勾选的数据吗？', {
                 btn: ['取消','确认'] //按钮
             }, function(){
@@ -505,7 +505,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
-                        layer.msg(data.message);
+                        layer.alert(data.message);
                         if(type=='0'){
                             $scope.articleTmpInstance.bootstrapTable('refresh');
                         }else{
@@ -539,7 +539,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
-                        layer.msg(data.message);
+                        layer.alert(data.message);
                         if(type=='0'){
                             $scope.articleTmpInstance.bootstrapTable('refresh');
                         }else{

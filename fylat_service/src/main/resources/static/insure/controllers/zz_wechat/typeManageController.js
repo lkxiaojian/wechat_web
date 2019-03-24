@@ -161,6 +161,40 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 {pre_location: $scope.listObj.current_location});
         }
 
+        $scope.delete = function (){
+            var treelist = $scope.myTree.getAllChecked();
+            if (!treelist) {
+                layer.msg('至少勾选一个节点');
+                return;
+            }
+            var confirm = layer.confirm('确认要删除勾选的类型吗？', {
+                btn: ['取消','确认'] //按钮
+            }, function(){
+                layer.close(confirm);
+            }, function(){
+                layer.load(2);
+                $http({
+                    method: 'GET',
+                    url: 'releaseManagement/delArticleTypeById/rest',
+                    params: {
+                        article_type_id: treelist
+                    }
+                }).success(function (data) {
+                    layer.closeAll('loading');
+                    if (data.code == 0) {
+                        layer.alert(data.message);
+                        $scope.myTree.refreshItem();
+                    } else {
+                        layer.alert(data.message);
+                    }
+
+                }).error(function (data) {
+                    layer.closeAll('loading');
+                    layer.alert("删除失败");
+                })
+            });
+        }
+
         $scope.createTree = function () {
             $scope.myTree = new dhtmlXTreeObject("dataTree", '100%', '100%', 0);
             // 设置皮肤
