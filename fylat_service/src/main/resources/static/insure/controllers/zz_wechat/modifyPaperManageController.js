@@ -306,7 +306,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             $http({
                 url: url,
                 method: 'POST',
-                data: {
+                `: {
                     type: $scope.listObj.type,
                     tmp_type: $scope.listObj.tmp_type,
                     article_id: $scope.listObj.article_id ,
