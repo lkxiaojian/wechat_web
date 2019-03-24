@@ -176,12 +176,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '操作',
                     class: 'col-md-1',
                     align: 'center',
-                    width: '115px',
                     formatter: function (value, row, index) {
-
-                        return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
-                            '<a class="a-edit a-blue" href="javascript:;">修改</a>&nbsp;' +
-                            '<a class="a-delete a-red" href="javascript:;"> 删除</a>';
+                        return '<a class="btn btn-info btn-xs a-view" href="javascript:;">查看</a>&nbsp;' +
+                            '<a class="btn btn-blue btn-xs a-edit" href="javascript:;">修改</a>&nbsp;' +
+                            '<a class="btn btn-danger btn-xs a-delete" href="javascript:;"> 删除</a>';
                     },
                     events: {
                         'click .a-view': function (e, value, row, index) {
@@ -350,12 +348,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '操作',
                     class: 'col-md-1',
                     align: 'center',
-                    width: '115px',
                     formatter: function (value, row, index) {
-
-                        return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
-                            '<a class="a-edit a-blue" href="javascript:;">修改</a>&nbsp;' +
-                            '<a class="a-delete a-red" href="javascript:;"> 删除</a>';
+                        return '<a class="btn btn-info btn-xs a-view" href="javascript:;">查看</a>&nbsp;' +
+                            '<a class="btn btn-blue btn-xs a-edit" href="javascript:;">修改</a>&nbsp;' +
+                            '<a class="btn btn-danger btn-xs a-delete" href="javascript:;"> 删除</a>';
                     },
                     events: {
                         'click .a-view': function (e, value, row, index) {
