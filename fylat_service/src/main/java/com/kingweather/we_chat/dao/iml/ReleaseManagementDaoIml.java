@@ -1065,8 +1065,14 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         String sql = "";
         if ("0".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where issue=1 and del_type=0 and parentid !='100' and parentid !='1'";
-        } else {
+
+        } else if("1".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state from zz_wechat.article_type where del_type=0 and parentid !='100' and parentid !='1'";
+        }else {
+
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1'";
+
+
         }
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         HashMap<String, Object> map = new HashMap<>();
