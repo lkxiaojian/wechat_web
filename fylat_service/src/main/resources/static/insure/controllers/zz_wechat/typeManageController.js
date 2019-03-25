@@ -157,8 +157,14 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             })
         }
         $scope.goPubView = function () {
+            debugger
+            var selectedNode = '';
+            if(!$scope.myTree.hasChildren()){
+                selectedNode = $scope.myTree.getSelected();
+            }
             $state.go('app.insure.publish_manage',
-                {pre_location: $scope.listObj.current_location});
+                {pre_location: $scope.listObj.current_location,
+                    comming_type_id: selectedNode});
         }
 
         $scope.delete = function (){
@@ -267,14 +273,13 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         layer.alert("请求失败", {icon: 2})
                     })
                 }, function () {
-                    debugger
                     $http({
-                        method: 'GET',
+                        method: 'POST',
                         url: 'releaseManagement/mergeTypeById/rest',
-                        params: {
-                            article_type_id: srcNode,// 要合并的保留的类型的id
+                        data: {
+                            article_type_id: tarNode,// 要合并的保留的类型的id
                             type: $scope.listObj.type,// type为0
-                            merge_type_id: tarNode//  要被合并 的类型id（传递一个最高的节点）
+                            merge_type_id: srcNode//  要被合并 的类型id（传递一个最高的节点）
                         }
                     }).success(function (data) {
                         if (data.code == 0) {

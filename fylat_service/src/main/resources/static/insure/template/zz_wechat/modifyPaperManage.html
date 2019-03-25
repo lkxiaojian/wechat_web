@@ -1,8 +1,11 @@
 <!--头部导航信息-->
 <div class="modal-header">
     <div class="btn pull-right m-t-n-xs m-l-n list-icon">
-        <a ui-sref="{{listObj.pre_location}}"> <i
-                class="fa fa-mail-reply-all"></i>
+<!--
+        <a ui-sref="{{listObj.pre_location}}">
+-->
+        <a ng-click="goPreLocation()">
+            <i class="fa fa-mail-reply-all"></i>
         </a>
     </div>
     <div style="margin: 0px 15px">
@@ -181,9 +184,9 @@
     <div class="modal-footer"  ng-show="listObj.operate_type == 'edit'">
         <!--<span class="_color_red pull-left">{{error_msg}}</span>-->
         <button type="button" class="btn btn-default btn-danger" ng-click="operate.delete()">删除</button>
-        <button type="button" class="btn btn-default btn-success" ng-click="operate.check()">审核</button>
+        <button type="button" class="btn btn-default btn-success" ng-click="operate.check()"  ng-show="listObj.check_type == '0'">审核</button>
         <button type="button" class="btn btn-default btn-warning" ng-click="operate.save()">保存</button>
-        <button type="button" class="btn btn-default btn-info" ng-click="operate.publish()">发布</button>
+        <button type="button" class="btn btn-default btn-info" ng-click="operate.publish()" ng-show="listObj.tmp_type == '0'">发布</button>
     </div>
 
 </div>

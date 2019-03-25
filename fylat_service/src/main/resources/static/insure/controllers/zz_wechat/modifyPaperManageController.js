@@ -27,13 +27,14 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
 
         $scope.listObj = {
             navigationMsg: '管理平台 >文章修改',
-            pre_location: '',
-            operate_type: '',
-            type: '',
-            tmp_type: '',
+            pre_location: $stateParams.pre_location,
+            operate_type: $stateParams.operate_type,
+            type: $stateParams.type,
+            tmp_type: $stateParams.tmp_type,
             regionType: {selected: undefined},//文章类型
             dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),
-            article_id: null,
+            article_id: $stateParams.article_id,
+            pre_query_params: $stateParams.pre_query_params,
             selectedItem: {
                 article_type_id: null,
                 article_type_name: null
@@ -96,11 +97,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             },
 
             getAtirlceMessage: function () {
-                $scope.listObj.article_id = $stateParams.article_id;
-                $scope.listObj.pre_location = $stateParams.pre_location;
-                $scope.listObj.operate_type = $stateParams.operate_type;
-                $scope.listObj.type = $stateParams.type;
-                $scope.listObj.tmp_type = $stateParams.tmp_type;
+
                 var url = "releaseManagement/getAricleTmpMessageById/rest";
                 if($scope.listObj.tmp_type == '1'){
                     url = 'article/webMessage';
@@ -132,12 +129,14 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         $scope.listObj.integrationQuery.content_excerpt_e = data.result.content_excerpt_e;
                         $scope.listObj.integrationQuery.article_keyword_e = data.result.article_keyword_e;
                         $scope.listObj.integrationQuery.article_title_e = data.result.article_title_e;
+                        $scope.listObj.integrationQuery.author_e = data.result.author_e;
                         $scope.listObj.integrationQuery.publication_date = data.result.publication_date;
                         $scope.listObj.integrationQuery.article_score = data.result.article_score;
                         $scope.listObj.integrationQuery.reference = data.result.reference;
 
                         $scope.listObj.integrationQuery.create_time = insureUtil.dateToString(new Date(data.result.create_time), "yyyy-MM-dd");
                         $scope.listObj.integrationQuery.update_time = insureUtil.dateToString(new Date(data.result.update_time), "yyyy-MM-dd");
+                        $scope.listObj.integrationQuery.check_type = data.result.check_type;
 
                         $scope.listObj.selectedItem.article_type_id = data.result.article_type_id;
                         $scope.listObj.selectedItem.article_type_name = data.result.article_type_name;
@@ -164,6 +163,14 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             }
         };
 
+        $scope.goPreLocation = function(){
+            debugger
+            $state.go($scope.listObj.pre_location, {
+                query_params: $scope.listObj.pre_query_params
+            });
+
+        }
+
         $scope.operate = {
             delete:function(){
                 var confirm = layer.confirm('确认删除勾选的数据吗？', {
@@ -188,7 +195,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         layer.closeAll('loading');
                         if (data.code == 0) {
                             layer.alert(data.message);
-                            $state.go($scope.pre_location);
+                            $scope.goPreLocation();
+                            // $state.go($scope.listObj.pre_location);
                         } else {
                             layer.alert(data.message);
                         }
@@ -217,7 +225,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         layer.closeAll('loading');
                         if (data.code == 0) {
                             layer.alert(data.message);
-                            $state.go($scope.pre_location);
+                            $scope.goPreLocation();
+                            // $state.go($scope.listObj.pre_location);
                         } else {
                             layer.alert(data.message);
                         }
@@ -245,8 +254,9 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     }).success(function (data) {
                         layer.closeAll('loading');
                         if (data.code == 0) {
-                            layer.alert(data.message);
-                            $state.go($scope.pre_location);
+                            layer.alert("发布成功");
+                            $scope.goPreLocation();
+                            // $state.go($scope.listObj.pre_location);
                         } else {
                             layer.alert(data.message);
                         }
@@ -261,45 +271,56 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
 
         $scope.save = function(callback){
             if(!$scope.listObj.integrationQuery.article_title){
-                layer.tips("请输入标题","#article_title");
+                layer.msg("请输入标题");
+                // layer.tips("请输入标题","#article_title");
                 return;
             }
             if(!$scope.listObj.regionType.selected){
-                layer.tips("请选择类型","#article_type");
+                layer.msg("请选择类型");
+                // layer.tips("请选择类型","#article_type");
                 return;
             }
             if(!$scope.listObj.integrationQuery.source){
-                layer.tips("请输入来源","#source");
+                layer.msg("请输入来源");
+                // layer.tips("请输入来源","#source");
                 return;
             }
             if(!$scope.listObj.integrationQuery.create_time){
-                layer.tips("请选择发表时间","#create_time");
+                layer.msg("请选择发表时间");
+                // layer.tips("请选择发表时间","#create_time");
                 return;
             }
             if(!$scope.listObj.integrationQuery.update_time){
-                layer.tips("请选择入库时间","#update_time");
+                layer.msg("请选择入库时间");
+                // layer.tips("请选择入库时间","#update_time");
                 return;
             }
             if(!$scope.listObj.integrationQuery.article_keyword){
-                layer.tips("请输入关键字","#article_keyword");
+                layer.msg("请输入关键字");
+                // layer.tips("请输入关键字","#article_keyword");
                 return;
             }
             if(!$scope.listObj.integrationQuery.content_excerpt){
-                layer.tips("请输入摘要","#content_excerpt");
+                layer.msg("请输入摘要");
+                // layer.tips("请输入摘要","#content_excerpt");
                 return;
             }
             // 获取编辑器区域完整html代码
             var html = editor.txt.html();
             // 获取编辑器纯文本内容
             var text = editor.txt.text();
-            if (text == null || text.length == 0) {
-                layer.tips("请输入正文","#content");
-                return;
+            //只有文章的时候需要论文
+            if($scope.listObj.type == '0'){
+                if (text == null || text.length == 0) {
+                    layer.msg("请输入正文");
+                    return;
+                }
             }
 
             $scope.listObj.dataTime = angular.element('#time').val();
             var url = "releaseManagement/updateAricleTmpMesage/rest";
             if($scope.listObj.tmp_type == '1'){
+            // if($scope.listObj.type == '0' && $scope.listObj.tmp_type == '1'){
                 url = 'article/updateArticle';
             }
             layer.load(2);
@@ -316,13 +337,14 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     article_title: $scope.listObj.integrationQuery.article_title,
                     article_keyword: $scope.listObj.integrationQuery.article_keyword,
                     content_excerpt: $scope.listObj.integrationQuery.content_excerpt,
-                    // share_initcount: $scope.listObj.integrationQuery.share_initcount,
-                    // collect_count: $scope.listObj.integrationQuery.collect_count,
+                    share_initcount: $scope.listObj.integrationQuery.share_initcount,
+                    collect_count: $scope.listObj.integrationQuery.collect_count,
                     content_manual: html,
                     details_div: html,
                     details_txt: text,
                     reference:$scope.listObj.integrationQuery.reference,
                     create_time: $scope.listObj.integrationQuery.create_time,
+                    dateTIme: $scope.listObj.integrationQuery.create_time,
                     //未更新
                     update_time: $scope.listObj.integrationQuery.update_time,//后台未更新
                     word_count: text.length,
@@ -330,6 +352,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     content_excerpt_e: $scope.listObj.integrationQuery.content_excerpt_e,
                     article_keyword_e: $scope.listObj.integrationQuery.article_keyword_e,
                     article_title_e: $scope.listObj.integrationQuery.article_title_e,
+                    author_e: $scope.listObj.integrationQuery.author_e,
                     publication_date: $scope.listObj.integrationQuery.publication_date,
                     article_score: $scope.listObj.integrationQuery.article_score
 
@@ -342,7 +365,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     if(callback){
                         callback();
                     }else{
-                        $state.go($scope.pre_location);
+                        $scope.goPreLocation();
+                        // $state.go($scope.listObj.pre_location);
                     }
                 } else {
                     layer.alert("更新失败");

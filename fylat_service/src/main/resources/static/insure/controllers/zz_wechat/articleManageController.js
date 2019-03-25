@@ -11,6 +11,19 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
             },
         }
 
+        $scope.query_params = {
+            updateTimeStart:'',
+            updateTimeEnd:'',
+            createTimeStart:'',
+            createTimeEnd:'',
+            article_type_id:'',
+            details_size_more:'',
+            details_size_less:'',
+            message:''
+        }
+        if($stateParams.query_params){
+            $scope.query_params = JSON.parse($stateParams.query_params);
+        }
 
         //文章列表
         $scope.listAritcle = function () {
@@ -116,31 +129,19 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         align: 'center',
                         width: "100px"
                     }, {
-                        title: '正文',
-                        class: 'col-md-1',
-                        field: 'details_txt',
-                        align: 'center',
-                        cellStyle:{
-                            css:{
-                                "min-width":"100px",
-                                "max-width":"200px"
-                            },
-                            classes:["overflow"]
-                        }
-                    }, {
                         title: '操作',
                         class: 'col-md-1',
                         align: 'center',
-                        width: '100px',
                         formatter: function (value, row, index) {
 
-                            return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
-                                '<a class="a-edit a-blue" href="javascript:;">修改</a>&nbsp;' +
-                                '<a class="a-delete a-red" href="javascript:;"> 删除</a>';
+                            return '<a class="btn btn-info btn-xs a-view" href="javascript:;">查看</a>&nbsp;' +
+                                '<a class="btn btn-blue btn-xs a-edit" href="javascript:;">修改</a>&nbsp;' +
+                                '<a class="btn btn-danger btn-xs a-delete" href="javascript:;"> 删除</a>';
                         },
                         events: {
                             'click .a-view': function (e, value, row, index) {
                                 $state.go('app.insure.modify_paper', {
+                                    pre_query_params: JSON.stringify($scope.query_params),
                                     article_id: row.article_id,
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"view",
@@ -151,6 +152,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                             },
                             'click .a-edit': function (e, value, row, index) {
                                 $state.go('app.insure.modify_paper', {
+                                    pre_query_params: JSON.stringify($scope.query_params),
                                     article_id: row.article_id,
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"edit",
@@ -169,10 +171,10 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
         $scope.listAritcle();
         $scope.query = function(){
-            if(!$("#article_type_id").val()){
+            /*if(!$("#article_type_id").val()){
                 layer.msg("文章类型不能为空");
                 return;
-            }
+            }*/
             $scope.tableInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
