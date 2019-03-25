@@ -139,7 +139,6 @@ public class StatisticsDaoIml implements StatisticsDao {
         String state =   info.get("state")==null?"":info.get("state").toString();
         String articleTitle =   info.get("articleTitle")==null?"":info.get("articleTitle").toString();
 
-
         StringBuffer sql = new StringBuffer();
         List parameterList = new ArrayList();
 
