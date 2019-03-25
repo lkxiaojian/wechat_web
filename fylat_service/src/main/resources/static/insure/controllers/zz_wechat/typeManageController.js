@@ -233,7 +233,10 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         $scope.myTree.openAllItems(array[i]);
                     }
                     if (level == 1 || level == 2) {
-                        $scope.myTree.setItemStyle(array[i], 'color:#616b88; font-weight: bold;text-al');
+                        $scope.myTree.setItemStyle(array[i], 'color:#616b88; font-weight: bold;');
+                    }
+                    if($scope.myTree.getUserData(array[i],"issue")==1){
+                        $scope.myTree.setItemStyle(array[i], 'background-color:#b9b9b8;');
                     }
                 }
 

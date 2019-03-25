@@ -1,6 +1,6 @@
 package com.kingweather.we_chat.dao.iml;
 
-import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer;
+import com.google.common.collect.Lists;
 import com.kingweather.common.jdbc.JdbcUtil;
 import com.kingweather.common.util.DateUtil;
 import com.kingweather.common.util.Page;
@@ -35,6 +35,15 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 1, parent_id
 
         });
+        if(maps != null && !"1".equals(type)){
+            maps.stream().forEach(s -> {
+                Map map = (Map<String, Object>) s;
+                Map userdata = new HashMap();
+                userdata.put("name", "issue");
+                userdata.put("content", map.get("issue"));
+                map.put("userdata", Lists.newArrayList(userdata));
+            });
+        }
 
         return maps;
     }
