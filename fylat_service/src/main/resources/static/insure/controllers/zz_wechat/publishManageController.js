@@ -403,7 +403,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         $scope.getAllPublishedType = function () {
             $http({
                 method: 'GET',
-                url: '/releaseManagement/getAllIssueArticleType/rest',
+                url: '/releaseManagement//rest',
                 params: {
                     type: "2"
                 }
