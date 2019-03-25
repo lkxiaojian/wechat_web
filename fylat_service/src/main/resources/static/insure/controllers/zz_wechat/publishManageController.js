@@ -123,6 +123,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             "max-width": "200px"
                         },
                         classes: ["overflow"]
+                    },formatter:function(value, row, index) {
+                        var values = row.content_excerpt;
+                        var span=document.createElement('span');
+                        span.setAttribute('title',values);
+                        span.innerHTML = row.content_excerpt;
+                        return span.outerHTML;
                     }
                 }, {
                     title: '来源',
@@ -301,6 +307,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             "max-width": "200px"
                         },
                         classes: ["overflow"]
+                    },formatter:function(value, row, index) {
+                        var values = row.content_excerpt;
+                        var span=document.createElement('span');
+                        span.setAttribute('title',values);
+                        span.innerHTML = row.content_excerpt;
+                        return span.outerHTML;
                     }
                 }, {
                     title: '来源',
