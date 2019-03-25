@@ -190,6 +190,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         Object tmp_type = req.getParameter("tmp_type");
         //查询的类型的id
         Object article_type_id = req.getParameter("article_type_id");
+        if(article_type_id!=null&&"".equals(article_type_id)){
+            article_type_id=null;
+        }
 
         Object startNum = req.getParameter("pageNumber");
         Object pageSize = req.getParameter("pageSize");
@@ -311,7 +314,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
 
-            sqlMessage = sqlMessage + " ORDER BY a.update_time asc";
+            sqlMessage = sqlMessage + " ORDER BY a.update_time desc";
             Page<Map<String, Object>> page = jdbc.queryForPage(Integer.parseInt(startNum.toString()), Integer.parseInt(pageSize.toString()), sqlCount, sqlMessage, new Object[]{});
             map.put("code", 0);
             map.put("message", "查询成功");
@@ -1069,9 +1072,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         } else if("1".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state from zz_wechat.article_type where del_type=0 and parentid !='100' and parentid !='1'";
         }else {
-
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1'";
-
 
         }
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
