@@ -1,0 +1,161 @@
+<!--头部导航信息-->
+<div class="modal-header">
+    <div class="btn pull-right m-t-n-xs m-l-n list-icon">
+        <a ui-sref="app.insure.integration_processManage"> <i
+                class="fa fa-mail-reply-all"></i>
+        </a>
+    </div>
+    <div style="margin: 0px 15px">
+        <h3 class="m-n font-thin h5">{{$scope.listObj.type == '0'?listObj.navigationMsg:'管理平台 >精品名称管理'}} </h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box-header with-border">
+            <form class="navbar-form navbar-left" role="search" id = "queryForm">
+                <div class="search-con">
+                    <div class="form-group form-inline">
+                        <label class="control-label input-sm">类型名称：</label>
+                        <input class="form-control input-sm" placeholder="请输入" ng-model="typeName">
+                    </div>
+                    <div class="form-group form-inline"  style="width: 500px;">
+                        <a class="btn btn-info" ng-click="query()">搜索</a>
+                        <a class="btn btn-success" ng-click="publish()" ng-show="listObj.type == '0'">发布</a>
+                        <a class="btn btn-blue" ng-click="refresh()">刷新</a>
+                        <a class="btn btn-danger" ng-click="similarity()">相似度</a>
+                        <a class="btn btn-warning" ng-click="goPubView()" ng-show="listObj.type == '0'">进入文章发布</a>
+                        <a class="btn btn-warning" ng-click="delete()" ng-show="listObj.type == '1'">删除</a>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group">
+                <div id="dataTree" class="col-sm-12" style="margin:5px;height:550px; border :1px solid Silver; overflow:auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="editModal">
+        <div class="modal-dialog modal-lg" role="document" style = "width:800px;">
+            <div class="modal-content" style="height: 460px;">
+                <div class="modal-header" style = "background-color:#355da5;">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" style = "color:#FFFFFF;">修改类型</h4>
+                </div>
+
+                <form class="form-horizontal" role="form"  name="searchuserForm" style="padding-top: 15px;padding-right: 10px;">
+<!--
+                    <input type="hidden" class="form-control input-sm" ng-model="typeForm.parentid">
+-->
+                    <input type="hidden" class="form-control input-sm" ng-model="typeForm.article_type_id">
+                    <!--<div class="form-group">
+                        <label class="col-sm-2 control-label">上级类型:</label>
+                        <div class="col-sm-10">
+                            <select ng-model="typeForm.parentid" class="form-control input-sm">
+                                <option ng-repeat="x in typeList" value="{{x.article_type_id}}" ngf-select="typeForm.parentid==x.article_type_id">{{x.article_type_name}}</option>
+                            </select>
+                        </div>
+                    </div>-->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">类型名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="typeForm.name" placeholder="请输入">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">关键词:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="typeForm.keyword" placeholder="请输入">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">原类型名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="typeForm.article_type_name_old"  ng-disabled="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">原关键词:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="typeForm.article_type_keyword_old" ng-disabled="true">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">头像图:</label>
+                        <div class="col-sm-2">
+                            <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
+                                 ngf-multiple="false" ng-model="typeForm.iamge_icon_file">
+                                选择文件
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="hidden" ng-model="typeForm.iamge_icon"/>
+                            <img ngf-src="typeForm.iamge_icon_file || iamge_icon_url" class="img-responsive" style="max-width: 60px;max-height: 60px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">背景图:</label>
+                        <div class="col-sm-2">
+                            <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
+                                 ngf-multiple="false" ng-model="typeForm.iamge_back_file">
+                                选择文件
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <input type="hidden" ng-model="typeForm.iamge_back"/>
+                            <img ngf-src="typeForm.iamge_back_file || iamge_back_url" class="img-responsive" style="max-width: 60px;max-height: 60px;"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10" style="text-align: right;padding-right: 50px;">
+                            <button class="btn btn-info" ng-disabled="searchuserForm.$invalid" ng-click="update()">保存</button>
+                            <button class="btn btn-default" ng-click="cancel()">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="similarityModal">
+        <div class="modal-dialog modal-lg" role="document" style = "width:800px;">
+            <div class="modal-content" style="height: 280px;">
+                <div class="modal-header" style = "background-color:#355da5;">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" style = "color:#FFFFFF;">相似度</h4>
+                </div>
+                <div style="padding: 5px">
+                    <table class="table table-bordered" style="margin-top: 10px;">
+                        <thead>
+                        <tr>
+                            <th>类型1</th>
+                            <th>类型2</th>
+                            <th>分数</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="entity in similarityList">
+                                <td style = "min-width:100px;max-width:200px;" title = "{{entity.id1Name}}" class = "overflow">{{entity.id1Name}}</td>
+                                <td style = "min-width:100px;max-width:200px;" title = "{{entity.id21Name}}" class = "overflow">{{entity.id2Name}}</td>
+                                <td style = "min-width:100px;" title = "{{entity.score}}">{{entity.score}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    form label{
+        font-weight: bolder;
+    }
+</style>

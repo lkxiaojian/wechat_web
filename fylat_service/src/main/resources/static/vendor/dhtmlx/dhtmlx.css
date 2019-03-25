@@ -3850,6 +3850,7 @@ div.dhxform_item_template div.dhx_cell_editor div.dhx_cell_toolbar_def div.dhx_t
 	font-size: 12px;
 	overflow: hidden;
 	padding: 0;
+	text-align: left;
 }
 
 .dhxtree_dhx_skyblue .selectedTreeRow_lor, .dhxtree_dhx_skyblue .selectedTreeRow

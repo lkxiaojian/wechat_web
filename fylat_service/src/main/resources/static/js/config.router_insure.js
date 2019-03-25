@@ -117,9 +117,15 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         })
         .state('app.insure.modify_article', {
             url: '/modifyArticle',
-            params: {param: null, article_id: null},
+            params: {param: null,
+                article_id: null,
+                pre_location: null,
+                operate_type: null,
+                type: null,//论文OR文章
+                tmp_type: null //1查询已发布的，0查询未发布的
+            },
             templateUrl: 'insure/template/zz_wechat/modifitionArticle.html',
-            pageTitle: '修改文章',
+            pageTitle: '文章修改',
             controller: 'modificationArticleManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -150,7 +156,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
-
+/*
         .state('app.insure.publishManage', {
             url: '/publishManage',
             params: {param: null, type_id: null},
@@ -168,7 +174,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                         ]);
                     }]
             }
-        })
+        })*/
         .state('app.insure.domainList', {
             url: '/domainList',
             // params: {param: null, data: null},
@@ -278,7 +284,159 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             }
         })
 
+        .state('app.insure.article_manage', {
+            url: '/articleManage',
+            params: {param: null, data: null,query_params:null},
+            templateUrl: 'insure/template/zz_wechat/articleManage.html',
+            pageTitle: '文章管理',
+            controller: 'articleManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/articleManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.article_data', {
+            url: '/articleData',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/articleData.html',
+            pageTitle: '文章统计',
+            controller: 'articleDataController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/articleDataController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
 
+        .state('app.insure.paper_manage', {
+            url: '/paperManage',
+            params: {param: null, data: null,query_params:null},
+            templateUrl: 'insure/template/zz_wechat/paperManage.html',
+            pageTitle: '论文管理',
+            controller: 'paperManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/paperManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.paper_data', {
+            url: '/paperData',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/paperData.html',
+            pageTitle: '论文统计',
+            controller: 'paperDataController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/paperDataController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.type_manage', {
+            url: '/typeManage',
+            params: {param: null, data: null,type:'0'},
+            templateUrl: 'insure/template/zz_wechat/typeManage.html',
+            pageTitle: '分类管理',
+            controller: 'typeManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/typeManageController.js',
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css',
+                            'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.pub_type_manage', {
+            url: '/pubTypeManage',
+            params: {param: null, data: null,type:'1'},
+            templateUrl: 'insure/template/zz_wechat/typeManage.html',
+            pageTitle: '分类管理',
+            controller: 'typeManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/typeManageController.js',
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css',
+                            'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
 
+        .state('app.insure.publish_manage', {
+            url: '/publishManage',
+            params: {param: null, data: null,type_id: null,pre_location: null,comming_type_id:null,query_params:null},
+            templateUrl: 'insure/template/zz_wechat/publishManage.html',
+            pageTitle: '发布管理',
+            controller: 'publishManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/publishManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+
+        .state('app.insure.modify_paper', {
+            url: '/modifyPaperManage',
+            params: {param: null,
+                pre_query_params: null,//上级的查询条件
+                article_id: null,
+                pre_location: null,
+                operate_type: null,
+                type: null,//论文OR文章
+                tmp_type: null //1查询已发布的，0查询未发布的
+            },
+            templateUrl: 'insure/template/zz_wechat/modifyPaperManage.html',
+            pageTitle: '修改',
+            controller: 'modifyPaperManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'vendor/jquery/wangEditor.js',
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/modifyPaperManageController.js',
+                            'ui.select',
+                            'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
 
 }]);

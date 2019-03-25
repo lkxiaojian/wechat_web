@@ -1,8 +1,11 @@
 <!--头部导航信息-->
 <div class="modal-header">
     <div class="btn pull-right m-t-n-xs m-l-n list-icon">
-        <a ui-sref="app.insure.integration_processManage"> <i
-                class="fa fa-mail-reply-all"></i>
+        <!--
+                <a ui-sref="app.insure.article_list">
+        -->
+        <a ui-sref="{{listObj.pre_location}}">
+            <i class="fa fa-mail-reply-all"></i>
         </a>
     </div>
     <div style="margin: 0px 15px">
@@ -10,194 +13,157 @@
     </div>
 </div>
 
-<div class="TabNav">
-    <ul ng-init='activeTab=1'>
-        <li ng-class='{active:activeTab==1}' ng-click='activeTab=1'>文章</li>
-        <li ng-class='{active:activeTab==2}' ng-click='activeTab=2'>论文</li>
+<!--内容区-->
+<div style="padding: 5px;">
+
+    <!--<div class="TabNav">
+        <ul ng-init='activeTab=1'>
+            <li ng-class='{active:activeTab==1}' ng-click='activeTab=1'>文章</li>
+            <li ng-class='{active:activeTab==2}' ng-click='activeTab=2'>论文</li>
+        </ul>
+    </div>-->
+
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="active">
+            <a ng-click='activeTab=1; query_params.type="0"' data-toggle="tab">文章管理</a>
+        </li>
+        <li><a id = 'tab2Btn' ng-click='activeTab=2; query_params.type="1"' data-toggle="tab">论文管理</a></li>
+
     </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="article" ng-show='activeTab==1'>
+            <div class="modal-body" >
+                <form class="form-horizontal m-b-md" role="search" id = "queryArticleForm">
+                    <div class="search-con">
+                        <div class="form-group form-inline" style = "width:460px;">
+                            <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeStart" name="updateTimeStart"  ng-model="article_query_params.updateTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd" name="updateTimeEnd"  ng-model="article_query_params.updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        </div>
+                        <div class="form-group form-inline" style = "width:460px;">
+                            <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeStart" name="createTimeStart"  ng-model="article_query_params.createTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeEnd" name="createTimeEnd"  ng-model="article_query_params.createTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        </div>
+                    </div>
+
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">文章类型：</label>
+                            <select name="article_type_id" class="form-control input-sm"  ng-model="article_query_params.article_type_id">
+                                <option value="">--请选择--</option>
+                                <option ng-repeat="x in publishedTypeList" ng-selected="article_query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group form-inline" style = "width:380px;">
+                            <label style=" padding-left:13px;width:120px;" class="control-label input-sm">字数：</label>
+                            <input size="16" type="text" name="details_size_more"  ng-model="article_query_params.details_size_more" style = "width:100px;" class="form-control input-sm"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input size="16" type="text" name="details_size_less"  ng-model="article_query_params.details_size_less" style = "width:100px;"  class="form-control input-sm"/>
+                        </div>
+                    </div>
+
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">是否审核：</label>
+                            <select name="language" class="form-control input-sm" ng-model="article_query_params.checkType">
+                                <option value="">--请选择--</option>
+                                <option value="0" ng-selected="article_query_params.checkType=='0'">未审核</option>
+                                <option value="1" ng-selected="article_query_params.checkType=='1'">已审核</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">内容：</label>
+                            <input name="message" class="form-control input-sm" placeholder="请输入" ng-model="article_query_params.message">
+                        </div>
+                        <div class="form-group form-inline">
+                            <a class="btn btn-info" ng-click="queryArticle()">查询</a>
+                            <a class="btn btn-default" ng-click="resetArticle()">清除</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <div class="btn-group col-lg-12" style="padding-left: 1px;">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll(0)">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll(0)">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish(0)">批量发布</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete(0)">批量删除</button>
+                </div>
+                <table table-directive tableoption="articleTmpOption" instance="articleTmpInstance" style="height: 286px"></table>
+            </div>
+        </div>
+        <div class="tab-pane fade in active" id="paper" ng-show='activeTab==2'>
+            <div class="modal-body">
+                <form class="form-horizontal m-b-md" role="search" id = "queryPaperForm">
+                    <div class="search-con">
+                        <div class="form-group form-inline" style = "width:460px;">
+                            <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeStart2" name="updateTimeStart" ng-model="paper_query_params.updateTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd2" name="updateTimeEnd" ng-model="paper_query_params.updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTime" name="createTime" ng-model="paper_query_params.createTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099\'}'})"/>
+                            <!--
+                            <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeEnd2" name="createTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                            -->
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">语言：</label>
+                            <select name="language" class="form-control input-sm" ng-model="query_params.language">
+                                <option value="">--请选择--</option>
+                                <option value="0" ng-selected="paper_query_params.article_type_id=='0'">中文</option>
+                                <option value="1" ng-selected="paper_query_params.article_type_id=='1'">英文</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="search-con">
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">论文类型：</label>
+                            <select name="article_type_id" id = "article_type_id" class="form-control input-sm"  ng-model="paper_query_params.article_type_id">
+                                <option value="">--请选择--</option>
+                                <option ng-repeat="x in publishedTypeList" ng-selected="paper_query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">是否审核：</label>
+                            <select name="language" class="form-control input-sm" ng-model="article_query_params.checkType">
+                                <option value="">--请选择--</option>
+                                <option value="0" ng-selected="paper_query_params.checkType=='0'">未审核</option>
+                                <option value="1" ng-selected="paper_query_params.checkType=='1'">已审核</option>
+                            </select>
+                        </div>
+                        <div class="form-group form-inline">
+                            <label class="control-label input-sm">内容：</label>
+                            <input name="message" class="form-control input-sm" placeholder="请输入" ng-model="paper_query_params.message">
+                        </div>
+                        <div class="form-group form-inline">
+                            <a class="btn btn-info" ng-click="queryPager()">查询</a>
+                            <a class="btn btn-default" ng-click="resetPager()">清除</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <div class="btn-group col-lg-12" style="padding-left: 1px;">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll(1)">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll(1)">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchPublish(1)">批量发布</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete(1)">批量删除</button>
+                </div>
+                <table table-directive tableoption="paperTmpOption" instance="paperTmpInstance"
+                       style="height: 286px"></table>
+            </div>
+        </div>
+
+    </div>
+
 </div>
-
-<div class="" style="margin-top: 20px;margin-left: 20px;" ng-show='activeTab==1'>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">入库时间：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">发表时间：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">分数：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-12 col-sm-12 padder-l-0 m-b-md">
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-5 col-sm-4 control-label padder-l-0">是否审核：</label>
-        <div class="col-md-7 col-sm-8 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">语言：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">字数：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">类型：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-8 col-sm-12 padder-l-0 m-b-md">
-        <label class="col-md-2 col-sm-2 control-label padder-l-0">搜索内容：</label>
-        <div class="col-md-4 col-sm-4 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.seachMessage">
-        </div>
-        <button class="btn m-b-xs w-xs btn-default"
-                ng-disabled="searchuserForm.$invalid"
-                ng-click="listObj.seach()"
-                style="position: relative; left: 15px;">搜索
-        </button>
-        <button class="btn m-b-xs w-xs btn-default"
-                ng-disabled="searchuserForm.$invalid"
-                ng-click="listObj.clear()"
-                style="position: relative; left: 15px;">清空
-        </button>
-    </div>
-</div>
-
-
-<!--内容区-->
-<div class="wrapper-md"  ng-show='activeTab==1'>
-    <table table-directive tableoption="articleTmpOption" id="ArticleTmp" instance="articleTmpInstance"
-           style="height: 286px"></table>
-</div>
-
-<div class="" style="margin-top: 20px;margin-left: 20px;" ng-show='activeTab==2'>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">入库时间：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">发表时间：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-4 col-sm-4 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">分数：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-12 col-sm-12 padder-l-0 m-b-md">
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-5 col-sm-4 control-label padder-l-0">是否审核：</label>
-        <div class="col-md-7 col-sm-8 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">语言：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">字数：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-3 col-sm-3 padder-l-0 m-b-md">
-        <label class="col-md-3 col-sm-2 control-label padder-l-0">类型：</label>
-        <div class="col-md-9 col-sm-10 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.integrationQuery.domain_name">
-        </div>
-    </div>
-    <div class="col-md-8 col-sm-12 padder-l-0 m-b-md">
-        <label class="col-md-2 col-sm-2 control-label padder-l-0">搜索内容：</label>
-        <div class="col-md-4 col-sm-4 padder-l-0">
-            <input type="text" class="form-control"
-                   ng-model="listObj.seachMessage">
-        </div>
-        <button class="btn m-b-xs w-xs btn-default"
-                ng-disabled="searchuserForm.$invalid"
-                ng-click="listObj.seach()"
-                style="position: relative; left: 15px;">搜索
-        </button>
-        <button class="btn m-b-xs w-xs btn-default"
-                ng-disabled="searchuserForm.$invalid"
-                ng-click="listObj.clear()"
-                style="position: relative; left: 15px;">清空
-        </button>
-    </div>
-</div>
-
-
-<!--内容区-->
-<div class="wrapper-md"  ng-show='activeTab==2'>
-    <table table-directive tableoption="testOption1" id="testArticle1" instance="testInstance"
-           style="height: 286px"></table>
-</div>
-
-<style>
-    .TabNav{
-        height: 48px;
-        position: relative;
-        /*margin-left: 100px;*/
-        /*margin-top: 100px;*/
-    }
-    .TabNav ul li{
-        float: left;
-        background: -webkit-gradient(linear,left top,left bottom, from(#fefefe), to(#ededed));
-        border: 1px solid #ccc;
-        padding: 5px 0;
-        width: 100px;
-        text-align: center;
-        margin-left: -1px;
-        position: relative;
-        cursor: pointer;
-    }
-    .TabNav ul li.active{
-        background: #FFFFFF;
-        border-bottom: none;
-    }
-</style>
-
-<script type="text/ng-template" id="myModalContent.html">
-    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
-</script>
 

@@ -388,6 +388,46 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
                 }
             }
         }
+        //TODO 测试方便加的
+        var menu = {};
+        menu.icon = 'icon-info';
+        menu.name = '测试用';
+        menu.submenus = [];
+
+        var sub_menu = {};
+        sub_menu.name = '文章管理';
+        sub_menu.href = 'app.insure.article_manage';
+        sub_menu.isLeaf = '1';
+        menu.submenus.push(sub_menu);
+        var sub_menu3 = {};
+        sub_menu3.name = '文章统计';
+        sub_menu3.href = 'app.insure.article_data';
+        sub_menu3.isLeaf = '1';
+        menu.submenus.push(sub_menu3);
+        var sub_menu1 = {};
+        sub_menu1.name = '论文管理';
+        sub_menu1.href = 'app.insure.paper_manage';
+        sub_menu1.isLeaf = '1';
+        menu.submenus.push(sub_menu1);
+        var sub_menu4 = {};
+        sub_menu4.name = '论文统计';
+        sub_menu4.href = 'app.insure.paper_data';
+        sub_menu4.isLeaf = '1';
+        menu.submenus.push(sub_menu4);
+        var sub_menu2 = {};
+        sub_menu2.name = '分类管理';
+        sub_menu2.href = 'app.insure.type_manage';
+        sub_menu2.isLeaf = '1';
+        menu.submenus.push(sub_menu2);
+        var sub_menu5 = {};
+        sub_menu5.name = '精品名称管理';
+        sub_menu5.href = 'app.insure.pub_type_manage';
+        sub_menu5.isLeaf = '1';
+        menu.submenus.push(sub_menu5);
+
+        menus.push(menu);
+        //TODO 测试方便加的
+
         $scope.insure.menus = menus;
     }
 }]);

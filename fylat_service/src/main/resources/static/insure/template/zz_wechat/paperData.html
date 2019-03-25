@@ -1,0 +1,92 @@
+<!--头部导航信息-->
+<div class="modal-header">
+    <div class="btn pull-right m-t-n-xs m-l-n list-icon">
+        <a>
+            <i class="fa fa-mail-reply-all"></i>
+        </a>
+    </div>
+    <div style="margin: 0px 15px">
+        <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box-header with-border">
+            <form class="navbar-form navbar-left" role="search" id = "queryForm">
+                <div class="search-con">
+                    <div class="form-group form-inline" style = "width:460px;">
+                        <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
+                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeStart2" name="updateTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                        <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd2" name="updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                    </div>
+                    <div class="form-group form-inline" style = "width:460px;">
+                        <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
+                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTime" name="createTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099\'}'})"/>
+                        <!--
+                        <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeEnd2" name="createTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        -->
+                    </div>
+                    <div class="form-group form-inline">
+                        <label class="control-label input-sm">语言：</label>
+                        <select name="language" class="form-control input-sm" >
+                            <option value="">--请选择--</option>
+                            <option value="0">中文</option>
+                            <option value="1">英文</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-con">
+                    <div class="form-group form-inline">
+                        <label class="control-label input-sm">论文类型：</label>
+                        <select name="article_type_id" id = "article_type_id" class="form-control input-sm" required>
+                            <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                        </select>
+                    </div>
+
+                    <!--<div class="form-group form-inline" style = "width:380px;">
+                        <label style=" padding-left:13px;width:120px;" class="control-label input-sm">字数：</label>
+                        <input size="16" type="text" name="details_size_more" style = "width:100px;" class="form-control input-sm"/>
+                        <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
+                        <input size="16" type="text" name="details_size_less" style = "width:100px;"  class="form-control input-sm"/>
+                    </div>-->
+                    <div class="form-group form-inline">
+                        <label class="control-label input-sm">内容：</label>
+                        <input name="message" class="form-control input-sm" placeholder="请输入">
+                    </div>
+                    <div class="form-group form-inline">
+                        <a class="btn btn-info" ng-click="query()">查询</a>
+                        <a class="btn btn-default" ng-click="reset()">清除</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default" ng-click="checkAll()">全部选择</button>
+                <button type="button" class="btn btn-default" ng-click="uncheckAll()">全部取消</button>
+                <button type="button" class="btn btn-default" ng-click="batchDownload()">批量下载</button>
+                <button type="button" class="btn btn-default" ng-click="batchDelete()">批量删除</button>
+            </div>
+        </div>
+        <div class="box-body">
+            <table table-directive tableoption="tableOption" instance="tableInstance"
+                   style="height: 286px"></table>
+        </div>
+    </div>
+</div>
+
+
+<!--内容区-->
+<!--<div class="wrapper-md">
+    <table table-directive tableoption="testOption" id="testArticle" instance="testInstance"
+           style="height: 286px"></table>
+</div>-->
+
+
+<script type="text/ng-template" id="myModalContent.html">
+    <div id="mapModel" ng-include="'insure/template/policy/mapAddressmodal.html'"></div>
+</script>
