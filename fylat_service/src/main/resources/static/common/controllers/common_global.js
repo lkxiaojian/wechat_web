@@ -391,7 +391,7 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
         //TODO 测试方便加的
         var menu = {};
         menu.icon = 'icon-info';
-        menu.name = '测试用';
+        menu.name = '分类管理';
         menu.submenus = [];
 
         var sub_menu = {};
