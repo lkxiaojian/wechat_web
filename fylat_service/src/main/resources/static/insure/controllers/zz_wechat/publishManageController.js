@@ -405,7 +405,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 method: 'GET',
                 url: '/releaseManagement/getAllIssueArticleType/rest',
                 params: {
-                    type: "1"
+                    type: "2"
                 }
             }).success(function (data) {
                 if (data.code == 0) {
