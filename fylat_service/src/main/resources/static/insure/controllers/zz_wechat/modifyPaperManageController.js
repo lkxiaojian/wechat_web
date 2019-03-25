@@ -75,12 +75,21 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                 if ($scope.listObj.region.selected != null) {
                     article_type_id = $scope.listObj.region.selected.article_type_id
                 }
+                var type = '1';
+                if($scope.listObj.tmp_type=='0'){
+                    type = '2';
+                }
                 $http({
-                    url: 'article/getAllAricleType',
+                    method: 'GET',
+                    url: '/releaseManagement/getAllIssueArticleType/rest',
+                    params: {
+                        type: type
+                    }
+                    /*url: 'article/getAllAricleType',
                     method: "GET",
                     params: {
                         article_type_id: article_type_id
-                    }
+                    }*/
                 }).success(function (data) {
                     $scope.listObj.articleTypeData = data;
 
