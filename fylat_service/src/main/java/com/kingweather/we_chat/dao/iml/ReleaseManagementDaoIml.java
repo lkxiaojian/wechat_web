@@ -35,7 +35,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 1, parent_id
 
         });
-        if(maps != null){
+        if(maps != null && !"1".equals(type)){
             maps.stream().forEach(s -> {
                 Map map = (Map<String, Object>) s;
                 Map userdata = new HashMap();
@@ -43,7 +43,6 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 userdata.put("content", map.get("issue"));
                 map.put("userdata", Lists.newArrayList(userdata));
             });
-
         }
 
         return maps;
