@@ -41,5 +41,5 @@ public interface ReleaseManagementService {
 
     Map seachArticleType(String type, String message);
 
-    Map pushArticleType(String typeId);
+    Map pushArticleType(String typeId,String type);
 }

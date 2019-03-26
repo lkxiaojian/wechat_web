@@ -16,45 +16,46 @@
                 <div class="search-con">
                     <div class="form-group form-inline" style = "width:460px;">
                         <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
-                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeStart" name="updateTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeStart" name="updateTimeStart"  ng-model="query_params.updateTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
                         <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
-                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd" name="updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd" name="updateTimeEnd"  ng-model="query_params.updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
                     </div>
                     <div class="form-group form-inline" style = "width:460px;">
                         <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
-                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeStart" name="createTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
+                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeStart" name="createTimeStart"  ng-model="query_params.createTimeStart" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099-12-31\'}'})"/>
                         <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
-                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeEnd" name="createTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                        <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTimeEnd" name="createTimeEnd"  ng-model="query_params.createTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
                     </div>
                 </div>
 
                 <div class="search-con">
                     <!--<div class="form-group form-inline">
                         <label class="control-label input-sm">语言：</label>
-                        <select name="language" class="form-control input-sm" >
+                        <select name="language" class="form-control input-sm"  ng-model="query_params.language">
                             <option value="">&#45;&#45;请选择&#45;&#45;</option>
                             <option value="0">中文</option>
                             <option value="1">英文</option>
                         </select>
                     </div>-->
                     <div class="form-group form-inline">
-                        <label class="control-label input-sm">文章分类：</label>
-                        <select name="article_type_id" id = "article_type_id" class="form-control input-sm" required>
-                            <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                        <label class="control-label input-sm">文章类型：</label>
+                        <select name="article_type_id" id = "article_type_id" class="form-control input-sm"  ng-model="query_params.article_type_id">
+                            <option value="">--请选择--</option>
+                            <option ng-repeat="x in publishedTypeList" ng-selected="query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                         </select>
                     </div>
                     <div class="form-group form-inline" style = "width:380px;">
                         <label style=" padding-left:13px;width:120px;" class="control-label input-sm">字数：</label>
-                        <input size="16" type="text" name="details_size_more" style = "width:100px;" class="form-control input-sm"/>
+                        <input size="16" type="text" name="details_size_more"  ng-model="query_params.details_size_more" style = "width:100px;" class="form-control input-sm"/>
                         <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
-                        <input size="16" type="text" name="details_size_less" style = "width:100px;"  class="form-control input-sm"/>
+                        <input size="16" type="text" name="details_size_less"  ng-model="query_params.details_size_less" style = "width:100px;"  class="form-control input-sm"/>
                     </div>
                 </div>
 
                 <div class="search-con">
                     <div class="form-group form-inline">
                         <label class="control-label input-sm">内容：</label>
-                        <input name="message" class="form-control input-sm" placeholder="请输入">
+                        <input name="message" class="form-control input-sm" placeholder="请输入" ng-model="query_params.message">
                     </div>
                     <div class="form-group form-inline">
                         <a class="btn btn-info" ng-click="query()">查询</a>

@@ -4,14 +4,19 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             navigationMsg: "管理平台 >分类管理",
             type: $stateParams.type,
             current_location: "app.insure.type_manage",
+            pic_location: "http://106.2.11.94:7902"
         };
         //获取所有已发布的类型
         $scope.getAllType = function () {
+            var type = '1';
+            if($scope.listObj.type=='0'){
+                type = '2';
+            }
             $http({
                 method: 'GET',
                 url: '/releaseManagement/getAllIssueArticleType/rest',
                 params: {
-                    type: $scope.listObj.type
+                    type: type
                 }
             }).success(function (data) {
                 if (data.code == 0) {
@@ -34,7 +39,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             $("#editModal").modal("hide");
         }
         $('#editModal').on('hidden.bs.modal', function () {
-            debugger
             $scope.typeForm.iamge_icon_file = "";
             $scope.typeForm.iamge_back_file = "";
             $scope.mulImages = [];
@@ -67,7 +71,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 iamge_back:$scope.typeForm.iamge_back,
                 type: $scope.listObj.type
             });
-            debugger
             //TODO 图片的回显问题
             $scope.mulImages.push($scope.typeForm.iamge_icon_file);
             $scope.mulImages.push($scope.typeForm.iamge_back_file);
@@ -94,7 +97,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             });
         };
 
-        $scope.publish = function () {
+        $scope.publish = function (type) {
             var treelist = $scope.myTree.getAllChecked();
             if (!treelist) {
                 layer.msg('至少勾选一个节点');
@@ -105,7 +108,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 method: 'GET',
                 url: 'releaseManagement/pushArticleType/rest',
                 params: {
-                    typeId: treelist
+                    typeId: treelist,
+                    type : type
                 }
             }).success(function (data) {
                 layer.closeAll('loading');
@@ -131,9 +135,139 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         $scope.refresh = function () {
             $scope.myTree.refreshItem();
         }
+        //相似度
+        $scope.similarity = function () {
+            layer.load(2);
+            $http({
+                method: 'GET',
+                url: 'releaseManagement/combinedScore/rest'
+            }).success(function (data) {
+                layer.closeAll('loading');
+                if (data.code == 0) {
+                    $scope.similarityList = data.result;
+
+                    $("#similarityModal").modal({
+/*
+                        backdrop:'static',
+*/
+                        keyboard : false
+                    });
+                } else {
+                    layer.alert(data.message, {icon: 2})
+                }
+            }).error(function (data) {
+                layer.closeAll('loading');
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
+        $scope.mergeTypeList = [];
+        $scope.showMergeModal = function () {
+            var treelist = $scope.myTree.getAllChecked();
+            if (!treelist) {
+                layer.msg('至少勾选两个节点');
+                return;
+            }
+            var split = treelist.split(",");
+            if(split.length<2){
+                layer.msg('至少勾选两个节点');
+                return;
+            }
+            var arr = new Array();
+            for (var i = 0; i < split.length; i++) {
+                var id = split[i];
+                var text = $scope.myTree.getItemText(id);
+                arr.push({id: id, text: text})
+            }
+            $scope.mergeTypeList = arr;
+
+            $("#mergeModal").modal({
+                backdrop:'static',
+                keyboard : false
+            });
+        }
+        $scope.cancelMerge = function () {
+            $("#mergeModal").modal("hide");
+        }
+        $scope.batchMerge = function () {
+            var tarNode = $("[name=optionsRadios]:checked").val();
+            var radioArr = $("[name=optionsRadios]");
+            var idArr = new Array();
+            for (var i = 0; i < radioArr.length; i++) {
+                var id = radioArr[i].value;
+                if(id == tarNode){
+                    continue;
+                }
+                idArr.push(id)
+            }
+            var mergeList = idArr.join(",");
+            merge(tarNode, mergeList);
+        }
+        $scope.merge = function(tarNode,mergeList){
+            layer.load(2);
+            $http({
+                method: 'POST',
+                url: 'releaseManagement/mergeTypeById/rest',
+                data: {
+                    article_type_id: tarNode,// 要合并的保留的类型的id
+                    type: $scope.listObj.type,// type为0
+                    merge_type_id: mergeList//  要被合并 的类型id（传递一个最高的节点）
+                }
+            }).success(function (data) {
+                layer.closeAll('loading');
+                if (data.code == 0) {
+                    layer.msg(data.message);
+                    $scope.focusNode = tarNode;
+                    $scope.refresh();
+                } else {
+                    layer.alert(data.message, {icon: 2})
+                }
+            }).error(function (data) {
+                layer.closeAll('loading');
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
         $scope.goPubView = function () {
+            var selectedNode = '';
+            if(!$scope.myTree.hasChildren()){
+                selectedNode = $scope.myTree.getSelected();
+            }
             $state.go('app.insure.publish_manage',
-                {pre_location: $scope.listObj.current_location});
+                {pre_location: $scope.listObj.current_location,
+                    comming_type_id: selectedNode});
+        }
+
+        $scope.delete = function (){
+            var treelist = $scope.myTree.getAllChecked();
+            if (!treelist) {
+                layer.msg('至少勾选一个节点');
+                return;
+            }
+            var confirm = layer.confirm('确认要删除勾选的类型吗？', {
+                btn: ['取消','确认'] //按钮
+            }, function(){
+                layer.close(confirm);
+            }, function(){
+                layer.load(2);
+                $http({
+                    method: 'GET',
+                    url: 'releaseManagement/delArticleTypeById/rest',
+                    params: {
+                        article_type_id: treelist
+                    }
+                }).success(function (data) {
+                    layer.closeAll('loading');
+                    if (data.code == 0) {
+                        layer.alert(data.message);
+                        $scope.myTree.refreshItem();
+                    } else {
+                        layer.alert(data.message);
+                    }
+
+                }).error(function (data) {
+                    layer.closeAll('loading');
+                    layer.alert("删除失败");
+                })
+            });
         }
 
         $scope.createTree = function () {
@@ -156,7 +290,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
 
             // 设置是否允许显示树图片
             // setOnLoadingStart   setOnLoadingEnd
-            $scope.myTree.setOnLoadingEnd(function () {
+            $scope.myTree.setOnLoadingEnd(function (node) {
                 //设置字体，以区分菜单节点和功能节点
                 var array = $scope.myTree.getAllSubItems(0).split(',');
 
@@ -167,7 +301,10 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         $scope.myTree.openAllItems(array[i]);
                     }
                     if (level == 1 || level == 2) {
-                        $scope.myTree.setItemStyle(array[i], 'color:#616b88; font-weight: bold;text-al');
+                        $scope.myTree.setItemStyle(array[i], 'color:#616b88; font-weight: bold;');
+                    }
+                    if($scope.myTree.getUserData(array[i],"issue")==1){
+                        $scope.myTree.setItemStyle(array[i], 'color:red;');
                     }
                 }
 
@@ -180,12 +317,11 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             $scope.myTree.setXMLAutoLoading("releaseManagement/getTypeMenuTree/rest?type="+$scope.listObj.type);
             $scope.myTree.setDataMode("json");
 
-            $scope.myTree.loadJSON('releaseManagement/getTypeMenuTree/rest?type='+$scope.listObj.type, function () {
+            $scope.myTree.loadJSON('releaseManagement/getTypeMenuTree/rest?type='+$scope.listObj.type, function (data) {
                 $scope.myTree.openAllItems();
 
             });
             $scope.myTree.setDragHandler(function (srcNode, tarNode) {
-                debugger
                 layer.confirm('请选择操作？', {
                     btn: ['作为目标子类', '合并到目标'] //按钮
                 }, function () {
@@ -208,26 +344,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         layer.alert("请求失败", {icon: 2})
                     })
                 }, function () {
-                    debugger
-                    $http({
-                        method: 'GET',
-                        url: 'releaseManagement/mergeTypeById/rest',
-                        params: {
-                            article_type_id: srcNode,// 要合并的保留的类型的id
-                            type: $scope.listObj.type,// type为0
-                            merge_type_id: tarNode//  要被合并 的类型id（传递一个最高的节点）
-                        }
-                    }).success(function (data) {
-                        if (data.code == 0) {
-                            layer.msg(data.message);
-                            $scope.focusNode = tarNode;
-                            $scope.refresh();
-                        } else {
-                            layer.alert(data.message, {icon: 2})
-                        }
-                    }).error(function (data) {
-                        layer.alert("请求失败", {icon: 2})
-                    })
+                    $scope.merge(tarNode,srcNode);
                 });
 
             });
@@ -249,7 +366,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         data: data
                     }).success(function (data) {
                         // $scope.myTree.setItemText(value);
-                        debugger
                         if (data.code == 0) {
                             layer.msg(data.message);
                             $scope.focusNode = id;
@@ -281,6 +397,18 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         $scope.typeForm.iamge_icon = data.data.iamge_icon;
                         $scope.typeForm.iamge_back = data.data.iamge_back;
                         $scope.typeForm.parentid = data.data.parentid;
+                        $scope.typeForm.article_type_name_old = data.data.article_type_name_old;
+                        $scope.typeForm.article_type_keyword_old = data.data.article_type_keyword_old;
+                        if(data.data.iamge_icon){
+                            $scope.iamge_icon_url = $scope.listObj.pic_location+data.data.iamge_icon;
+                        }else{
+                            $scope.iamge_icon_url = "";
+                        }
+                        if(data.data.iamge_back) {
+                            $scope.iamge_back_url = $scope.listObj.pic_location+data.data.iamge_back;
+                        }else{
+                            $scope.iamge_back_url = "";
+                        }
 
                         $("#editModal").modal({
                             backdrop:'static',

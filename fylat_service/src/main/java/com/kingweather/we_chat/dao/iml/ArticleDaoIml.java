@@ -189,10 +189,10 @@ public class ArticleDaoIml implements ArticleDao {
 //        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
         String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title, a.article_title_e,a.content_excerpt,a.content_excerpt_e,"
-                + "a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,a.create_time,"
+                + "a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,"
                 + "(a.share_count+a.collect_initcount) AS share_count,"
                 + "(a.collect_count+a.collect_initcount) AS collect_count ,"
-                + "a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path  "
+                + "a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path,a.reference ,a.paper_create_time,a.site_number "
                 + "FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
@@ -380,7 +380,6 @@ public class ArticleDaoIml implements ArticleDao {
             });
         }
 
-
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", 0);
         map.put("message", "成功！");
@@ -402,7 +401,7 @@ public class ArticleDaoIml implements ArticleDao {
         List<Map<String, Object>> gzList = jdbcTemplate.queryForList(gzSql, new Object[]{
                 1,
                 wechatid,
-                0,
+                100,
                 -1
         });
 
@@ -422,7 +421,7 @@ public class ArticleDaoIml implements ArticleDao {
                 user_id,
                 wechatid,
                 1,
-                0,
+                100,
                 -1
         });
 
@@ -454,12 +453,12 @@ public class ArticleDaoIml implements ArticleDao {
         }
 
         if (message != null) {
-            message = message.replaceAll(" ", "");
+            message = message.replaceAll(" ", "").trim();
         }
         String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
-        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=0 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
+        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=100 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
                 message +
                 "%' or binary article_type_keyword  LIKE '%" +
                 message +
@@ -469,7 +468,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         List<Map<String, Object>> gzMapList = jdbcTemplate.queryForList(gzSeachSql);
 
-        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=0 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
+        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=100 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -484,36 +483,36 @@ public class ArticleDaoIml implements ArticleDao {
         resultMap.put("articleType", list);
         String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                 user_id +
-                "' ) AND (binary article_title LIKE '%" +
+                "' ) AND (BINARY article_title LIKE '%" +
                 message +
-                "%' OR binary article_keyword LIKE '%" +
+                "%' OR BINARY article_keyword LIKE '%" +
                 message +
-                "%' OR binary author LIKE '%" +
+                "%' OR BINARY author LIKE '%" +
                 message +
-                "%' OR binary source LIKE '%" +
+                "%' OR BINARY source LIKE '%" +
                 message +
-                "%' OR binary content_crawl LIKE '%" +
+                "%' OR BINARY content_crawl LIKE '%" +
                 message +
                 "%'" +
-                "OR binary content_manual LIKE '%" +
+                "OR BINARY content_manual LIKE '%" +
                 message +
-                "%' OR binary content_excerpt LIKE '%" +
+                "%' OR BINARY content_excerpt LIKE '%" +
                 message +
                 "%' "+
                 " OR binary posting_name LIKE '%" +
                 message +
-                "%' OR binary article_title_e LIKE '%" +
+                "%' OR BINARY article_title_e LIKE '%" +
                 message +
                 "%'"+
-                " OR binary content_excerpt_e LIKE '%" +
+                " OR BINARY content_excerpt_e LIKE '%" +
                 message +
-                "%' OR binary article_keyword_e LIKE '%" +
+                "%' OR BINARY article_keyword_e LIKE '%" +
                 message +
                 "%' "
                 +
-                "OR binary reference LIKE '%" +
+                " OR BINARY reference LIKE '%" +
                 message +
-                "%' OR binary site_number LIKE '%" +
+                "%' OR BINARY site_number LIKE '%" +
                 message +
                 "%')"
                 ;
@@ -528,38 +527,39 @@ public class ArticleDaoIml implements ArticleDao {
 
         if (count > 0 && pageSize * page <= count || count < 10) {
 
-            String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+            String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
+                    "FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
-                    "' ) AND (binary article_title LIKE '%" +
+                    "' ) AND (BINARY article_title LIKE '%" +
                     message +
-                    "%' OR binary article_keyword LIKE '%" +
+                    "%' OR BINARY article_keyword LIKE '%" +
                     message +
-                    "%' OR binary author LIKE '%" +
+                    "%' OR BINARY author LIKE '%" +
                     message +
-                    "%' OR binary source LIKE '%" +
+                    "%' OR BINARY source LIKE '%" +
                     message +
-                    "%' OR binary content_crawl LIKE '%" +
-                    message +
-                    "%'" +
-                    "OR binary content_manual LIKE '%" +
-                    message +
-                    "%' OR binary content_excerpt LIKE '%" +
+                    "%' OR BINARY content_crawl LIKE '%" +
                     message +
                     "%'" +
-                    "OR binary posting_name LIKE '%" +
+                    "OR BINARY content_manual LIKE '%" +
                     message +
-                    "%' OR binary article_title_e LIKE '%" +
+                    "%' OR BINARY content_excerpt LIKE '%" +
+                    message +
+                    "%'" +
+                    "OR BINARY posting_name LIKE '%" +
+                    message +
+                    "%' OR BINARY article_title_e LIKE '%" +
                     message +
                     "%'"+
-                    "OR binary content_excerpt_e LIKE '%" +
+                    "OR BINARY content_excerpt_e LIKE '%" +
                     message +
-                    "%' OR binary article_keyword_e LIKE '%" +
+                    "%' OR BINARY article_keyword_e LIKE '%" +
                     message +
                     "%'"
                     +
-                    "OR binary reference LIKE '%" +
+                    "OR BINARY reference LIKE '%" +
                     message +
-                    "%' OR binary site_number LIKE '%" +
+                    "%' OR BINARY site_number LIKE '%" +
                     message +
                     "%'"+
                     ") ORDER BY create_time desc LIMIT " +
@@ -590,24 +590,64 @@ public class ArticleDaoIml implements ArticleDao {
             }
 
 
-            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id NOT in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id NOT in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                    user_id +
+//                    "' ) AND (BINARY article_title LIKE '%" +
+//                    message +
+//                    "%' OR BINARY article_keyword LIKE '%" +
+//                    message +
+//                    "%' OR BINARY author LIKE '%" +
+//                    message +
+//                    "%' OR BINARY source LIKE '%" +
+//                    message +
+//                    "%' OR BINARY content_crawl LIKE '%" +
+//                    message +
+//                    "%'" +
+//                    " OR BINARY content_manual LIKE '%" +
+//                    message +
+//                    "%' OR BINARY content_excerpt LIKE '%" +
+//                    message +
+//                    "%')ORDER BY create_time DESC LIMIT " +
+//                    page * pageSize +
+//                    "," +
+//                    pageSize;
+
+
+            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
                     user_id +
-                    "' ) AND (article_title LIKE '%" +
+                    "' ) AND (BINARY article_title LIKE '%" +
                     message +
-                    "%' OR article_keyword LIKE '%" +
+                    "%' OR BINARY article_keyword LIKE '%" +
                     message +
-                    "%' OR author LIKE '%" +
+                    "%' OR BINARY author LIKE '%" +
                     message +
-                    "%' OR source LIKE '%" +
+                    "%' OR BINARY source LIKE '%" +
                     message +
-                    "%' OR content_crawl LIKE '%" +
+                    "%' OR BINARY content_crawl LIKE '%" +
                     message +
                     "%'" +
-                    " OR content_manual LIKE '%" +
+                    "OR BINARY content_manual LIKE '%" +
                     message +
-                    "%' OR content_excerpt LIKE '%" +
+                    "%' OR BINARY content_excerpt LIKE '%" +
                     message +
-                    "%')ORDER BY create_time DESC LIMIT " +
+                    "%'" +
+                    "OR BINARY posting_name LIKE '%" +
+                    message +
+                    "%' OR BINARY article_title_e LIKE '%" +
+                    message +
+                    "%'"+
+                    "OR BINARY content_excerpt_e LIKE '%" +
+                    message +
+                    "%' OR BINARY article_keyword_e LIKE '%" +
+                    message +
+                    "%'"
+                    +
+                    "OR BINARY reference LIKE '%" +
+                    message +
+                    "%' OR BINARY site_number LIKE '%" +
+                    message +
+                    "%'"+
+                    ") ORDER BY create_time desc LIMIT " +
                     page * pageSize +
                     "," +
                     pageSize;
@@ -980,9 +1020,8 @@ public class ArticleDaoIml implements ArticleDao {
 
         //获取文章的详细信息 content_manual
         String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time ,a.collect_initcount,a.share_initcount ,a.collect_initcount ,a.content_type,a.content_crawl,a.details_div,a.content_manual,a.content_excerpt,b.article_type_id,b.article_type_name ," +
-                " a.posting_name,a.article_title_e,a.content_excerpt_e,a.pdf_path,a.article_keyword_e,a.author_e,a.reference,a.site_number,a.publication_date,a.article_score,a.paper_create_time    FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
+                " a.posting_name,a.article_title_e,a.content_excerpt_e,a.pdf_path,a.article_keyword_e,a.author_e,a.reference,a.site_number,a.publication_date,a.article_score,a.paper_create_time ,,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time   FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{article_id});
-
         Object details_div = messageMap.get("details_div");
 
         Object content_manual = messageMap.get("content_manual");

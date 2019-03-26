@@ -1,6 +1,6 @@
 package com.kingweather.we_chat.dao.iml;
 
-import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer;
+import com.google.common.collect.Lists;
 import com.kingweather.common.jdbc.JdbcUtil;
 import com.kingweather.common.util.DateUtil;
 import com.kingweather.common.util.Page;
@@ -26,16 +26,28 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     @Override
     public List<Map> getTypeMenuTree(String parent_id, String type) {
 
-        String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+        String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
 
         if ("1".equals(type)) {
             sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,1 as issue  from zz_wechat.article_type where del_type!=? and parentid=?";
+        } else if ("2".equals(type)) {
+            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+            parent_id = "-2";
 
         }
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
                 1, parent_id
 
         });
+        if (maps != null && !"1".equals(type)) {
+            maps.stream().forEach(s -> {
+                Map map = (Map<String, Object>) s;
+                Map userdata = new HashMap();
+                userdata.put("name", "issue");
+                userdata.put("content", map.get("issue"));
+                map.put("userdata", Lists.newArrayList(userdata));
+            });
+        }
 
         return maps;
     }
@@ -44,8 +56,8 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     public Map getTypeMessage(String article_type_id, String type) {
 
 
-        String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type_tmp where del_type!=? and article_type_id=?";
-        if ("1".equals(type)) {
+        String sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and article_type_id=?";
+        if ("1".equals(type)) {//正式表
             sql = "select article_type_id,article_type_name,article_type_keyword,iamge_icon,iamge_back,parentid,type_state from zz_wechat.article_type where del_type!=? and article_type_id=?";
         }
         Map maps = jdbcTemplate.queryForMap(sql, new Object[]{
@@ -182,10 +194,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         Object tmp_type = req.getParameter("tmp_type");
         //查询的类型的id
         Object article_type_id = req.getParameter("article_type_id");
+        if (article_type_id != null && "".equals(article_type_id)) {
+            article_type_id = null;
+        }
 
         Object startNum = req.getParameter("pageNumber");
         Object pageSize = req.getParameter("pageSize");
-        if (type == null || article_type_id == null || startNum == null || pageSize == null) {
+        if (type == null || startNum == null || pageSize == null) {
             return getErrorMap();
         }
         //入库的开始时间
@@ -222,22 +237,31 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
             String sqlCount = "select count(*) as count from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type  " + delTypeSql +
-                    "AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                    "AND a.article_type_id=b.article_type_id ";
+//                    "and a.article_type_id='" + article_type_id + "' ";
 
             String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt,a.details_size,a.check_type,a.article_score,b.article_type_name  " +
                     "from zz_wechat.article_tmp a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
-                    " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                    " AND a.article_type_id=b.article_type_id ";
+//                    " and a.article_type_id='" + article_type_id + "' ";
 
 
             if (tmp_type != null && "1".equals(tmp_type.toString())) {
 
                 sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
-                        "AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                        "AND a.article_type_id=b.article_type_id and  a.state=0 ";
+//                        "and a.article_type_id='" + article_type_id + "' ";
 
                 sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt,a.word_count,a.article_score,b.article_type_name  " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                        " AND a.article_type_id=b.article_type_id and  a.state=0 ";
+//                        "and a.article_type_id='" + article_type_id + "' ";
 
+            }
+
+            if (article_type_id != null && !"100".equals(article_type_id)) {
+                sqlCount = sqlCount + " and a.article_type_id='" + article_type_id + "' ";
+                sqlMessage = sqlMessage + " and a.article_type_id='" + article_type_id + "' ";
             }
 
 
@@ -268,12 +292,28 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
             if (details_size_more != null && !details_size_more.toString().equals("")) {
-                sqlCount = sqlCount + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
-                sqlMessage = sqlMessage + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
+                if (tmp_type != null && "1".equals(tmp_type.toString())) {
+                    sqlCount = sqlCount + " and a.word_count>=" + Integer.parseInt(details_size_more.toString());
+                    sqlMessage = sqlMessage + " and a.word_count>=" + Integer.parseInt(details_size_more.toString());
+
+                } else {
+                    sqlCount = sqlCount + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
+                    sqlMessage = sqlMessage + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
+                }
             }
             if (details_size_less != null && !details_size_less.toString().equals("")) {
-                sqlCount = sqlCount + " and details_size<=" + Integer.parseInt(details_size_less.toString());
-                sqlMessage = sqlMessage + " and a.details_size<=" + Integer.parseInt(details_size_less.toString());
+
+
+                if (tmp_type != null && "1".equals(tmp_type.toString())) {
+                    sqlCount = sqlCount + " and a.word_count<=" + Integer.parseInt(details_size_less.toString());
+                    sqlMessage = sqlMessage + " and a.word_count<=" + Integer.parseInt(details_size_less.toString());
+
+                } else {
+                    sqlCount = sqlCount + " and a.details_size<=" + Integer.parseInt(details_size_less.toString());
+                    sqlMessage = sqlMessage + " and a.details_size<=" + Integer.parseInt(details_size_less.toString());
+
+                }
+
             }
             //分数
             if (article_score_more != null && !article_score_more.toString().equals("")) {
@@ -294,7 +334,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
 
-            sqlMessage = sqlMessage + " ORDER BY a.update_time asc";
+            sqlMessage = sqlMessage + " ORDER BY a.update_time desc";
             Page<Map<String, Object>> page = jdbc.queryForPage(Integer.parseInt(startNum.toString()), Integer.parseInt(pageSize.toString()), sqlCount, sqlMessage, new Object[]{});
             map.put("code", 0);
             map.put("message", "查询成功");
@@ -311,28 +351,33 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             //查询的是论文
             String sqlCount = "select count(*) as count from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type  " + delTypeSql +
-                    " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                    " AND a.article_type_id=b.article_type_id ";
+//                    "and a.article_type_id='" + article_type_id + "' ";
 
             String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
                     "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
-                    " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                    " AND a.article_type_id=b.article_type_id ";
+//                    "and a.article_type_id='" + article_type_id + "' ";
 
 
             if (tmp_type != null && "1".equals(tmp_type.toString())) {
 
                 sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                        " AND a.article_type_id=b.article_type_id and  a.state=1 ";
+//                        "and a.article_type_id='" + article_type_id + "' ";
 
                 if (language != null && "1".equals(language)) {
                     sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,a.content_excerpt_e,a.reference,a.article_score,b.article_type_name  " +
                             "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                            " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                            " AND a.article_type_id=b.article_type_id and  a.state=1 ";
+//                            "and a.article_type_id='" + article_type_id + "' ";
                 }
 
 
                 sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                        " AND a.article_type_id=b.article_type_id ";
+//                        "and a.article_type_id='" + article_type_id + "' ";
 
 
             } else {
@@ -340,10 +385,17 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 if (language != null && "1".equals(language)) {
                     sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,b.article_type_name  " +
                             "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
-                            " AND a.article_type_id=b.article_type_id and a.article_type_id='" + article_type_id + "' ";
+                            " AND a.article_type_id=b.article_type_id and  a.state=1  ";
+//                            "and a.article_type_id='" + article_type_id + "' ";
                 }
 
 
+            }
+
+
+            if (article_type_id != null && !"100".equals(article_type_id)) {
+                sqlCount = sqlCount + " and a.article_type_id='" + article_type_id + "' ";
+                sqlMessage = sqlMessage + " and a.article_type_id='" + article_type_id + "' ";
             }
 
             //入库时间
@@ -1036,8 +1088,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         String sql = "";
         if ("0".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where issue=1 and del_type=0 and parentid !='100' and parentid !='1'";
-        } else {
+
+        } else if ("1".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state from zz_wechat.article_type where del_type=0 and parentid !='100' and parentid !='1'";
+        } else {
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1'";
+
         }
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         HashMap<String, Object> map = new HashMap<>();
@@ -1071,7 +1127,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
-    public Map pushArticleType(String typeId) {
+    public Map pushArticleType(String typeId, String type) {
         if (typeId == null || "".equals(typeId)) {
             return getErrorMap();
         }
@@ -1090,16 +1146,36 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         artcicle_type_id
                 });
 
-                try {
-                    String sqlCount = "select count(*) as count from zz_wechat.article_type where article_type_id=?";
-                    Map<String, Object> map = jdbcTemplate.queryForMap(sqlCount, new Object[]{
-                            artcicle_type_id
-                    });
-                    if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
+                //type 0 是发布 1 取消发布
+                if ("0".equals(type) || type.isEmpty()) {
+                    try {
+                        String sqlCount = "select count(*) as count from zz_wechat.article_type where article_type_id=?";
+                        Map<String, Object> map = jdbcTemplate.queryForMap(sqlCount, new Object[]{
+                                artcicle_type_id
+                        });
+                        if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
+                            //插入实际的类型表
+                            String currentTime = DateUtil.getCurrentTimeString();
+                            String insertSqlt = "insert into (artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state) values " +
+                                    "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?)";
+                            jdbcTemplate.update(insertSqlt, new Object[]{
+                                    artcicle_type_id,
+                                    typeMap.get("article_type_keyword"),
+                                    typeMap.get("article_type_name"),
+                                    typeMap.get("iamge_icon"),
+                                    typeMap.get("iamge_back"),
+                                    typeMap.get("parentid"),
+                                    0,
+                                    currentTime,
+                                    Integer.parseInt(typeMap.get("type_state").toString())
+
+                            });
+                        }
+                    } catch (Exception e) {
                         //插入实际的类型表
                         String currentTime = DateUtil.getCurrentTimeString();
-                        String insertSqlt = "insert into (artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state) values " +
-                                "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?)";
+                        String insertSqlt = "insert into zz_wechat.article_type(article_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state) values " +
+                                "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),? )";
                         jdbcTemplate.update(insertSqlt, new Object[]{
                                 artcicle_type_id,
                                 typeMap.get("article_type_keyword"),
@@ -1110,51 +1186,27 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                                 0,
                                 currentTime,
                                 Integer.parseInt(typeMap.get("type_state").toString())
-
                         });
-
                     }
-
-             /*       else {
-                        String updateSql = "update zz_wechat.article_type set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?, parentid=? ,del_type=?   where article_type_id=?";
-                        jdbcTemplate.update(updateSql, new Object[]{
-                                typeMap.get("article_type_keyword"),
-                                typeMap.get("article_type_name"),
-                                typeMap.get("iamge_icon"),
-                                typeMap.get("iamge_back"),
-                                typeMap.get("parentid"),
-                                0,
-                                artcicle_type_id
-
-
-                        });
-                    }*/
-                } catch (Exception e) {
-                    //插入实际的类型表
-                    String currentTime = DateUtil.getCurrentTimeString();
-                    String insertSqlt = "insert into zz_wechat.article_type(article_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time) values " +
-                            "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s') )";
-                    jdbcTemplate.update(insertSqlt, new Object[]{
-                            artcicle_type_id,
-                            typeMap.get("article_type_keyword"),
-                            typeMap.get("article_type_name"),
-                            typeMap.get("iamge_icon"),
-                            typeMap.get("iamge_back"),
-                            typeMap.get("parentid"),
-                            0,
-                            currentTime
-                    });
+                } else {
+                    //临时表
+                    String sqlTmp = "update zz_wechat.article_type_tmp set issue=0 where article_type_id ='" + artcicle_type_id + "'";
+                    //正式表
+                    String sql = "update zz_wechat.article_type set issue=0 where article_type_id ='" + artcicle_type_id + "'";
+                    jdbcTemplate.update(sqlTmp);
+                    jdbcTemplate.update(sql);
                 }
             }
         } catch (Exception e) {
             System.out.println(e);
+            return getErrorMapService();
 
         }
-
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", 0);
-        map.put("message", "发布成功！");
+        map.put("message", "操作成功！");
         return map;
+
     }
 
     @Override

@@ -436,9 +436,9 @@ public class ReleaseManagementController extends BaseController {
 
     @RequestMapping(value = "/pushArticleType/rest", method = RequestMethod.GET)
     @Transactional
-    public Map pushArticleType(String typeId) {
+    public Map pushArticleType(String typeId,String type) {
         try {
-            return releaseManagementService.pushArticleType(typeId);
+            return releaseManagementService.pushArticleType(typeId,type);
         } catch (Exception e) {
             return getErrorMapService();
         }

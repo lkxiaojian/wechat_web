@@ -43,7 +43,7 @@ public interface ReleaseManagementDao {
 
     Map seachArticleType(String type, String message);
 
-    Map pushArticleType(String typeId);
+    Map pushArticleType(String typeId,String type);
 
     String getArticleNameById(String id1);
 }

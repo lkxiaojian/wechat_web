@@ -161,8 +161,8 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map pushArticleType(String typeId) {
-        return releaseManagementDao.pushArticleType(typeId);
+    public Map pushArticleType(String typeId,String type) {
+        return releaseManagementDao.pushArticleType(typeId, type);
     }
 
 

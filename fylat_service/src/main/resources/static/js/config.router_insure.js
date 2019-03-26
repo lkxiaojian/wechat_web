@@ -286,7 +286,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.article_manage', {
             url: '/articleManage',
-            params: {param: null, data: null},
+            params: {param: null, data: null,query_params:null},
             templateUrl: 'insure/template/zz_wechat/articleManage.html',
             pageTitle: '文章管理',
             controller: 'articleManageController',
@@ -321,7 +321,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.paper_manage', {
             url: '/paperManage',
-            params: {param: null, data: null},
+            params: {param: null, data: null,query_params:null},
             templateUrl: 'insure/template/zz_wechat/paperManage.html',
             pageTitle: '论文管理',
             controller: 'paperManageController',
@@ -396,7 +396,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.publish_manage', {
             url: '/publishManage',
-            params: {param: null, data: null,type_id: null,pre_location: null},
+            params: {param: null, data: null,type_id: null,pre_location: null,comming_type_id:null,query_params:null},
             templateUrl: 'insure/template/zz_wechat/publishManage.html',
             pageTitle: '发布管理',
             controller: 'publishManageController',
@@ -415,6 +415,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.modify_paper', {
             url: '/modifyPaperManage',
             params: {param: null,
+                pre_query_params: null,//上级的查询条件
                 article_id: null,
                 pre_location: null,
                 operate_type: null,
@@ -422,7 +423,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                 tmp_type: null //1查询已发布的，0查询未发布的
             },
             templateUrl: 'insure/template/zz_wechat/modifyPaperManage.html',
-            pageTitle: '文章修改',
+            pageTitle: '修改',
             controller: 'modifyPaperManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
