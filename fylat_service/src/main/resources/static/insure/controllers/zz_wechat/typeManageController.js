@@ -8,11 +8,15 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         };
         //获取所有已发布的类型
         $scope.getAllType = function () {
+            var type = '1';
+            if($scope.listObj.type=='0'){
+                type = '2';
+            }
             $http({
                 method: 'GET',
                 url: '/releaseManagement/getAllIssueArticleType/rest',
                 params: {
-                    type: $scope.listObj.type
+                    type: type
                 }
             }).success(function (data) {
                 if (data.code == 0) {
@@ -223,7 +227,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             // 设置是否允许显示树图片
             // setOnLoadingStart   setOnLoadingEnd
             $scope.myTree.setOnLoadingEnd(function (node) {
-                debugger
                 //设置字体，以区分菜单节点和功能节点
                 var array = $scope.myTree.getAllSubItems(0).split(',');
 
@@ -237,7 +240,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         $scope.myTree.setItemStyle(array[i], 'color:#616b88; font-weight: bold;');
                     }
                     if($scope.myTree.getUserData(array[i],"issue")==1){
-                        $scope.myTree.setItemStyle(array[i], 'background-color:#b9b9b8;');
+                        $scope.myTree.setItemStyle(array[i], 'color:red;');
                     }
                 }
 
