@@ -30,6 +30,10 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         if ("1".equals(type)) {
             sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,1 as issue  from zz_wechat.article_type where del_type!=? and parentid=?";
+        } else if ("2".equals(type)) {
+            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+            parent_id = "-2";
+
         }
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
                 1, parent_id
@@ -245,12 +249,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             if (tmp_type != null && "1".equals(tmp_type.toString())) {
 
                 sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
-                        "AND a.article_type_id=b.article_type_id ";
+                        "AND a.article_type_id=b.article_type_id and  a.state=0 ";
 //                        "and a.article_type_id='" + article_type_id + "' ";
 
                 sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,DATE_ADD( a.create_time,INTERVAL -8 HOUR) AS  create_time ,a.source,a.content_excerpt,a.word_count,a.article_score,b.article_type_name  " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id ";
+                        " AND a.article_type_id=b.article_type_id and  a.state=0 ";
 //                        "and a.article_type_id='" + article_type_id + "' ";
 
             }
@@ -288,12 +292,28 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
             if (details_size_more != null && !details_size_more.toString().equals("")) {
-                sqlCount = sqlCount + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
-                sqlMessage = sqlMessage + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
+                if (tmp_type != null && "1".equals(tmp_type.toString())) {
+                    sqlCount = sqlCount + " and a.word_count>=" + Integer.parseInt(details_size_more.toString());
+                    sqlMessage = sqlMessage + " and a.word_count>=" + Integer.parseInt(details_size_more.toString());
+
+                } else {
+                    sqlCount = sqlCount + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
+                    sqlMessage = sqlMessage + " and a.details_size>=" + Integer.parseInt(details_size_more.toString());
+                }
             }
             if (details_size_less != null && !details_size_less.toString().equals("")) {
-                sqlCount = sqlCount + " and details_size<=" + Integer.parseInt(details_size_less.toString());
-                sqlMessage = sqlMessage + " and a.details_size<=" + Integer.parseInt(details_size_less.toString());
+
+
+                if (tmp_type != null && "1".equals(tmp_type.toString())) {
+                    sqlCount = sqlCount + " and a.word_count<=" + Integer.parseInt(details_size_less.toString());
+                    sqlMessage = sqlMessage + " and a.word_count<=" + Integer.parseInt(details_size_less.toString());
+
+                } else {
+                    sqlCount = sqlCount + " and a.details_size<=" + Integer.parseInt(details_size_less.toString());
+                    sqlMessage = sqlMessage + " and a.details_size<=" + Integer.parseInt(details_size_less.toString());
+
+                }
+
             }
             //分数
             if (article_score_more != null && !article_score_more.toString().equals("")) {
@@ -344,13 +364,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
                 sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id ";
+                        " AND a.article_type_id=b.article_type_id and  a.state=1 ";
 //                        "and a.article_type_id='" + article_type_id + "' ";
 
                 if (language != null && "1".equals(language)) {
                     sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,a.content_excerpt_e,a.reference,a.article_score,b.article_type_name  " +
                             "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
-                            " AND a.article_type_id=b.article_type_id ";
+                            " AND a.article_type_id=b.article_type_id and  a.state=1 ";
 //                            "and a.article_type_id='" + article_type_id + "' ";
                 }
 
@@ -365,7 +385,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 if (language != null && "1".equals(language)) {
                     sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,b.article_type_name  " +
                             "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
-                            " AND a.article_type_id=b.article_type_id ";
+                            " AND a.article_type_id=b.article_type_id and  a.state=1  ";
 //                            "and a.article_type_id='" + article_type_id + "' ";
                 }
 

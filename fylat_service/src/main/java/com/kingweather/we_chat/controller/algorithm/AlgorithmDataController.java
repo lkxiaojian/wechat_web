@@ -7,6 +7,7 @@ import com.kingweather.fylat_service.controller.other.DataManageController;
 import com.kingweather.system.manager.domain.Log;
 import com.kingweather.we_chat.bean.ArticleTmp;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +55,25 @@ public class AlgorithmDataController extends BaseController {
         String typeName = "";
         String articleKeyword = "";
         String parent_id = "";
-        for (int i = 0; i < typeList.size(); i++) {
-            type_id = type_id + typeList.get(i).toString();
-            if (i < typeList.size() - 1) {
-                parent_id = parent_id + typeList.get(i).toString();
+//        for (int i = 0; i < typeList.size(); i++) {
+//            type_id = type_id + typeList.get(i).toString();
+//            if (i < typeList.size() - 1) {
+//                parent_id = parent_id + typeList.get(i).toString();
+//            }
+//
+//        }
+
+        if (typeList != null) {
+            if (typeList.size() == 1) {
+                parent_id = "-2";
+                type_id = typeList.get(0);
+            } else {
+                parent_id = typeList.get(typeList.size() - 2);
+                type_id = typeList.get(typeList.size() - 1);
             }
 
+        } else {
+            return 1;
         }
 
         for (int i = 0; i < typeNameList.size(); i++) {
@@ -68,9 +82,6 @@ public class AlgorithmDataController extends BaseController {
         for (int i = 0; i < articleKeywordList.size(); i++) {
             articleKeyword = articleKeyword + articleKeywordList.get(i).toString() + ",";
         }
-
-//        type_id = type_id.substring(0, type_id.length() - 1);
-
         typeName = typeName.substring(0, typeName.length() - 1);
 
         articleKeyword = articleKeyword.substring(0, articleKeyword.length() - 1);
@@ -111,8 +122,8 @@ public class AlgorithmDataController extends BaseController {
                 && !type_id.isEmpty() && !typeName.isEmpty() && !articleKeyword.isEmpty()) {
 
 
-            String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue) values " +
-                    "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?)";
+            String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue,parentid_tmp) values " +
+                    "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?)";
             int update = jdbcTemplate.update(insertTypeSql, new Object[]{
                     type_id,
                     typeName,
@@ -124,7 +135,8 @@ public class AlgorithmDataController extends BaseController {
                     typeName,
                     articleKeyword,
                     0,
-                    0
+                    0,
+                    parent_id
             });
 
         }
@@ -220,13 +232,27 @@ public class AlgorithmDataController extends BaseController {
             String typeName = "";
             String articleKeyword = "";
             String parent_id = "";
-            for (int i = 0; i < typeList.size(); i++) {
-                type_id = type_id + typeList.get(i).toString();
-                if (i < typeList.size() - 1) {
-                    parent_id = parent_id + typeList.get(i).toString();
-                }
+//            for (int i = 0; i < typeList.size(); i++) {
+//                type_id = type_id + typeList.get(i).toString();
+//                if (i < typeList.size() - 1) {
+//                    parent_id = parent_id + typeList.get(i).toString();
+//                }
+//
+//            }
 
+
+            if (typeList != null) {
+                if (typeList.size() == 1) {
+                    parent_id = "100";
+                    type_id = typeList.get(0);
+                } else {
+                    parent_id = typeList.get(typeList.size() - 2);
+                    type_id = typeList.get(typeList.size() - 1);
+                }
+            } else {
+                return 1;
             }
+
 
             for (int i = 0; i < typeNameList.size(); i++) {
                 typeName = typeName + typeNameList.get(i).toString() + ",";
