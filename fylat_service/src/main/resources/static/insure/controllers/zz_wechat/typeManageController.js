@@ -94,7 +94,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             });
         };
 
-        $scope.publish = function () {
+        $scope.publish = function (type) {
             var treelist = $scope.myTree.getAllChecked();
             if (!treelist) {
                 layer.msg('至少勾选一个节点');
@@ -105,7 +105,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 method: 'GET',
                 url: 'releaseManagement/pushArticleType/rest',
                 params: {
-                    typeId: treelist
+                    typeId: treelist,
+                    type : type
                 }
             }).success(function (data) {
                 layer.closeAll('loading');

@@ -20,7 +20,8 @@
                     </div>
                     <div class="form-group form-inline"  style="width: 500px;">
                         <a class="btn btn-info" ng-click="query()">搜索</a>
-                        <a class="btn btn-success" ng-click="publish()" ng-show="listObj.type == '0'">发布</a>
+                        <a class="btn btn-success" ng-click="publish(0)" ng-show="listObj.type == '0'">发布</a>
+                        <a class="btn btn-success" ng-click="publish(1)" ng-show="listObj.type == '1'">取消发布</a>
                         <a class="btn btn-blue" ng-click="refresh()">刷新</a>
                         <a class="btn btn-danger" ng-click="similarity()">相似度</a>
                         <a class="btn btn-warning" ng-click="goPubView()" ng-show="listObj.type == '0'">进入文章发布</a>
