@@ -26,6 +26,7 @@
                         <a class="btn btn-danger" ng-click="similarity()">相似度</a>
                         <a class="btn btn-warning" ng-click="goPubView()" ng-show="listObj.type == '0'">进入文章发布</a>
                         <a class="btn btn-warning" ng-click="delete()" ng-show="listObj.type == '1'">删除</a>
+                        <a class="btn btn-info" ng-click="showMergeModal()">合并</a>
                     </div>
                 </div>
             </form>
@@ -148,6 +149,42 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="mergeModal">
+        <div class="modal-dialog modal-lg" role="document" style = "width:800px;">
+            <div class="modal-content" style="height: 280px;overflow:scroll ">
+                <div class="modal-header" style = "background-color:#355da5;">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" style = "color:#FFFFFF;">合并</h4>
+                </div>
+                <div style="padding: 5px">
+                    <table class="table table-bordered" style="margin-top: 10px;">
+                        <thead>
+                        <tr>
+                            <th>操作</th>
+                            <th>类型</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="entity in mergeTypeList">
+                                <td ><input type="radio" name="optionsRadios" value="{{entity.id}}" checked></td>
+                                <td title = "{{entity.text}}" val = "{{entity.id}}" name = "article_id">{{entity.text}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10" style="text-align: right;padding-right: 50px;">
+                            <button class="btn btn-info" ng-click="batchMerge()">保存</button>
+                            <button class="btn btn-default" ng-click="cancelMerge()">取消</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

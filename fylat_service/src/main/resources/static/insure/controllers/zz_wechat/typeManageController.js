@@ -71,7 +71,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 iamge_back:$scope.typeForm.iamge_back,
                 type: $scope.listObj.type
             });
-            debugger
             //TODO 图片的回显问题
             $scope.mulImages.push($scope.typeForm.iamge_icon_file);
             $scope.mulImages.push($scope.typeForm.iamge_back_file);
@@ -161,8 +160,73 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 layer.alert("请求失败", {icon: 2})
             })
         }
+        $scope.mergeTypeList = [];
+        $scope.showMergeModal = function () {
+            var treelist = $scope.myTree.getAllChecked();
+            if (!treelist) {
+                layer.msg('至少勾选两个节点');
+                return;
+            }
+            var split = treelist.split(",");
+            if(split.length<2){
+                layer.msg('至少勾选两个节点');
+                return;
+            }
+            var arr = new Array();
+            for (var i = 0; i < split.length; i++) {
+                var id = split[i];
+                var text = $scope.myTree.getItemText(id);
+                arr.push({id: id, text: text})
+            }
+            $scope.mergeTypeList = arr;
+
+            $("#mergeModal").modal({
+                backdrop:'static',
+                keyboard : false
+            });
+        }
+        $scope.cancelMerge = function () {
+            $("#mergeModal").modal("hide");
+        }
+        $scope.batchMerge = function () {
+            var tarNode = $("[name=optionsRadios]:checked").val();
+            var radioArr = $("[name=optionsRadios]");
+            var idArr = new Array();
+            for (var i = 0; i < radioArr.length; i++) {
+                var id = radioArr[i].value;
+                if(id == tarNode){
+                    continue;
+                }
+                idArr.push(id)
+            }
+            var mergeList = idArr.join(",");
+            merge(tarNode, mergeList);
+        }
+        $scope.merge = function(tarNode,mergeList){
+            layer.load(2);
+            $http({
+                method: 'POST',
+                url: 'releaseManagement/mergeTypeById/rest',
+                data: {
+                    article_type_id: tarNode,// 要合并的保留的类型的id
+                    type: $scope.listObj.type,// type为0
+                    merge_type_id: mergeList//  要被合并 的类型id（传递一个最高的节点）
+                }
+            }).success(function (data) {
+                layer.closeAll('loading');
+                if (data.code == 0) {
+                    layer.msg(data.message);
+                    $scope.focusNode = tarNode;
+                    $scope.refresh();
+                } else {
+                    layer.alert(data.message, {icon: 2})
+                }
+            }).error(function (data) {
+                layer.closeAll('loading');
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
         $scope.goPubView = function () {
-            debugger
             var selectedNode = '';
             if(!$scope.myTree.hasChildren()){
                 selectedNode = $scope.myTree.getSelected();
@@ -280,25 +344,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         layer.alert("请求失败", {icon: 2})
                     })
                 }, function () {
-                    $http({
-                        method: 'POST',
-                        url: 'releaseManagement/mergeTypeById/rest',
-                        data: {
-                            article_type_id: tarNode,// 要合并的保留的类型的id
-                            type: $scope.listObj.type,// type为0
-                            merge_type_id: srcNode//  要被合并 的类型id（传递一个最高的节点）
-                        }
-                    }).success(function (data) {
-                        if (data.code == 0) {
-                            layer.msg(data.message);
-                            $scope.focusNode = tarNode;
-                            $scope.refresh();
-                        } else {
-                            layer.alert(data.message, {icon: 2})
-                        }
-                    }).error(function (data) {
-                        layer.alert("请求失败", {icon: 2})
-                    })
+                    $scope.merge(tarNode,srcNode);
                 });
 
             });
@@ -320,7 +366,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         data: data
                     }).success(function (data) {
                         // $scope.myTree.setItemText(value);
-                        debugger
                         if (data.code == 0) {
                             layer.msg(data.message);
                             $scope.focusNode = id;
