@@ -147,7 +147,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 }, {
                     title: '字数',
                     class: 'col-md-1',
-                    field: 'word_count',
+                    field: 'details_size',
                     align: 'center',
                     width: "100px"
                 }, {
