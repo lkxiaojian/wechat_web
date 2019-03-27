@@ -8,10 +8,10 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         };
         //获取所有已发布的类型
         $scope.getAllType = function () {
-            var type = '1';
-            if($scope.listObj.type=='0'){
-                type = '2';
-            }
+            var type = '3';
+            // if($scope.listObj.type=='0'){
+            //     type = '2';
+            // }
             $http({
                 method: 'GET',
                 url: '/releaseManagement/getAllIssueArticleType/rest',
