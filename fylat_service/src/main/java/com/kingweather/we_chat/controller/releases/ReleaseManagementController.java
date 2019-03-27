@@ -444,6 +444,24 @@ public class ReleaseManagementController extends BaseController {
         }
     }
 
+
+//    /**
+//     * 根据文章类型id，获取文章或者论文
+//     *
+//     * @param data
+//     * @return
+//     */
+//
+//    @RequestMapping(value = "/getWxArticleList/rest", method = RequestMethod.POST)
+//    @Transactional
+//    public Map getWxArticleList(@RequestBody Map<String, Object> data ) {
+//        try {
+//            return releaseManagementService.getWxArticleList(data);
+//        } catch (Exception e) {
+//            return getErrorMapService();
+//        }
+//    }
+
     /**
      * 传参错误
      *

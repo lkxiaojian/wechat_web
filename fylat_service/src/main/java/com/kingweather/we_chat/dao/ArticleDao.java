@@ -11,7 +11,7 @@ public interface ArticleDao {
 
     Map<String,Object> collectingAndShare(Map<String, Object> data);
 
-    Map<String,Object> getAllArticleType(String wechatid);
+    Map<String,Object> getAllArticleType(String wechatid,int page);
 
     Map<String,Object> articleSearch(String wechatid, String message, int page);
 

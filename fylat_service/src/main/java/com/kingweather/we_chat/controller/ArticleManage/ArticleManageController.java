@@ -79,12 +79,12 @@ public class ArticleManageController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/article/getalltype/rest", method = RequestMethod.GET)
-    public Map<String, Object> getAllArticleType(String wechatid) {
+    public Map<String, Object> getAllArticleType(String wechatid,int page) {
         log.info("查询全部期刊");
         if(wechatid==null||"".equals(wechatid)){
             wechatid="1";
         }
-        return articleService.getAllArticleType(wechatid);
+        return articleService.getAllArticleType(wechatid,page);
     }
 
 

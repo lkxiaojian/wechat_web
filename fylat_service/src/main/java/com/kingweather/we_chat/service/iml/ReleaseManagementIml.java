@@ -170,6 +170,11 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         return releaseManagementDao.pushArticleType(typeId, type);
     }
 
+    @Override
+    public Map getWxArticleList(Map<String, Object> data) {
+        return releaseManagementDao.getWxArticleList(data);
+    }
+
 
     private List getMenuTreeChildren(String parentId, String type) {
 

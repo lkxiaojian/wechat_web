@@ -191,6 +191,8 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         Object del_type = req.getParameter("del_type");
         //查询的是否是临时表 1是 0不是
         Object tmp_type = req.getParameter("tmp_type");
+        //查询是否 是wx二级类型一下文章或者论文 0 不是  1 是
+        Object wx_type = req.getParameter("wx_type");
         //查询的类型的id
         Object article_type_id = req.getParameter("article_type_id");
         if (article_type_id != null && "".equals(article_type_id)) {
@@ -245,7 +247,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 //                    " and a.article_type_id='" + article_type_id + "' ";
 
 
-            if (tmp_type != null && "1".equals(tmp_type.toString())) {
+            if (tmp_type != null && !"1".equals(tmp_type.toString())) {
 
                 sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
                         "AND a.article_type_id=b.article_type_id and  a.state=0 ";
@@ -259,8 +261,37 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
             if (article_type_id != null && !"100".equals(article_type_id)) {
-                sqlCount = sqlCount + " and a.article_type_id='" + article_type_id + "' ";
-                sqlMessage = sqlMessage + " and a.article_type_id='" + article_type_id + "' ";
+                if("1".equals(wx_type)){
+                    String childList = "SELECT article_type_id FROM\n" +
+                            "  (\n" +
+                            "    SELECT * FROM article_type_tmp  ORDER BY parentid, article_type_id DESC\n" +
+                            "  ) realname_sorted,\n" +
+                            "  (SELECT @pv :='" +
+                            article_type_id +
+                            "') initialisation\n" +
+                            "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";
+                    String idString = "'" +
+                            article_type_id +
+                            "',";
+                    List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(childList);
+                    if (idlistMaps != null && idlistMaps.size() > 0) {
+                        for (int i = 0; i < idlistMaps.size(); i++) {
+                            idString = idString + "'" + idlistMaps.get(i).get("article_type_id").toString() + "',";
+                        }
+                    }
+
+                    if (idString.length() > 0) {
+                        idString = idString.substring(0, idString.length() - 1);
+                    }
+
+
+                    sqlCount = sqlCount + " and a.article_type_id in (" + idString + ") ";
+                    sqlMessage = sqlMessage + " and a.article_type_id in(" + idString + ") ";
+                }else {
+                    sqlCount = sqlCount + " and a.article_type_id='" + article_type_id + "' ";
+                    sqlMessage = sqlMessage + " and a.article_type_id='" + article_type_id + "' ";
+                }
+
             }
 
 
@@ -291,7 +322,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
             if (details_size_more != null && !details_size_more.toString().equals("")) {
-                if (tmp_type != null && "1".equals(tmp_type.toString())) {
+                if (tmp_type != null && !"1".equals(tmp_type.toString())) {
                     sqlCount = sqlCount + " and a.word_count>=" + Integer.parseInt(details_size_more.toString());
                     sqlMessage = sqlMessage + " and a.word_count>=" + Integer.parseInt(details_size_more.toString());
 
@@ -303,7 +334,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             if (details_size_less != null && !details_size_less.toString().equals("")) {
 
 
-                if (tmp_type != null && "1".equals(tmp_type.toString())) {
+                if (tmp_type != null && !"1".equals(tmp_type.toString())) {
                     sqlCount = sqlCount + " and a.word_count<=" + Integer.parseInt(details_size_less.toString());
                     sqlMessage = sqlMessage + " and a.word_count<=" + Integer.parseInt(details_size_less.toString());
 
@@ -359,7 +390,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 //                    "and a.article_type_id='" + article_type_id + "' ";
 
 
-            if (tmp_type != null && "1".equals(tmp_type.toString())) {
+            if (tmp_type != null && !"1".equals(tmp_type.toString())) {
 
                 sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
@@ -393,8 +424,35 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
             if (article_type_id != null && !"100".equals(article_type_id)) {
-                sqlCount = sqlCount + " and a.article_type_id='" + article_type_id + "' ";
-                sqlMessage = sqlMessage + " and a.article_type_id='" + article_type_id + "' ";
+                if("1".equals(wx_type)){
+                    String childList = "SELECT article_type_id FROM\n" +
+                            "  (\n" +
+                            "    SELECT * FROM article_type_tmp  ORDER BY parentid, article_type_id DESC\n" +
+                            "  ) realname_sorted,\n" +
+                            "  (SELECT @pv :='" +
+                            article_type_id +
+                            "') initialisation\n" +
+                            "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";
+                    String idString = "'" +
+                            article_type_id +
+                            "',";
+                    List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(childList);
+                    if (idlistMaps != null && idlistMaps.size() > 0) {
+                        for (int i = 0; i < idlistMaps.size(); i++) {
+                            idString = idString + "'" + idlistMaps.get(i).get("article_type_id").toString() + "',";
+                        }
+                    }
+
+                    if (idString.length() > 0) {
+                        idString = idString.substring(0, idString.length() - 1);
+                    }
+
+                    sqlCount = sqlCount + " and a.article_type_id in (" + article_type_id + ") ";
+                    sqlMessage = sqlMessage + " and a.article_type_id in(" + article_type_id + ") ";
+                }else {
+                    sqlCount = sqlCount + " and a.article_type_id='" + article_type_id + "' ";
+                    sqlMessage = sqlMessage + " and a.article_type_id='" + article_type_id + "' ";
+                }
             }
 
             //入库时间
@@ -426,7 +484,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             if (createTime != null && !createTime.toString().equals("")) {
 
-                if (tmp_type != null && "1".equals(tmp_type.toString())) {
+                if (tmp_type != null && !"1".equals(tmp_type.toString())) {
                     sqlCount = sqlCount + " and a.paper_create_time like '%" + createTime + "%'";
                     sqlMessage = sqlMessage + " and a.paper_create_time like '%" + createTime + "%'";
                 } else {
@@ -1019,7 +1077,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         try {
             String childList = "SELECT article_type_id FROM\n" +
                     "  (\n" +
-                    "    SELECT * FROM article_type_tmp where parentid > 0 ORDER BY parentid, article_type_id DESC\n" +
+                    "    SELECT * FROM article_type_tmp ORDER BY parentid, article_type_id DESC\n" +
                     "  ) realname_sorted,\n" +
                     "  (SELECT @pv :='" +
                     article_type_id +
@@ -1216,6 +1274,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 id1
         });
         return map.get("article_type_name") == null ? "" : map.get("article_type_name").toString();
+    }
+
+    @Override
+    public Map getWxArticleList(Map<String, Object> data) {
+
+
+        return null;
     }
 
     /**

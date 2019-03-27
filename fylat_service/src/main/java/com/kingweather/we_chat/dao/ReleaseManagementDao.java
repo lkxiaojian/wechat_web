@@ -46,4 +46,6 @@ public interface ReleaseManagementDao {
     Map pushArticleType(String typeId,String type);
 
     String getArticleNameById(String id1);
+
+    Map getWxArticleList(Map<String, java.lang.Object> data);
 }

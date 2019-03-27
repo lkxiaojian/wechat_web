@@ -35,8 +35,8 @@ public class ArticleServiceIml implements ArticleService {
     }
 
     @Override
-    public Map<String, Object> getAllArticleType(String wechatid) {
-        return articleDao.getAllArticleType(wechatid);
+    public Map<String, Object> getAllArticleType(String wechatid,int page) {
+        return articleDao.getAllArticleType(wechatid,page);
     }
 
     @Override
