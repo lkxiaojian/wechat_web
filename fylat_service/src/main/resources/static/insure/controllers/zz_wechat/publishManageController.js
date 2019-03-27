@@ -51,7 +51,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         view: 'select',
                         type: "0", //文章
                         del_type: "0", //非删除
-                        tmp_type: "0", //非正式发布的
+                        tmp_type: "1", //非正式发布的
                         wx_type: $scope.listObj.wx_type
                     });
                     return params;
@@ -236,7 +236,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         view: 'select',
                         type: "1", //论文
                         del_type: "0", //非删除
-                        tmp_type: "0" //非正式发布的
+                        tmp_type: "1" //非正式发布的
                     });
                     return params;
                 },

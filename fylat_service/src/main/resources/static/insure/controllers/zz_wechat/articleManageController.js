@@ -7,7 +7,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 view: 'select',
                 type:"0", //文章
                 del_type:"0", //非删除
-                tmp_type:"1" //正式发布的
+                tmp_type:"0" //正式发布的
             },
         }
 
