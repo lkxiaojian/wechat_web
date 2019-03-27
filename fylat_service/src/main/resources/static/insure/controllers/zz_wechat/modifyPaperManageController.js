@@ -133,7 +133,11 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         $scope.listObj.integrationQuery.details_div = data.result.details_div;
                         $scope.listObj.integrationQuery.collect_count = data.result.collect_initcount;
 
-                        $scope.listObj.integrationQuery.word_count = data.result.word_count;
+                        if(data.result.details_size){
+                            $scope.listObj.integrationQuery.word_count = data.result.details_size;
+                        }else{
+                            $scope.listObj.integrationQuery.word_count = data.result.word_count;
+                        }
                         $scope.listObj.integrationQuery.site_number = data.result.site_number;
                         $scope.listObj.integrationQuery.content_excerpt_e = data.result.content_excerpt_e;
                         $scope.listObj.integrationQuery.article_keyword_e = data.result.article_keyword_e;

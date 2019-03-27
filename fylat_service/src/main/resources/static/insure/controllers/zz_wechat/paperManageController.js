@@ -128,12 +128,6 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         align: 'center'
 
                     }, {
-                        title: '字数',
-                        class: 'col-md-1',
-                        field: 'word_count',
-                        align: 'center',
-                        width: "100px"
-                    }, {
                         title: '操作',
                         class: 'col-md-1',
                         align: 'center',
