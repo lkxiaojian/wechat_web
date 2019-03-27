@@ -830,7 +830,7 @@ public class ArticleDaoIml implements ArticleDao {
             int update = jdbcTemplate.update(sql, new Object[]{
 
                     article_id,
-                    Integer.parseInt(article_type_id.toString()),
+                    article_type_id.toString(),
                     article_title.toString(),
                     article_keyword.toString(),
                     author.toString(),

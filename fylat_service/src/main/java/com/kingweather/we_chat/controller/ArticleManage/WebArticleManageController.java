@@ -59,27 +59,14 @@ public class WebArticleManageController extends BaseController {
                 map.put("message", "传参错误");
                 return map;
             }
-//            String path = realpath.replaceAll("home", "resources") + savePath;
-//            if (file == null) {
-//                path = "";
-//            }
+
             articleService.insertDomain(name, keyword, "");
 
             map.put("code", 0);
             map.put("message", "添加成功");
         }
 
-//        if (isFlag) {
-//            try {
-//                FileUtils.copyInputStreamToFile(file.getInputStream(), f);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            map.put("code", 0);
-//            map.put("message", "传参错误");
-//            return map;
-//        }
+
         return map;
     }
 
@@ -133,8 +120,8 @@ public class WebArticleManageController extends BaseController {
             String keyword = req.getParameter("keyword");
             String artcicle_type_id = req.getParameter("artcicle_type_id");
             String num = req.getParameter("num_id");
-            String pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
-            String pathBack = realpath.replaceAll("home", "resources") + savePathBack;
+            String pathICon = realpath.replaceAll("data/file/", "resources") + savePathIcon;
+            String pathBack = realpath.replaceAll("data/file/", "resources") + savePathBack;
             isFlag = articleService.insertArticleType(name, keyword, artcicle_type_id, num, pathICon, pathBack);
         }
 
@@ -190,7 +177,7 @@ public class WebArticleManageController extends BaseController {
             FileUtils.copyInputStreamToFile(file.getInputStream(), f);
             map.put("code", 0);
             List<String> pathList = new ArrayList<>();
-            String s = path.replaceAll("home", "resources");
+            String s = path.replaceAll("data/file/", "resources");
             pathList.add("http://106.2.11.94:7902" + s);
             map.put("data", pathList);
         } catch (IOException e) {
@@ -287,7 +274,7 @@ public class WebArticleManageController extends BaseController {
         File fICon = new File(realpath + savePathIcon);
         try {
             FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
-            String pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
+            String pathICon = realpath.replaceAll("data/file/", "resources") + savePathIcon;
             map.put("code", 0);
             map.put("path", "https://xiaochengxu.zhuanzhilink.com/weixin_img" + pathICon);
             return map;

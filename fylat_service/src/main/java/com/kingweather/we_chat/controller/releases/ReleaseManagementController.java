@@ -99,7 +99,7 @@ public class ReleaseManagementController extends BaseController {
             if (file1 != null) {
                 String savePathIcon = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file1.getOriginalFilename();
                 File fICon = new File(realpath + savePathIcon);
-                pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
+                pathICon = realpath.replaceAll("data/file/", "resources") + savePathIcon;
                 FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
 
             } else {
@@ -108,7 +108,7 @@ public class ReleaseManagementController extends BaseController {
             if (file2 != null) {
                 String savePathBack = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file2.getOriginalFilename();
                 File fBack = new File(realpath + savePathBack);
-                pathBack = realpath.replaceAll("home", "resources") + savePathBack;
+                pathBack = realpath.replaceAll("data/file/", "resources") + savePathBack;
                 FileUtils.copyInputStreamToFile(file2.getInputStream(), fBack);
             } else {
                 pathBack = req.getParameter("iamge_back");
@@ -349,7 +349,7 @@ public class ReleaseManagementController extends BaseController {
         }
         try {
             FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
-            String pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
+            String pathICon = realpath.replaceAll("data/file/", "resources") + savePathIcon;
             int i = releaseManagementService.updatePostingImage(posting_id, pathICon);
 
             if (i == 1) {
