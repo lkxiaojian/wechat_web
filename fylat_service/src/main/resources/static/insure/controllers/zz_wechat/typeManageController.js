@@ -226,14 +226,79 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 layer.alert("请求失败", {icon: 2})
             })
         }
+
+        $scope.updateDomainObj = {article_type_id:'',parentid:''};
+        $scope.showParentView = function(){
+            var selectedNode = $scope.myTree.getSelected();
+            if(!selectedNode){
+                layer.msg("请选中一个节点");
+                return;
+            }
+            layer.load(2);
+            $http({
+                method: 'POST',
+                url: 'reptile/getDominData/rest',
+                data: {
+                    type: 0
+                }
+            }).success(function (data) {
+                layer.closeAll('loading');
+                if (data.code == 0) {
+                    $scope.updateDomainObj.article_type_id = selectedNode;
+                    $scope.domainDataList = data.result;
+                    $("#addParentModal").modal({
+                        backdrop:'static',
+                        keyboard : false
+                    });
+                } else {
+                    layer.alert(data.message, {icon: 2})
+                }
+            }).error(function (data) {
+                layer.closeAll('loading');
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
+        $scope.cancelAddParent = function(){
+            $("#addParentModal").modal("hide");
+        }
+        $scope.updateDomain = function(){
+            layer.load(2);
+            $http({
+                method: 'GET',
+                url: '/releaseManagement/updateTypeParentId/rest',
+                params: {
+                    article_type_id: $scope.updateDomainObj.article_type_id,
+                    parentid: $scope.updateDomainObj.parentid
+                }
+            }).success(function (data) {
+                layer.closeAll('loading');
+                if (data.code == 0) {
+                    $scope.updateDomainObj.article_type_id = selectedNode;
+                    $scope.domainDataList = data.result;
+                    $("#addParentModal").modal({
+                        backdrop:'static',
+                        keyboard : false
+                    });
+                } else {
+                    layer.alert(data.message, {icon: 2})
+                }
+            }).error(function (data) {
+                layer.closeAll('loading');
+                layer.alert("请求失败", {icon: 2})
+            })
+        }
         $scope.goPubView = function () {
             var selectedNode = '';
             if(!$scope.myTree.hasChildren()){
                 selectedNode = $scope.myTree.getSelected();
             }
+            var wx_type = '0';
+            if($scope.listObj.type == '2'){
+                wx_type = '1';
+            }
             $state.go('app.insure.publish_manage',
                 {pre_location: $scope.listObj.current_location,
-                    comming_type_id: selectedNode});
+                    comming_type_id: selectedNode,wx_type:wx_type});
         }
 
         $scope.delete = function (){

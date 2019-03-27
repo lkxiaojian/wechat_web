@@ -424,6 +424,11 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
         sub_menu5.href = 'app.insure.pub_type_manage';
         sub_menu5.isLeaf = '1';
         menu.submenus.push(sub_menu5);
+        var sub_menu6 = {};
+        sub_menu6.name = '待修复分类管理';
+        sub_menu6.href = 'app.insure.todo_type_manage';
+        sub_menu6.isLeaf = '1';
+        menu.submenus.push(sub_menu6);
 
         menus.push(menu);
         //TODO 测试方便加的
