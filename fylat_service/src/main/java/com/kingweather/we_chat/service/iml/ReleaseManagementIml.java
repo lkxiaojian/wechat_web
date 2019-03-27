@@ -22,10 +22,15 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     @Value("${urlTypePath}")
     private String urlTypePath;
 
+
     @Override
     public List getTypeMenuTree(String type) {
+        String parentId="-1";
+        if("2".equals(type)){
+            parentId="-2";
+        }
 
-        List<Map> list = releaseManagementDao.getTypeMenuTree("-1", type);
+        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type);
         for (Map s : list) {
             List childrenList = getMenuTreeChildren(s.get("id").toString(), type);
             if (childrenList != null) {
