@@ -32,14 +32,14 @@ public class UserManagerServiceImpl implements UserManagerService
 
     @Resource
     private UserManagerDao userManagerDaoImpl;
-    
+
     @Resource
     private MenuManagerService menuManagerServiceImpl;
 	@Transactional
 	public Map<String, Object> getAllChildUsers(Object... object) {
 		// TODO Auto-generated method stub
 		HttpServletRequest request = (HttpServletRequest)object[0];
-		
+
 		Map<String,Object> conditions = new HashMap<String, Object>();
         String startNum = request.getParameter("pageNumber");
         String pageSizestr = request.getParameter("pageSize");
@@ -53,13 +53,13 @@ public class UserManagerServiceImpl implements UserManagerService
         }
         conditions.put("startNum", pageNo);
         conditions.put("pageSize", pageSize);
-        
+
         User user = (User)object[1];
         conditions.put("parentId", user.getUserId());
-        
+
         conditions.put("userName", request.getParameter("userName"));
         conditions.put("userEmail", request.getParameter("userEmail"));
-        
+
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("code", 0);
 		Page<Map<String, Object>> page = userManagerDaoImpl.getAllChildUsers(conditions);
@@ -72,7 +72,7 @@ public class UserManagerServiceImpl implements UserManagerService
 	public Map<String, Object> getAllUsers(Object... object) {
 		// TODO Auto-generated method stub
 		HttpServletRequest request = (HttpServletRequest)object[0];
-		
+
 		Map<String,Object> conditions = new HashMap<String, Object>();
         String startNum = request.getParameter("pageNumber");
         String pageSizestr = request.getParameter("pageSize");
@@ -85,10 +85,10 @@ public class UserManagerServiceImpl implements UserManagerService
           pageSize = Integer.parseInt(pageSizestr);
         }
         conditions.put("startNum", pageNo);
-        conditions.put("pageSize", pageSize); 
+        conditions.put("pageSize", pageSize);
         conditions.put("userName", request.getParameter("userName"));
         conditions.put("userEmail", request.getParameter("userEmail"));
-        
+
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("code", 0);
 		Page<Map<String, Object>> page = userManagerDaoImpl.getAllUsers(conditions);
@@ -110,8 +110,8 @@ public class UserManagerServiceImpl implements UserManagerService
 		String [] ids = null;
 		if(!"".equals(menuIds)&&menuIds!=null){
 			ids = menuIds.split(",");
-		}	
-		boolean result = userManagerDaoImpl.addUserMenu(userId, ids);	
+		}
+		boolean result = userManagerDaoImpl.addUserMenu(userId, ids);
 		return result;
 	}
 	@Transactional
@@ -180,9 +180,9 @@ public class UserManagerServiceImpl implements UserManagerService
 	}
 	@Transactional
 	public Map<String, Object> deleteUser(String userId) {
-		// TODO Auto-generated method stub		
+		// TODO Auto-generated method stub
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		
+
 		String [] ids = userId.split(",");
 		boolean hasChild = false;
 		for(String id : ids){
@@ -191,7 +191,7 @@ public class UserManagerServiceImpl implements UserManagerService
 				hasChild = true;
 			}
 		}
-		
+
 		boolean result = false;
 		if(!hasChild){
 			result = userManagerDaoImpl.deleteUserRole(ids);
@@ -223,7 +223,7 @@ public class UserManagerServiceImpl implements UserManagerService
 	@Transactional
 	public Map<String, Object> getRoleByUserId(String userId) {
 		// TODO Auto-generated method stub
-		Map<String, Object> map = new LinkedHashMap<String, Object>();		
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("code", 0);
 		map.put("message", "查询成功");
 		map.put("result", userManagerDaoImpl.getRoleByUserId(userId));
@@ -232,7 +232,7 @@ public class UserManagerServiceImpl implements UserManagerService
 	@Transactional
 	public Map<String, Object> getMenuByUserId(String userId,String userType) {
 		// TODO Auto-generated method stub
-		Map<String, Object> map = new LinkedHashMap<String, Object>();		
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("code", 0);
 		map.put("message", "查询成功");
 		map.put("result", userManagerDaoImpl.getMenuByUserId(userId,userType));
@@ -244,6 +244,12 @@ public class UserManagerServiceImpl implements UserManagerService
 		String pwd = Md5Utils.encode2hex(password);
 		return userManagerDaoImpl.getUserByNamePassword(userName, pwd);
 	}
+
+	@Override
+	public void addLoginLog(HttpServletRequest request, User user) {
+		userManagerDaoImpl.addLoginLog(request,user);
+	}
+
 	@Transactional
 	public int updatePassword(String userName, String password, String newpassword) {
 		// TODO Auto-generated method stub
@@ -262,7 +268,7 @@ public class UserManagerServiceImpl implements UserManagerService
 			}
 			if("0".equals(parentId)){
 				Map<String,Object> parentMenu = menuManagerServiceImpl.getTreeMap(menu);
-				
+
 				menuManagerServiceImpl.buildMenuTree(parentMenu, menuMap);
 				parentMenuList.add(parentMenu);
 			}
@@ -278,14 +284,14 @@ public class UserManagerServiceImpl implements UserManagerService
 		// TODO Auto-generated method stub
 		List<Map<String,Object>> menulist = userManagerDaoImpl.getMenuTreeByUserId(userId);
 		return getMenuTree(menulist);
-		
+
 	}
 	@Transactional
 	public Map<String, Object> getMenuTreeByUidAndUtp(String userId,String userType) {
 		// TODO Auto-generated method stub
 		List<Map<String,Object>> menulist = userManagerDaoImpl.getMenuTreeByUidAndUtp(userId, userType);
 		return getMenuTree(menulist);
-		
+
 	}
 	@Transactional
     public List<Map<String,Object>> getUserApps(String entId){
@@ -417,7 +423,7 @@ public class UserManagerServiceImpl implements UserManagerService
 		}
 		return null;
 	}
-    
+
 }
 
 

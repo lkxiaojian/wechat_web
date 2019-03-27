@@ -92,46 +92,37 @@ public class WebSysUserDaoIml implements WebSysUserDao {
         String userSex =   info.get("userSex")==null?"":info.get("userSex").toString();
 
         StringBuffer sql =  new StringBuffer();
-        StringBuffer sqlCount =  new StringBuffer();
         List list = new ArrayList();
-        List listCount = new ArrayList();
 
         sql.append("  	SELECT 	 ");
-        sql.append("  	tel_phone telPhone, 	 ");
-        sql.append("  	nick_name name, 	 ");
-        sql.append("  	user_sex userSex, 	 ");
-        sql.append("  	date_format(create_time,'%Y-%m-%d %H:%i:%S') createTime, 	 ");
-        sql.append("  	date_format(update_time,'%Y-%m-%d %H:%i:%S') updateTime	 ");
+        sql.append("  	a.tel_phone telPhone, 	 ");
+        sql.append("  	a.nick_name name, 	 ");
+        sql.append("  	a.user_sex userSex, 	 ");
+        sql.append("  	date_format(b.login_time,'%Y-%m-%d %H:%i:%S')   loginTime, 	 ");
+        sql.append("  	COUNT(b.id) loginNum, 	 ");
+        sql.append("  	date_format(a.create_time,'%Y-%m-%d %H:%i:%S') createTime, 	 ");
+        sql.append("  	date_format(a.update_time,'%Y-%m-%d %H:%i:%S') updateTime	 ");
         sql.append("  	FROM 	 ");
-        sql.append("  	zz_wechat.sys_user WHERE STATUS= 1	 ");
+        sql.append("  	zz_wechat.sys_user a LEFT JOIN   (SELECT * FROM sys_login_log ORDER BY login_time DESC) b on a.id= b.user_id where STATUS= 1	 ");
 
-        sqlCount.append("  	SELECT 	 ");
-        sqlCount.append("  	count(id) num	 ");
-        sqlCount.append("  	FROM 	 ");
-        sqlCount.append("  	zz_wechat.sys_user WHERE STATUS= 1	 ");
 
         if(telPhone!=null&&!"".equals(telPhone)){
-            sql.append("  	and tel_phone like ?  	 ");
+            sql.append("  	and a.tel_phone like ?  	 ");
             list.add(telPhone+"%");
-            sqlCount.append("  	and tel_phone like ?  	 ");
-            listCount.add(telPhone+"%");
 
         }
         if(name!=null&&!"".equals(name)){
-            sql.append("  and nick_name like ?  	 ");
+            sql.append("  and a.nick_name like ?  	 ");
             list.add(name+"%");
-            sqlCount.append("  and nick_name like ?  	 ");
-            listCount.add(name+"%");
 
         }
         if(userSex!=null&&!"".equals(userSex)){
-            sql.append("  and user_sex = ?  	 ");
+            sql.append("  and a.user_sex = ?  	 ");
             list.add(userSex);
-            sqlCount.append("  and user_sex = ?  	 ");
-            listCount.add(userSex);
 
         }
-
+        sql.append("   GROUP BY a.id  	 ");
+        Map mapCount = jdbcTemplate.queryForMap("select count(1) num from ("+sql.toString()+") cc",list.toArray());
 
         list.add((Integer.valueOf(page)-1)*Integer.valueOf(size));
         list.add(Integer.valueOf(size));
@@ -139,7 +130,6 @@ public class WebSysUserDaoIml implements WebSysUserDao {
         List listData = jdbcTemplate.queryForList(sql.toString(),list.toArray());
         map.put("data",listData);
 
-        Map mapCount = jdbcTemplate.queryForMap(sqlCount.toString(),listCount.toArray());
         map.put("num",Integer.valueOf( mapCount.get("num").toString() ));
         return map;
     }
