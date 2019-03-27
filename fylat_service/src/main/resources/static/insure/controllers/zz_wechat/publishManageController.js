@@ -8,7 +8,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             pre_location: $stateParams.pre_location,
             comming_type_id: $stateParams.comming_type_id, //带过来的typeId
             wx_type: $stateParams.wx_type, //带过来的wx_type
-            current_location: "app.insure.publish_manage"
+            current_location: "app.insure.publish_manage",
+            defaultSearchParams:{
+                tmp_type:1
+            }
         };
 
         $scope.query_params = {
@@ -51,7 +54,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         view: 'select',
                         type: "0", //文章
                         del_type: "0", //非删除
-                        tmp_type: "1", //非正式发布的
+                        tmp_type: $scope.listObj.defaultSearchParams.tmp_type, //非正式发布的
                         wx_type: $scope.listObj.wx_type
                     });
                     return params;
@@ -197,7 +200,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
                                 type: "0",//文章
-                                tmp_type: "0"
+                                tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                             });
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
@@ -208,7 +211,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"edit",
                                 type: "0",//文章
-                                tmp_type: "0"
+                                tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                             });
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
@@ -236,7 +239,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         view: 'select',
                         type: "1", //论文
                         del_type: "0", //非删除
-                        tmp_type: "1" //非正式发布的
+                        tmp_type: $scope.listObj.defaultSearchParams.tmp_type //非正式发布的
                     });
                     return params;
                 },
@@ -375,7 +378,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
                                 type: "1",//论文
-                                tmp_type: "0"
+                                tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                             });
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
@@ -386,7 +389,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"edit",
                                 type: "1",//论文
-                                tmp_type: "0"
+                                tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                             });
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },

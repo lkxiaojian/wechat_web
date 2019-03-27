@@ -152,7 +152,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"view",
                                     type: "0",//文章
-                                    tmp_type: "1"//查正式表
+                                    tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                                 });
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },
@@ -163,7 +163,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"edit",
                                     type:"0",//文章
-                                    tmp_type: "1"
+                                    tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                                 });
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },

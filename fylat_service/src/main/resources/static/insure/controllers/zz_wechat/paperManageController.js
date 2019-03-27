@@ -145,7 +145,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"view",
                                     type: "1",//论文
-                                    tmp_type: "1"
+                                    tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                                 });
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },
@@ -156,7 +156,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"edit",
                                     type: "1",//论文
-                                    tmp_type: "1"
+                                    tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                                 });
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },
