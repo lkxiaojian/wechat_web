@@ -26,7 +26,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
         };
 
         $scope.listObj = {
-            navigationMsg: '管理平台 >文章修改',
+            navigationMsg: $stateParams.type=='0'?'管理平台 >文章修改':'管理平台 >论文修改',
             pre_location: $stateParams.pre_location,
             operate_type: $stateParams.operate_type,
             type: $stateParams.type,
@@ -146,6 +146,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         $scope.listObj.integrationQuery.create_time = insureUtil.dateToString(new Date(data.result.create_time), "yyyy-MM-dd");
                         $scope.listObj.integrationQuery.update_time = insureUtil.dateToString(new Date(data.result.update_time), "yyyy-MM-dd");
                         $scope.listObj.integrationQuery.check_type = data.result.check_type;
+                        $scope.listObj.integrationQuery.posting_name = data.result.posting_name;
 
                         $scope.listObj.selectedItem.article_type_id = data.result.article_type_id;
                         $scope.listObj.selectedItem.article_type_name = data.result.article_type_name;
@@ -289,10 +290,12 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                 // layer.tips("请选择类型","#article_type");
                 return;
             }
-            if(!$scope.listObj.integrationQuery.source){
-                layer.msg("请输入来源");
-                // layer.tips("请输入来源","#source");
-                return;
+            if($scope.listObj.type == '0') {
+                if (!$scope.listObj.integrationQuery.source) {
+                    layer.msg("请输入来源");
+                    // layer.tips("请输入来源","#source");
+                    return;
+                }
             }
             if(!$scope.listObj.integrationQuery.create_time){
                 layer.msg("请选择发表时间");

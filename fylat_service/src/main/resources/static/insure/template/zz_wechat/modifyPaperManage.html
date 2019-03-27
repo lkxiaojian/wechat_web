@@ -31,6 +31,15 @@
                            ng-maxlength="50" id="article_title" required/>
                 </div>
             </div>
+            <div class="form-group" ng-show="listObj.type == '1'">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
+                        class="text-danger m-r-xs font-bold as-star"></span>期刊名称</label>
+                <div class="col-lg-10 col-md-10 col-sm-10">
+                    <input type="text" class="form-control"
+                           ng-model="listObj.integrationQuery.posting_name" ng-disabled="1==1"
+                           ng-maxlength="50" id="posting_name"/>
+                </div>
+            </div>
             <div class="form-group">
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
                         class="text-danger m-r-xs font-bold as-star">*</span>类型</label>
