@@ -23,7 +23,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             createTime:'',
             language:'',
             checkType:'',
-            article_type_id: $scope.listObj.comming_type_id,
+            article_type_id: $scope.listObj.comming_type_id?$scope.listObj.comming_type_id:'',
             details_size_more:'',
             details_size_less:'',
             message:''
