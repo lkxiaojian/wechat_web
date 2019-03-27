@@ -54,14 +54,14 @@ app.controller('adminListManageController', ['$scope', '$modal', '$http', 'fylat
                     }, {
                         title: '最近登录时间',
                         class: 'col-md-1',
-                        field: 'updateTime',
+                        field: 'loginTime',
                         align: 'center',
                         width: "13%"
 
                     },  {
                         title: '登录次数',
                         class: 'col-md-1',
-                        field: 'keyword_name',
+                        field: 'loginNum',
                         align: 'center',
                         width: "13%"
 
@@ -84,7 +84,7 @@ app.controller('adminListManageController', ['$scope', '$modal', '$http', 'fylat
                         },
                         events: {
                             'click .a-edit': function (e, value, row, index) {
-                                $state.go('app.insure.adminEdit', {
+                                $state.go('app.insure.admin_edit', {
                                     id: row.id});
                                 $scope.testInstance.bootstrapTable('refresh');
                                 // modalTip({
