@@ -132,7 +132,9 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             }
             $scope.myTree.findItem($scope.typeName, 0, 1);
         }
+        var refreshLoding = layer.load(2);;
         $scope.refresh = function () {
+            refreshLoding = layer.load(2);
             $scope.myTree.refreshItem();
         }
         //相似度
@@ -236,9 +238,9 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             }
             layer.load(2);
             $http({
-                method: 'POST',
+                method: 'GET',
                 url: 'reptile/getDominData/rest',
-                data: {
+                params: {
                     type: 0
                 }
             }).success(function (data) {
@@ -273,12 +275,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             }).success(function (data) {
                 layer.closeAll('loading');
                 if (data.code == 0) {
-                    $scope.updateDomainObj.article_type_id = selectedNode;
-                    $scope.domainDataList = data.result;
-                    $("#addParentModal").modal({
-                        backdrop:'static',
-                        keyboard : false
-                    });
+                    layer.alert("更新成功");
+                    $("#addParentModal").modal('hide');
                 } else {
                     layer.alert(data.message, {icon: 2})
                 }
@@ -371,6 +369,9 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     if($scope.myTree.getUserData(array[i],"issue")==1){
                         $scope.myTree.setItemStyle(array[i], 'color:red;');
                     }
+                }
+                if(refreshLoding){
+                    layer.close(refreshLoding);
                 }
 
                 //聚焦
