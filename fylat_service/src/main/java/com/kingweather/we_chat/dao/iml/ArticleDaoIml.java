@@ -748,7 +748,7 @@ public class ArticleDaoIml implements ArticleDao {
 
             String sysTime = DateUtil.getCurrentTimeString();
             //插入
-            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?)";
+            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1)";
             int update = jdbcTemplate.update(sql, new Object[]{
                     name,
                     keyword,

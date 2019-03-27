@@ -29,7 +29,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
 
         if ("1".equals(type)) {
-            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,1 as issue  from zz_wechat.article_type where del_type!=? and parentid=?";
+            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state, issue  from zz_wechat.article_type where del_type!=? and parentid=?";
         } else if ("2".equals(type)) {
             sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
             parent_id = "-2";
