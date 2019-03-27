@@ -99,7 +99,7 @@ public class ReleaseManagementController extends BaseController {
             if (file1 != null) {
                 String savePathIcon = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file1.getOriginalFilename();
                 File fICon = new File(realpath + savePathIcon);
-                pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
+                pathICon = realpath.replaceAll("data/file/", "resources") + savePathIcon;
                 FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
 
             } else {
@@ -108,7 +108,7 @@ public class ReleaseManagementController extends BaseController {
             if (file2 != null) {
                 String savePathBack = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + file2.getOriginalFilename();
                 File fBack = new File(realpath + savePathBack);
-                pathBack = realpath.replaceAll("home", "resources") + savePathBack;
+                pathBack = realpath.replaceAll("data/file/", "resources") + savePathBack;
                 FileUtils.copyInputStreamToFile(file2.getInputStream(), fBack);
             } else {
                 pathBack = req.getParameter("iamge_back");
@@ -349,7 +349,7 @@ public class ReleaseManagementController extends BaseController {
         }
         try {
             FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
-            String pathICon = realpath.replaceAll("home", "resources") + savePathIcon;
+            String pathICon = realpath.replaceAll("data/file/", "resources") + savePathIcon;
             int i = releaseManagementService.updatePostingImage(posting_id, pathICon);
 
             if (i == 1) {
@@ -443,6 +443,24 @@ public class ReleaseManagementController extends BaseController {
             return getErrorMapService();
         }
     }
+
+
+//    /**
+//     * 根据文章类型id，获取文章或者论文
+//     *
+//     * @param data
+//     * @return
+//     */
+//
+//    @RequestMapping(value = "/getWxArticleList/rest", method = RequestMethod.POST)
+//    @Transactional
+//    public Map getWxArticleList(@RequestBody Map<String, Object> data ) {
+//        try {
+//            return releaseManagementService.getWxArticleList(data);
+//        } catch (Exception e) {
+//            return getErrorMapService();
+//        }
+//    }
 
     /**
      * 传参错误

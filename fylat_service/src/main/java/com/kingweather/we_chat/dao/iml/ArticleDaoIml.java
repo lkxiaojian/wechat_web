@@ -32,12 +32,14 @@ public class ArticleDaoIml implements ArticleDao {
     @Value("${urlPath}")
     private String urlPath;
 
+    private int pageSize=10;
+
     @Override
     public Map<String, Object> getArticleTrait(String articleId, int page) {
         if (articleId == null || articleId.isEmpty()) {
             return getErrorMap();
         }
-        int pageSize = 10;
+
 
         String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back,b.article_keyword,b.article_title,b.content_excerpt ,b.content_type,b.state,b.pdf_path " +
                 "FROM zz_wechat.article_type a,zz_wechat.article b where b.del_type !=1 and a.del_type !=1 and a.article_type_id=b.article_type_id and b.article_type_id=? ORDER BY b.create_time DESC LIMIT ?,?";
@@ -390,22 +392,88 @@ public class ArticleDaoIml implements ArticleDao {
     }
 
     @Override
-    public Map<String, Object> getAllArticleType(String wechatid) {
+    public Map<String, Object> getAllArticleType(String wechatid,int page) {
         if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
+
+         //关注的数量
+        int gzCount=0;
+        //总共的类型的数量
+        int allCount=0;
+        //剩余数量
+        int total=0;
+        String gzCountSql = "SELECT  count(*) as count from article_type a,user_articletype b ,sys_user c WHERE a.del_type !=? and a.article_type_id=b.article_type_id AND c.user_id=b.user_id AND c.wechat_id=?" +
+                "AND a.parentid !=? " +
+                "AND a.parentid !=? " +
+                "AND a.parentid !=? " +
+                "AND a.issue !=? " ;
+        Map<String, Object> gzCountMap=null;
+        Map<String, Object> allCountMap=null;
+        try {
+            gzCountMap = jdbcTemplate.queryForMap(gzCountSql, new Object[]{
+                    1,
+                    wechatid,
+                    100,
+                    -1,
+                    -2,
+                    0
+            });
+
+        }catch (Exception e){
+        }
+
+        if(gzCountMap!=null&&gzCountMap.get("count")!=null){
+            gzCount=Integer.parseInt(gzCountMap.get("count").toString());
+        }
+
+
+        String allCountSql="select count(*) as count from zz_wechat.article_type where del_type !=?  "+
+                "AND parentid !=? " +
+                "AND parentid !=? " +
+                "AND parentid !=? " +
+                "AND issue !=? " ;
+        try {
+            allCountMap = jdbcTemplate.queryForMap(allCountSql, new Object[]{
+                    1,
+                    100,
+                    -1,
+                    -2,
+                    0
+            });
+
+        }catch (Exception e){
+        }
+
+        if(allCountMap!=null&&allCountMap.get("count")!=null){
+            allCount=Integer.parseInt(allCountMap.get("count").toString());
+        }
+
         String gzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,1 as type_id from article_type a,user_articletype b ,sys_user c WHERE a.del_type !=? and a.article_type_id=b.article_type_id AND c.user_id=b.user_id AND c.wechat_id=?" +
                 "AND a.parentid !=? " +
                 "AND a.parentid !=? " +
-                "ORDER BY a.create_time DESC";
+                "AND a.parentid !=? " +
+                "AND a.issue !=? " +
+                "ORDER BY a.create_time DESC LIMIT ?,?";
         List<Map<String, Object>> gzList = jdbcTemplate.queryForList(gzSql, new Object[]{
                 1,
                 wechatid,
                 100,
-                -1
+                -1,
+                -2,
+                0,
+                page*pageSize,
+                pageSize
         });
+        List<Map<String, Object>> nogzList=new ArrayList<>();
+        if(gzList.size()==0||gzList.size()<10){
+             int num=((page+1)*pageSize-gzCount)/pageSize;
+            if(num<0){
+               num=0;
+            }
 
-        String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
+
+            String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
         Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
         Object objId = userMap.get("user_id");
         if (objId == null) {
@@ -416,24 +484,35 @@ public class ArticleDaoIml implements ArticleDao {
         String nogzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,2 as type_id \n" +
                 "from zz_wechat.article_type a ,zz_wechat.sys_user c WHERE " +
                 "a.article_type_id not in(SELECT article_type_id FROM zz_wechat.user_articletype WHERE user_id=?) AND c.wechat_id=?" +
-                " AND a.del_type !=? AND a.parentid !=? AND a.parentid !=?";
-        List<Map<String, Object>> nogzList = jdbcTemplate.queryForList(nogzSql, new Object[]{
+                " AND a.del_type !=? AND a.parentid !=? AND a.parentid !=? AND a.parentid !=? AND a.issue !=?"
+                + " ORDER BY a.create_time DESC LIMIT ?,?";;
+        nogzList = jdbcTemplate.queryForList(nogzSql, new Object[]{
                 user_id,
                 wechatid,
                 1,
                 100,
-                -1
+                -1,
+                -2,
+                0,
+                num*pageSize,
+                pageSize
         });
-
+            total=allCount-gzCount-(num+1)*pageSize;
+        }else {
+            total=allCount-(page+1)*pageSize;
+        }
         List list = new ArrayList();
-
         list.addAll(nogzList);
         list.addAll(gzList);
+        if(total<0){
+            total=0;
+        }
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("cdoe", 0);
         map.put("message", "查询成功");
         map.put("result", list);
+        map.put("total", total);
         return map;
     }
 
@@ -748,7 +827,7 @@ public class ArticleDaoIml implements ArticleDao {
 
             String sysTime = DateUtil.getCurrentTimeString();
             //插入
-            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?)";
+            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1)";
             int update = jdbcTemplate.update(sql, new Object[]{
                     name,
                     keyword,
@@ -830,7 +909,7 @@ public class ArticleDaoIml implements ArticleDao {
             int update = jdbcTemplate.update(sql, new Object[]{
 
                     article_id,
-                    Integer.parseInt(article_type_id.toString()),
+                    article_type_id.toString(),
                     article_title.toString(),
                     article_keyword.toString(),
                     author.toString(),
@@ -1323,7 +1402,7 @@ public class ArticleDaoIml implements ArticleDao {
         //根据父级id 查询所有的子级的节点的id
         String idlist = "SELECT article_type_id FROM\n" +
                 "  (\n" +
-                "    SELECT * FROM article_type where parentid > 0 ORDER BY parentid, article_type_id DESC\n" +
+                "    SELECT * FROM article_type ORDER BY parentid, article_type_id DESC\n" +
                 "  ) realname_sorted,\n" +
                 "  (SELECT @pv :=" +
                 id +

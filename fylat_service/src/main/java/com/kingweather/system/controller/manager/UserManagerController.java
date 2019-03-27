@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -317,9 +318,9 @@ public class UserManagerController extends BaseController
 	*/
 	@ResponseBody
 	@RequestMapping(value = "/user/login")
-	public Map<String, Object> userLogin(String userName,String password){
+	public Map<String, Object> userLogin(HttpServletRequest request,String userName, String password){
        Map<String, Object> map = new HashMap<String, Object>();
-       User user = userManagerServiceImpl.getUserByNamePassword(userName, password);
+		User user = userManagerServiceImpl.getUserByNamePassword(userName, password);
 		if (null == user){
 		   map.put("userCode", UserState.UNKNOWN.getCode());
            map.put("message", "用户名或者密码错误！！");
@@ -359,7 +360,8 @@ public class UserManagerController extends BaseController
                         map.put("result", menuTree);
                         session.setAttribute("menusTree", menuTree);
                         map.put("loginUser", user);
-						List list = userMenuServiceIml.getUserMenuTree(null,user.getId());
+						userManagerServiceImpl.addLoginLog(request,user);
+						List list = userMenuServiceIml.getUserMenuTree(request,user.getId());
 						map.put("userMenu", list);
 
 					}

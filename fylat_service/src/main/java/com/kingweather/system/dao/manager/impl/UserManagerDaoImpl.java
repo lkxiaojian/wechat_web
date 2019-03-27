@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -478,6 +479,14 @@ public class UserManagerDaoImpl implements UserManagerDao {
 						password
 				});
 		return isUpdate;
+	}
+
+	@Override
+	public void addLoginLog(HttpServletRequest request, User user) {
+		int isUpdate = jdbcTemplate.update("INSERT INTO sys_login_log (user_id,login_time)VALUES(?,NOW())",
+				new Object[]{
+						user.getId()
+				});
 	}
 
 	public List<Map<String, Object>> getMenuTreeByUserId(String userId) {

@@ -1,8 +1,8 @@
 #webpath  /home/huxq/NETDISK/web/
 ########################shell variable################################
 upload:
-  realpath: /home/images/articleTypeImages/
-  pafpath: /home/pdf/paper/
+  realpath: /data/file/images/articleTypeImages/
+  pafpath: /data/file/pdf/paper/
 liunx:
   ipAddress:
   username: huxq
