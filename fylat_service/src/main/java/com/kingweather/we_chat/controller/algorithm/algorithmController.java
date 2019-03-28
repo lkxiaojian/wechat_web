@@ -2,6 +2,7 @@ package com.kingweather.we_chat.controller.algorithm;
 
 import com.kingweather.common.controller.BaseController;
 import com.kingweather.fylat_service.controller.other.DataManageController;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -134,6 +135,44 @@ public class algorithmController extends BaseController {
         map.put("result", maps);
         return map;
     }
+
+
+    @RequestMapping(value = "/reptile/gettestData/rest", method = RequestMethod.GET)
+    public Map<String, Object> gettestData(String id) {
+
+        String sql="select details_div,details_txt,article_id from zz_wechat.article_tmp where article_id=?";
+        Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{
+                id
+        });
+        Map<String, Object> resultmap = new HashMap<>();
+        String details_txt = guessEncoding((byte[]) map.get("details_txt"));
+        String details_div = guessEncoding((byte[]) map.get("details_div"));
+        resultmap.put("details_txt",details_txt);
+        resultmap.put("details_div",details_div);
+        resultmap.put("id",map.get("article_id"));
+        return resultmap;
+    }
+
+
+    private String guessEncoding(byte[] bytes) {
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        if (null != encoding) {
+            try {
+                return new String(bytes, encoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return new String(bytes);
+        }
+
+        return "";
+    }
+
 
 
 }

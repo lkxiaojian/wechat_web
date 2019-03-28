@@ -227,9 +227,11 @@ public class AlgorithmDataController extends BaseController {
                 File f = new File(path);
                 FileUtils.copyInputStreamToFile(file.getInputStream(), f);
                 path = path.replaceAll("data/file/", "resources");
-            } else {
-                path = req.getParameter("pdf_path");
             }
+
+//            else {
+//                path = req.getParameter("pdf_path");
+//            }
 
 
             String create_time = req.getParameter("create_time");

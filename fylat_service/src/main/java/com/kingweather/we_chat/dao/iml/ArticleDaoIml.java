@@ -7,6 +7,7 @@ import com.kingweather.common.util.Page;
 import com.kingweather.we_chat.constants.HttpRequest;
 import com.kingweather.we_chat.constants.UuidUtils;
 import com.kingweather.we_chat.dao.ArticleDao;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -91,11 +92,14 @@ public class ArticleDaoIml implements ArticleDao {
         byte[] content_manualbytes = (byte[]) content_manual;
         try {
             if (details_div != null) {
-                messageMap.put("details_div", new String(bytes, "UTF-8"));
+//                messageMap.put("details_div", new String(bytes, "UTF-8"));
+                messageMap.put("details_div", guessEncoding(bytes));
+
             }
 
             if (content_manual != null) {
-                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
+//                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
+                messageMap.put("content_manual", guessEncoding(content_manualbytes));
             }
 
             String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
@@ -105,7 +109,7 @@ public class ArticleDaoIml implements ArticleDao {
                     messageMap.get("article_type_id").toString()
             });
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -148,7 +152,7 @@ public class ArticleDaoIml implements ArticleDao {
             Map<String, Object> forMap = jdbcTemplate.queryForMap(selectSqlFora, new Object[]{
                     1,
                     articleId,
-                    Integer.parseInt(messageMap.get("article_type_id").toString()),
+                    messageMap.get("article_type_id").toString(),
                     user_id
             });
             if (forMap.get("count") == null || "0".equals(forMap.get("count").toString())) {
@@ -165,7 +169,7 @@ public class ArticleDaoIml implements ArticleDao {
                     1,
                     articleId,
                     user_id,
-                    Integer.parseInt(messageMap.get("article_type_id").toString())
+                    messageMap.get("article_type_id").toString()
 
             });
         }
@@ -245,7 +249,7 @@ public class ArticleDaoIml implements ArticleDao {
             Map<String, Object> forMap = jdbcTemplate.queryForMap(selectSqlFora, new Object[]{
                     1,
                     articleId,
-                    Integer.parseInt(messageMap.get("article_type_id").toString()),
+                    messageMap.get("article_type_id").toString(),
                     user_id
             });
             if (forMap.get("count") == null || "0".equals(forMap.get("count").toString())) {
@@ -262,7 +266,7 @@ public class ArticleDaoIml implements ArticleDao {
                     1,
                     articleId,
                     user_id,
-                    Integer.parseInt(messageMap.get("article_type_id").toString())
+                    messageMap.get("article_type_id").toString()
 
             });
         }
@@ -1111,13 +1115,17 @@ public class ArticleDaoIml implements ArticleDao {
         byte[] content_manualbytes = (byte[]) content_manual;
         try {
             if (details_div != null) {
-                messageMap.put("details_div", new String(details_divbytes, "UTF-8"));
+//                messageMap.put("details_div", new String(details_divbytes, "UTF-8"));
+                messageMap.put("details_div", guessEncoding(details_divbytes));
             }
             if (content_manualbytes != null) {
-                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
+//                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
+
+                messageMap.put("content_manual", guessEncoding(content_manualbytes));
+
             }
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return getErrorMapService();
         }
@@ -1531,5 +1539,30 @@ public class ArticleDaoIml implements ArticleDao {
         map.put("code", 2);
         map.put("message", "服务器内部错误！");
         return map;
+    }
+
+    /**
+     * 文档格式转换
+     * @param bytes
+     * @return
+     */
+
+    private String guessEncoding(byte[] bytes) {
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        if (null != encoding) {
+            try {
+                return new String(bytes, encoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return new String(bytes);
+        }
+
+        return "";
     }
 }
