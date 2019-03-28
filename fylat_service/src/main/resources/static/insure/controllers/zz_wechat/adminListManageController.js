@@ -85,7 +85,8 @@ app.controller('adminListManageController', ['$scope', '$modal', '$http', 'fylat
                         events: {
                             'click .a-edit': function (e, value, row, index) {
                                 $state.go('app.insure.admin_edit', {
-                                    id: row.id});
+                                    userId: row.id,
+                                    name:row.name});
                                 $scope.testInstance.bootstrapTable('refresh');
                                 // modalTip({
                                 //     tip: '开发中',

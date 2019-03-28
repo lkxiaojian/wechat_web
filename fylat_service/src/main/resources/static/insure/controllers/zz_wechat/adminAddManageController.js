@@ -19,6 +19,7 @@ app.controller('adminAddManageController', ['$scope', '$modal', '$http', 'fylatS
 
 
         };
+
         $scope.checkUserName=function () {
             if(!$scope.name){
                 layer.msg('请输入账号');
@@ -40,6 +41,7 @@ app.controller('adminAddManageController', ['$scope', '$modal', '$http', 'fylatS
                 layer.msg('至少勾选一个节点');
                 return;
             }
+
             $http({
                 method: 'GET',
                 url: 'webSysUser/verifyName/rest',
@@ -62,7 +64,13 @@ app.controller('adminAddManageController', ['$scope', '$modal', '$http', 'fylatS
             });
         }
         $scope.saveUserAndAuth=function () {
-            var auth=$scope.myTree.getAllChecked().split(",");
+            var auth1=$scope.myTree.getAllChecked();
+            var auth2=$scope.myTree.getAllPartiallyChecked();
+            if (auth2){
+                auth1=auth1+','+auth2;
+            }
+            var auth=auth1.split(',');
+
             $http({
                 method: 'GET',
                 url: 'webSysUser/addUser/rest',
@@ -73,8 +81,9 @@ app.controller('adminAddManageController', ['$scope', '$modal', '$http', 'fylatS
                     telPhone:$scope.telPhone,
                 },
             }).success(function (data) {
+
                 if (data.code == 0) {
-                    var userId=data.data.userId;
+                    var userId=data.userId;
 
                     var list2='';
                     for (id in auth){
