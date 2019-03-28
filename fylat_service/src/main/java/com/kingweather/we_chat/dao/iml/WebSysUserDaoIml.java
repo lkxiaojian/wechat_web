@@ -18,26 +18,36 @@ public class WebSysUserDaoIml implements WebSysUserDao {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public int addUser(Map<String, Object> info)throws Exception {
+    public Map addUser(Map<String, Object> info)throws Exception {
+        Map m = new HashMap();
+        int id = jdbcTemplate.queryForObject("SELECT AUTO_INCREMENT FROM information_schema.`TABLES` WHERE Table_Schema='zz_wechat' AND table_name = 'sys_user' LIMIT 1;  ",Integer.class);
 
         StringBuffer sql =  new StringBuffer();
         sql.append("  	INSERT INTO zz_wechat.sys_user 		 ");
-        sql.append("  		(tel_phone, 	 ");
+        sql.append("  		(id,tel_phone, 	 ");
         sql.append("  		nick_name,  	 ");
         sql.append("  		user_sex, 	 ");
         sql.append("  		create_time, 	 ");
         sql.append("  		PASSWORD, 	 ");
         sql.append("  		STATUS)	 ");
         sql.append("  		VALUES	 ");
-        sql.append("  		(?,?,?,now(),?,1)	 ");
+        sql.append("  		(?,?,?,?,now(),?,1)	 ");
 
-        int i = jdbcTemplate.update(sql.toString(), new Object[]{
+        int i = jdbcTemplate.update(sql.toString(), new Object[]{id,
                 info.get("telPhone"),
                 info.get("name"),
                 info.get("userSex"),
                 Md5Utils.encode2hex(info.get("pass").toString())
         });
-        return i;
+        m.put("userId",id);
+        if(i>0){
+            m.put("code", 0);
+            m.put("message", "添加用户成功！");
+        }else{
+            m.put("code", 2);
+            m.put("message", "添加用户失败！");
+        }
+        return m;
     }
 
     @Override

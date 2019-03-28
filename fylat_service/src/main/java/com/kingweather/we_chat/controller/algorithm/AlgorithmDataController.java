@@ -226,7 +226,7 @@ public class AlgorithmDataController extends BaseController {
                 path = pafpath + savePath;
                 File f = new File(path);
                 FileUtils.copyInputStreamToFile(file.getInputStream(), f);
-                path = path.replaceAll("data/file/", "resources");
+                path = path.replaceAll("data/file/", "resources/");
             }
 
 //            else {

@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface WebSysUserDao {
 
-    public int addUser(Map<String, Object> info)throws Exception;
+    public Map addUser(Map<String, Object> info)throws Exception;
 
     public int removeUser(String id)throws Exception;
 

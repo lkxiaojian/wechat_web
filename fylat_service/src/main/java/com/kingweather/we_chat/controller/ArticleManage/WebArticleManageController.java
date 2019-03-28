@@ -120,8 +120,8 @@ public class WebArticleManageController extends BaseController {
             String keyword = req.getParameter("keyword");
             String artcicle_type_id = req.getParameter("artcicle_type_id");
             String num = req.getParameter("num_id");
-            String pathICon = realpath.replaceAll("data/file/", "resources") + savePathIcon;
-            String pathBack = realpath.replaceAll("data/file/", "resources") + savePathBack;
+            String pathICon = realpath.replaceAll("data/file/", "resources/") + savePathIcon;
+            String pathBack = realpath.replaceAll("data/file/", "resources/") + savePathBack;
             isFlag = articleService.insertArticleType(name, keyword, artcicle_type_id, num, pathICon, pathBack);
         }
 
@@ -177,7 +177,7 @@ public class WebArticleManageController extends BaseController {
             FileUtils.copyInputStreamToFile(file.getInputStream(), f);
             map.put("code", 0);
             List<String> pathList = new ArrayList<>();
-            String s = path.replaceAll("data/file/", "resources");
+            String s = path.replaceAll("data/file/", "resources/");
             pathList.add("http://106.2.11.94:7902" + s);
             map.put("data", pathList);
         } catch (IOException e) {
@@ -274,7 +274,7 @@ public class WebArticleManageController extends BaseController {
         File fICon = new File(realpath + savePathIcon);
         try {
             FileUtils.copyInputStreamToFile(file1.getInputStream(), fICon);
-            String pathICon = realpath.replaceAll("data/file/", "resources") + savePathIcon;
+            String pathICon = realpath.replaceAll("data/file/", "resources/") + savePathIcon;
             map.put("code", 0);
             map.put("path", "https://xiaochengxu.zhuanzhilink.com/weixin_img" + pathICon);
             return map;

@@ -6,6 +6,13 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             current_location: "app.insure.type_manage",
             pic_location: "http://106.2.11.94:7902"
         };
+        if($scope.listObj.type == '2'){
+            $scope.listObj.navigationMsg = "管理平台 >待修复分类管理";
+        }else if($scope.listObj.type == '1'){
+            $scope.listObj.navigationMsg = "管理平台 >精品名称管理";
+        }else{
+            $scope.listObj.navigationMsg = "管理平台 >分类管理";
+        }
         //获取所有已发布的类型
         $scope.getAllType = function () {
             var type = '3';
@@ -202,7 +209,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 idArr.push(id)
             }
             var mergeList = idArr.join(",");
-            merge(tarNode, mergeList);
+            $scope.merge(tarNode, mergeList);
         }
         $scope.merge = function(tarNode,mergeList){
             layer.load(2);
@@ -218,6 +225,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 layer.closeAll('loading');
                 if (data.code == 0) {
                     layer.msg(data.message);
+                    $("#mergeModal").modal("hide");
                     $scope.focusNode = tarNode;
                     $scope.refresh();
                 } else {
@@ -343,7 +351,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             $scope.myTree.enableCheckBoxes(1);
             // 允许半选状态
             $scope.myTree.enableThreeStateCheckboxes(true);
-            $scope.myTree.enableTreeImages(false);
+            // $scope.myTree.enableTreeImages(false);
             $scope.myTree.enableThreeStateCheckboxes(false);// 是否级联选中
 
             $scope.myTree.enableDragAndDrop(true);
@@ -368,6 +376,11 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     }
                     if($scope.myTree.getUserData(array[i],"issue")==1){
                         $scope.myTree.setItemStyle(array[i], 'color:red;');
+                    }
+                    if($scope.myTree.getUserData(array[i],"type_state")==0){
+                        $scope.myTree.setItemImage(array[i], "text.gif");
+                    }else if($scope.myTree.getUserData(array[i],"type_state")==1){
+                        $scope.myTree.setItemImage(array[i], "graph.gif");
                     }
                 }
                 if(refreshLoding){

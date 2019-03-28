@@ -42,10 +42,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         if (maps != null && !"1".equals(type)) {
             maps.stream().forEach(s -> {
                 Map map = (Map<String, Object>) s;
-                Map userdata = new HashMap();
-                userdata.put("name", "issue");
-                userdata.put("content", map.get("issue"));
-                map.put("userdata", Lists.newArrayList(userdata));
+                Map userdata1 = new HashMap();
+                userdata1.put("name", "issue");
+                userdata1.put("content", map.get("issue"));
+                Map userdata2 = new HashMap();
+                userdata2.put("name", "type_state");
+                userdata2.put("content", map.get("type_state"));
+                map.put("userdata", Lists.newArrayList(userdata1,userdata2));
             });
         }
 
@@ -709,15 +712,15 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                     ",author_e=?,reference=?,site_number=?,publication_date=?,article_score=? " +
                     "where article_id=?";
 
-            if ("1".equals(tmp_type)) {
-
-                sql = "update zz_wechat.article set article_type_id=?,article_title=?,article_keyword=?,author=?,source=?," +
-                        "content_excerpt=?,status=?,article_score=?,del_type=?," +
-                        " paper_create_time=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s') ,article_title_e=?,content_excerpt_e=?,article_keyword_e=?" +
-                        ",author_e=?,reference=?,site_number=?,publication_date=?,article_score=? " +
-                        "where article_id=?";
-
-            }
+//            if ("1".equals(tmp_type)) {
+//
+//                sql = "update zz_wechat.article set article_type_id=?,article_title=?,article_keyword=?,author=?,source=?," +
+//                        "content_excerpt=?,status=?,article_score=?,del_type=?," +
+//                        " paper_create_time=?,update_time=date_format(?,'%Y-%m-%d %H:%i:%s') ,article_title_e=?,content_excerpt_e=?,article_keyword_e=?" +
+//                        ",author_e=?,reference=?,site_number=?,publication_date=?,article_score=? " +
+//                        "where article_id=?";
+//
+//            }
 
             int update = jdbcTemplate.update(sql, new Object[]{
                     article_type_id.toString(),
