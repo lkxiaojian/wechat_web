@@ -6,7 +6,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             current_location: "app.insure.type_manage",
             pic_location: "http://106.2.11.94:7902"
         };
-        debugger
         if($scope.listObj.type == '2'){
             $scope.listObj.navigationMsg = "管理平台 >待修复分类管理";
         }else if($scope.listObj.type == '1'){
