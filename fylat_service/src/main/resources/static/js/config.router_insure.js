@@ -459,4 +459,22 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             }
         })
 
+        .state('app.insure.recycle_manage', {
+            url: '/recycleManage',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/recycleManage.html',
+            pageTitle: '回收站管理',
+            controller: 'recycleManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/recycleManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+
 }]);

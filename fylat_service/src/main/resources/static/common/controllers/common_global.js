@@ -429,7 +429,11 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
         sub_menu6.href = 'app.insure.todo_type_manage';
         sub_menu6.isLeaf = '1';
         menu.submenus.push(sub_menu6);
-
+        var sub_menu7 = {};
+        sub_menu7.name = '回收站管理';
+        sub_menu7.href = 'app.insure.recycle_manage';
+        sub_menu7.isLeaf = '1';
+        menu.submenus.push(sub_menu7);
         menus.push(menu);
         //TODO 测试方便加的
 
