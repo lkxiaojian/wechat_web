@@ -36,11 +36,27 @@ public class AlgorithmDataController extends BaseController {
 
     @RequestMapping(value = "/algorithm/wxdata", method = RequestMethod.POST)
     public int collectingAndShare(@RequestBody Map<String, Object> data) {
-        System.out.print(data);
+        String article_id = data.get("article_id").toString();
+        log.info("微信文章id----->"+article_id);
+        String exitArticle = "SELECT count(*) as count  from zz_wechat.article_tmp where article_id=?";
+        Map<String, Object> exitArticleMap =null;
+        try {
+            exitArticleMap = jdbcTemplate.queryForMap(exitArticle, new Object[]{
+                    article_id
+            });
+        }catch (Exception e){
+
+        }
+        if (exitArticleMap != null && exitArticleMap.get("count") != null && Integer.parseInt(exitArticleMap.get("count").toString()) != 0) {
+            return 2;
+        }
+
+
         List<String> typeNameList = (List<String>) data.get("type_name");
         List<String> typeList = (List<String>) data.get("type_id");
         List<String> articleKeywordList = (List<String>) data.get("article_keywords");
         String currentTime = DateUtil.getCurrentTimeString();
+
 
         Object author = data.get("author");
         Object source = data.get("source");
@@ -74,14 +90,13 @@ public class AlgorithmDataController extends BaseController {
         for (int i = 0; i < articleKeywordList.size(); i++) {
             articleKeyword = articleKeyword + articleKeywordList.get(i).toString() + ",";
         }
-        if(typeName.length()>1){
+        if (typeName.length() > 1) {
             typeName = typeName.substring(0, typeName.length() - 1);
         }
 
-        if(articleKeyword.length()>1){
+        if (articleKeyword.length() > 1) {
             articleKeyword = articleKeyword.substring(0, articleKeyword.length() - 1);
         }
-
 
 
         //查询关联表中是否存在
@@ -146,6 +161,7 @@ public class AlgorithmDataController extends BaseController {
         div = div.replaceAll("webp", "png");
         div = div.substring(0, div.indexOf("<script nonce"));
         div = div + "</div>";
+        System.out.print(div);
         try {
             int update = jdbcTemplate.update(insertArticleSql, new Object[]{
                     data.get("article_id").toString(),
@@ -183,27 +199,45 @@ public class AlgorithmDataController extends BaseController {
 
         try {
             String path = "";
+
+            String article_id = req.getParameter("article_id");
+            String exitArticle = "SELECT count(*) as count  from zz_wechat.academic_paper where article_id=?";
+            Map<String, Object> exitArticleMap =null;
+            try {
+            exitArticleMap = jdbcTemplate.queryForMap(exitArticle, new Object[]{
+                        article_id
+                });
+            }catch (Exception e){
+
+            }
+
+
+            if (exitArticleMap != null && exitArticleMap.get("count") != null && Integer.parseInt(exitArticleMap.get("count").toString()) != 0) {
+                return 2;
+            }
+
+
             if (file != null) {
 //                String fileName = file.getOriginalFilename();
                 String fileName = req.getParameter("FILE_NAME");
-                fileName=new String(fileName.getBytes("UTF-8"),"UTF-8");
+                fileName = new String(fileName.getBytes("UTF-8"), "UTF-8");
                 log.info("pdf-----fileName--->" + fileName);
                 String savePath = DateUtil.formatDateTime(new Date(), "yyyy-MM-dd") + "_" + (int) (Math.random() * 100) + "/" + fileName;
                 path = pafpath + savePath;
                 File f = new File(path);
                 FileUtils.copyInputStreamToFile(file.getInputStream(), f);
                 path = path.replaceAll("data/file/", "resources");
-            }else {
-                path = req.getParameter("pdf_path");
             }
+
+//            else {
+//                path = req.getParameter("pdf_path");
+//            }
 
 
             String create_time = req.getParameter("create_time");
             String author = req.getParameter("author").replaceAll("/r/n", "").replaceAll("/r", "").replaceAll("/n", "");
             String FILE_PATH = req.getParameter("FILE_PATH");
             String seach_keyword = req.getParameter("seach_keyword");
-            String FILE_NAME = req.getParameter("FILE_NAME");
-            String article_id = req.getParameter("article_id");
             String reference = req.getParameter("reference");
             String article_title = req.getParameter("article_title");
             String article_keyword = req.getParameter("article_keyword").replaceAll("/r/n", "").replaceAll("/r", "").replaceAll("/n", "");
@@ -217,11 +251,11 @@ public class AlgorithmDataController extends BaseController {
             String article_title_e = req.getParameter("article_title_e");
             String content_excerpt_e = req.getParameter("content_excerpt_e");
             String source = req.getParameter("source");
-            if(article_keyword!=null&&article_keyword.length()>1){
-                article_keyword=article_keyword.substring(0,article_keyword.length()-1);
+            if (article_keyword != null && article_keyword.length() > 1) {
+                article_keyword = article_keyword.substring(0, article_keyword.length() - 1);
             }
-            if(article_keyword_e!=null&&article_keyword_e.length()>1){
-                article_keyword_e=article_keyword_e.substring(0,article_keyword_e.length()-1);
+            if (article_keyword_e != null && article_keyword_e.length() > 1) {
+                article_keyword_e = article_keyword_e.substring(0, article_keyword_e.length() - 1);
             }
 
 
@@ -258,11 +292,11 @@ public class AlgorithmDataController extends BaseController {
             for (int i = 0; i < articleKeywordList.size(); i++) {
                 articleKeyword = articleKeyword + articleKeywordList.get(i).toString() + ",";
             }
-            if(typeName.length()>1){
+            if (typeName.length() > 1) {
                 typeName = typeName.substring(0, typeName.length() - 1);
             }
 
-            if(articleKeyword.length()>1) {
+            if (articleKeyword.length() > 1) {
                 articleKeyword = articleKeyword.substring(0, articleKeyword.length() - 1);
             }
 

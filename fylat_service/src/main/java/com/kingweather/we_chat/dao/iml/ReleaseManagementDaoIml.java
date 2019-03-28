@@ -5,6 +5,7 @@ import com.kingweather.common.jdbc.JdbcUtil;
 import com.kingweather.common.util.DateUtil;
 import com.kingweather.common.util.Page;
 import com.kingweather.we_chat.dao.ReleaseManagementDao;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -406,7 +407,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
                 sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id ";
+                        " AND a.article_type_id=b.article_type_id  and  a.state=1";
 //                        "and a.article_type_id='" + article_type_id + "' ";
 
 
@@ -561,13 +562,17 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             try {
                 if (details_txt != null) {
-                    map.put("details_txt", new String(details_txt, "UTF-8"));
+//                    map.put("details_txt", new String(details_txt, "UTF-8"));
+
+                    map.put("details_txt", guessEncoding(details_txt));
+
                 }
                 if (details_div != null) {
-                    map.put("details_div", new String(details_div, "UTF-8"));
+//                    map.put("details_div", new String(details_div, "UTF-8"));
+                    map.put("details_div", guessEncoding(details_div));
                 }
 
-            } catch (UnsupportedEncodingException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -1148,8 +1153,11 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         } else if ("1".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state from zz_wechat.article_type where del_type=0 and parentid !='100' and parentid !='1'";
-        } else {
+        } else if("2".equals(type)){
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1'";
+
+        }else {
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 ";
 
         }
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
@@ -1306,6 +1314,26 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         map.put("code", 2);
         map.put("message", "服务器内部错误！");
         return map;
+    }
+
+
+    private String guessEncoding(byte[] bytes) {
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        if (null != encoding) {
+            try {
+                return new String(bytes, encoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return new String(bytes);
+        }
+
+        return "";
     }
 
 

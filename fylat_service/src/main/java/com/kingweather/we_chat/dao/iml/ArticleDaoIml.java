@@ -7,6 +7,7 @@ import com.kingweather.common.util.Page;
 import com.kingweather.we_chat.constants.HttpRequest;
 import com.kingweather.we_chat.constants.UuidUtils;
 import com.kingweather.we_chat.dao.ArticleDao;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -91,11 +92,14 @@ public class ArticleDaoIml implements ArticleDao {
         byte[] content_manualbytes = (byte[]) content_manual;
         try {
             if (details_div != null) {
-                messageMap.put("details_div", new String(bytes, "UTF-8"));
+//                messageMap.put("details_div", new String(bytes, "UTF-8"));
+                messageMap.put("details_div", guessEncoding(bytes));
+
             }
 
             if (content_manual != null) {
-                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
+//                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
+                messageMap.put("content_manual", guessEncoding(content_manualbytes));
             }
 
             String sql = "INSERT INTO statistics_info (article_id,statistics_type,dispose_time,user_id,article_type,count_num) VALUES(?,1,NOW(),?,?,1)";
@@ -105,7 +109,7 @@ public class ArticleDaoIml implements ArticleDao {
                     messageMap.get("article_type_id").toString()
             });
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -148,7 +152,7 @@ public class ArticleDaoIml implements ArticleDao {
             Map<String, Object> forMap = jdbcTemplate.queryForMap(selectSqlFora, new Object[]{
                     1,
                     articleId,
-                    Integer.parseInt(messageMap.get("article_type_id").toString()),
+                    messageMap.get("article_type_id").toString(),
                     user_id
             });
             if (forMap.get("count") == null || "0".equals(forMap.get("count").toString())) {
@@ -165,7 +169,7 @@ public class ArticleDaoIml implements ArticleDao {
                     1,
                     articleId,
                     user_id,
-                    Integer.parseInt(messageMap.get("article_type_id").toString())
+                    messageMap.get("article_type_id").toString()
 
             });
         }
@@ -245,7 +249,7 @@ public class ArticleDaoIml implements ArticleDao {
             Map<String, Object> forMap = jdbcTemplate.queryForMap(selectSqlFora, new Object[]{
                     1,
                     articleId,
-                    Integer.parseInt(messageMap.get("article_type_id").toString()),
+                    messageMap.get("article_type_id").toString(),
                     user_id
             });
             if (forMap.get("count") == null || "0".equals(forMap.get("count").toString())) {
@@ -262,7 +266,7 @@ public class ArticleDaoIml implements ArticleDao {
                     1,
                     articleId,
                     user_id,
-                    Integer.parseInt(messageMap.get("article_type_id").toString())
+                    messageMap.get("article_type_id").toString()
 
             });
         }
@@ -560,56 +564,58 @@ public class ArticleDaoIml implements ArticleDao {
         list.addAll(nogzmapList);
 
         resultMap.put("articleType", list);
-        String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
-                user_id +
-                "' ) AND (BINARY article_title LIKE '%" +
-                message +
-                "%' OR BINARY article_keyword LIKE '%" +
-                message +
-                "%' OR BINARY author LIKE '%" +
-                message +
-                "%' OR BINARY source LIKE '%" +
-                message +
-                "%' OR BINARY content_crawl LIKE '%" +
-                message +
-                "%'" +
-                "OR BINARY content_manual LIKE '%" +
-                message +
-                "%' OR BINARY content_excerpt LIKE '%" +
-                message +
-                "%' "+
-                " OR binary posting_name LIKE '%" +
-                message +
-                "%' OR BINARY article_title_e LIKE '%" +
-                message +
-                "%'"+
-                " OR BINARY content_excerpt_e LIKE '%" +
-                message +
-                "%' OR BINARY article_keyword_e LIKE '%" +
-                message +
-                "%' "
-                +
-                " OR BINARY reference LIKE '%" +
-                message +
-                "%' OR BINARY site_number LIKE '%" +
-                message +
-                "%')"
-                ;
+//        String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                user_id +
+//                "' ) AND (BINARY article_title LIKE '%" +
+//                message +
+//                "%' OR BINARY article_keyword LIKE '%" +
+//                message +
+//                "%' OR BINARY author LIKE '%" +
+//                message +
+//                "%' OR BINARY source LIKE '%" +
+//                message +
+//                "%' OR BINARY content_crawl LIKE '%" +
+//                message +
+//                "%'" +
+//                "OR BINARY content_manual LIKE '%" +
+//                message +
+//                "%' OR BINARY content_excerpt LIKE '%" +
+//                message +
+//                "%' "+
+//                " OR binary posting_name LIKE '%" +
+//                message +
+//                "%' OR BINARY article_title_e LIKE '%" +
+//                message +
+//                "%'"+
+//                " OR BINARY content_excerpt_e LIKE '%" +
+//                message +
+//                "%' OR BINARY article_keyword_e LIKE '%" +
+//                message +
+//                "%' "
+//                +
+//                " OR BINARY reference LIKE '%" +
+//                message +
+//                "%' OR BINARY site_number LIKE '%" +
+//                message +
+//                "%')"
+//                ;
+//
+//        Map<String, Object> map = jdbcTemplate.queryForMap(gzArticleSqlCount);
+//        Object objCount = map.get("count");
+//        int count = 0;
+//        if (objCount != null) {
+//            count = Integer.parseInt(objCount.toString());
+//        }
 
-        Map<String, Object> map = jdbcTemplate.queryForMap(gzArticleSqlCount);
-        Object objCount = map.get("count");
-        int count = 0;
-        if (objCount != null) {
-            count = Integer.parseInt(objCount.toString());
-        }
 
-
-        if (count > 0 && pageSize * page <= count || count < 10) {
+//        if (count > 0 && pageSize * page <= count || count < 10) {
 
             String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
-                    "FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
-                    user_id +
-                    "' ) AND (BINARY article_title LIKE '%" +
+                    "FROM zz_wechat.article WHERE del_type !=1 " +
+//                    "and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                    user_id +
+//                    "' ) " +
+                    "AND (BINARY article_title LIKE '%" +
                     message +
                     "%' OR BINARY article_keyword LIKE '%" +
                     message +
@@ -653,20 +659,20 @@ public class ArticleDaoIml implements ArticleDao {
             }
 
             resultMap.put("loveArticle", gzArticleList);
-        }
+//        }
 
         if (resultMap.get("loveArticle") == null) {
 
-            List<Map<String, Object>> gzArticleList = new ArrayList<>();
+             gzArticleList = new ArrayList<>();
             resultMap.put("loveArticle", gzArticleList);
         }
 
 
-        if (count < 10 || pageSize * page > count) {
-            count = (pageSize * page - count) / pageSize;
-            if (count < 0) {
-                count = 0;
-            }
+//        if (count < 10 || pageSize * page > count) {
+//            count = (pageSize * page - count) / pageSize;
+//            if (count < 0) {
+//                count = 0;
+//            }
 
 
 //            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id NOT in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
@@ -691,56 +697,56 @@ public class ArticleDaoIml implements ArticleDao {
 //                    "," +
 //                    pageSize;
 
-
-            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
-                    user_id +
-                    "' ) AND (BINARY article_title LIKE '%" +
-                    message +
-                    "%' OR BINARY article_keyword LIKE '%" +
-                    message +
-                    "%' OR BINARY author LIKE '%" +
-                    message +
-                    "%' OR BINARY source LIKE '%" +
-                    message +
-                    "%' OR BINARY content_crawl LIKE '%" +
-                    message +
-                    "%'" +
-                    "OR BINARY content_manual LIKE '%" +
-                    message +
-                    "%' OR BINARY content_excerpt LIKE '%" +
-                    message +
-                    "%'" +
-                    "OR BINARY posting_name LIKE '%" +
-                    message +
-                    "%' OR BINARY article_title_e LIKE '%" +
-                    message +
-                    "%'"+
-                    "OR BINARY content_excerpt_e LIKE '%" +
-                    message +
-                    "%' OR BINARY article_keyword_e LIKE '%" +
-                    message +
-                    "%'"
-                    +
-                    "OR BINARY reference LIKE '%" +
-                    message +
-                    "%' OR BINARY site_number LIKE '%" +
-                    message +
-                    "%'"+
-                    ") ORDER BY create_time desc LIMIT " +
-                    page * pageSize +
-                    "," +
-                    pageSize;
-            List<Map<String, Object>> nogzArticleList = jdbcTemplate.queryForList(nogzArticleSql);
-            if (nogzArticleList == null) {
-                nogzArticleList = new ArrayList<>();
-            }
-
-            resultMap.put("notLoveArticle", nogzArticleList);
-        }
+//
+//            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                    user_id +
+//                    "' ) AND (BINARY article_title LIKE '%" +
+//                    message +
+//                    "%' OR BINARY article_keyword LIKE '%" +
+//                    message +
+//                    "%' OR BINARY author LIKE '%" +
+//                    message +
+//                    "%' OR BINARY source LIKE '%" +
+//                    message +
+//                    "%' OR BINARY content_crawl LIKE '%" +
+//                    message +
+//                    "%'" +
+//                    "OR BINARY content_manual LIKE '%" +
+//                    message +
+//                    "%' OR BINARY content_excerpt LIKE '%" +
+//                    message +
+//                    "%'" +
+//                    "OR BINARY posting_name LIKE '%" +
+//                    message +
+//                    "%' OR BINARY article_title_e LIKE '%" +
+//                    message +
+//                    "%'"+
+//                    "OR BINARY content_excerpt_e LIKE '%" +
+//                    message +
+//                    "%' OR BINARY article_keyword_e LIKE '%" +
+//                    message +
+//                    "%'"
+//                    +
+//                    "OR BINARY reference LIKE '%" +
+//                    message +
+//                    "%' OR BINARY site_number LIKE '%" +
+//                    message +
+//                    "%'"+
+//                    ") ORDER BY create_time desc LIMIT " +
+//                    page * pageSize +
+//                    "," +
+//                    pageSize;
+//            List<Map<String, Object>> nogzArticleList = jdbcTemplate.queryForList(nogzArticleSql);
+//            if (nogzArticleList == null) {
+//                nogzArticleList = new ArrayList<>();
+//            }
+//
+//            resultMap.put("notLoveArticle", nogzArticleList);
+//        }
 
 
         if (resultMap.get("notLoveArticle") == null) {
-            List<Map<String, Object>> gzArticleList = new ArrayList<>();
+             gzArticleList = new ArrayList<>();
             resultMap.put("notLoveArticle", gzArticleList);
         }
 
@@ -1099,7 +1105,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         //获取文章的详细信息 content_manual
         String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time ,a.collect_initcount,a.share_initcount ,a.collect_initcount ,a.content_type,a.content_crawl,a.details_div,a.content_manual,a.content_excerpt,b.article_type_id,b.article_type_name ," +
-                " a.posting_name,a.article_title_e,a.content_excerpt_e,a.pdf_path,a.article_keyword_e,a.author_e,a.reference,a.site_number,a.publication_date,a.article_score,a.paper_create_time ,,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time   FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
+                " a.posting_name,a.article_title_e,a.content_excerpt_e,a.pdf_path,a.article_keyword_e,a.author_e,a.reference,a.site_number,a.publication_date,a.article_score,a.paper_create_time ,a.word_count,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time   FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{article_id});
         Object details_div = messageMap.get("details_div");
 
@@ -1109,13 +1115,17 @@ public class ArticleDaoIml implements ArticleDao {
         byte[] content_manualbytes = (byte[]) content_manual;
         try {
             if (details_div != null) {
-                messageMap.put("details_div", new String(details_divbytes, "UTF-8"));
+//                messageMap.put("details_div", new String(details_divbytes, "UTF-8"));
+                messageMap.put("details_div", guessEncoding(details_divbytes));
             }
             if (content_manualbytes != null) {
-                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
+//                messageMap.put("content_manual", new String(content_manualbytes, "UTF-8"));
+
+                messageMap.put("content_manual", guessEncoding(content_manualbytes));
+
             }
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return getErrorMapService();
         }
@@ -1529,5 +1539,30 @@ public class ArticleDaoIml implements ArticleDao {
         map.put("code", 2);
         map.put("message", "服务器内部错误！");
         return map;
+    }
+
+    /**
+     * 文档格式转换
+     * @param bytes
+     * @return
+     */
+
+    private String guessEncoding(byte[] bytes) {
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        if (null != encoding) {
+            try {
+                return new String(bytes, encoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return new String(bytes);
+        }
+
+        return "";
     }
 }
