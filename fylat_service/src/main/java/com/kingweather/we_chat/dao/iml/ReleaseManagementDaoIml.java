@@ -406,7 +406,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
                 sqlCount = "select count(*) as count from zz_wechat.article a ,zz_wechat.article_type b where a.del_type  " + delTypeSql +
-                        " AND a.article_type_id=b.article_type_id ";
+                        " AND a.article_type_id=b.article_type_id  and  a.state=1";
 //                        "and a.article_type_id='" + article_type_id + "' ";
 
 
