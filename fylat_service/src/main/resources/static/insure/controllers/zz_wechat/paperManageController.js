@@ -7,7 +7,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                 view: 'select',
                 type:"1", //论文
                 del_type:"0", //非删除
-                tmp_type:"1" //正式发布的
+                tmp_type:"0" //正式发布的
             },
         }
 
@@ -128,12 +128,6 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         align: 'center'
 
                     }, {
-                        title: '字数',
-                        class: 'col-md-1',
-                        field: 'word_count',
-                        align: 'center',
-                        width: "100px"
-                    }, {
                         title: '操作',
                         class: 'col-md-1',
                         align: 'center',
@@ -151,7 +145,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"view",
                                     type: "1",//论文
-                                    tmp_type: "1"
+                                    tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                                 });
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },
@@ -162,7 +156,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"edit",
                                     type: "1",//论文
-                                    tmp_type: "1"
+                                    tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                                 });
                                 // $scope.tableInstance.bootstrapTable('refresh');
                             },

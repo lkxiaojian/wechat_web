@@ -377,7 +377,27 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/pubTypeManage',
             params: {param: null, data: null,type:'1'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
-            pageTitle: '分类管理',
+            pageTitle: '精品名称管理',
+            controller: 'typeManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/typeManageController.js',
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css',
+                            'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.todo_type_manage', {
+            url: '/pubTypeManage',
+            params: {param: null, data: null,type:'2'},
+            templateUrl: 'insure/template/zz_wechat/typeManage.html',
+            pageTitle: '待修复分类管理',
             controller: 'typeManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -396,7 +416,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
 
         .state('app.insure.publish_manage', {
             url: '/publishManage',
-            params: {param: null, data: null,type_id: null,pre_location: null,comming_type_id:null,query_params:null},
+            params: {param: null, data: null,type_id: null,pre_location: null,comming_type_id:null,query_params:null,wx_type:null},
             templateUrl: 'insure/template/zz_wechat/publishManage.html',
             pageTitle: '发布管理',
             controller: 'publishManageController',
@@ -484,6 +504,24 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                         return $ocLazyLoad.load([
                             'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/adminAddManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+
+        .state('app.insure.recycle_manage', {
+            url: '/recycleManage',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/recycleManage.html',
+            pageTitle: '回收站管理',
+            controller: 'recycleManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/recycleManageController.js',
                             'ui.select'
                         ]);
                     }]

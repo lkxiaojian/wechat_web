@@ -26,19 +26,19 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
         };
 
         $scope.listObj = {
-            navigationMsg: '管理平台 >文章修改',
+            navigationMsg: $stateParams.type=='0'?'管理平台 >文章修改':'管理平台 >论文修改',
             pre_location: $stateParams.pre_location,
             operate_type: $stateParams.operate_type,
             type: $stateParams.type,
             tmp_type: $stateParams.tmp_type,
-            regionType: {selected: undefined},//文章类型
+            // regionType: {selected: undefined},//文章类型
             dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),
             article_id: $stateParams.article_id,
             pre_query_params: $stateParams.pre_query_params,
-            selectedItem: {
-                article_type_id: null,
-                article_type_name: null
-            },
+            // selectedItem: {
+            //     article_type_id: null,
+            //     article_type_name: null
+            // },
 
             //查询参数
             integrationQuery: {
@@ -67,17 +67,17 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             articleTypeData: [],//
             region: [],//
             articleMessage: {},
-            getRegionTypeSelect: function (item) {
-                $scope.listObj.regionType.selected = item;
-            },
+            // getRegionTypeSelect: function (item) {
+            //     $scope.listObj.regionType.selected = item;
+            // },
             postDownload: function () {//类型查询
                 var article_type_id;
                 if ($scope.listObj.region.selected != null) {
                     article_type_id = $scope.listObj.region.selected.article_type_id
                 }
-                var type = '1';
+                var type = '2';
                 if($scope.listObj.tmp_type=='0'){
-                    type = '2';
+                    type = '1';
                 }
                 $http({
                     method: 'GET',
@@ -91,7 +91,11 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         article_type_id: article_type_id
                     }*/
                 }).success(function (data) {
-                    $scope.listObj.articleTypeData = data;
+                    if(data.code == '0'){
+                        $scope.listObj.articleTypeData = data.result;
+                    }else{
+                        layer.alert("查询类型列表失败");
+                    }
 
                 }).error(function (data) {
 
@@ -108,7 +112,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             getAtirlceMessage: function () {
 
                 var url = "releaseManagement/getAricleTmpMessageById/rest";
-                if($scope.listObj.tmp_type == '1'){
+                if($scope.listObj.tmp_type == '0'){
                     url = 'article/webMessage';
                 }
                 $http({
@@ -133,7 +137,11 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         $scope.listObj.integrationQuery.details_div = data.result.details_div;
                         $scope.listObj.integrationQuery.collect_count = data.result.collect_initcount;
 
-                        $scope.listObj.integrationQuery.word_count = data.result.word_count;
+                        if(data.result.details_size){
+                            $scope.listObj.integrationQuery.word_count = data.result.details_size;
+                        }else{
+                            $scope.listObj.integrationQuery.word_count = data.result.word_count;
+                        }
                         $scope.listObj.integrationQuery.site_number = data.result.site_number;
                         $scope.listObj.integrationQuery.content_excerpt_e = data.result.content_excerpt_e;
                         $scope.listObj.integrationQuery.article_keyword_e = data.result.article_keyword_e;
@@ -146,10 +154,13 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         $scope.listObj.integrationQuery.create_time = insureUtil.dateToString(new Date(data.result.create_time), "yyyy-MM-dd");
                         $scope.listObj.integrationQuery.update_time = insureUtil.dateToString(new Date(data.result.update_time), "yyyy-MM-dd");
                         $scope.listObj.integrationQuery.check_type = data.result.check_type;
+                        $scope.listObj.integrationQuery.posting_name = data.result.posting_name;
 
-                        $scope.listObj.selectedItem.article_type_id = data.result.article_type_id;
-                        $scope.listObj.selectedItem.article_type_name = data.result.article_type_name;
-                        $scope.listObj.regionType.selected= $scope.listObj.selectedItem;
+                        $scope.listObj.integrationQuery.article_type_id = data.result.article_type_id;
+
+                        // $scope.listObj.selectedItem.article_type_id = data.result.article_type_id;
+                        // $scope.listObj.selectedItem.article_type_name = data.result.article_type_name;
+                        // $scope.listObj.regionType.selected= $scope.listObj.selectedItem;
                         if (editor != null && $scope.listObj.integrationQuery.content_type == 0) {
                             editor.txt.html($scope.listObj.integrationQuery.content_manual)
                         } else if (editor != null && $scope.listObj.integrationQuery.content_type == 1) {
@@ -188,7 +199,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     layer.close(confirm);
                 }, function(){
                     var url = "releaseManagement/delAricleTmpList/rest";
-                    if($scope.listObj.tmp_type == '1'){
+                    if($scope.listObj.tmp_type == '0'){
                         url = 'article/deletedById';
                     }
                     layer.load(2);
@@ -284,15 +295,17 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                 // layer.tips("请输入标题","#article_title");
                 return;
             }
-            if(!$scope.listObj.regionType.selected){
+            if(!$scope.listObj.integrationQuery.article_type_id){
                 layer.msg("请选择类型");
                 // layer.tips("请选择类型","#article_type");
                 return;
             }
-            if(!$scope.listObj.integrationQuery.source){
-                layer.msg("请输入来源");
-                // layer.tips("请输入来源","#source");
-                return;
+            if($scope.listObj.type == '0') {
+                if (!$scope.listObj.integrationQuery.source) {
+                    layer.msg("请输入来源");
+                    // layer.tips("请输入来源","#source");
+                    return;
+                }
             }
             if(!$scope.listObj.integrationQuery.create_time){
                 layer.msg("请选择发表时间");
@@ -328,8 +341,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
 
             $scope.listObj.dataTime = angular.element('#time').val();
             var url = "releaseManagement/updateAricleTmpMesage/rest";
-            if($scope.listObj.tmp_type == '1'){
-            // if($scope.listObj.type == '0' && $scope.listObj.tmp_type == '1'){
+            if($scope.listObj.tmp_type == '0'){
+            // if($scope.listObj.type == '0' && $scope.listObj.tmp_type == '0'){
                 url = 'article/updateArticle';
             }
             layer.load(2);
@@ -340,7 +353,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     type: $scope.listObj.type,
                     tmp_type: $scope.listObj.tmp_type,
                     article_id: $scope.listObj.article_id ,
-                    article_type_id: $scope.listObj.regionType.selected.article_type_id,
+                    article_type_id: $scope.listObj.integrationQuery.article_type_id,
+                    // article_type_id: $scope.listObj.regionType.selected.article_type_id,
                     author: $scope.listObj.integrationQuery.author,
                     source: $scope.listObj.integrationQuery.source,
                     article_title: $scope.listObj.integrationQuery.article_title,

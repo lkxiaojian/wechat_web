@@ -23,15 +23,16 @@
                         <a class="btn btn-success" ng-click="publish(0)" ng-show="listObj.type == '0'">发布</a>
                         <a class="btn btn-success" ng-click="publish(1)" ng-show="listObj.type == '1'">取消发布</a>
                         <a class="btn btn-blue" ng-click="refresh()">刷新</a>
-                        <a class="btn btn-danger" ng-click="similarity()">相似度</a>
-                        <a class="btn btn-warning" ng-click="goPubView()" ng-show="listObj.type == '0'">进入文章发布</a>
+                        <a class="btn btn-danger" ng-click="similarity()" ng-show="listObj.type != '2'">相似度</a>
                         <a class="btn btn-warning" ng-click="delete()" ng-show="listObj.type == '1'">删除</a>
-                        <a class="btn btn-info" ng-click="showMergeModal()">合并</a>
+                        <a class="btn btn-info" ng-click="showMergeModal()" ng-show="listObj.type != '2'">合并</a>
+                        <a class="btn btn-info" ng-click="showParentView()" ng-show="listObj.type == '2'">指定父类</a>
+                        <a class="btn btn-warning" ng-click="goPubView()" ng-show="listObj.type != '1'">进入文章发布</a>
                     </div>
                 </div>
             </form>
             <div class="form-group">
-                <div id="dataTree" class="col-sm-12" style="margin:5px;height:550px; border :1px solid Silver; overflow:auto;"></div>
+                <div id="dataTree" class="col-sm-12" style="margin:5px;height:500px; border :1px solid Silver; overflow:auto;"></div>
             </div>
         </div>
     </div>
@@ -186,6 +187,38 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="addParentModal">
+        <div class="modal-dialog modal-lg" role="document" style = "width:800px;">
+            <div class="modal-content" style="height: 200px;">
+                <div class="modal-header" style = "background-color:#355da5;">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" style = "color:#FFFFFF;">添加一级领域</h4>
+                </div>
+
+                <form class="form-horizontal" role="form" style="padding-top: 15px;padding-right: 10px;">
+                    <input type="hidden" class="form-control input-sm" ng-model="updateDomainObj.article_type_id">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">一级领域:</label>
+                        <div class="col-sm-10">
+                            <select ng-model="updateDomainObj.parentid" class="form-control input-sm">
+                                <option ng-repeat="x in domainDataList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10" style="text-align: right;padding-right: 50px;">
+                            <button class="btn btn-info" ng-click="updateDomain()">保存</button>
+                            <button class="btn btn-default" ng-click="cancelAddParent()"  data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
