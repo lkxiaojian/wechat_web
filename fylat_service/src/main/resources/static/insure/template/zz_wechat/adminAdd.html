@@ -11,12 +11,43 @@
 </div>
 
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="box-header with-border">
+            <form class="navbar-form navbar-left" role="search" id = "queryForm">
 
-<!--内容区-->
-<div class="wrapper-md">
-    <table table-directive tableoption="testOption" id="testArticle" instance="testInstance"
-           style="height: 286px"></table>
+
+                <div class="search-con">
+
+                    <div class="form-group form-inline">
+                        <label class="control-label input-sm">用户名：</label>
+                        <input name="name" ng-model="name" class="form-control input-sm" placeholder="请输入">
+                    </div>
+                    <div class="form-group form-inline">
+                        <label class="control-label input-sm">密码：</label>
+                        <input name="pass" ng-model="pass" class="form-control input-sm" placeholder="请输入">
+                    </div>
+                    <div class="form-group form-inline">
+                        <label class="control-label input-sm">手机号：</label>
+                        <input name="telPhone" ng-model="telPhone" class="form-control input-sm" placeholder="请输入">
+                    </div>
+
+                </div>
+
+
+
+            </form>
+        </div>
+
+        <div class="form-group">
+            <div id="dataTree" class="col-sm-12" style="margin:5px;height:500px; border :1px solid Silver; overflow:auto;"></div>
+        </div>
+        <div class="form-group form-inline"  style="width: 500px;">
+            <a class="btn btn-info" ng-click="checkUserName()">保存</a>
+        </div>
+    </div>
 </div>
+
 
 
 <script type="text/ng-template" id="myModalContent.html">

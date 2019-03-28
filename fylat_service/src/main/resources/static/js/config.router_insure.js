@@ -487,7 +487,9 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                         return $ocLazyLoad.load([
                             'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/adminEditManageController.js',
-                            'ui.select'
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css'
                         ]);
                     }]
             }
@@ -504,7 +506,9 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                         return $ocLazyLoad.load([
                             'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/adminAddManageController.js',
-                            'ui.select'
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css',
                         ]);
                     }]
             }
