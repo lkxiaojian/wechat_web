@@ -117,4 +117,35 @@ public class ArithmeticArticleTask {
     }
 
 
+
+//    @Scheduled(cron ="0 0 21 ? * * ")
+    public void test(){
+        String sql="select pdf_path,article_id from academic_paper";
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+for (Map<String,Object> map:maps){
+
+
+    if(map.get("pdf_path")!=null){
+        String pdf_path = map.get("pdf_path").toString().replaceAll("/resourcespdf", "/resources/pdf");
+        String updateSql="update academic_paper set pdf_path=? where article_id=?";
+        int article_id = jdbcTemplate.update(updateSql, new Object[]{
+                pdf_path,
+                map.get("article_id")
+        });
+
+        log.info("更新字段--->"+article_id+"---"+pdf_path);
+
+    }
+
+}
+
+        log.info("更新完成");
+
+
+        }
+
+
+
+
+
 }
