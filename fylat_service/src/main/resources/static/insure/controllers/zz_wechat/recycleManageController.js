@@ -14,7 +14,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
         //文章列表
         $scope.listAritcle = function () {
 
-            $scope.tableOption = {
+            $scope.articleOption = {
                 url: 'releaseManagement/selectAricleTmpList/rest',
                 resultTag: 'result',
                 method: 'get',
@@ -142,7 +142,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                                 });
                             },
                             'click .a-recover': function (e, value, row, index) {
-                                recoverData(row.article_id);
+                                recoverData(row.article_id,0);
                             },
                             'click .a-delete': function (e, value, row, index) {
                                 deleteData(row.article_id);
@@ -153,8 +153,140 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             };
         }
         $scope.listAritcle();
+
+        //论文列表
+        $scope.listPaper = function () {
+
+            $scope.paperOption = {
+                url: 'releaseManagement/selectAricleTmpList/rest',
+                resultTag: 'result',
+                method: 'get',
+                queryParams: function (params) {
+                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.listObj.defaultSearchParams);
+                    return params;
+                },
+                pageList: ['All'],
+                pageSize: 10,
+                onLoadSuccess: function (data) {
+                    if (data.code != 0) {
+                        modalTip({
+                            tip: data.message,
+                            type: true
+                        });
+                    }
+                },
+                columns: [{
+                    checkbox: true
+                }, {
+                    title: '标题',
+                    class: 'col-md-1',
+                    field: 'article_title',
+                    align: 'center',
+                    titleTooltip: 'title',
+                    // width: "15%",
+                    cellStyle:{
+                        css:{
+                            "min-width":"100px",
+                            "max-width":"200px"
+                        }
+                    }
+                }, {
+                    title: '所属分类',
+                    class: 'col-md-1',
+                    field: 'article_type_name',
+                    align: 'center'
+                }, {
+                    title: '发表时间',
+                    class: 'col-md-1',
+                    field: 'create_time',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
+                        }
+                        return '';
+                    }
+                }, {
+                    title: '入库时间',
+                    class: 'col-md-1',
+                    field: 'update_time',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
+                        }
+                        return '';
+                    }
+
+                }, {
+                    title: '关键词',
+                    class: 'col-md-1',
+                    field: 'article_keyword',
+                    align: 'center'
+
+                }, {
+                    title: '摘要',
+                    class: 'col-md-1',
+                    field: 'content_excerpt',
+                    align: 'center',
+                    cellStyle:{
+                        css:{
+                            "min-width":"100px",
+                            "max-width":"200px"
+                        },
+                        classes:["overflow"]
+                    }
+                }, {
+                    title: '来源',
+                    class: 'col-md-1',
+                    field: 'source',
+                    align: 'center',
+                    sortable: false
+                }, {
+                    title: '作者',
+                    class: 'col-md-1',
+                    field: 'author',
+                    align: 'center'
+
+                }, {
+                    title: '字数',
+                    class: 'col-md-1',
+                    field: 'word_count',
+                    align: 'center',
+                    width: "100px"
+                }, {
+                    title: '操作',
+                    class: 'col-md-1',
+                    align: 'center',
+                    width: '100px',
+                    formatter: function (value, row, index) {
+
+                        return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
+                            '<a class="btn btn-blue btn-xs a-recover" href="javascript:;">恢复</a>&nbsp;' +
+                            '<a class="a-delete a-red" href="javascript:;"> 删除</a>';
+                    },
+                    events: {
+                        'click .a-view': function (e, value, row, index) {
+                            $state.go('app.insure.modify_article', {article_id: row.article_id,pre_location:$scope.listObj.current_location,operate_type:"view",article_type: "article"});
+                        },
+                        'click .a-recover': function (e, value, row, index) {
+                            recoverData(row.article_id,1);
+                        },
+                        'click .a-delete': function (e, value, row, index) {
+                            deleteData(row.article_id);
+                        }
+                    }
+                }
+                ]
+            };
+        }
+        $scope.listPaper();
+
         $scope.query = function(){
-            $scope.tableInstance.bootstrapTable('refresh');
+            $scope.articleInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
             $.each($("#queryForm select,#queryForm input"),
@@ -227,7 +359,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
         function recoverData(rowIds,type){
             var recoverType = '1';//恢复论文和文章传1
-            if(type = '3'){
+            if(type == 3){
                 recoverType = '0';//恢复关键字传0
             }
             var confirm = layer.confirm('确认恢复勾选的数据吗？', {
