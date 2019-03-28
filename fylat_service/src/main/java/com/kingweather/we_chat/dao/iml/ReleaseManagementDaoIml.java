@@ -42,10 +42,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         if (maps != null && !"1".equals(type)) {
             maps.stream().forEach(s -> {
                 Map map = (Map<String, Object>) s;
-                Map userdata = new HashMap();
-                userdata.put("name", "issue");
-                userdata.put("content", map.get("issue"));
-                map.put("userdata", Lists.newArrayList(userdata));
+                Map userdata1 = new HashMap();
+                userdata1.put("name", "issue");
+                userdata1.put("content", map.get("issue"));
+                Map userdata2 = new HashMap();
+                userdata2.put("name", "type_state");
+                userdata2.put("content", map.get("type_state"));
+                map.put("userdata", Lists.newArrayList(userdata2));
             });
         }
 
