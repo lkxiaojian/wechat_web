@@ -24,13 +24,9 @@ public class WebSysUserController {
         try {
             map.put("code", 2);
             map.put("message", "系统异常，请联系管理员！");
-            int i = webSysUserServiceIml.addUser(info);
+            Map m = webSysUserServiceIml.addUser(info);
 
-            if(i>0){
-                map.put("code", 0);
-                map.put("message", "添加用户成功！");
-            }
-            return map;
+            return m;
         } catch (Exception e) {
             e.printStackTrace();
             return map;

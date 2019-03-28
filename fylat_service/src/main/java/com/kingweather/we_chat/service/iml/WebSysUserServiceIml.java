@@ -14,7 +14,7 @@ public class WebSysUserServiceIml implements WebSysUserService {
     private WebSysUserDao webSysUserDaoIml;
 
     @Override
-    public int addUser(Map<String, Object> info) throws Exception{
+    public Map addUser(Map<String, Object> info) throws Exception{
 
         return webSysUserDaoIml.addUser(info);
     }
