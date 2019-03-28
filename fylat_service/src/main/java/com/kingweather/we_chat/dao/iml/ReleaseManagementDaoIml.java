@@ -48,7 +48,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 Map userdata2 = new HashMap();
                 userdata2.put("name", "type_state");
                 userdata2.put("content", map.get("type_state"));
-                map.put("userdata", Lists.newArrayList(userdata2));
+                map.put("userdata", Lists.newArrayList(userdata1,userdata2));
             });
         }
 

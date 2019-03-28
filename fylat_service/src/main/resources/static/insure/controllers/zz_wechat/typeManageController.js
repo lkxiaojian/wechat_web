@@ -209,7 +209,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 idArr.push(id)
             }
             var mergeList = idArr.join(",");
-            merge(tarNode, mergeList);
+            $scope.merge(tarNode, mergeList);
         }
         $scope.merge = function(tarNode,mergeList){
             layer.load(2);
@@ -225,6 +225,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 layer.closeAll('loading');
                 if (data.code == 0) {
                     layer.msg(data.message);
+                    $("#mergeModal").modal("hide");
                     $scope.focusNode = tarNode;
                     $scope.refresh();
                 } else {
@@ -350,7 +351,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             $scope.myTree.enableCheckBoxes(1);
             // 允许半选状态
             $scope.myTree.enableThreeStateCheckboxes(true);
-            $scope.myTree.enableTreeImages(false);
+            // $scope.myTree.enableTreeImages(false);
             $scope.myTree.enableThreeStateCheckboxes(false);// 是否级联选中
 
             $scope.myTree.enableDragAndDrop(true);
@@ -375,6 +376,11 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     }
                     if($scope.myTree.getUserData(array[i],"issue")==1){
                         $scope.myTree.setItemStyle(array[i], 'color:red;');
+                    }
+                    if($scope.myTree.getUserData(array[i],"type_state")==0){
+                        $scope.myTree.setItemImage(array[i], "text.gif");
+                    }else if($scope.myTree.getUserData(array[i],"type_state")==1){
+                        $scope.myTree.setItemImage(array[i], "graph.gif");
                     }
                 }
                 if(refreshLoding){
