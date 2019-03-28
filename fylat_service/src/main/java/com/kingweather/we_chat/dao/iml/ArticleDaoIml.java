@@ -560,56 +560,58 @@ public class ArticleDaoIml implements ArticleDao {
         list.addAll(nogzmapList);
 
         resultMap.put("articleType", list);
-        String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
-                user_id +
-                "' ) AND (BINARY article_title LIKE '%" +
-                message +
-                "%' OR BINARY article_keyword LIKE '%" +
-                message +
-                "%' OR BINARY author LIKE '%" +
-                message +
-                "%' OR BINARY source LIKE '%" +
-                message +
-                "%' OR BINARY content_crawl LIKE '%" +
-                message +
-                "%'" +
-                "OR BINARY content_manual LIKE '%" +
-                message +
-                "%' OR BINARY content_excerpt LIKE '%" +
-                message +
-                "%' "+
-                " OR binary posting_name LIKE '%" +
-                message +
-                "%' OR BINARY article_title_e LIKE '%" +
-                message +
-                "%'"+
-                " OR BINARY content_excerpt_e LIKE '%" +
-                message +
-                "%' OR BINARY article_keyword_e LIKE '%" +
-                message +
-                "%' "
-                +
-                " OR BINARY reference LIKE '%" +
-                message +
-                "%' OR BINARY site_number LIKE '%" +
-                message +
-                "%')"
-                ;
+//        String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                user_id +
+//                "' ) AND (BINARY article_title LIKE '%" +
+//                message +
+//                "%' OR BINARY article_keyword LIKE '%" +
+//                message +
+//                "%' OR BINARY author LIKE '%" +
+//                message +
+//                "%' OR BINARY source LIKE '%" +
+//                message +
+//                "%' OR BINARY content_crawl LIKE '%" +
+//                message +
+//                "%'" +
+//                "OR BINARY content_manual LIKE '%" +
+//                message +
+//                "%' OR BINARY content_excerpt LIKE '%" +
+//                message +
+//                "%' "+
+//                " OR binary posting_name LIKE '%" +
+//                message +
+//                "%' OR BINARY article_title_e LIKE '%" +
+//                message +
+//                "%'"+
+//                " OR BINARY content_excerpt_e LIKE '%" +
+//                message +
+//                "%' OR BINARY article_keyword_e LIKE '%" +
+//                message +
+//                "%' "
+//                +
+//                " OR BINARY reference LIKE '%" +
+//                message +
+//                "%' OR BINARY site_number LIKE '%" +
+//                message +
+//                "%')"
+//                ;
+//
+//        Map<String, Object> map = jdbcTemplate.queryForMap(gzArticleSqlCount);
+//        Object objCount = map.get("count");
+//        int count = 0;
+//        if (objCount != null) {
+//            count = Integer.parseInt(objCount.toString());
+//        }
 
-        Map<String, Object> map = jdbcTemplate.queryForMap(gzArticleSqlCount);
-        Object objCount = map.get("count");
-        int count = 0;
-        if (objCount != null) {
-            count = Integer.parseInt(objCount.toString());
-        }
 
-
-        if (count > 0 && pageSize * page <= count || count < 10) {
+//        if (count > 0 && pageSize * page <= count || count < 10) {
 
             String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
-                    "FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
-                    user_id +
-                    "' ) AND (BINARY article_title LIKE '%" +
+                    "FROM zz_wechat.article WHERE del_type !=1 " +
+//                    "and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                    user_id +
+//                    "' ) " +
+                    "AND (BINARY article_title LIKE '%" +
                     message +
                     "%' OR BINARY article_keyword LIKE '%" +
                     message +
@@ -653,20 +655,20 @@ public class ArticleDaoIml implements ArticleDao {
             }
 
             resultMap.put("loveArticle", gzArticleList);
-        }
+//        }
 
         if (resultMap.get("loveArticle") == null) {
 
-            List<Map<String, Object>> gzArticleList = new ArrayList<>();
+             gzArticleList = new ArrayList<>();
             resultMap.put("loveArticle", gzArticleList);
         }
 
 
-        if (count < 10 || pageSize * page > count) {
-            count = (pageSize * page - count) / pageSize;
-            if (count < 0) {
-                count = 0;
-            }
+//        if (count < 10 || pageSize * page > count) {
+//            count = (pageSize * page - count) / pageSize;
+//            if (count < 0) {
+//                count = 0;
+//            }
 
 
 //            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id NOT in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
@@ -691,56 +693,56 @@ public class ArticleDaoIml implements ArticleDao {
 //                    "," +
 //                    pageSize;
 
-
-            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
-                    user_id +
-                    "' ) AND (BINARY article_title LIKE '%" +
-                    message +
-                    "%' OR BINARY article_keyword LIKE '%" +
-                    message +
-                    "%' OR BINARY author LIKE '%" +
-                    message +
-                    "%' OR BINARY source LIKE '%" +
-                    message +
-                    "%' OR BINARY content_crawl LIKE '%" +
-                    message +
-                    "%'" +
-                    "OR BINARY content_manual LIKE '%" +
-                    message +
-                    "%' OR BINARY content_excerpt LIKE '%" +
-                    message +
-                    "%'" +
-                    "OR BINARY posting_name LIKE '%" +
-                    message +
-                    "%' OR BINARY article_title_e LIKE '%" +
-                    message +
-                    "%'"+
-                    "OR BINARY content_excerpt_e LIKE '%" +
-                    message +
-                    "%' OR BINARY article_keyword_e LIKE '%" +
-                    message +
-                    "%'"
-                    +
-                    "OR BINARY reference LIKE '%" +
-                    message +
-                    "%' OR BINARY site_number LIKE '%" +
-                    message +
-                    "%'"+
-                    ") ORDER BY create_time desc LIMIT " +
-                    page * pageSize +
-                    "," +
-                    pageSize;
-            List<Map<String, Object>> nogzArticleList = jdbcTemplate.queryForList(nogzArticleSql);
-            if (nogzArticleList == null) {
-                nogzArticleList = new ArrayList<>();
-            }
-
-            resultMap.put("notLoveArticle", nogzArticleList);
-        }
+//
+//            String nogzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
+//                    user_id +
+//                    "' ) AND (BINARY article_title LIKE '%" +
+//                    message +
+//                    "%' OR BINARY article_keyword LIKE '%" +
+//                    message +
+//                    "%' OR BINARY author LIKE '%" +
+//                    message +
+//                    "%' OR BINARY source LIKE '%" +
+//                    message +
+//                    "%' OR BINARY content_crawl LIKE '%" +
+//                    message +
+//                    "%'" +
+//                    "OR BINARY content_manual LIKE '%" +
+//                    message +
+//                    "%' OR BINARY content_excerpt LIKE '%" +
+//                    message +
+//                    "%'" +
+//                    "OR BINARY posting_name LIKE '%" +
+//                    message +
+//                    "%' OR BINARY article_title_e LIKE '%" +
+//                    message +
+//                    "%'"+
+//                    "OR BINARY content_excerpt_e LIKE '%" +
+//                    message +
+//                    "%' OR BINARY article_keyword_e LIKE '%" +
+//                    message +
+//                    "%'"
+//                    +
+//                    "OR BINARY reference LIKE '%" +
+//                    message +
+//                    "%' OR BINARY site_number LIKE '%" +
+//                    message +
+//                    "%'"+
+//                    ") ORDER BY create_time desc LIMIT " +
+//                    page * pageSize +
+//                    "," +
+//                    pageSize;
+//            List<Map<String, Object>> nogzArticleList = jdbcTemplate.queryForList(nogzArticleSql);
+//            if (nogzArticleList == null) {
+//                nogzArticleList = new ArrayList<>();
+//            }
+//
+//            resultMap.put("notLoveArticle", nogzArticleList);
+//        }
 
 
         if (resultMap.get("notLoveArticle") == null) {
-            List<Map<String, Object>> gzArticleList = new ArrayList<>();
+             gzArticleList = new ArrayList<>();
             resultMap.put("notLoveArticle", gzArticleList);
         }
 
