@@ -1,10 +1,14 @@
 app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         var editor;
+        $scope.name=$stateParams.name;
+        $scope.userId=$stateParams.userId;
         $scope.listObj = {
             navigationMsg: '管理平台 >编辑',
             seachMessage: '',
             parent_id: null,
+            userId:$stateParams.userId,
+            name:$stateParams.name,
             defaultSearchParams: {
                 view: 'select',
                 state:'0',
@@ -27,7 +31,8 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
                 layer.msg('至少勾选一个节点');
                 return;
             }
-            $scope.saveUserAndAuth();
+            layer.msg($scope.name+$scope.userId);
+            // $scope.saveUserAndAuth();
 
         }
         $scope.removeAuth=function () {

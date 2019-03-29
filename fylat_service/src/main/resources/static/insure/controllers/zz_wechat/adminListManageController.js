@@ -41,7 +41,7 @@ app.controller('adminListManageController', ['$scope', '$modal', '$http', 'fylat
                     {
                         title: '编号',
                         class: 'col-md-1',
-                        field: 'id',
+                        field: 'userId',
                         align: 'center',
                         width: "6%"
                     }, {
@@ -85,9 +85,9 @@ app.controller('adminListManageController', ['$scope', '$modal', '$http', 'fylat
                         events: {
                             'click .a-edit': function (e, value, row, index) {
                                 $state.go('app.insure.admin_edit', {
-                                    userId: row.id,
+                                    userId: row.userId,
                                     name:row.name});
-                                $scope.testInstance.bootstrapTable('refresh');
+                                // $scope.testInstance.bootstrapTable('refresh');
                                 // modalTip({
                                 //     tip: '开发中',
                                 //     type: false
@@ -100,7 +100,7 @@ app.controller('adminListManageController', ['$scope', '$modal', '$http', 'fylat
                                         url: 'webSysUser/removeUser/rest',
                                         params: {
                                             view: 'delete',
-                                            list: row.id
+                                            list: row.userId
                                         }
                                     }).success(function (data) {
                                         if (data.code == 0) {
