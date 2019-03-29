@@ -26,18 +26,18 @@ public class ReleaseManagementController extends BaseController {
 
     /**
      * 得到算法返回的类型树状
-     *
+     * delType 1 查询未删除 0 删除
      * @return
      */
     @RequestMapping(value = "/getTypeMenuTree/rest")
-    public Object getTypeMenuTree(String type) {
+    public Object getTypeMenuTree(String type,String delType) {
 
         if (type == null || "".equals(type)) {
             type = "0";
         }
         Map map = new HashMap();
         try {
-            List list = releaseManagementService.getTypeMenuTree(type);
+            List list = releaseManagementService.getTypeMenuTree(type,delType);
             map.put("id", 0);
             List<Map> listResult = new ArrayList<>();
             listResult.add(0, map);
@@ -445,22 +445,39 @@ public class ReleaseManagementController extends BaseController {
     }
 
 
-//    /**
-//     * 根据文章类型id，获取文章或者论文
-//     *
-//     * @param data
-//     * @return
-//     */
-//
-//    @RequestMapping(value = "/getWxArticleList/rest", method = RequestMethod.POST)
-//    @Transactional
-//    public Map getWxArticleList(@RequestBody Map<String, Object> data ) {
-//        try {
-//            return releaseManagementService.getWxArticleList(data);
-//        } catch (Exception e) {
-//            return getErrorMapService();
-//        }
-//    }
+    /**
+     * 删除回收站
+     *
+     * @param type 0 所有的 1关键词  2 已发布的文章  3 已发布的论文  4 未发布的文章 5 未发布的论文 6类型
+     * @return
+     */
+
+    @RequestMapping(value = "/delAllRecycle/rest", method = RequestMethod.GET)
+    @Transactional
+    public Map delAllRecycle(String type) {
+        try {
+            return releaseManagementService.delAllRecycle(type);
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
+    }
+
+
+    /**
+     *获取删除的类型
+     * @param
+     * @return
+     */
+
+    @RequestMapping(value = "/getDelArticleType/rest", method = RequestMethod.POST)
+    @Transactional
+    public Map getDelArticleType(@RequestParam  Map<String,Object> data ) {
+        try {
+            return releaseManagementService.getDelArticleType(data);
+        } catch (Exception e) {
+            return getErrorMapService();
+        }
+    }
 
     /**
      * 传参错误

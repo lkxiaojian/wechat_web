@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReleaseManagementDao {
-    List<Map> getTypeMenuTree(String s,String type);
+    List<Map> getTypeMenuTree(String s,String type,String delType);
 
     Map getTypeMessage(String article_type_id,String type);
 
@@ -47,5 +47,8 @@ public interface ReleaseManagementDao {
 
     String getArticleNameById(String id1);
 
-    Map getWxArticleList(Map<String, java.lang.Object> data);
+
+    Map delAllRecycle(String type);
+
+    Map getDelArticleType(Map<String, java.lang.Object> data);
 }

@@ -1506,6 +1506,14 @@ public class ArticleDaoIml implements ArticleDao {
         String sql = "update zz_wechat.keyword set del_type=0 where id in(" + idList + ")";
         if ("1".equals(type)) {
             sql = "update zz_wechat.article set del_type=0 where article_id in(" + idList + ")";
+        }else if("2".equals(type)){
+            sql = "update zz_wechat.article_tmp set del_type=0 where article_id in(" + idList + ")";
+        }else if("3".equals(type)){
+            sql = "update zz_wechat.academic_paper set del_type=0 where article_id in(" + idList + ")";
+        }else if("4".equals(type)){
+            String  sqltmp = "update zz_wechat.article_type_tmp set del_type=0 where article_type_id in(" + idList + ")";
+            sql = "update zz_wechat.article_type set del_type=0 where article_type_id in(" + idList + ")";
+            jdbcTemplate.update(sqltmp);
         }
 
         jdbcTemplate.update(sql);

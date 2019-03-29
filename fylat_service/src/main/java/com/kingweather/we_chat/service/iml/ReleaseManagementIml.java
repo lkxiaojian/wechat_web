@@ -24,15 +24,15 @@ public class ReleaseManagementIml implements ReleaseManagementService {
 
 
     @Override
-    public List getTypeMenuTree(String type) {
+    public List getTypeMenuTree(String type,String delType) {
         String parentId="-1";
         if("2".equals(type)){
             parentId="-2";
         }
 
-        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type);
+        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type,delType);
         for (Map s : list) {
-            List childrenList = getMenuTreeChildren(s.get("id").toString(), type);
+            List childrenList = getMenuTreeChildren(s.get("id").toString(), type,delType);
             if (childrenList != null) {
                 s.put("item", childrenList);
             }
@@ -170,17 +170,24 @@ public class ReleaseManagementIml implements ReleaseManagementService {
         return releaseManagementDao.pushArticleType(typeId, type);
     }
 
+
+
     @Override
-    public Map getWxArticleList(Map<String, Object> data) {
-        return releaseManagementDao.getWxArticleList(data);
+    public Map delAllRecycle( String type) {
+        return releaseManagementDao.delAllRecycle(type);
+    }
+
+    @Override
+    public Map getDelArticleType(Map<String,Object> data) {
+        return releaseManagementDao.getDelArticleType(data);
     }
 
 
-    private List getMenuTreeChildren(String parentId, String type) {
+    private List getMenuTreeChildren(String parentId, String type,String delType) {
 
-        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type);
+        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type,delType);
         for (Map s : list) {
-            List childrenList = getMenuTreeChildren(s.get("id").toString(), type);
+            List childrenList = getMenuTreeChildren(s.get("id").toString(), type,delType);
             if (childrenList != null) {
                 s.put("item", childrenList);
             }
