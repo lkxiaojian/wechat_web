@@ -70,9 +70,9 @@ public class StatisticsDaoIml implements StatisticsDao {
 
             sql.append("  	SELECT COUNT(s.count_num) num FROM (	     ");
             sql.append("  	SELECT a.article_id,a.count_num,a.dispose_time  	     ");
-            sql.append("  	FROM statistics_info a,article_type c,article d 	     ");
+            sql.append("  	FROM statistics_info a,keyword c,article d 	     ");
             sql.append("  	WHERE count_num IS NOT  NULL	     ");
-            sql.append("  	AND c.article_type_id = a.article_type 	     ");
+            sql.append("  	AND c.id = a.article_type 	     ");
             sql.append("  	AND a.article_id = d.article_id 	     ");
             sql.append("  	AND a.dispose_time BETWEEN ? AND ?  	     ");
             parameterList.add(startTime);
@@ -82,7 +82,7 @@ public class StatisticsDaoIml implements StatisticsDao {
                 sql.append("  and a.article_type = ?  	 ");
                 parameterList.add(articleType);
             }
-            sql.append("  	AND c.parentid IN (SELECT w.article_type_id  FROM article_type w WHERE w.parentid= ? )	     ");
+            sql.append("  	AND c.id IN (SELECT w.article_type_id  FROM article_type w WHERE w.parentid= ? )	     ");
             parameterList.add(parentid);
             sql.append("  	AND c.del_type=0 	     ");
             if(statisticsType!=null&&!"".equals(statisticsType)){
@@ -179,7 +179,7 @@ public class StatisticsDaoIml implements StatisticsDao {
         }
 
         if(articleTitle!=null&&!"".equals(articleTitle)){
-            sql.append("  and a.articleTitle like ?  	 ");
+            sql.append("  and a.article_title like ?  	 ");
             parameterList.add("%"+articleTitle+"%");
         }
 
