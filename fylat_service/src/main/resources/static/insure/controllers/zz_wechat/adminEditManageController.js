@@ -165,10 +165,10 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
                 }
             });
             // // 设置允许动态加载xml文件（异步加载）
-            $scope.myTree.setXMLAutoLoading("releaseManagement/getTypeMenuTree/rest?type=1");
+            $scope.myTree.setXMLAutoLoading("userMenu/getMenuTree/rest");
             $scope.myTree.setDataMode("json");
 
-            $scope.myTree.loadJSON('releaseManagement/getTypeMenuTree/rest?type=1', function (data) {
+            $scope.myTree.loadJSON('userMenu/getMenuTree/rest', function (data) {
                 $scope.myTree.openAllItems();
 
             });
