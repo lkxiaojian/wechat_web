@@ -133,8 +133,8 @@ public class StatisticsDaoIml implements StatisticsDao {
         String endTime =   info.get("endTime")==null?"":info.get("endTime").toString();
         String userId =   info.get("userId")==null?"":info.get("userId").toString();
         String articleType =  info.get("articleType")==null?"":info.get("articleType").toString();
-        String page =   info.get("page")==null?"":info.get("page").toString();
-        String size =   info.get("size")==null?"":info.get("size").toString();
+        String page =   info.get("pageNumber")==null?"":info.get("pageNumber").toString();
+        String size =   info.get("pageSize")==null?"":info.get("pageSize").toString();
         String hour =   info.get("hour")==null?"":info.get("hour").toString();
         String state =   info.get("state")==null?"":info.get("state").toString();
         String articleTitle =   info.get("articleTitle")==null?"":info.get("articleTitle").toString();
