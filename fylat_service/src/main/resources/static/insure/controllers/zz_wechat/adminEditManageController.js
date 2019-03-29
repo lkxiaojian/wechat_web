@@ -41,17 +41,17 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
             }).success(function (data) {
                 if (data.code == 0) {
                     var datas=data.data;
-                    var authStr='';
+                    var authStr=',';
                     for (temp in datas){
                         var tempStr=datas[temp];
-                        if(authStr.indexOf(tempStr.menuId)<0){
+                        if(authStr.indexOf(','+tempStr.menuId+',')<0){
                             authStr=authStr+tempStr.menuId+',';
                         }
-                        if(authStr.indexOf(tempStr.parentId)<0){
+                        if(authStr.indexOf(','+tempStr.parentId+',')<0){
                             authStr=authStr+tempStr.parentId+',';
                         }
                     }
-                    authStr=authStr.substr(0,authStr.length-1);
+                    authStr=authStr.substr(1,authStr.length-1);
                     var auth=authStr.split(',');
                     var userId=$scope.listObj.userId;
 
@@ -189,21 +189,21 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
             }).success(function (data) {
                 if (data.code == 0) {
                     var datas=data.data;
-                    var authStr='';
+                    var authStr=',';
                     for (temp in datas){
                         var tempStr=datas[temp];
-                        if(authStr.indexOf(tempStr.menuId)<0){
+                        if(authStr.indexOf(','+tempStr.menuId+',')<0){
                             authStr=authStr+tempStr.menuId+',';
                         }
-                        if(authStr.indexOf(tempStr.parentId)<0){
+                        if(authStr.indexOf(','+tempStr.parentId+',')<0){
                             authStr=authStr+tempStr.parentId+',';
                         }
                     }
-                    authStr=authStr.substr(0,authStr.length-1);
+                    authStr=authStr.substr(1,authStr.length-1);
                     var auth=authStr.split(',');
+
                     for(i in auth){
-                        var a= $scope.myTree._globalIdStorageFind(auth[i],0,1);
-                        layer.msg(a)
+                        $scope.myTree.selectItem(auth[i], 0, 1);
                     }
                 } else {
                     layer.msg(data.message)
