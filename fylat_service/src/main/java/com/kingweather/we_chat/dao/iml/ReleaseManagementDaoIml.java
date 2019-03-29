@@ -1128,7 +1128,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             int update4 = jdbcTemplate.update(updateArticleSql);
             HashMap<String, Object> map = new HashMap<>();
             map.put("code", 0);
-            map.put("message", "更新成功！");
+            map.put("message", "删除成功！");
             return map;
         } catch (Exception e) {
             return getErrorMapService();
