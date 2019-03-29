@@ -435,6 +435,23 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
         sub_menu7.isLeaf = '1';
         menu.submenus.push(sub_menu7);
         menus.push(menu);
+        
+        var menuAdmin = {};
+        menuAdmin.icon = 'icon-info';
+        menuAdmin.name = '权限管理';
+        menuAdmin.submenus = [];
+
+        var sub_menu = {};
+        sub_menu.name = '管理员';
+        sub_menu.href = 'app.insure.admin_list';
+        sub_menu.isLeaf = '1';
+        menuAdmin.submenus.push(sub_menu);
+        var sub_menu2 = {};
+        sub_menu2.name = '添加管理员';
+        sub_menu2.href = 'app.insure.admin_add';
+        sub_menu2.isLeaf = '1';
+        menuAdmin.submenus.push(sub_menu2);
+        menus.push(menuAdmin);
         //TODO 测试方便加的
 
         $scope.insure.menus = menus;

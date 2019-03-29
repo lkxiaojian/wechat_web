@@ -163,14 +163,18 @@ app.directive('tableDirective', ['$timeout',
                          */
                         var xData = barverticaldata.xData, featureSet = barverticaldata.featureSet,
                             legendSet = barverticaldata.legendSet;
-                        var yAxisLabelFormatter = barverticaldata.yAxisLabelFormatter;
+                        var title=barverticaldata.title;
+                        // var yAxisLabelFormatter = barverticaldata.yAxisLabelFormatter;
                         if (xData[0]) {
                             var option = echartsConfigService.barVerticalOption();
                             for (var k in legendSet) {
                                 option.legend.data.push(legendSet[k]);
                             }
+                            if (title){
+                                option.title.text=title;
+                            }
                             option.xAxis[0].data = xData;
-                            option.yAxis[0].axisLabel.formatter = yAxisLabelFormatter;
+                            // option.yAxis[0].axisLabel.formatter = yAxisLabelFormatter;
                             for (var f in featureSet) {
                                 option.series.push({
                                     name: legendSet[f],
@@ -190,7 +194,7 @@ app.directive('tableDirective', ['$timeout',
                                     }
                                 });
                             }
-                            areaEcharts = echarts.init(element[0]).setOption(option);
+                            barverticalEcharts = echarts.init(element[0]).setOption(option);
                         } else {
                             barverticalEcharts = echarts.init(element[0]).setOption({series: [{}]});
                         }

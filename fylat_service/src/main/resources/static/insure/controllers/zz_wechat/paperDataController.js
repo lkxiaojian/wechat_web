@@ -1,22 +1,25 @@
-app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
+app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         $scope.listObj = {
-            current_location: 'app.insure.paper_manage',
-            navigationMsg: '管理平台 >论文管理',
+            current_location: 'app.insure.paper_data',
+            navigationMsg: '管理平台 >论文统计',
             defaultSearchParams: {
                 view: 'select',
                 type:"1", //论文
                 del_type:"0", //非删除
-                tmp_type:"1" //正式发布的
+                tmp_type:"1", //正式发布的
+
+                hour:"10",
+                size:"10",
             },
         }
 
 
-        //论文列表
+        //文章列表
         $scope.listAritcle = function () {
 
             $scope.tableOption = {
-                url: 'releaseManagement/selectAricleTmpList/rest',
+                url: 'statistics/selStatisticsInfo/rest',
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
@@ -24,6 +27,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                     $.extend(params, $scope.listObj.defaultSearchParams);
                     return params;
                 },
+                message: $scope.listObj.seachMessage,
                 pageList: ['All'],
                 pageSize: 10,
                 onLoadSuccess: function (data) {
@@ -34,131 +38,282 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         });
                     }
                 },
-                columns: [{
-                  checkbox: true
-                    }, {
-                        title: '标题',
-                        class: 'col-md-1',
-                        field: 'article_title',
-                        align: 'center',
-                        titleTooltip: 'title',
-                        // width: "15%",
-                        cellStyle:{
-                                css:{
-                                    "min-width":"100px",
-                                    "max-width":"200px"
-                                }
+                columns: [ {
+                    title: '标题',
+                    class: 'col-md-1',
+                    field: 'articleTitle',
+                    align: 'center',
+                    titleTooltip: 'title',
+                    // width: "15%",
+                    cellStyle:{
+                        css:{
+                            "min-width":"100px",
+                            "max-width":"200px"
                         }
-                    }, {
-                        title: '所属分类',
-                        class: 'col-md-1',
-                        field: 'article_type_name',
-                        align: 'center'
-                    }, {
-                        title: '发表时间',
-                        class: 'col-md-1',
-                        field: 'create_time',
-                        align: 'center',
-                        width: "150px",
-                        formatter: function (value, row, index) {
-                            if (value) {
-                                return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
-                            }
-                            return '';
-                        }
-                    }, {
-                        title: '入库时间',
-                        class: 'col-md-1',
-                        field: 'update_time',
-                        align: 'center',
-                        width: "150px",
-                        formatter: function (value, row, index) {
-                            if (value) {
-                                return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
-                            }
-                            return '';
-                        }
+                    }
+                }, {
+                    title: '摘要',
+                    class: 'col-md-1',
+                    field: 'contentExcerpt',
+                    align: 'center',
+                    cellStyle:{
+                        css:{
+                            "min-width":"100px",
+                            "max-width":"200px"
+                        },
+                        classes:["overflow"]
+                    }
+                },  {
+                    title: '关键词',
+                    class: 'col-md-1',
+                    field: 'articleKeyword',
+                    align: 'center'
 
-                    }, {
-                        title: '关键词',
-                        class: 'col-md-1',
-                        field: 'article_keyword',
-                        align: 'center'
-
-                    }, {
-                        title: '摘要',
-                        class: 'col-md-1',
-                        field: 'content_excerpt',
-                        align: 'center',
-                        cellStyle:{
-                            css:{
-                                "min-width":"100px",
-                                "max-width":"200px"
-                            },
-                            classes:["overflow"]
+                },  {
+                    title: '入库时间',
+                    class: 'col-md-1',
+                    field: 'createTime',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
                         }
-                    }, {
-                        title: '来源',
-                        class: 'col-md-1',
-                        field: 'source',
-                        align: 'center',
-                        sortable: false
-                    }, {
-                        title: '作者',
-                        class: 'col-md-1',
-                        field: 'author',
-                        align: 'center'
+                        return '';
+                    }
 
-                    }, {
-                        title: '字数',
+                }, {
+                    title: '发表时间',
+                    class: 'col-md-1',
+                    field: 'createTime',
+                    align: 'center',
+                    width: "150px",
+                    formatter: function (value, row, index) {
+                        if (value) {
+                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
+                        }
+                        return '';
+                    }
+                },{
+                    title: '来源',
+                    class: 'col-md-1',
+                    field: 'source',
+                    align: 'center',
+                    sortable: false
+                }, {
+                    title: '作者',
+                    class: 'col-md-1',
+                    field: 'author',
+                    align: 'center'
+
+                }, {
+                    title: '字数',
+                    class: 'col-md-1',
+                    field: 'charNum',
+                    align: 'center',
+                    width: "100px"
+                },
+                    {
+                        title: '转发数',
                         class: 'col-md-1',
-                        field: 'word_count',
+                        field: 'num2',
                         align: 'center',
                         width: "100px"
-                    }, {
-                        title: '正文',
+                    },
+                    {
+                        title: '阅读数',
                         class: 'col-md-1',
-                        field: 'details_txt',
+                        field: 'num1',
                         align: 'center',
-                        cellStyle:{
-                            css:{
-                                "min-width":"100px",
-                                "max-width":"200px"
-                            },
-                            classes:["overflow"]
-                        }
-                    }, {
-                        title: '操作',
+                        width: "100px"
+                    },
+                    {
+                        title: '阅读进度',
                         class: 'col-md-1',
+                        field: 'num1',
                         align: 'center',
-                        width: '100px',
+                        width: "100px"
+                    },{
+                        title: '留存时间',
+                        class: 'col-md-1',
+                        field: 'num3',
+                        align: 'center',
+                        width: "100px",
                         formatter: function (value, row, index) {
-
-                            return '<a class="a-view a-blue" href="javascript:;">查看</a>&nbsp;' +
-                                '<a class="a-edit a-blue" href="javascript:;">修改</a>&nbsp;' +
-                                '<a class="a-delete a-red" href="javascript:;"> 删除</a>';
-                        },
-                        events: {
-                            'click .a-view': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {article_id: row.article_id,pre_location:$scope.listObj.current_location,operate_type:"view",article_type: "article"});
-                                // $scope.tableInstance.bootstrapTable('refresh');
-                            },
-                            'click .a-edit': function (e, value, row, index) {
-                                $state.go('app.insure.modify_article', {article_id: row.article_id,pre_location:$scope.listObj.current_location,operate_type:"edit",article_type: "article"});
-                                // $scope.tableInstance.bootstrapTable('refresh');
-                            },
-                            'click .a-delete': function (e, value, row, index) {
-                                deleteData(row.article_id);
+                            if (value) {
+                                return value+'ms';
                             }
+                            return '';
                         }
                     }
                 ]
             };
         }
         $scope.listAritcle();
+        $scope.yAxisLabelFormatter=function (value) {
+            return value+"次";
+        }
+        $scope.month = function(){
+            $scope.timeType='c';
+            $scope.getOptions();
+        }
+        $scope.week = function(){
+            $scope.timeType='w';
+            $scope.getOptions();
+        }
+        $scope.day = function(){
+            $scope.timeType='e';
+            $scope.getOptions();
+        }
+        $scope.hour = function(){
+            $scope.timeType='k';
+            $scope.getOptions();
+        }
+
+        $scope.getCurrentMonthFirst=function(){
+            var date=new Date();
+            date.setDate(1);
+            return $scope.setToday(date);
+        }
+// 获取当前月的最后一天
+        $scope.getCurrentMonthLast=function(){
+            var date=new Date();
+            var currentMonth=date.getMonth();
+            var nextMonth=++currentMonth;
+            var nextMonthFirstDay=new Date(date.getFullYear(),nextMonth,1);
+            var oneDay=1000*60*60*24;
+            return $scope.setToday(new Date(nextMonthFirstDay-oneDay));
+        }
+        /**
+         * 获取当天所在周的周一和周日的日期
+         * 返回 YYYY-MM-DD 格式时间
+         */
+        $scope.setToday =function(t) {
+            return t.getFullYear()+'-'+$scope.setT(t.getMonth() + 1)+'-'+$scope.setT(t.getDate());
+        }
+        $scope.setT =function(e) {
+            return 10>e ? '0'+e:e;
+
+        }
+        $scope.getWeekDayStart=function() {
+            var date1=new Date();
+            return $scope.setToday(new Date(date1.setDate(date1.getDate() - date1.getDay() + 1)));
+        }
+        $scope.getWeekDayEnd=function() {
+            var date2=new Date();
+            return $scope.setToday( new Date(date2.setDate(date2.getDate() + (7 - date2.getDay()))));
+        }
+        $scope.initDateAll=function () {
+            $("#startTime").val($scope.getCurrentMonthFirst());
+            $("#endTime").val($scope.getCurrentMonthLast());
+            $scope.timeType='e';//小时k  周w 天e 月c
+        }
+        $scope.initDateAll();
+        $scope.getOptions=function () {
+            $http({
+                method: 'GET',
+                url: 'statistics/getCharData/rest',
+                params: {
+                    state:1,
+                    type:$scope.timeType,
+                    statisticsType:1,
+                    startTime:$("#startTime").val(),
+                    endTime:$("#endTime").val(),
+                },
+            }).success(function (data) {
+                if (data.code == 0) {
+                    var legend=[];
+                    var features=[];
+                    for(var f in data.Y){
+                        legend.push(data.Y[f].YName);
+                        features.push(data.Y[f].YData);
+                    }
+
+                    $scope.pieOption1 ={
+                        title:'阅读数',
+                        xData:data.X,
+                        legendSet:legend,
+                        featureSet :features,
+
+                    };
+                } else {
+                    layer.msg(data.message)
+                }
+            }).error(function (data) {
+                layer.alert("请求失败",{icon:2})
+            });
+            $http({
+                method: 'GET',
+                url: 'statistics/getCharData/rest',
+                params: {
+                    state:1,
+                    type:$scope.timeType,
+                    statisticsType:2,
+                    startTime:$("#startTime").val(),
+                    endTime:$("#endTime").val(),
+                },
+            }).success(function (data) {
+                if (data.code == 0) {
+                    var legend=[];
+                    var features=[];
+                    for(var f in data.Y){
+                        legend.push(data.Y[f].YName);
+                        features.push(data.Y[f].YData);
+                    }
+
+                    $scope.pieOption2 ={
+                        title:'转发数',
+                        xData:data.X,
+                        legendSet:legend,
+                        featureSet :features,
+
+                    };
+                } else {
+                    layer.msg(data.message)
+                }
+            }).error(function (data) {
+                layer.alert("请求失败",{icon:2})
+            });
+            $http({
+                method: 'GET',
+                url: 'statistics/getCharData/rest',
+                params: {
+                    state:1,
+                    type:$scope.timeType,
+                    statisticsType:3,
+                    startTime:$("#startTime").val(),
+                    endTime:$("#endTime").val(),
+                },
+            }).success(function (data) {
+                if (data.code == 0) {
+                    var legend=[];
+                    var features=[];
+                    for(var f in data.Y){
+                        legend.push(data.Y[f].YName);
+                        features.push(data.Y[f].YData);
+                    }
+
+                    $scope.pieOption3 ={
+                        title:'停留时间',
+                        xData:data.X,
+                        legendSet:legend,
+                        featureSet :features,
+
+                    };
+                } else {
+                    layer.msg(data.message)
+                }
+            }).error(function (data) {
+                layer.alert("请求失败",{icon:2})
+            });
+        }
+
+
+        $scope.getOptions();
+
         $scope.query = function(){
-            if(!$("#article_type_id").val()){
-                layer.msg("论文类型不能为空");
+            if(!$("#article_type").val()){
+                layer.msg("文章类型不能为空");
                 return;
             }
             $scope.tableInstance.bootstrapTable('refresh');
@@ -169,72 +324,16 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                     $(n).val('');
                 });
         }
+
+
+
         $scope.checkAll = function(){
             $scope.tableInstance.bootstrapTable('checkAll');
         }
         $scope.uncheckAll = function(){
             $scope.tableInstance.bootstrapTable('uncheckAll');
         }
-        $scope.batchDownload = function(){
-            var array = $scope.tableInstance.bootstrapTable('getSelections');
-            if(!array || array.length == 0){
-                modalTip({
-                    tip: "请至少勾选一条数据",
-                    type: true
-                });
-                return;
-            }
-            for(var i = 0;i<array.length;i++){
 
-            }
-        }
-        $scope.batchDelete = function(){
-            var array = $scope.tableInstance.bootstrapTable('getSelections');
-            if(!array || array.length == 0){
-                modalTip({
-                    tip: "请至少勾选一条数据",
-                    type: true
-                });
-                return;
-            }
-            var ids = "";
-            for(var i = 0;i<array.length;i++){
-                ids += array[i].article_id;
-                ids += ",";
-            }
-            deleteData(ids);
-        }
-
-        function deleteData(rowIds){
-            if (confirm(switchLang.switchLang('确认删除勾选的数据吗？'))) {
-                $http({
-                    method: 'GET',
-                    url: 'releaseManagement/delAricleTmpList/rest',
-                    params: {
-                        articleIdList: rowIds
-                    }
-                }).success(function (data) {
-                    if (data.code == 0) {
-                        modalTip({
-                            tip: data.message,
-                            type: true
-                        });
-                        $scope.tableInstance.bootstrapTable('refresh');
-                    } else {
-                        modalTip({
-                            tip: data.message,
-                            type: false
-                        });
-                    }
-
-                }).error(function (data) {
-                    modalTip({
-                        tip: "删除失败",
-                        type: false
-                    });
-                })
-            }
-        }
 
         //获取所有已发布的类型
         $scope.getAllPublishedType = function(){

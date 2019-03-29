@@ -458,6 +458,61 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
+        .state('app.insure.admin_list', {
+            url: '/adminList',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/adminList.html',
+            pageTitle: '管理员',
+            controller: 'adminListManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/adminListManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.admin_edit', {
+            url: '/adminEdit',
+            params: {userId: null, name: null},
+            templateUrl: 'insure/template/zz_wechat/adminEdit.html',
+            pageTitle: '编辑管理员',
+            controller: 'adminEditManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/adminEditManageController.js',
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css'
+                        ]);
+                    }]
+            }
+        })
+        .state('app.insure.admin_add', {
+            url: '/adminAdd',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/adminAdd.html',
+            pageTitle: '添加管理员',
+            controller: 'adminAddManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/adminAddManageController.js',
+                            'ui.select',
+                            'vendor/dhtmlx/dhtmlx.js',
+                            'vendor/dhtmlx/dhtmlx.css',
+                        ]);
+                    }]
+            }
+        })
 
         .state('app.insure.recycle_manage', {
             url: '/recycleManage',
