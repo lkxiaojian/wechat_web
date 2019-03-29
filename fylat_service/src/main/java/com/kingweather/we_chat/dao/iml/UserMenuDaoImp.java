@@ -20,7 +20,7 @@ public class UserMenuDaoImp implements UserMenuDao {
     @Override
     public List getMenuTree(String parentId) {
 
-        String sql = "SELECT menu_id id ,menu_name lobel,parent_id parentid FROM sys_menu WHERE parent_id = ? AND status =1 ";
+        String sql = "SELECT menu_id id ,menu_name text,parent_id parentid FROM sys_menu WHERE parent_id = ? AND status =1 ";
 
         List list = jdbcTemplate.queryForList(sql,new Object[]{parentId});
         return list;

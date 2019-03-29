@@ -105,6 +105,7 @@ public class WebSysUserDaoIml implements WebSysUserDao {
         List list = new ArrayList();
 
         sql.append("  	SELECT 	 ");
+        sql.append("  	a.id userId, 	 ");
         sql.append("  	a.tel_phone telPhone, 	 ");
         sql.append("  	a.nick_name name, 	 ");
         sql.append("  	a.user_sex userSex, 	 ");
@@ -138,9 +139,9 @@ public class WebSysUserDaoIml implements WebSysUserDao {
         list.add(Integer.valueOf(size));
         sql.append("  	LIMIT ?, ? 	 ");
         List listData = jdbcTemplate.queryForList(sql.toString(),list.toArray());
-        map.put("data",listData);
+        map.put("result",listData);
 
-        map.put("num",Integer.valueOf( mapCount.get("num").toString() ));
+        map.put("total",Integer.valueOf( mapCount.get("num").toString() ));
         return map;
     }
 
