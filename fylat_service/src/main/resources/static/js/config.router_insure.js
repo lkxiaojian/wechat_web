@@ -477,7 +477,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         })
         .state('app.insure.admin_edit', {
             url: '/adminEdit',
-            params: {param: null, data: null},
+            params: {userId: null, name: null},
             templateUrl: 'insure/template/zz_wechat/adminEdit.html',
             pageTitle: '编辑管理员',
             controller: 'adminEditManageController',

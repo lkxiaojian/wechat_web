@@ -1,8 +1,6 @@
 app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         var editor;
-        $scope.name=$stateParams.name;
-        $scope.userId=$stateParams.userId;
         $scope.listObj = {
             navigationMsg: '管理平台 >编辑',
             seachMessage: '',
@@ -31,16 +29,14 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
                 layer.msg('至少勾选一个节点');
                 return;
             }
-            layer.msg($scope.name+$scope.userId);
-            // $scope.saveUserAndAuth();
-
+            $scope.removeAuth();
         }
         $scope.removeAuth=function () {
             $http({
                 method: 'GET',
                 url: 'userMenu/getUserMenu/rest',
                 params: {
-                    userId:$scope.userId,
+                    userId:$scope.listObj.userId,
                 },
             }).success(function (data) {
                 if (data.code == 0) {
@@ -48,16 +44,16 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
                     var authStr='';
                     for (temp in datas){
                         var tempStr=datas[temp];
-                        if(!authStr.contains(tempStr.menuId)){
+                        if(authStr.indexOf(tempStr.menuId)<0){
                             authStr=authStr+tempStr.menuId+',';
                         }
-                        if(!authStr.contains(tempStr.parentId)){
+                        if(authStr.indexOf(tempStr.parentId)<0){
                             authStr=authStr+tempStr.parentId+',';
                         }
                     }
                     authStr=authStr.substr(0,authStr.length-1);
                     var auth=authStr.split(',');
-                    var userId=$scope.userId;
+                    var userId=$scope.listObj.userId;
 
                     var list2='';
                     for (id in auth){
@@ -72,7 +68,7 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
                         },
                     }).success(function (data) {
                         if (data.code == 0) {
-                            layer.msg(data.message)
+                            $scope.saveUserAndAuth();
                         } else {
                             layer.msg(data.message)
                         }
@@ -95,7 +91,7 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
             }
             var auth=auth1.split(',');
 
-            var userId=$scope.userId;
+            var userId=$scope.listObj.userId;
 
             var list2='';
             for (id in auth){
@@ -110,7 +106,8 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
                 },
             }).success(function (data) {
                 if (data.code == 0) {
-                    layer.msg(data.message)
+                    layer.msg('保存成功')
+                    $state.go('app.insure.admin_list', {});
                 } else {
                     layer.msg(data.message)
                 }
@@ -182,6 +179,40 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
         };
 
         $scope.createTree();
+        $scope.getAllAuth=function(){
+            $http({
+                method: 'GET',
+                url: 'userMenu/getUserMenu/rest',
+                params: {
+                    userId:$scope.listObj.userId,
+                },
+            }).success(function (data) {
+                if (data.code == 0) {
+                    var datas=data.data;
+                    var authStr='';
+                    for (temp in datas){
+                        var tempStr=datas[temp];
+                        if(authStr.indexOf(tempStr.menuId)<0){
+                            authStr=authStr+tempStr.menuId+',';
+                        }
+                        if(authStr.indexOf(tempStr.parentId)<0){
+                            authStr=authStr+tempStr.parentId+',';
+                        }
+                    }
+                    authStr=authStr.substr(0,authStr.length-1);
+                    var auth=authStr.split(',');
+                    for(i in auth){
+                        var a= $scope.myTree._globalIdStorageFind(auth[i],0,1);
+                        layer.msg(a)
+                    }
+                } else {
+                    layer.msg(data.message)
+                }
+            }).error(function (data) {
+                layer.alert("请求失败",{icon:2})
+            });
+        };
+        $scope.getAllAuth();
 
     }])
 ;

@@ -99,6 +99,7 @@ app.controller('adminAddManageController', ['$scope', '$modal', '$http', 'fylatS
                     }).success(function (data) {
                         if (data.code == 0) {
                             layer.msg(data.message)
+                            $state.go('app.insure.admin_list', {});
                         } else {
                             layer.msg(data.message)
                         }

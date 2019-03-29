@@ -21,8 +21,8 @@
 
                     <div class="form-group form-inline">
                         <label class="control-label input-sm">用户名：</label>
-                        <input name="name" ng-model="name" class="form-control input-sm" disabled="disabled">
-                        <input type="hidden" ng-model="userId" >
+                        <input name="name" ng-model="listObj.name" class="form-control input-sm" value="{{listObj.name}}" disabled="disabled">
+                        <input type="hidden" ng-model="listObj.userId" value="{{listObj.userId}}">
                     </div>
                     <div class="form-group form-inline"  style="width: 500px;">
                         <a class="btn btn-info" ng-click="checkUserName()">保存</a>
