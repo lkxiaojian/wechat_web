@@ -1,0 +1,72 @@
+<!--头部导航信息-->
+<div class="modal-header">
+    <div class="btn pull-right m-t-n-xs m-l-n list-icon">
+        <a>
+            <i class="fa fa-mail-reply-all"></i>
+        </a>
+    </div>
+    <div style="margin: 0px 15px">
+        <h3 class="m-n font-thin h5">{{listObj.navigationMsg}} </h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box-header with-border">
+            <form class="navbar-form navbar-left" role="search" id = "queryForm">
+                <div class="search-con">
+                    <div class="form-group form-inline">
+                        <label class="control-label input-sm">期刊名称：</label>
+                        <input name="message" class="form-control input-sm" placeholder="请输入" ng-model="listObj.message">
+                    </div>
+                    <div class="form-group form-inline">
+                        <a class="btn btn-info" ng-click="query()">查询</a>
+                        <a class="btn btn-default" ng-click="reset()">清除</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="box-body">
+            <table table-directive tableoption="tableOption" instance="tableInstance" id="paperTb"
+                   style="height: 286px"></table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="addModal">
+    <div class="modal-dialog modal-lg" role="document" style = "width:800px;">
+        <div class="modal-content" style="height: 280px;">
+            <div class="modal-header" style = "background-color:#355da5;">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" style = "color:#FFFFFF;">添加图片</h4>
+            </div>
+            <form class="form-horizontal" role="form"  name="searchuserForm" style="padding-top: 15px;padding-right: 10px;">
+                <!--
+                                    <input type="hidden" class="form-control input-sm" ng-model="typeForm.parentid">
+                -->
+                <input type="hidden" class="form-control input-sm" ng-model="typeForm.posting_id">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">期刊图片:</label>
+                    <div class="col-sm-2">
+                        <div class="button" style="margin-top: 6.5px" ngf-select="" ngf-pattern="'image/*'"
+                             ngf-multiple="false" ng-model="typeForm.file">
+                            <span style="color:blue;text-underline: #1a9c39;">选择文件</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <img ngf-src="typeForm.file" class="img-responsive" style="max-width: 80px;max-height: 80px;"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10" style="text-align: right;padding-right: 50px;">
+                        <button class="btn btn-info" ng-click="save()">保存</button>
+                        <button class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

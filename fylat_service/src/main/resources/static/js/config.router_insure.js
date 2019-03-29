@@ -531,5 +531,22 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
-
+        .state('app.insure.posting_manage', {
+            url: '/postingManageController',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/postingManage.html',
+            pageTitle: '期刊名称管理',
+            controller: 'postingManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/postingManageController.js',
+                            'ui.select',
+                            'ngFileUpload'
+                        ]);
+                    }]
+            }
+        })
 }]);

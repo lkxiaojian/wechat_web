@@ -304,7 +304,7 @@ public class ReleaseManagementController extends BaseController {
      * @param data
      * @return
      */
-    @RequestMapping(value = "/getPostingList/rest", method = RequestMethod.POST)
+    @RequestMapping(value = "/getPostingList/rest")
     public Map<String, Object> getPostingList(@RequestBody Map<String, Object> data) {
         try {
             return releaseManagementService.getPostingList(data);
