@@ -179,8 +179,8 @@ public class StatisticsDaoIml implements StatisticsDao {
         }
 
         if(articleTitle!=null&&!"".equals(articleTitle)){
-            sql.append("  and a.articleTitle like '?%'  	 ");
-            parameterList.add(articleTitle);
+            sql.append("  and a.articleTitle like ?  	 ");
+            parameterList.add("%"+articleTitle+"%");
         }
 
         if(state!=null&&!"".equals(state)){
