@@ -42,7 +42,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                 columns: [ {
                         title: '标题',
                         class: 'col-md-1',
-                        field: 'article_title',
+                        field: 'articleTitle',
                         align: 'center',
                         titleTooltip: 'title',
                         // width: "15%",
@@ -67,13 +67,13 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                 },  {
                     title: '关键词',
                     class: 'col-md-1',
-                    field: 'article_keyword',
+                    field: 'articleKeyword',
                     align: 'center'
 
                 },  {
                     title: '入库时间',
                     class: 'col-md-1',
-                    field: 'update_time',
+                    field: 'createTime',
                     align: 'center',
                     width: "150px",
                     formatter: function (value, row, index) {
@@ -110,7 +110,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                     }, {
                         title: '字数',
                         class: 'col-md-1',
-                        field: 'word_count',
+                        field: 'wordCount',
                         align: 'center',
                         width: "100px"
                     },
@@ -225,14 +225,14 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                 if (data.code == 0) {
                     var legend=[];
                     var features=[];
-                    for(var f in data.data.vals){
-                        legend.push(data.data.vals[f].name);
-                        features.push(data.data.vals[f].num);
+                    for(var f in data.Y){
+                        legend.push(data.Y[f].YName);
+                        features.push(data.Y[f].YData);
                     }
 
                     $scope.pieOption1 ={
                         title:'阅读数',
-                        xData:data.data.dates,
+                        xData:data.X,
                         legendSet:legend,
                         featureSet :features,
 
@@ -257,14 +257,14 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                 if (data.code == 0) {
                     var legend=[];
                     var features=[];
-                    for(var f in data.data.vals){
-                        legend.push(data.data.vals[f].name);
-                        features.push(data.data.vals[f].num);
+                    for(var f in data.Y){
+                        legend.push(data.Y[f].YName);
+                        features.push(data.Y[f].YData);
                     }
 
                     $scope.pieOption2 ={
                         title:'转发数',
-                        xData:data.data.dates,
+                        xData:data.X,
                         legendSet:legend,
                         featureSet :features,
 
@@ -289,14 +289,14 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                 if (data.code == 0) {
                     var legend=[];
                     var features=[];
-                    for(var f in data.data.vals){
-                        legend.push(data.data.vals[f].name);
-                        features.push(data.data.vals[f].num);
+                    for(var f in data.Y){
+                        legend.push(data.Y[f].YName);
+                        features.push(data.Y[f].YData);
                     }
 
                     $scope.pieOption3 ={
                         title:'停留时间',
-                        xData:data.data.dates,
+                        xData:data.X,
                         legendSet:legend,
                         featureSet :features,
 
