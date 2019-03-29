@@ -55,7 +55,7 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
                 }, {
                     title: '摘要',
                     class: 'col-md-1',
-                    field: 'content_excerpt',
+                    field: 'contentExcerpt',
                     align: 'center',
                     cellStyle:{
                         css:{
@@ -86,7 +86,7 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
                 }, {
                     title: '发表时间',
                     class: 'col-md-1',
-                    field: 'create_time',
+                    field: 'createTime',
                     align: 'center',
                     width: "150px",
                     formatter: function (value, row, index) {
@@ -110,7 +110,7 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
                 }, {
                     title: '字数',
                     class: 'col-md-1',
-                    field: 'wordCount',
+                    field: 'charNum',
                     align: 'center',
                     width: "100px"
                 },
@@ -128,14 +128,13 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
                         align: 'center',
                         width: "100px"
                     },
-                    // {
-                    //     title: '阅读进度',
-                    //     class: 'col-md-1',
-                    //     field: 'num1',
-                    //     align: 'center',
-                    //     width: "100px"
-                    // },
                     {
+                        title: '阅读进度',
+                        class: 'col-md-1',
+                        field: 'num1',
+                        align: 'center',
+                        width: "100px"
+                    },{
                         title: '留存时间',
                         class: 'col-md-1',
                         field: 'num3',

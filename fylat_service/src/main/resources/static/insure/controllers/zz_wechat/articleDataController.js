@@ -55,7 +55,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                     }, {
                     title: '摘要',
                     class: 'col-md-1',
-                    field: 'content_excerpt',
+                    field: 'contentExcerpt',
                     align: 'center',
                     cellStyle:{
                         css:{
@@ -86,7 +86,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                 }, {
                         title: '发表时间',
                         class: 'col-md-1',
-                        field: 'create_time',
+                        field: 'createTime',
                         align: 'center',
                         width: "150px",
                         formatter: function (value, row, index) {
@@ -110,7 +110,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                     }, {
                         title: '字数',
                         class: 'col-md-1',
-                        field: 'wordCount',
+                        field: 'charNum',
                         align: 'center',
                         width: "100px"
                     },
