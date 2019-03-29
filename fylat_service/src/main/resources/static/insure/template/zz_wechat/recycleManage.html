@@ -50,30 +50,48 @@
                     <div class="form-group form-inline">
                         <a class="btn btn-info" ng-click="query()">查询</a>
                         <a class="btn btn-default" ng-click="reset()">清除</a>
+                        <a class="btn btn-danger" ng-click="clearRecycle()">清空回收站</a>
                     </div>
                 </div>
 
             </form>
         </div>
-
-        <div class="box-body">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
-                <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
-                <button type="button" class="btn btn-default btn-sm" ng-click="batchDownload()">批量下载</button>
-                <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
+        <div class="panel panel-default">
+            <div class="panel-body" style="font-weight: bolder;">类型</div>
+            <div class="panel-footer">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll(2)">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll(2)">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchRecover(2)">批量恢复</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete(2)">批量删除</button>
+                </div>
+                <table table-directive tableoption="typeOption" instance="typeInstance" style="height: 286px"></table>
             </div>
-            <table table-directive tableoption="articleOption" instance="articleInstance" style="height: 286px"></table>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body" style="font-weight: bolder;">微信文章</div>
+            <div class="panel-footer">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll(0)">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll(0)">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchRecover(0)">批量下载</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete(0)">批量删除</button>
+                </div>
+                <table table-directive tableoption="articleOption" instance="articleInstance" style="height: 286px"></table>
+            </div>
         </div>
 
-        <div class="box-body">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm" ng-click="checkAll()">全部选择</button>
-                <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll()">全部取消</button>
-                <button type="button" class="btn btn-default btn-sm" ng-click="batchDownload()">批量下载</button>
-                <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete()">批量删除</button>
+        <div class="panel panel-default">
+            <div class="panel-body" style="font-weight: bolder;">学术论文</div>
+            <div class="panel-footer">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-sm" ng-click="checkAll(1)">全部选择</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="uncheckAll(1)">全部取消</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchRecover(1)">批量恢复</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-click="batchDelete(1)">批量删除</button>
+                </div>
+                <table table-directive tableoption="paperOption" instance="paperInstance" style="height: 286px"></table>
             </div>
-            <table table-directive tableoption="paperOption" instance="paperInstance" style="height: 286px"></table>
         </div>
     </div>
 </div>
