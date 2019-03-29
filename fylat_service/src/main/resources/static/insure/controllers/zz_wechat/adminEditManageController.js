@@ -51,7 +51,7 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
                             authStr=authStr+tempStr.parentId+',';
                         }
                     }
-                    authStr=authStr.substr(1,authStr.length-1);
+                    authStr=authStr.substr(1,authStr.length-2);
                     var auth=authStr.split(',');
                     var userId=$scope.listObj.userId;
 
@@ -172,7 +172,7 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
 
             $scope.myTree.loadJSON('userMenu/getMenuTree/rest', function (data) {
                 $scope.myTree.openAllItems();
-
+                $scope.getAllAuth();
             });
 
             $scope.typeForm = {}
@@ -189,21 +189,25 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
             }).success(function (data) {
                 if (data.code == 0) {
                     var datas=data.data;
+                    var authStrParent=',';
                     var authStr=',';
                     for (temp in datas){
                         var tempStr=datas[temp];
-                        if(authStr.indexOf(','+tempStr.menuId+',')<0){
+                        authStrParent=authStrParent+tempStr.parentId+',';
+
+                    }
+                    for (temp in datas){
+                        var tempStr=datas[temp];
+                        if(authStrParent.indexOf(','+tempStr.menuId+',')<0){
                             authStr=authStr+tempStr.menuId+',';
                         }
-                        if(authStr.indexOf(','+tempStr.parentId+',')<0){
-                            authStr=authStr+tempStr.parentId+',';
-                        }
+
                     }
-                    authStr=authStr.substr(1,authStr.length-1);
+                    authStr=authStr.substr(1,authStr.length-2);
                     var auth=authStr.split(',');
 
                     for(i in auth){
-                        $scope.myTree.selectItem(auth[i], 0, 1);
+                        $scope.myTree.setCheck(auth[i],true);
                     }
                 } else {
                     layer.msg(data.message)
@@ -212,7 +216,7 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
                 layer.alert("请求失败",{icon:2})
             });
         };
-        $scope.getAllAuth();
+
 
     }])
 ;

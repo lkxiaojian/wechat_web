@@ -6,13 +6,11 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
             defaultSearchParams: {
                 view: 'select',
                 type:"1", //论文
-                state:'1',//论文
                 del_type:"0", //非删除
                 tmp_type:"1", //正式发布的
 
                 hour:"10",
                 size:"10",
-                page:"1",
             },
         }
 
@@ -29,6 +27,7 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
                     $.extend(params, $scope.listObj.defaultSearchParams);
                     return params;
                 },
+                message: $scope.listObj.seachMessage,
                 pageList: ['All'],
                 pageSize: 10,
                 onLoadSuccess: function (data) {

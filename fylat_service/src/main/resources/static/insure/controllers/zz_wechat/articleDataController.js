@@ -5,7 +5,6 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
             navigationMsg: '管理平台 >文章统计',
             defaultSearchParams: {
                 view: 'select',
-                state:'0',
                 type:"0", //文章
                 tmp_type:"1", //正式发布的
                 hour:"10",
