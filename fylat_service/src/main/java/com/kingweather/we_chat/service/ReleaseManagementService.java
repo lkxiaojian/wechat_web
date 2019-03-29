@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReleaseManagementService {
-    List getTypeMenuTree(String type);
+    List getTypeMenuTree(String type,String delType);
 
     Map getTypeMessage(String article_type_id,String type);
 
@@ -43,5 +43,9 @@ public interface ReleaseManagementService {
 
     Map pushArticleType(String typeId,String type);
 
-    Map getWxArticleList(Map<String, Object> data);
+
+
+    Map delAllRecycle(String type);
+
+    Map getDelArticleType(Map<String,Object> data);
 }

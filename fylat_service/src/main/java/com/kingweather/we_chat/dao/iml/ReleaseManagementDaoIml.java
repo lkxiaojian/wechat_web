@@ -25,18 +25,22 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     private JdbcUtil jdbc;
 
     @Override
-    public List<Map> getTypeMenuTree(String parent_id, String type) {
+    public List<Map> getTypeMenuTree(String parent_id, String type,String delType) {
+     int del=1;//默认查询的是没有删除的文章
+        if("0".equals(delType)){
+            del=0;
+        }
 
-        String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+        String sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old,del_type from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
 
         if ("1".equals(type)) {
-            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state, issue  from zz_wechat.article_type where del_type!=? and parentid=?";
+            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state, issue  from zz_wechat.article_type,del_type where del_type!=? and parentid=?";
         } else if ("2".equals(type)) {
-            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
+            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old ,del_type from zz_wechat.article_type_tmp where del_type!=? and parentid=?";
 
         }
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
-                1, parent_id
+                del, parent_id
 
         });
         if (maps != null && !"1".equals(type)) {
@@ -48,7 +52,11 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 Map userdata2 = new HashMap();
                 userdata2.put("name", "type_state");
                 userdata2.put("content", map.get("type_state"));
-                map.put("userdata", Lists.newArrayList(userdata1,userdata2));
+//                map.put("userdata", Lists.newArrayList(userdata1,userdata2));
+                Map userdata3 = new HashMap();
+                userdata3.put("name", "del_type");
+                userdata3.put("content", map.get("del_type"));
+                map.put("userdata", Lists.newArrayList(userdata1,userdata2,userdata3));
             });
         }
 
@@ -1287,11 +1295,91 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         return map.get("article_type_name") == null ? "" : map.get("article_type_name").toString();
     }
 
+
+
+    /**
+     * 清空回收站
+     * @param type 0 全部 1关键词  2 已发布的文章  3 已发布的论文  4 未发布的文章 5 未发布的论文 6类型
+     * @return
+     */
     @Override
-    public Map getWxArticleList(Map<String, Object> data) {
+    public Map delAllRecycle( String type) {
+        if(type.isEmpty()){
+            return getErrorMap();
+        }
+
+        if("0".equals(type)){
+            delAllArticle();
+            delAllArticleTmp();
+            delAllAticleType();
+            delAllKeyword();
+            delAllPaper();
+            delAllPaperTmp();
+        } else if("1".equals(type)){
+            delAllKeyword();
+
+        } else if("2".equals(type)){
+            delAllArticle();
+
+        } else if("3".equals(type)){
+            delAllPaper();
+
+        } else if("4".equals(type)){
+            delAllArticleTmp();
+
+        } else if("5".equals(type)){
+
+            delAllPaperTmp();
+
+        } else if("6".equals(type)){
+            delAllAticleType();
+        }else {
+            return getErrorMap();
+        }
 
 
-        return null;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "删除成功！");
+        return map;
+    }
+
+    /**
+     * 获取删除的类型
+     * @return
+     */
+    @Override
+    public Map getDelArticleType(Map<String,Object> data) {
+        String tableName="zz_wechat.article_type";
+        Object type = data.get("type");
+        Object message = data.get("message");
+        Object startNum = data.get("pageNumber");
+        Object pageSize = data.get("pageSize");
+        if (startNum == null || pageSize == null) {
+            return getErrorMap();
+        }
+
+        if(type!=null&&"1".equals(type.toString())){
+            tableName="zz_wechat.article_type_tmp";
+        }
+
+        String sqlCount="select count(*) as count  from "+tableName +" where del_type=1 ";
+
+        String sqlResult="select * from "+tableName +" where del_type=1 ";
+        if(message!=null&&message.toString().length()>0){
+            sqlCount=sqlCount+" and article_type_name like '%"+message.toString() +"%'";
+            sqlResult=sqlResult+" and article_type_name like '%"+message.toString() +"%'";
+        }
+
+        sqlResult = sqlResult + " ORDER BY create_time desc";
+        Page<Map<String, Object>> page = jdbc.queryForPage(Integer.parseInt(startNum.toString()), Integer.parseInt(pageSize.toString()), sqlCount, sqlResult, new Object[]{});
+        Map<String,Object> map =new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "查询成功");
+        map.put("total", page.getTotalCount());
+        map.put("result", page.getResult());
+        return map;
+
     }
 
     /**
@@ -1319,7 +1407,11 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         return map;
     }
 
-
+    /**
+     * 格式转换
+     * @param bytes
+     * @return
+     */
     private String guessEncoding(byte[] bytes) {
         UniversalDetector detector = new UniversalDetector(null);
         detector.handleData(bytes, 0, bytes.length);
@@ -1337,6 +1429,78 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         }
 
         return "";
+    }
+
+    /**
+     * 删除全部回收站内容
+     * @return
+     */
+    private int delAllKeyword(){
+
+        String delSql=" DELETE FROM zz_wechat.keyword where del_type=1";
+        int update = jdbcTemplate.update(delSql);
+        return update;
+
+    }
+
+    /**
+     * 删除全部回收站内容
+     *
+     * @return
+     */
+    private int delAllArticle(){
+
+        String delSql=" DELETE FROM zz_wechat.article where del_type=1 AND state=0" ;
+        int update = jdbcTemplate.update(delSql);
+        return update;
+
+    }
+
+    /**
+     * 删除已发布的论文
+     * @return
+     */
+    private int delAllPaper(){
+        String delSql=" DELETE FROM zz_wechat.article where del_type=1 AND state=1" ;
+        int update = jdbcTemplate.update(delSql);
+        return update;
+
+    }
+
+    /**
+     * 删除未发布的文章
+     * @return
+     */
+    private int delAllArticleTmp(){
+
+        String delSql=" DELETE FROM zz_wechat.article_tmp where del_type=1" ;
+        int update = jdbcTemplate.update(delSql);
+        return update;
+
+    }
+
+    /**
+     * 删除未发布的论文
+     * @return
+     */
+    private int delAllPaperTmp(){
+        String delSql=" DELETE FROM zz_wechat.academic_paper where del_type=1" ;
+        int update = jdbcTemplate.update(delSql);
+        return update;
+
+    }
+
+    /**
+     * 删除类型
+     * @return
+     */
+    private int delAllAticleType(){
+        String delTmpSql=" DELETE FROM zz_wechat.article_type_tmp where del_type=1" ;
+        int update = jdbcTemplate.update(delTmpSql);
+        String delSql=" DELETE FROM zz_wechat.article_type where del_type=1" ;
+        int update1 = jdbcTemplate.update(delSql);
+        return update+update1;
+
     }
 
 
