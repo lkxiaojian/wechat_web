@@ -29,7 +29,7 @@ public class UserMenuServiceIml implements UserMenuService {
         for(Map s:list) {
             List childrenList = getMenuTreeChildren(s.get("id").toString());
             if(childrenList!=null){
-                s.put("children",childrenList);
+                s.put("item",childrenList);
             }
         }
         return list;
@@ -79,7 +79,7 @@ public class UserMenuServiceIml implements UserMenuService {
         for (Map s:list) {
             List childrenList = getMenuTreeChildren(s.get("id").toString());
             if(childrenList!=null){
-                s.put("children",childrenList);
+                s.put("item",childrenList);
             }
         }
         return list;

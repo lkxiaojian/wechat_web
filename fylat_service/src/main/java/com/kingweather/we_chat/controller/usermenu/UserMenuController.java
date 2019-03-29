@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,20 +27,27 @@ public class UserMenuController {
 
 
     @RequestMapping(value = "/getMenuTree/rest", method = {RequestMethod.POST, RequestMethod.GET})
-    public Map getMenuTree() {
+    public Object getMenuTree() {
 
         Map map = new HashMap();
         try {
             List list = userMenuServiceIml.getMenuTree();
-            map.put("code", 0);
-            map.put("message", "查询成功");
-            map.put("data", list);
-            return map;
+//            map.put("code", 0);
+//            map.put("message", "查询成功");
+//            map.put("data", list);
+//            return map;
+
+            map.put("id", 0);
+            List<Map> listResult = new ArrayList<>();
+            listResult.add(0, map);
+            map.put("item", list);
+            Object o = listResult.get(0);
+            return o;
         } catch (Exception e) {
             map.put("code", 2);
             map.put("message", "系统异常，请联系管理员！");
             e.printStackTrace();
-            return map;
+            return null;
         }
     }
 
