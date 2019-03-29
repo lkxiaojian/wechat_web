@@ -149,6 +149,11 @@ public class StatisticsDaoIml implements StatisticsDao {
         sql.append(" 	a.article_keyword articleKeyword,	  ");
         sql.append(" 	a.author author,	  ");
         sql.append(" 	a.create_time createTime,	  ");
+        sql.append(" 	a.content_excerpt contentExcerpt,	  ");
+        sql.append(" 	a.content_excerpt_e contentExcerptE ,	  ");
+        sql.append(" 	DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%S') updateTime,	  ");
+        sql.append(" 	a.details_txt detailsTxt,	  ");
+//        sql.append(" 	CHAR_LENGTH( a.details_txt) charNum,	  ");
         sql.append(" 	b.statistics_type statisticsType,	  ");
         sql.append(" 	a.source source,	  ");
 //        sql.append(" 	SUM(b.count_num) num	  ");
@@ -200,11 +205,18 @@ public class StatisticsDaoIml implements StatisticsDao {
         parameterList.add(Integer.valueOf(size));
         sql.append("  	LIMIT ?, ? 	 ");
 
-        List obj = jdbcTemplate.queryForList(sql.toString(),parameterList.toArray());
+        List<Map<String,Object>> obj = jdbcTemplate.queryForList(sql.toString(),parameterList.toArray());
+
+        for (Map m:obj ) {
+            byte[] bytts = (byte[]) m.get("detailsTxt");
+            String detailsTxt = new String(bytts,"utf-8");
+            m.put("charNum",detailsTxt.length());
+            m.put("detailsTxt",detailsTxt);
+        }
 
         Map map = new HashMap();
-        map.put("data",obj);
-        map.put("count",number.longValue());
+        map.put("result",obj);
+        map.put("total",number.longValue());
 
         return map;
     }
