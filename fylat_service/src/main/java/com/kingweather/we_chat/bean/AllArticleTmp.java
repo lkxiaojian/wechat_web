@@ -25,7 +25,7 @@ public class AllArticleTmp {
 
         private String article_type_id;
         private int is_paper;
-        private String parent_type_id;
+        private List<String> parent_type_id;
         private List<String> article_type_keyword;
 
         public String getArticle_type_id() {
@@ -44,11 +44,11 @@ public class AllArticleTmp {
             this.is_paper = is_paper;
         }
 
-        public String getParent_type_id() {
+        public List<String> getParent_type_id() {
             return parent_type_id;
         }
 
-        public void setParent_type_id(String parent_type_id) {
+        public void setParent_type_id(List<String> parent_type_id) {
             this.parent_type_id = parent_type_id;
         }
 

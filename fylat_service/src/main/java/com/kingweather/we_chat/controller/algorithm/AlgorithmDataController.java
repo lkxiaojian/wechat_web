@@ -9,6 +9,7 @@ import com.kingweather.we_chat.bean.ArticleTmp;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.mozilla.universalchardet.UniversalDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +40,16 @@ public class AlgorithmDataController extends BaseController {
     @RequestMapping(value = "/algorithm/wxdata", method = RequestMethod.POST)
     public int collectingAndShare(@RequestBody Map<String, Object> data) {
         String article_id = data.get("article_id").toString();
-        log.info("微信文章id----->"+article_id);
+        String simhash = data.get("simhash").toString();
+
+        log.info("微信文章id----->" + article_id);
         String exitArticle = "SELECT count(*) as count  from zz_wechat.article_tmp where article_id=?";
-        Map<String, Object> exitArticleMap =null;
+        Map<String, Object> exitArticleMap = null;
         try {
             exitArticleMap = jdbcTemplate.queryForMap(exitArticle, new Object[]{
                     article_id
             });
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
         if (exitArticleMap != null && exitArticleMap.get("count") != null && Integer.parseInt(exitArticleMap.get("count").toString()) != 0) {
@@ -71,13 +76,17 @@ public class AlgorithmDataController extends BaseController {
         String typeName = "";
         String articleKeyword = "";
         String parent_id = "";
+        //领域id
+        String domain_id="";
         if (typeList != null) {
             if (typeList.size() == 1) {
                 parent_id = "-2";
                 type_id = typeList.get(0);
+                domain_id=type_id;
             } else {
                 parent_id = typeList.get(typeList.size() - 2);
                 type_id = typeList.get(typeList.size() - 1);
+                domain_id=typeList.get(1);
             }
 
         } else {
@@ -134,8 +143,8 @@ public class AlgorithmDataController extends BaseController {
                 && !type_id.isEmpty() && !typeName.isEmpty() && !articleKeyword.isEmpty()) {
 
 
-            String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue,parentid_tmp) values " +
-                    "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?)";
+            String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue,parentid_tmp,domain_id) values " +
+                    "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?,?)";
             int update = jdbcTemplate.update(insertTypeSql, new Object[]{
                     type_id,
                     typeName,
@@ -148,13 +157,48 @@ public class AlgorithmDataController extends BaseController {
                     articleKeyword,
                     0,
                     0,
-                    parent_id
+                    parent_id,
+                    domain_id
             });
 
         }
+
+
+        //查重根据simhash
+        String simhashSql = "select simhash from zz_wechat.article_tmp where article_type_id=?";
+        List<Map<String, Object>> simhashList = new ArrayList<>();
+        try {
+            simhashList = jdbcTemplate.queryForList(simhashSql, new Object[]{
+                    type_id
+            });
+        } catch (Exception e) {
+
+        }
+
+        boolean isExit = false;
+        if (simhashList != null && simhashList.size() > 0) {
+
+            for (Map<String, Object> result : simhashList) {
+
+                String simhash1 = result.get("simhash").toString();
+                int i = twoStringXor(simhash1, simhash);
+                if (i <= 13) {
+                    isExit = true;
+                    break;
+                }
+
+
+            }
+        }
+        //文章重复了
+        if (isExit) {
+            return 3;
+        }
+
+
         String create_time = data.get("create_time").toString();
         String insertArticleSql = "insert into zz_wechat.article_tmp (article_id,article_type_id,article_title,article_keyword,author,source,content_excerpt,details_txt" +
-                ",details_div,details_size,create_time,update_time,status,check_type,article_score,del_type) values(?,?,?,?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?)";
+                ",details_div,details_size,create_time,update_time,status,check_type,article_score,del_type,simhash) values(?,?,?,?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?)";
         String div = data.get("article_div").toString();
 
         div = div.replaceAll("data-src=", "src=");
@@ -179,7 +223,8 @@ public class AlgorithmDataController extends BaseController {
                     0,
                     0,
                     0,
-                    0
+                    0,
+                    simhash
             });
 
         } catch (Exception e) {
@@ -202,12 +247,12 @@ public class AlgorithmDataController extends BaseController {
 
             String article_id = req.getParameter("article_id");
             String exitArticle = "SELECT count(*) as count  from zz_wechat.academic_paper where article_id=?";
-            Map<String, Object> exitArticleMap =null;
+            Map<String, Object> exitArticleMap = null;
             try {
-            exitArticleMap = jdbcTemplate.queryForMap(exitArticle, new Object[]{
+                exitArticleMap = jdbcTemplate.queryForMap(exitArticle, new Object[]{
                         article_id
                 });
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -352,8 +397,8 @@ public class AlgorithmDataController extends BaseController {
             //插入新的类型
             if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0
                     && !type_id.isEmpty() && !typeName.isEmpty() && !articleKeyword.isEmpty()) {
-                String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue) values " +
-                        "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?)";
+                String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue,domain_id) values " +
+                        "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?)";
                 int update = jdbcTemplate.update(insertTypeSql, new Object[]{
                         type_id,
                         typeName,
@@ -365,7 +410,8 @@ public class AlgorithmDataController extends BaseController {
                         typeName,
                         articleKeyword,
                         1,
-                        0
+                        0,
+                        parent_id
                 });
 
             }
@@ -410,5 +456,52 @@ public class AlgorithmDataController extends BaseController {
 
         return 0;
 
+    }
+
+
+    private int twoStringXor(String str1, String str2) {
+        byte b1[] = str1.getBytes();
+        byte b2[] = str2.getBytes();
+        byte longbytes[], shortbytes[];
+        if (b1.length >= b2.length) {
+            longbytes = b1;
+            shortbytes = b2;
+        } else {
+            longbytes = b2;
+            shortbytes = b1;
+        }
+        int value=0;
+        byte xorstr[] = new byte[longbytes.length];
+        int i = 0;
+        for (; i < shortbytes.length; i++) {
+            xorstr[i] = (byte) (shortbytes[i] ^ longbytes[i]);
+        }
+        for (; i < longbytes.length; i++) {
+            xorstr[i] = longbytes[i];
+        }
+
+
+//        String str = guessEncoding(xorstr);
+        return 14;
+    }
+
+
+    private String guessEncoding(byte[] bytes) {
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        if (null != encoding) {
+            try {
+                return new String(bytes, encoding);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            return new String(bytes);
+        }
+
+        return "";
     }
 }

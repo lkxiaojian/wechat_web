@@ -42,7 +42,19 @@ public class ArithmeticArticleTask {
 
 
                 String type_id = bean.getArticle_type_id();
-                String parent_id = bean.getParent_type_id();
+                List<String> parent_type_id = bean.getParent_type_id();
+                //父级id
+                String parent_id = "";
+                //领域id
+                String domain_id="";
+                if (parent_type_id.size() == 1) {
+                    parent_id = parent_type_id.get(0);
+                    domain_id=type_id;
+                }else if(parent_type_id.size()>1) {
+                    parent_id = parent_type_id.get(parent_type_id.size()-1);
+                    domain_id=parent_type_id.get(1);
+                }
+
                 String typeName = "";
                 if (bean.getArticle_type_keyword() != null) {
                     for (int i = 0; i < bean.getArticle_type_keyword().size(); i++) {
@@ -88,8 +100,8 @@ public class ArithmeticArticleTask {
                         && !type_id.isEmpty()) {
 
 
-                    String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue,parentid_tmp) values " +
-                            "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?)";
+                    String insertTypeSql = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,parentid,del_type,status,article_type_name_old,article_type_keyword_old,type_state,issue,parentid_tmp,domain_id) values " +
+                            "(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?,?)";
                     int update = jdbcTemplate.update(insertTypeSql, new Object[]{
                             type_id,
                             typeName,
@@ -103,49 +115,46 @@ public class ArithmeticArticleTask {
                             bean.getIs_paper()
                             ,
                             0,
-                            parent_id
+                            parent_id,
+                            domain_id
                     });
                     log.info("获取全部类型" + bean.toString());
-
                 }
 
 
             }
         }
+        log.info("获取全部类型完毕！！！！");
 
 
     }
 
 
-
-//    @Scheduled(cron ="0 0 21 ? * * ")
-    public void test(){
-        String sql="select pdf_path,article_id from academic_paper";
+    //    @Scheduled(cron ="0 0 21 ? * * ")
+    public void test() {
+        String sql = "select pdf_path,article_id from academic_paper";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
-for (Map<String,Object> map:maps){
+        for (Map<String, Object> map : maps) {
 
 
-    if(map.get("pdf_path")!=null){
-        String pdf_path = map.get("pdf_path").toString().replaceAll("/resourcespdf", "/resources/pdf");
-        String updateSql="update academic_paper set pdf_path=? where article_id=?";
-        int article_id = jdbcTemplate.update(updateSql, new Object[]{
-                pdf_path,
-                map.get("article_id")
-        });
+            if (map.get("pdf_path") != null) {
+                String pdf_path = map.get("pdf_path").toString().replaceAll("/resourcespdf", "/resources/pdf");
+                String updateSql = "update academic_paper set pdf_path=? where article_id=?";
+                int article_id = jdbcTemplate.update(updateSql, new Object[]{
+                        pdf_path,
+                        map.get("article_id")
+                });
 
-        log.info("更新字段--->"+article_id+"---"+pdf_path);
+                log.info("更新字段--->" + article_id + "---" + pdf_path);
 
-    }
+            }
 
-}
+        }
 
         log.info("更新完成");
 
 
-        }
-
-
-
+    }
 
 
 }
