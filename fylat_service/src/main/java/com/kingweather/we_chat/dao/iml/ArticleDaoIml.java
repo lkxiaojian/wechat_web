@@ -194,7 +194,7 @@ public class ArticleDaoIml implements ArticleDao {
         //获取文章的详细信息 content_manual
 //        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
-        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title, a.article_title_e,a.content_excerpt,a.content_excerpt_e,a.posting_name"
+        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title, a.article_title_e,a.content_excerpt,a.content_excerpt_e,a.posting_name,"
                 + "a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,"
                 + "(a.share_count+a.collect_initcount) AS share_count,"
                 + "(a.collect_count+a.collect_initcount) AS collect_count ,"
