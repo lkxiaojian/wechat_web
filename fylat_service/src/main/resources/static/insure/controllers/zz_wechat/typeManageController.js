@@ -302,9 +302,18 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             if($scope.listObj.type == '2'){
                 wx_type = '1';
             }
+            var type = 0;
+            if($scope.myTree.getUserData(selectedNode,"type_state")==0){
+                type = 0;
+            }else if($scope.myTree.getUserData(selectedNode,"type_state")==1){
+                type = 1;
+            }
             $state.go('app.insure.publish_manage',
                 {pre_location: $scope.listObj.current_location,
-                    comming_type_id: selectedNode,wx_type:wx_type});
+                    comming_type_id: selectedNode,
+                    wx_type:wx_type,
+                    type:type
+                });
         }
 
         $scope.delete = function (){

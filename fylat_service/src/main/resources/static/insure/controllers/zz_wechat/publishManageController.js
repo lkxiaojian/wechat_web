@@ -42,6 +42,12 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             $scope.activeTab=2;
         }
 
+        if($stateParams.type == '1'){
+            $scope.paper_query_params = $scope.query_params;
+            $("#tab2Btn").trigger("click");
+            $scope.activeTab=2;
+        }
+
         $scope.listAritcle = function () {
 
             $scope.articleTmpOption = {
