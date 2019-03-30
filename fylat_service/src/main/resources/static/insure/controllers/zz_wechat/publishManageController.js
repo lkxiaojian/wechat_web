@@ -456,7 +456,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             if(type=='0'){
                 $scope.articleTmpInstance.bootstrapTable('checkAll');
             }else{
-                $scope.paperTmpInstance.bootstrapTable('refresh');
+                $scope.paperTmpInstance.bootstrapTable('checkAll');
             }
         }
         $scope.uncheckAll=function (type) {
