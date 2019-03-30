@@ -285,6 +285,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 if (data.code == 0) {
                     layer.alert("更新成功");
                     $("#addParentModal").modal('hide');
+                    $scope.refresh();
                 } else {
                     layer.alert(data.message, {icon: 2})
                 }
