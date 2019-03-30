@@ -41,7 +41,7 @@ app.controller('postingManageController', ['$scope', '$modal', '$http', 'fylatSe
                         align: 'center',
                         formatter: function (value, row, index) {
                             if(value){
-                                return '<span><img src="' + $scope.listObj.pic_location+value + '" style="max-width: 80px;max-height: 80px;"></span>';
+                                return '<span class = "a-add"><img src="' + $scope.listObj.pic_location+value + '" style="max-width: 80px;max-height: 80px;"></span>';
                             }else {
                                 return '<a class="btn btn-info btn-xs a-add" href="javascript:;">添加图片</a>';
                             }
@@ -95,4 +95,8 @@ app.controller('postingManageController', ['$scope', '$modal', '$http', 'fylatSe
                 layer.alert("保存失败");
             });
         }
+        $('#addModal').on('hidden.bs.modal', function () {
+            $scope.mulImages = [];
+            $scope.typeForm.file=null;
+        })
     }]);
