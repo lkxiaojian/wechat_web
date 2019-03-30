@@ -389,7 +389,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
 
                 //聚焦
                 if ($scope.focusNode) {
-                    $scope.myTree.selectItem($scope.focusNode, 0, 1);
+                    $scope.myTree.selectItem($scope.focusNode);
+                    $scope.myTree.focusItem($scope.focusNode);
                 }
             });
             // // 设置允许动态加载xml文件（异步加载）
@@ -414,7 +415,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     }).success(function (data) {
                         if (data.code == 0) {
                             layer.msg(data.message);
-                            $scope.focusNode = tarNode;
+                            $scope.focusNode = srcNode;
                             $scope.refresh();
                         } else {
                             layer.alert(data.message, {icon: 2})
