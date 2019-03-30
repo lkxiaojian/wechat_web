@@ -33,7 +33,7 @@ public interface ReleaseManagementService {
 
     int updatePostingImage(String posting_id, String pathICon);
 
-    Map<String,Object> delArticleTypeById(String article_type_id);
+    Map<String,Object> delArticleTypeById(String article_type_id,String type);
 
     Map  combinedScore();
 

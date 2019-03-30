@@ -117,8 +117,8 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map<String, Object> delArticleTypeById(String article_type_id) {
-        return releaseManagementDao.delArticleTypeById(article_type_id);
+    public Map<String, Object> delArticleTypeById(String article_type_id,String type) {
+        return releaseManagementDao.delArticleTypeById(article_type_id,type);
     }
 
     @Override

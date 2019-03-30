@@ -304,7 +304,7 @@ public class ReleaseManagementController extends BaseController {
      * @param data
      * @return
      */
-    @RequestMapping(value = "/getPostingList/rest")
+    @RequestMapping(value = "/getPostingList/rest", method = RequestMethod.POST)
     public Map<String, Object> getPostingList(@RequestBody Map<String, Object> data) {
         try {
             return releaseManagementService.getPostingList(data);
@@ -377,9 +377,9 @@ public class ReleaseManagementController extends BaseController {
 
     @RequestMapping(value = "/delArticleTypeById/rest", method = RequestMethod.GET)
     @Transactional
-    public Map<String, Object> delArticleTypeById(String article_type_id) {
+    public Map<String, Object> delArticleTypeById(String article_type_id,String type) {
         try {
-            return releaseManagementService.delArticleTypeById(article_type_id);
+            return releaseManagementService.delArticleTypeById(article_type_id,type);
         } catch (Exception e) {
             return getErrorMapService();
         }

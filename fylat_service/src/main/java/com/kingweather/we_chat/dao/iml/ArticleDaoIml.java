@@ -991,26 +991,33 @@ public class ArticleDaoIml implements ArticleDao {
             return getErrorMap();
 
         }
+        String idList = "";
+        String[] split = article_id.split(",");
+
+        for (int i = 0; i < split.length; i++) {
+            idList = idList + "'" + split[i].toString() + "',";
+        }
+        idList = idList.substring(0, idList.length() - 1);
 
         if (type != null && "1".equals(type)) {
-            String idList = "";
-            String[] split = article_id.split(",");
-
-            for (int i = 0; i < split.length; i++) {
-                idList = idList + "'" + split[i].toString() + "',";
-            }
-            idList = idList.substring(0, idList.length() - 1);
-
             String sql = "DELETE from zz_wechat.article  where article_id in(" + idList + ")";
             jdbcTemplate.update(sql);
 
-        } else {
+        }else if("2".equals(type)){
+            // 临时表论文
+            String sql = "DELETE from zz_wechat.academic_paper  where article_id in(" + idList + ")";
+            jdbcTemplate.update(sql);
 
-            String sql = "UPDATE  zz_wechat.article set del_type=? where article_id =?";
-            jdbcTemplate.update(sql, new Object[]{
-                    1,
-                    article_id,
-            });
+        }else if("3".equals(type)){
+            // 临时表文章
+            String sql = "DELETE from zz_wechat.article_tmp  where article_id in(" + idList + ")";
+            jdbcTemplate.update(sql);
+        }
+
+
+        else {
+            String sql = "UPDATE  zz_wechat.article set del_type=? where article_id in(" + idList + ")";
+            jdbcTemplate.update(sql);
 
         }
         Map<String, Object> map = new HashMap<>();

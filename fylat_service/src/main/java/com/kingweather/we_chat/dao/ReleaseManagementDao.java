@@ -35,7 +35,7 @@ public interface ReleaseManagementDao {
 
     int updatePostingImage(String posting_id, String pathICon);
 
-    Map<String,java.lang.Object> delArticleTypeById(String article_type_id);
+    Map<String,java.lang.Object> delArticleTypeById(String article_type_id,String type);
 
     List<Map<String, java.lang.Object>> combinedScore(int i);
 

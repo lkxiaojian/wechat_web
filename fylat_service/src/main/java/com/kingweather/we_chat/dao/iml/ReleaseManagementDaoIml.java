@@ -1085,7 +1085,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
-    public Map<String, Object> delArticleTypeById(String article_type_id) {
+    public Map<String, Object> delArticleTypeById(String article_type_id,String type) {
         if (article_type_id == null) {
             return getErrorMap();
         }
@@ -1113,27 +1113,38 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             if (idString.length() > 0) {
                 idString = idString.substring(0, idString.length() - 1);
             }
-            //删除类型的临时表
-            String delTypeTmpsql = "delete from zz_wechat.article_type_tmp where article_type_id in(" + idString + ")";
+           //回收站
+            if("1".equals(type)){
 
-            //删除文章的临时表
-            String delArticleTmpsql = "delete from zz_wechat.article_tmp where article_type_id in(" + idString + ")";
-
-            //删除论文的临时表
-            String delPaperTmpsql = "delete from zz_wechat.academic_paper where article_type_id in(" + idString + ")";
-
-            // 更新正式表类型del_type
-            String updateTypeSql = "update zz_wechat.article_type set del_type=1 where article_type_id in (" + idString + ")";
+                String delTypeTmpsql = "delete from zz_wechat.article_type_tmp where article_type_id in(" + idString + ")";
+                String delTypeSql = "delete from zz_wechat.article_type where article_type_id in(" + idString + ")";
+                jdbcTemplate.update(delTypeTmpsql);
+                jdbcTemplate.update(delTypeSql);
 
 
-            // 更新正式表类型del_type
-            String updateArticleSql = "update zz_wechat.article set del_type=1 where article_type_id in (" + idString + ")";
+            }else {
+                //删除类型的临时表
+                String delTypeTmpsql = "update zz_wechat.article_type_tmp set del_type=1 where article_type_id in(" + idString + ")";
 
-            int update = jdbcTemplate.update(delTypeTmpsql);
-            int update1 = jdbcTemplate.update(delArticleTmpsql);
-            int update2 = jdbcTemplate.update(delPaperTmpsql);
-            int update3 = jdbcTemplate.update(updateTypeSql);
-            int update4 = jdbcTemplate.update(updateArticleSql);
+                //删除文章的临时表
+                String delArticleTmpsql = "update zz_wechat.article_tmp  set del_type=1  where article_type_id in(" + idString + ")";
+
+                //删除论文的临时表
+                String delPaperTmpsql = "update zz_wechat.academic_paper set del_type=1  where article_type_id in(" + idString + ")";
+
+                // 更新正式表类型del_type
+                String updateTypeSql = "update zz_wechat.article_type set del_type=1 where article_type_id in (" + idString + ")";
+
+
+                // 更新正式表类型del_type
+                String updateArticleSql = "update zz_wechat.article set del_type=1 where article_type_id in (" + idString + ")";
+
+                int update = jdbcTemplate.update(delTypeTmpsql);
+                int update1 = jdbcTemplate.update(delArticleTmpsql);
+                int update2 = jdbcTemplate.update(delPaperTmpsql);
+                int update3 = jdbcTemplate.update(updateTypeSql);
+                int update4 = jdbcTemplate.update(updateArticleSql);
+            }
             HashMap<String, Object> map = new HashMap<>();
             map.put("code", 0);
             map.put("message", "删除成功！");
