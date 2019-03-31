@@ -697,18 +697,47 @@ public class UserDaoIml implements userDao {
             String user_id = objId.toString();
 
             for (int i = 0; i < attentionList.length; i++) {
-                String insertsql = "insert into zz_wechat.user_articletype (user_id,article_type_id) values(?,?)";
+                String insertsql = "";
+
 
                 if ("1".equals(type)) {
                     insertsql = " DELETE FROM zz_wechat.user_articletype WHERE user_id=? AND article_type_id=?";
+                    jdbcTemplate.update(insertsql, new Object[]{
+                            user_id,
+                            attentionList[i]
+                    });
+                }else {
+                    Map<String, Object> map=null;
+                    try {
+                    String countSql="select count(*) as count from zz_wechat.user_articletype where user_id=? and article_type_id=?";
+                      map = jdbcTemplate.queryForMap(countSql, new Object[]{
+                            user_id,
+                            attentionList[i]
+                    });
+                    }catch (Exception e){
+                        insertsql = "insert into zz_wechat.user_articletype (user_id,article_type_id) values(?,?)";
+                        jdbcTemplate.update(insertsql, new Object[]{
+                                user_id,
+                                attentionList[i]
+                        });
+
+                    }
+
+                    if(map!=null&&Integer.parseInt(map.get("count").toString())==0){
+
+                        insertsql = "insert into zz_wechat.user_articletype (user_id,article_type_id) values(?,?)";
+                        jdbcTemplate.update(insertsql, new Object[]{
+                                user_id,
+                                attentionList[i]
+                        });
+
+                    }
+
                 }
-                jdbcTemplate.update(insertsql, new Object[]{
-                        user_id,
-                        Integer.parseInt(attentionList[i])
-                });
+
             }
         } catch (Exception e) {
-            return getErrorMapService();
+            return getErrorMap();
         }
 
         HashMap<String, Object> map = new HashMap<>();
