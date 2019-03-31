@@ -39,3 +39,6 @@ legend {
     white-space: nowrap;
     overflow: hidden;
 }
+.bootstrap-select.btn-group .dropdown-menu{
+    z-index: 100000;
+}
