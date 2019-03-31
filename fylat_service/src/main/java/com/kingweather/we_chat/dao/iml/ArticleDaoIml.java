@@ -1532,7 +1532,7 @@ public class ArticleDaoIml implements ArticleDao {
     @Override
     public Map<String, Object> selectarticleType() {
         //获取一级领域
-        String doMainSql = "select article_type_id,article_type_name,article_type_keyword,type_state from zz_wechat.article_type where del_type!=? and issue=? AND parentid=?  AND parentid !=?";
+        String doMainSql = "select article_type_id as id,article_type_name as name ,article_type_keyword as keyword,type_state from zz_wechat.article_type where del_type!=? and issue=? AND parentid=?  AND parentid !=?";
         List<Map<String, Object>> doMainList = jdbcTemplate.queryForList(doMainSql, new Object[]{
                 1,
                 1,
@@ -1549,7 +1549,7 @@ public class ArticleDaoIml implements ArticleDao {
             Map<String, Object> doMainMap = doMainList.get(i);
             for (int j=0;j<typeList.size();j++){
                 Map<String, Object> typeMap = typeList.get(j);
-                if(doMainMap.get("article_type_id").toString().equals(typeMap.get("domain_id").toString())){
+                if(doMainMap.get("id").toString().equals(typeMap.get("domain_id").toString())){
                     dataMap.add(typeMap);
                 }
             }
