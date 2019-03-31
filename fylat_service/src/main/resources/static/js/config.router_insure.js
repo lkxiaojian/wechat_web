@@ -329,6 +329,8 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                 deps: ['$ocLazyLoad',
                     function ($ocLazyLoad) {
                         return $ocLazyLoad.load([
+                            "css/bootstrap-select.min.css",
+                            "vendor/bootstrap/bootstrap-select.min.js",
                             'common/directives/custom_directives.js',
                             'insure/controllers/zz_wechat/paperManageController.js',
                             'ui.select'

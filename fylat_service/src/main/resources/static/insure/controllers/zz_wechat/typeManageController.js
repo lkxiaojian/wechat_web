@@ -333,7 +333,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                     method: 'GET',
                     url: 'releaseManagement/delArticleTypeById/rest',
                     params: {
-                        article_type_id: treelist
+                        article_type_id: treelist,
+                        type:'0'
                     }
                 }).success(function (data) {
                     layer.closeAll('loading');
