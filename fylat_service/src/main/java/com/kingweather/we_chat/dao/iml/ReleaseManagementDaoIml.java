@@ -1246,7 +1246,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1'";
 
         } else {
-            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 ";
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0  and parentid !='1'";
 
         }
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
@@ -1310,7 +1310,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
                             //插入实际的类型表
                             String currentTime = DateUtil.getCurrentTimeString();
-                            String insertSqlt = "insert into zz_wechat.article_type(artcicle_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state,domain_id,issue) values " +
+                            String insertSqlt = "insert into zz_wechat.article_type(article_type_id,article_type_keyword,article_type_name,iamge_icon,iamge_back,parentid,del_type,create_time,type_state,domain_id,issue) values " +
                                     "(?,?,?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
                             jdbcTemplate.update(insertSqlt, new Object[]{
                                     artcicle_type_id,

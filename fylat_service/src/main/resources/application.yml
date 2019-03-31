@@ -28,24 +28,12 @@ spring:
  #上传文件大小
   http:
     multipart:
-      maxFileSize: 50Mb
+      maxFileSize: 500Mb
       maxRequestSize: 500MB
   application:
     name: fylat_service
   datasource:
 
-#    url: jdbc:postgresql://localhost:5432/postgres?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
-#    username: handongchen
-#    password: 123456
-
-#    url: jdbc:postgresql://10.24.34.185:5432/postgres?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
-#    username: huxq
-
-#    url: jdbc:postgresql://192.168.4.41:5432/postgres?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
-#    username: postgres
-#    password: postgres
-#
-#    driver-class-name: org.postgresql.Driver
     url: jdbc:mysql://106.2.11.94:3306/zz_wechat?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: 123&456

@@ -48,4 +48,7 @@ public interface ArticleDao {
     Map<String,Object> updateDomainById(Map<String, Object> data);
 
     Map<String,Object> recoverKeyword(String id, String type);
+
+    Map<String,Object> selectarticleType();
+
 }

@@ -104,5 +104,17 @@ public class ArticleManageController extends BaseController {
     }
 
 
+    /**
+     * 获取领域以及以下内容
+     *
+     * @return
+     */
+    @RequestMapping(value = "/select/articleType/rest", method = RequestMethod.GET)
+    public Map<String, Object> selectarticleType() {
+
+        return articleService.selectarticleType();
+    }
+
+
 
 }

@@ -33,7 +33,7 @@ public class ArticleDaoIml implements ArticleDao {
     @Value("${urlPath}")
     private String urlPath;
 
-    private int pageSize=10;
+    private int pageSize = 10;
 
     @Override
     public Map<String, Object> getArticleTrait(String articleId, int page) {
@@ -396,24 +396,24 @@ public class ArticleDaoIml implements ArticleDao {
     }
 
     @Override
-    public Map<String, Object> getAllArticleType(String wechatid,int page) {
+    public Map<String, Object> getAllArticleType(String wechatid, int page) {
         if (wechatid == null || "".equals(wechatid)) {
             return getErrorMap();
         }
 
-         //关注的数量
-        int gzCount=0;
+        //关注的数量
+        int gzCount = 0;
         //总共的类型的数量
-        int allCount=0;
+        int allCount = 0;
         //剩余数量
-        int total=0;
+        int total = 0;
         String gzCountSql = "SELECT  count(*) as count from article_type a,user_articletype b ,sys_user c WHERE a.del_type !=? and a.article_type_id=b.article_type_id AND c.user_id=b.user_id AND c.wechat_id=?" +
                 "AND a.parentid !=? " +
                 "AND a.parentid !=? " +
                 "AND a.parentid !=? " +
-                "AND a.issue !=? " ;
-        Map<String, Object> gzCountMap=null;
-        Map<String, Object> allCountMap=null;
+                "AND a.issue !=? ";
+        Map<String, Object> gzCountMap = null;
+        Map<String, Object> allCountMap = null;
         try {
             gzCountMap = jdbcTemplate.queryForMap(gzCountSql, new Object[]{
                     1,
@@ -424,19 +424,19 @@ public class ArticleDaoIml implements ArticleDao {
                     0
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
         }
 
-        if(gzCountMap!=null&&gzCountMap.get("count")!=null){
-            gzCount=Integer.parseInt(gzCountMap.get("count").toString());
+        if (gzCountMap != null && gzCountMap.get("count") != null) {
+            gzCount = Integer.parseInt(gzCountMap.get("count").toString());
         }
 
 
-        String allCountSql="select count(*) as count from zz_wechat.article_type where del_type !=?  "+
+        String allCountSql = "select count(*) as count from zz_wechat.article_type where del_type !=?  " +
                 "AND parentid !=? " +
                 "AND parentid !=? " +
                 "AND parentid !=? " +
-                "AND issue !=? " ;
+                "AND issue !=? ";
         try {
             allCountMap = jdbcTemplate.queryForMap(allCountSql, new Object[]{
                     1,
@@ -446,11 +446,11 @@ public class ArticleDaoIml implements ArticleDao {
                     0
             });
 
-        }catch (Exception e){
+        } catch (Exception e) {
         }
 
-        if(allCountMap!=null&&allCountMap.get("count")!=null){
-            allCount=Integer.parseInt(allCountMap.get("count").toString());
+        if (allCountMap != null && allCountMap.get("count") != null) {
+            allCount = Integer.parseInt(allCountMap.get("count").toString());
         }
 
         String gzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,1 as type_id from article_type a,user_articletype b ,sys_user c WHERE a.del_type !=? and a.article_type_id=b.article_type_id AND c.user_id=b.user_id AND c.wechat_id=?" +
@@ -466,50 +466,51 @@ public class ArticleDaoIml implements ArticleDao {
                 -1,
                 -2,
                 0,
-                page*pageSize,
+                page * pageSize,
                 pageSize
         });
-        List<Map<String, Object>> nogzList=new ArrayList<>();
-        if(gzList.size()==0||gzList.size()<10){
-             int num=((page+1)*pageSize-gzCount)/pageSize;
-            if(num<0){
-               num=0;
+        List<Map<String, Object>> nogzList = new ArrayList<>();
+        if (gzList.size() == 0 || gzList.size() < 10) {
+            int num = ((page + 1) * pageSize - gzCount) / pageSize;
+            if (num < 0) {
+                num = 0;
             }
 
 
             String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
-        Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
-        Object objId = userMap.get("user_id");
-        if (objId == null) {
-            return getErrorMap();
-        }
-        String user_id = objId.toString();
+            Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
+            Object objId = userMap.get("user_id");
+            if (objId == null) {
+                return getErrorMap();
+            }
+            String user_id = objId.toString();
 
-        String nogzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,2 as type_id \n" +
-                "from zz_wechat.article_type a ,zz_wechat.sys_user c WHERE " +
-                "a.article_type_id not in(SELECT article_type_id FROM zz_wechat.user_articletype WHERE user_id=?) AND c.wechat_id=?" +
-                " AND a.del_type !=? AND a.parentid !=? AND a.parentid !=? AND a.parentid !=? AND a.issue !=?"
-                + " ORDER BY a.create_time DESC LIMIT ?,?";;
-        nogzList = jdbcTemplate.queryForList(nogzSql, new Object[]{
-                user_id,
-                wechatid,
-                1,
-                100,
-                -1,
-                -2,
-                0,
-                num*pageSize,
-                pageSize
-        });
-            total=allCount-gzCount-(num+1)*pageSize;
-        }else {
-            total=allCount-(page+1)*pageSize;
+            String nogzSql = "SELECT  a.article_type_name,a.article_type_id,a.article_type_keyword,a.iamge_icon,a.iamge_back  ,2 as type_id \n" +
+                    "from zz_wechat.article_type a ,zz_wechat.sys_user c WHERE " +
+                    "a.article_type_id not in(SELECT article_type_id FROM zz_wechat.user_articletype WHERE user_id=?) AND c.wechat_id=?" +
+                    " AND a.del_type !=? AND a.parentid !=? AND a.parentid !=? AND a.parentid !=? AND a.issue !=?"
+                    + " ORDER BY a.create_time DESC LIMIT ?,?";
+            ;
+            nogzList = jdbcTemplate.queryForList(nogzSql, new Object[]{
+                    user_id,
+                    wechatid,
+                    1,
+                    100,
+                    -1,
+                    -2,
+                    0,
+                    num * pageSize,
+                    pageSize
+            });
+            total = allCount - gzCount - (num + 1) * pageSize;
+        } else {
+            total = allCount - (page + 1) * pageSize;
         }
         List list = new ArrayList();
         list.addAll(nogzList);
         list.addAll(gzList);
-        if(total<0){
-            total=0;
+        if (total < 0) {
+            total = 0;
         }
 
         HashMap<String, Object> map = new HashMap<>();
@@ -610,60 +611,60 @@ public class ArticleDaoIml implements ArticleDao {
 
 //        if (count > 0 && pageSize * page <= count || count < 10) {
 
-            String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
-                    "FROM zz_wechat.article WHERE del_type !=1 " +
+        String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
+                "FROM zz_wechat.article WHERE del_type !=1 " +
 //                    "and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
 //                    user_id +
 //                    "' ) " +
-                    "AND (BINARY article_title LIKE '%" +
-                    message +
-                    "%' OR BINARY article_keyword LIKE '%" +
-                    message +
-                    "%' OR BINARY author LIKE '%" +
-                    message +
-                    "%' OR BINARY source LIKE '%" +
-                    message +
-                    "%' OR BINARY content_crawl LIKE '%" +
-                    message +
-                    "%'" +
-                    "OR BINARY content_manual LIKE '%" +
-                    message +
-                    "%' OR BINARY content_excerpt LIKE '%" +
-                    message +
-                    "%'" +
-                    "OR BINARY posting_name LIKE '%" +
-                    message +
-                    "%' OR BINARY article_title_e LIKE '%" +
-                    message +
-                    "%'"+
-                    "OR BINARY content_excerpt_e LIKE '%" +
-                    message +
-                    "%' OR BINARY article_keyword_e LIKE '%" +
-                    message +
-                    "%'"
-                    +
-                    "OR BINARY reference LIKE '%" +
-                    message +
-                    "%' OR BINARY site_number LIKE '%" +
-                    message +
-                    "%'"+
-                    ") ORDER BY create_time desc LIMIT " +
-                    page * pageSize +
-                    "," +
-                    pageSize;
+                "AND (BINARY article_title LIKE '%" +
+                message +
+                "%' OR BINARY article_keyword LIKE '%" +
+                message +
+                "%' OR BINARY author LIKE '%" +
+                message +
+                "%' OR BINARY source LIKE '%" +
+                message +
+                "%' OR BINARY content_crawl LIKE '%" +
+                message +
+                "%'" +
+                "OR BINARY content_manual LIKE '%" +
+                message +
+                "%' OR BINARY content_excerpt LIKE '%" +
+                message +
+                "%'" +
+                "OR BINARY posting_name LIKE '%" +
+                message +
+                "%' OR BINARY article_title_e LIKE '%" +
+                message +
+                "%'" +
+                "OR BINARY content_excerpt_e LIKE '%" +
+                message +
+                "%' OR BINARY article_keyword_e LIKE '%" +
+                message +
+                "%'"
+                +
+                "OR BINARY reference LIKE '%" +
+                message +
+                "%' OR BINARY site_number LIKE '%" +
+                message +
+                "%'" +
+                ") ORDER BY create_time desc LIMIT " +
+                page * pageSize +
+                "," +
+                pageSize;
 
-            List<Map<String, Object>> gzArticleList = jdbcTemplate.queryForList(gzArticleSql);
+        List<Map<String, Object>> gzArticleList = jdbcTemplate.queryForList(gzArticleSql);
 
-            if (gzArticleList == null) {
-                gzArticleList = new ArrayList<>();
-            }
+        if (gzArticleList == null) {
+            gzArticleList = new ArrayList<>();
+        }
 
-            resultMap.put("loveArticle", gzArticleList);
+        resultMap.put("loveArticle", gzArticleList);
 //        }
 
         if (resultMap.get("loveArticle") == null) {
 
-             gzArticleList = new ArrayList<>();
+            gzArticleList = new ArrayList<>();
             resultMap.put("loveArticle", gzArticleList);
         }
 
@@ -746,7 +747,7 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         if (resultMap.get("notLoveArticle") == null) {
-             gzArticleList = new ArrayList<>();
+            gzArticleList = new ArrayList<>();
             resultMap.put("notLoveArticle", gzArticleList);
         }
 
@@ -1003,20 +1004,17 @@ public class ArticleDaoIml implements ArticleDao {
             String sql = "DELETE from zz_wechat.article  where article_id in(" + idList + ")";
             jdbcTemplate.update(sql);
 
-        }else if("2".equals(type)){
+        } else if ("2".equals(type)) {
             // 临时表论文
             String sql = "DELETE from zz_wechat.academic_paper  where article_id in(" + idList + ")";
             jdbcTemplate.update(sql);
 
-        }else if("3".equals(type)){
+        } else if ("3".equals(type)) {
             // 临时表文章
             String sql = "DELETE from zz_wechat.article_tmp  where article_id in(" + idList + ")";
             jdbcTemplate.update(sql);
-        }
-
-
-        else {
-            String sql = "UPDATE  zz_wechat.article set del_type=? where article_id in(" + idList + ")";
+        } else {
+            String sql = "UPDATE  zz_wechat.article set del_type=1 where article_id in(" + idList + ")";
             jdbcTemplate.update(sql);
 
         }
@@ -1513,12 +1511,12 @@ public class ArticleDaoIml implements ArticleDao {
         String sql = "update zz_wechat.keyword set del_type=0 where id in(" + idList + ")";
         if ("1".equals(type)) {
             sql = "update zz_wechat.article set del_type=0 where article_id in(" + idList + ")";
-        }else if("2".equals(type)){
+        } else if ("2".equals(type)) {
             sql = "update zz_wechat.article_tmp set del_type=0 where article_id in(" + idList + ")";
-        }else if("3".equals(type)){
+        } else if ("3".equals(type)) {
             sql = "update zz_wechat.academic_paper set del_type=0 where article_id in(" + idList + ")";
-        }else if("4".equals(type)){
-            String  sqltmp = "update zz_wechat.article_type_tmp set del_type=0 where article_type_id in(" + idList + ")";
+        } else if ("4".equals(type)) {
+            String sqltmp = "update zz_wechat.article_type_tmp set del_type=0 where article_type_id in(" + idList + ")";
             sql = "update zz_wechat.article_type set del_type=0 where article_type_id in(" + idList + ")";
             jdbcTemplate.update(sqltmp);
         }
@@ -1527,6 +1525,41 @@ public class ArticleDaoIml implements ArticleDao {
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", 0);
         map.put("message", "恢复成功！");
+        return map;
+    }
+
+    //获取领域以及id
+    @Override
+    public Map<String, Object> selectarticleType() {
+        //获取一级领域
+        String doMainSql = "select article_type_id,article_type_name,article_type_keyword,type_state from zz_wechat.article_type where del_type!=? and issue=? AND parentid=?  AND parentid !=?";
+        List<Map<String, Object>> doMainList = jdbcTemplate.queryForList(doMainSql, new Object[]{
+                1,
+                1,
+                100,
+                -1
+        });
+        //获取全部类型不包含领域
+        String typeSql="SELECT article_type_id,article_type_name,article_type_keyword,type_state,domain_id,parentid  \n" +
+                " from zz_wechat.article_type where del_type!=1 and issue=1 and (type_state=0 or type_state=1) AND parentid!=100  AND parentid !=-1 ORDER BY create_time DESC";
+
+        List<Map<String, Object>> typeList = jdbcTemplate.queryForList(typeSql);
+        for (int i=0;i<doMainList.size();i++){
+            List<Map<String, Object>> dataMap=new ArrayList<>();
+            Map<String, Object> doMainMap = doMainList.get(i);
+            for (int j=0;j<typeList.size();j++){
+                Map<String, Object> typeMap = typeList.get(j);
+                if(doMainMap.get("article_type_id").toString().equals(typeMap.get("domain_id").toString())){
+                    dataMap.add(typeMap);
+                }
+            }
+            doMainMap.put("item",dataMap);
+        }
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("code", 0);
+        map.put("message", "请求成功！");
+        map.put("result", doMainList);
         return map;
     }
 
@@ -1558,6 +1591,7 @@ public class ArticleDaoIml implements ArticleDao {
 
     /**
      * 文档格式转换
+     *
      * @param bytes
      * @return
      */

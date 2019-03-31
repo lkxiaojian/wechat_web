@@ -280,12 +280,12 @@ public class AlgorithmDataController extends BaseController {
 
 
             String create_time = req.getParameter("create_time");
-            String author = req.getParameter("author").replaceAll("/r/n", "").replaceAll("/r", "").replaceAll("/n", "");
+            String author = req.getParameter("author");
             String FILE_PATH = req.getParameter("FILE_PATH");
             String seach_keyword = req.getParameter("seach_keyword");
             String reference = req.getParameter("reference");
             String article_title = req.getParameter("article_title");
-            String article_keyword = req.getParameter("article_keyword").replaceAll("/r/n", "").replaceAll("/r", "").replaceAll("/n", "");
+            String article_keyword = req.getParameter("article_keyword");
             ;
             String posting_name = req.getParameter("posting_name");
             String article_keyword_e = req.getParameter("article_keyword_e");

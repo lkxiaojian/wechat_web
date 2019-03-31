@@ -128,4 +128,9 @@ public class ArticleServiceIml implements ArticleService {
     public Map<String, Object> recoverKeyword(String id, String type) {
         return articleDao.recoverKeyword(id,type);
     }
+
+    @Override
+    public Map<String, Object> selectarticleType() {
+        return articleDao.selectarticleType();
+    }
 }
