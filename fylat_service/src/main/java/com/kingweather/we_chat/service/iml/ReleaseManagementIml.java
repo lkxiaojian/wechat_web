@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,22 +22,38 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     private ReleaseManagementDao releaseManagementDao;
     @Value("${urlTypePath}")
     private String urlTypePath;
+    private int value=0;
 
 
     @Override
-    public List getTypeMenuTree(String type,String delType) {
-        String parentId="-1";
-        if("2".equals(type)){
-            parentId="-2";
-        }
+    public List getTypeMenuTree(String type, String delType) {
+        List<Map> list=new ArrayList<>();
+        if("1".equals(type)){
+            //查询精选类型
+            list = releaseManagementDao.getTypeMenuTree(type, delType);
 
-        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type,delType);
-        for (Map s : list) {
-            List childrenList = getMenuTreeChildren(s.get("id").toString(), type,delType);
-            if (childrenList != null) {
-                s.put("item", childrenList);
+            for (Map s : list) {
+                List childrenList = getMenuTreeChildren(s.get("domain_id").toString(), type, delType,0);
+                value=value+1;
+                if (childrenList != null) {
+                    s.put("item", childrenList);
+                }
+            }
+
+        }else {
+            String parentId = "-1";
+            if ("2".equals(type)) {
+                parentId = "-2";
+            }
+             list = releaseManagementDao.getTypeMenuTree(parentId, type, delType,-1);
+            for (Map s : list) {
+                List childrenList = getMenuTreeChildren(s.get("id").toString(), type, delType,-1);
+                if (childrenList != null) {
+                    s.put("item", childrenList);
+                }
             }
         }
+
         return list;
 
 
@@ -117,42 +134,63 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map<String, Object> delArticleTypeById(String article_type_id,String type) {
-        return releaseManagementDao.delArticleTypeById(article_type_id,type);
+    public Map<String, Object> delArticleTypeById(String article_type_id, String type) {
+        return releaseManagementDao.delArticleTypeById(article_type_id, type);
     }
 
     @Override
-    public Map combinedScore() {
-        Map<String, Object> jsonMap = new HashMap<>();
-        //文章
-        List<Map<String, Object>> articleList = releaseManagementDao.combinedScore(0);
-        Map artileMap = getArtileMap(articleList);
-        jsonMap.put("cluster_A", artileMap);
-        //论文
-        List<Map<String, Object>> paperList = releaseManagementDao.combinedScore(1);
-        Map artileMap1 = getArtileMap(paperList);
-        jsonMap.put("cluster_B", artileMap1);
-        jsonMap.put("Topn", 3);
+    public Map combinedScore(String articleTypeId,String paperTypeId) {
+        try {
+            Map<String, Object> jsonMap = new HashMap<>();
+//            //文章
+//            List<Map<String, Object>> articleList = releaseManagementDao.combinedScore(0);
+//            Map artileMap = getArtileMap(articleList);
+//            jsonMap.put("cluster_A", artileMap);
+//            //论文
+//            List<Map<String, Object>> paperList = releaseManagementDao.combinedScore(1);
+//            Map artileMap1 = getArtileMap(paperList);
+//            jsonMap.put("cluster_B", artileMap1);
 
-        String json = JSON.toJSONString(jsonMap);
-        String sendAbstractsPost = HttpUtils.doPost(urlTypePath + "similarity", json);
+            //文章
+            List<Map<String, Object>> articleList = releaseManagementDao.combinedScoreById(articleTypeId);
+            Map artileMap = getArtileMap(articleList);
+            jsonMap.put("cluster_A", artileMap);
+            //论文
+            List<Map<String, Object>> paperList = releaseManagementDao.combinedScoreById(paperTypeId);
+            Map artileMap1 = getArtileMap(paperList);
+            jsonMap.put("cluster_B", artileMap1);
 
-        ArticleTypeSouce articleTypeSouce = JSON.parseObject(sendAbstractsPost, ArticleTypeSouce.class);
-        List<ArticleTypeSouce.ResultBean> result = articleTypeSouce.getResult();
-        if (result != null) {
-            for(int i=0;i<result.size();i++){
-                String id1Name=releaseManagementDao.getArticleNameById(result.get(i).getId1());
-                String id2Name=releaseManagementDao.getArticleNameById(result.get(i).getId2());
-                result.get(i).setId1Name(id1Name);
-                result.get(i).setId2Name(id2Name);
+            jsonMap.put("Topn", 3);
+
+            String json = JSON.toJSONString(jsonMap);
+            String sendAbstractsPost = HttpUtils.doPost(urlTypePath + "similarity", json);
+
+            ArticleTypeSouce articleTypeSouce = JSON.parseObject(sendAbstractsPost, ArticleTypeSouce.class);
+            List<ArticleTypeSouce.ResultBean> result = articleTypeSouce.getResult();
+            if (result != null) {
+                for (int i = 0; i < result.size(); i++) {
+                    String id1Name = releaseManagementDao.getArticleNameById(result.get(i).getId1());
+                    String id2Name = releaseManagementDao.getArticleNameById(result.get(i).getId2());
+                    result.get(i).setId1Name(id1Name);
+                    result.get(i).setId2Name(id2Name);
+
+                }
 
             }
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("result", result);
+            return map;
+
+        } catch (Exception e) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "算法计算错误！");
+            return map;
 
         }
-        Map<String, Object> map = new HashMap<>();
-        map.put("code",0);
-        map.put("result",result);
-        return map;
+
+
     }
 
     @Override
@@ -166,28 +204,37 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map pushArticleType(String typeId,String type) {
+    public Map pushArticleType(String typeId, String type) {
         return releaseManagementDao.pushArticleType(typeId, type);
     }
 
 
-
     @Override
-    public Map delAllRecycle( String type) {
+    public Map delAllRecycle(String type) {
         return releaseManagementDao.delAllRecycle(type);
     }
 
     @Override
-    public Map getDelArticleType(Map<String,Object> data) {
+    public Map getDelArticleType(Map<String, Object> data) {
         return releaseManagementDao.getDelArticleType(data);
     }
 
 
-    private List getMenuTreeChildren(String parentId, String type,String delType) {
+    private List getMenuTreeChildren(String parentId, String type, String delType,int value) {
 
-        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type,delType);
+        List<Map> list = releaseManagementDao.getTypeMenuTree(parentId, type, delType,value);
+        value=value+1;
         for (Map s : list) {
-            List childrenList = getMenuTreeChildren(s.get("id").toString(), type,delType);
+            List childrenList = new ArrayList();
+            if("1".equals(type)){
+                if(s.get("domain_id")!=null&&value==1){
+                    childrenList = getMenuTreeChildren(s.get("domain_id").toString(), type, delType,-2);
+                }
+
+            }else {
+                 childrenList = getMenuTreeChildren(s.get("id").toString(), type, delType,-2);
+            }
+
             if (childrenList != null) {
                 s.put("item", childrenList);
             }
