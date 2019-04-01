@@ -805,7 +805,7 @@ public class UserDaoIml implements userDao {
                 String sqlCount = "SELECT count(*) as count FROM " +
                         " zz_wechat.article_type a,zz_wechat.article b WHERE b.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND  a.parentid !='-1' AND a.article_type_id=b.article_type_id \n" +
                         " AND a.article_type_id='" +
-                        Integer.parseInt(article_type_id) +
+                         article_type_id +
                         "' AND b.update_time<date_format('" +
                         threeDay +
                         "','%Y-%m-%d %H:%i:%s') and b.state= '"+state+
