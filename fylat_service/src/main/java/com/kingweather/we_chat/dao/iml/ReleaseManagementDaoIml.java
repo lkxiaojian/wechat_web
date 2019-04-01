@@ -408,14 +408,14 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             if (createTimeStart != null && !createTimeStart.toString().equals("")) {
 //                String createTime = DateUtil.getCurrentTimeString(createTimeStart.toString());
-                sqlCount = sqlCount + " and a.update_time>=date_format('" + createTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
-                sqlMessage = sqlMessage + " and a.update_time>=date_format('" + createTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
+                sqlCount = sqlCount + " and a.create_time>=date_format('" + createTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
+                sqlMessage = sqlMessage + " and a.create_time>=date_format('" + createTimeStart.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
             if (createTimeEnd != null && !createTimeEnd.toString().equals("")) {
 //                String createTime = DateUtil.getCurrentTimeString(createTimeEnd.toString());
-                sqlCount = sqlCount + " and a.update_time<=date_format('" + createTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
-                sqlMessage = sqlMessage + " and a.update_time<=date_format('" + createTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
+                sqlCount = sqlCount + " and a.create_time<=date_format('" + createTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
+                sqlMessage = sqlMessage + " and a.create_time<=date_format('" + createTimeEnd.toString() + "','%Y-%m-%d %H:%i:%s')";
             }
 
             if (details_size_more != null && !details_size_more.toString().equals("")) {
@@ -602,7 +602,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             }
 
-            sqlMessage = sqlMessage + " ORDER BY a.update_time asc";
+            sqlMessage = sqlMessage + " ORDER BY a.update_time desc";
             Page<Map<String, Object>> page = jdbc.queryForPage(Integer.parseInt(startNum.toString()), Integer.parseInt(pageSize.toString()), sqlCount, sqlMessage, new Object[]{});
             map.put("code", 0);
             map.put("message", "查询成功");

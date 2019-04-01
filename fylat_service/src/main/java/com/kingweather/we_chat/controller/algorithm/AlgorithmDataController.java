@@ -470,7 +470,6 @@ public class AlgorithmDataController extends BaseController {
             longbytes = b2;
             shortbytes = b1;
         }
-        int value=0;
         byte xorstr[] = new byte[longbytes.length];
         int i = 0;
         for (; i < shortbytes.length; i++) {
@@ -479,10 +478,17 @@ public class AlgorithmDataController extends BaseController {
         for (; i < longbytes.length; i++) {
             xorstr[i] = longbytes[i];
         }
+        int value=0;
 
-
+        for(byte e : xorstr) {
+         String t=""+e;
+         if("1".equals(t)){
+             value=value+1;
+         }
+        }
+//        String s = new String(xorstr);
 //        String str = guessEncoding(xorstr);
-        return 14;
+        return value;
     }
 
 
