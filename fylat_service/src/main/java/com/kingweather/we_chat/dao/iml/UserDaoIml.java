@@ -823,7 +823,7 @@ public class UserDaoIml implements userDao {
                 String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,b.article_title ,b.article_keyword ,b.create_time,b.content_excerpt FROM " +
                         " zz_wechat.article_type a,zz_wechat.article b WHERE b.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
                         " AND b.article_type_id='" +
-                        Integer.parseInt(article_type_id) +
+                         article_type_id +
                         "' and b.state='"+state+
                         "' AND b.update_time<date_format('" +
                         threeDay +
