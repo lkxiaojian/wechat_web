@@ -2,7 +2,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload, insureUtil, $window, modalTip) {
         $scope.listObj = {
             navigationMsg: "管理平台 >分类管理",
-            type: $stateParams.type,
+            type: $stateParams.type,//0:分类管理 1:精品名称管理 2:待修复分类管理
             current_location: "app.insure.type_manage",
             pic_location: "http://106.2.11.94:7902"
         };
@@ -13,6 +13,8 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         }else{
             $scope.listObj.navigationMsg = "管理平台 >分类管理";
         }
+        //聚焦
+        $scope.focusNode = $stateParams.focus_node;
         //获取所有已发布的类型
         $scope.getAllType = function () {
             var type = '3';
@@ -313,6 +315,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                 {pre_location: $scope.listObj.current_location,
                     comming_type_id: selectedNode,
                     wx_type:wx_type,
+                    menu_type:$scope.listObj.type,
                     type:type
                 });
         }
