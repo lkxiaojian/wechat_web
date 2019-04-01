@@ -357,7 +357,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         })
         .state('app.insure.type_manage', {
             url: '/typeManage',
-            params: {param: null, data: null,type:'0'},
+            params: {param: null, data: null, focus_node:'', type:'0'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
             pageTitle: '分类管理',
             controller: 'typeManageController',
@@ -377,7 +377,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         })
         .state('app.insure.pub_type_manage', {
             url: '/pubTypeManage',
-            params: {param: null, data: null,type:'1'},
+            params: {param: null, data: null, focus_node:'', type:'1'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
             pageTitle: '精品名称管理',
             controller: 'typeManageController',
@@ -397,7 +397,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         })
         .state('app.insure.todo_type_manage', {
             url: '/pubTypeManage',
-            params: {param: null, data: null,type:'2'},
+            params: {param: null, data: null, focus_node:'', type:'2'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
             pageTitle: '待修复分类管理',
             controller: 'typeManageController',
@@ -424,6 +424,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                 comming_type_id:null,
                 query_params:null,
                 wx_type:null,
+                menu_type:null,//菜单分类 0:分类管理 1:精品名称管理 2:待修复类型管理
                 type: null  //0 文章、 1 论文
             },
             templateUrl: 'insure/template/zz_wechat/publishManage.html',

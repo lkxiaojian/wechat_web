@@ -48,6 +48,16 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             $scope.activeTab=2;
         }
 
+
+        $scope.goPreLocation = function(){
+            debugger
+            $state.go($scope.listObj.pre_location, {
+                focus_node: $stateParams.comming_type_id,
+                type:$stateParams.menu_type
+            });
+
+        }
+
         $scope.listAritcle = function () {
 
             $scope.articleTmpOption = {
