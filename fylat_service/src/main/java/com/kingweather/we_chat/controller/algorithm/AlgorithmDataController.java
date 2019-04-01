@@ -426,7 +426,7 @@ public class AlgorithmDataController extends BaseController {
             int update = jdbcTemplate.update(insertPaperSql, new Object[]{
                     article_id,
                     article_title,
-                    article_keyword.substring(0, article_keyword.length() - 1),
+                    article_keyword,
                     author,
                     currentTime,
                     create_time,
@@ -438,7 +438,7 @@ public class AlgorithmDataController extends BaseController {
                     article_title_e,
                     content_excerpt_e,
                     path,
-                    article_keyword_e.substring(0, article_keyword.length() - 1),
+                    article_keyword_e,
                     author_e,
                     reference,
                     site_number,

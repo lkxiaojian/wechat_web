@@ -833,8 +833,35 @@ public class ArticleDaoIml implements ArticleDao {
         if (countMap == null || countMap.get("count") == null || "0".equals(countMap.get("count").toString())) {
 
             String sysTime = DateUtil.getCurrentTimeString();
+
+
+            String fafterSql="SELECT T2.article_type_id \n" +
+                    "FROM ( \n" +
+                    "    SELECT \n" +
+                    "        @r AS _article_type_id, \n" +
+                    "        (SELECT @r := parentid FROM article_type WHERE article_type_id = _article_type_id) AS parentid, \n" +
+                    "        @l := @l + 1 AS lvl \n" +
+                    "    FROM \n" +
+                    "        (SELECT @r := '" +
+                    artcicle_type_id +
+                    "', @l := 0) vars, \n" +
+                    "        article_type h \n" +
+                    "    WHERE @r <> 0) T1 \n" +
+                    "JOIN article_type T2 \n" +
+                    "ON T1._article_type_id = T2.article_type_id \n" +
+                    "ORDER BY T1.lvl DESC \n";
+            List<Map<String, Object>> maps = jdbcTemplate.queryForList(fafterSql);
+
+            String domian_id="";
+            if(maps.size()==1){
+                domian_id=maps.get(0).get("article_type_id").toString();
+            }else if (maps.size()>1){
+                domian_id=maps.get(1).get("article_type_id").toString();
+            }
+
+
             //插入
-            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1)";
+            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?)";
             int update = jdbcTemplate.update(sql, new Object[]{
                     name,
                     keyword,
@@ -842,7 +869,8 @@ public class ArticleDaoIml implements ArticleDao {
                     pathICon,
                     artcicle_type_id,
                     pathback,
-                    0
+                    0,
+                    domian_id
             });
             if (update == 1) {
                 return true;
@@ -1415,14 +1443,25 @@ public class ArticleDaoIml implements ArticleDao {
         String sql = "update zz_wechat.article_type set del_type=1 where article_type_id='" + id + "'";
         jdbcTemplate.update(sql);
         //根据父级id 查询所有的子级的节点的id
-        String idlist = "SELECT article_type_id FROM\n" +
+   /*     String idlist = "SELECT article_type_id FROM\n" +
                 "  (\n" +
                 "    SELECT * FROM article_type ORDER BY parentid, article_type_id DESC\n" +
                 "  ) realname_sorted,\n" +
                 "  (SELECT @pv :=" +
                 id +
                 ") initialisation\n" +
-                "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";
+                "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";*/
+        String idlist="SELECT  \n" +
+                "    b.article_type_id  \n" +
+                "FROM  \n" +
+                "    article_type AS a,  \n" +
+                "    article_type AS b  \n" +
+                "WHERE  \n" +
+                "    a.parentid= b.parentid  \n" +
+                "AND(a.article_type_id= '" +id+
+                "') ";
+
+
         List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(idlist);
 
 

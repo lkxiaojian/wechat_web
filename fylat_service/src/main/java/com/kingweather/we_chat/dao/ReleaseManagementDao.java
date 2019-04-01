@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReleaseManagementDao {
-    List<Map> getTypeMenuTree(String s,String type,String delType);
+    List<Map> getTypeMenuTree(String s,String type,String delType,int value);
 
     Map getTypeMessage(String article_type_id,String type);
 
@@ -51,4 +51,8 @@ public interface ReleaseManagementDao {
     Map delAllRecycle(String type);
 
     Map getDelArticleType(Map<String, java.lang.Object> data);
+
+    List<Map<String,java.lang.Object>> combinedScoreById(String articleTypeId);
+
+    List<Map> getTypeMenuTree(String type, String delType);
 }
