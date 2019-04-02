@@ -1,5 +1,6 @@
 package com.kingweather.we_chat.dao.iml;
 
+import com.fasterxml.jackson.databind.deser.std.FromStringDeserializer;
 import com.google.common.collect.Lists;
 import com.kingweather.common.jdbc.JdbcUtil;
 import com.kingweather.common.util.DateUtil;
@@ -357,7 +358,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                             "') initialisation\n" +
                             "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";*/
 
-                    String childList="SELECT  \n" +
+               /*     String childList="SELECT  \n" +
                             "    b.article_type_id  \n" +
                             "FROM  \n" +
                             "    article_type_tmp AS a,  \n" +
@@ -379,9 +380,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
                     if (idString.length() > 0) {
                         idString = idString.substring(0, idString.length() - 1);
-                    }
+                    }*/
 
-
+                    String  idString =getChildList(article_type_id.toString(),"1");
                     sqlCount = sqlCount + " and a.article_type_id in (" + idString + ") ";
                     sqlMessage = sqlMessage + " and a.article_type_id in(" + idString + ") ";
                 } else {
@@ -530,7 +531,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                             article_type_id +
                             "') initialisation\n" +
                             "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";*/
-                    String childList="SELECT  \n" +
+                /*    String childList="SELECT  \n" +
                             "    b.article_type_id  \n" +
                             "FROM  \n" +
                             "    article_type_tmp AS a,  \n" +
@@ -553,10 +554,11 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
                     if (idString.length() > 0) {
                         idString = idString.substring(0, idString.length() - 1);
-                    }
+                    }*/
+                    String idString=  getChildList(article_type_id.toString(),"1");
 
-                    sqlCount = sqlCount + " and a.article_type_id in (" + article_type_id + ") ";
-                    sqlMessage = sqlMessage + " and a.article_type_id in(" + article_type_id + ") ";
+                    sqlCount = sqlCount + " and a.article_type_id in (" + idString + ") ";
+                    sqlMessage = sqlMessage + " and a.article_type_id in(" + idString + ") ";
                 } else {
                     sqlCount = sqlCount + " and a.article_type_id='" + article_type_id + "' ";
                     sqlMessage = sqlMessage + " and a.article_type_id='" + article_type_id + "' ";
@@ -1200,29 +1202,33 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 //                    "') initialisation\n" +
 //                    "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";
 
-            String childList="SELECT  \n" +
-                    "    b.article_type_id  \n" +
-                    "FROM  \n" +
-                    "    article_type_tmp AS a,  \n" +
-                    "    article_type_tmp AS b  \n" +
-                    "WHERE  \n" +
-                    "    a.parentid= b.parentid  \n" +
-                    "AND(a.article_type_id= '" +article_type_id+
-                    "') ";
-            String idString = "'" +
-                    article_type_id +
-                    "',";
-            List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(childList);
-            if (idlistMaps != null && idlistMaps.size() > 0) {
-                for (int i = 0; i < idlistMaps.size(); i++) {
-                    idString = idString + "'" + idlistMaps.get(i).get("article_type_id").toString() + "',";
-                }
 
-            }
 
-            if (idString.length() > 0) {
-                idString = idString.substring(0, idString.length() - 1);
-            }
+//            String childList="SELECT  \n" +
+//                    "    b.article_type_id  \n" +
+//                    "FROM  \n" +
+//                    "    article_type_tmp AS a,  \n" +
+//                    "    article_type_tmp AS b  \n" +
+//                    "WHERE  \n" +
+//                    "    a.parentid= b.parentid  \n" +
+//                    "AND(a.article_type_id= '" +article_type_id+
+//                    "') ";
+//            String idString = "'" +
+//                    article_type_id +
+//                    "',";
+
+            String  idString =getChildList(article_type_id,"1");
+//            List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(childList);
+//            if (idlistMaps != null && idlistMaps.size() > 0) {
+//                for (int i = 0; i < idlistMaps.size(); i++) {
+//                    idString = idString + "'" + idlistMaps.get(i).get("article_type_id").toString() + "',";
+//                }
+//
+//            }
+//
+//            if (idString.length() > 0) {
+//                idString = idString.substring(0, idString.length() - 1);
+//            }
             //回收站
             if ("1".equals(type)) {
 
@@ -1519,7 +1525,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 //                "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";
 
 
-        String childList="SELECT  \n" +
+     /*   String childList="SELECT  \n" +
                 "    b.article_type_id  \n" +
                 "FROM  \n" +
                 "    article_type_tmp AS a,  \n" +
@@ -1527,12 +1533,14 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 "WHERE  \n" +
                 "    a.parentid= b.parentid  \n" +
                 "AND(a.article_type_id= '" +id+
-                "') ";
+                "') ";*/
+
+       String  idString =getChildList(id,"1");
 
 
-        String idString = "'" +
-                id +
-                "',";
+/*//        String idString = "'" +
+//                id +
+//                "',";
         List<Map<String, Object>> idlistMaps = jdbcTemplate.queryForList(childList);
         if (idlistMaps != null && idlistMaps.size() > 0) {
             for (int i = 0; i < idlistMaps.size(); i++) {
@@ -1543,7 +1551,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         if (idString.length() > 0) {
             idString = idString.substring(0, idString.length() - 1);
-        }
+        }*/
 
 
         String sql = "select  article_type_id,article_type_name_old from zz_wechat.article_type_tmp where del_type !=1 and parentid !=100 and  parentid !=-1 and article_type_id in("+idString+")";
@@ -1551,6 +1559,8 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
         return maps;
     }
+
+
 
     @Override
     public List<Map> getTypeMenuTree(String type, String delType) {
@@ -1562,6 +1572,60 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         });
         return maps;
     }
+
+    /**
+     * 根据id获取所有下级id
+     * @param id
+     * @return
+     */
+    private String getChildList(String id,String type) {
+                String idString = "'" +
+                id +
+                "',";
+        String table=" zz_wechat.article_type";
+        if("1".equals(type)){
+            table=" zz_wechat.article_type_tmp";
+        }
+
+        String sql="select article_type_id from "+table+" where parentid=?";
+        List<Map<String, Object>> result=new ArrayList<>();
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
+                id
+        });
+        result.addAll(maps);
+        for (Map<String, Object> map:maps){
+
+            if(map.get("article_type_id")!=null){
+                List<Map<String, Object>> article_id = getlist(sql, map.get("article_type_id").toString());
+                result.addAll(article_id);
+            }
+
+        }
+        for (Map<String, Object> map:result){
+            idString=idString+"'"+map.get("article_type_id")+"',";
+        }
+        return idString.substring(0,idString.length()-1);
+    }
+
+
+    private List<Map<String, Object>> getlist(String sql,String id ){
+        List<Map<String, Object>> result=new ArrayList<>();
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
+                id
+        });
+        result.addAll(maps);
+        for (Map<String, Object> map:maps){
+
+            if(map.get("article_type_id")!=null){
+                result.addAll(  getlist(sql,map.get("article_type_id").toString()));
+            }
+
+        }
+           return result;
+    }
+
 
     /**
      * 传参错误
