@@ -781,30 +781,33 @@ public class ArticleDaoIml implements ArticleDao {
                 key = keyword.toString();
             }
             String sysTime = DateUtil.getCurrentTimeString();
-            String insertSql = "insert into zz_wechat.article_type (article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type) values(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
+            String insertSql = "insert into zz_wechat.article_type (article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type,issue,type_state,domain_id) values(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,0,2,?)";
 
 
-            String insertSqlTMp = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type) values(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?)";
-
+            String insertSqlTMp = "insert into zz_wechat.article_type_tmp (article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon,parentid,del_type,issue,type_state,domain_id) values(?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,0,2,?)";
+            String uUid = UuidUtils.getUUid();
 
             int update = jdbcTemplate.update(insertSql, new Object[]{
-                    UuidUtils.getUUid(),
+                    uUid,
                     name.toString(),
                     key,
                     sysTime,
                     path,
                     100,
-                    0
+                    0,
+                    uUid
+
             });
 
             int updateTmp = jdbcTemplate.update(insertSqlTMp, new Object[]{
-                    UuidUtils.getUUid(),
+                    uUid,
                     name.toString(),
                     key,
                     sysTime,
                     path,
                     100,
-                    0
+                    0,
+                    uUid
             });
             if (update == 1) {
                 return true;
@@ -861,7 +864,7 @@ public class ArticleDaoIml implements ArticleDao {
 
 
             //插入
-            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?)";
+            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id,type_state) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?,2)";
             int update = jdbcTemplate.update(sql, new Object[]{
                     name,
                     keyword,
@@ -1407,11 +1410,11 @@ public class ArticleDaoIml implements ArticleDao {
             Object message = conditions.get("message");
 
 
-            String countSql = "select count(*) from zz_wechat.article_type where parentid='0' and del_type !='1' ";
+            String countSql = "select count(*) from zz_wechat.article_type where parentid='100' and del_type !='1' ";
             if (message != null && !"".equals(message.toString())) {
                 countSql = countSql + "  and article_type_name like '%" + message.toString() + "%' ";
             }
-            String sql = "select article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon, iamge_back,parentid from zz_wechat.article_type where parentid='0' and del_type !='1' ";
+            String sql = "select article_type_id,article_type_name,article_type_keyword,create_time,iamge_icon, iamge_back,parentid from zz_wechat.article_type where parentid='100' and del_type !='1' ";
             if (message != null && !"".equals(message.toString())) {
                 sql = sql + " and article_type_name like '%" + message.toString() + "%'  ";
             }
@@ -1451,7 +1454,8 @@ public class ArticleDaoIml implements ArticleDao {
                 id +
                 ") initialisation\n" +
                 "  WHERE (FIND_IN_SET(parentid,@pv)>0 And @pv := concat(@pv, ',', article_type_id))";*/
-        String idlist="SELECT  \n" +
+
+/*        String idlist="SELECT  \n" +
                 "    b.article_type_id  \n" +
                 "FROM  \n" +
                 "    article_type AS a,  \n" +
@@ -1473,7 +1477,10 @@ public class ArticleDaoIml implements ArticleDao {
             }
             if (idString.length() > 0) {
                 idString = idString.substring(0, idString.length() - 1);
-            }
+            }*/
+
+             String  idString =getChildList(id,"0");
+
             //改变 子节点 del_type 的值
             String ChildSql = "update zz_wechat.article_type set del_type=1 where article_type_id in( " + idString + " )";
             jdbcTemplate.update(ChildSql);
@@ -1482,7 +1489,7 @@ public class ArticleDaoIml implements ArticleDao {
             String ArticleSql = "update zz_wechat.article set del_type=1 where article_type_id in( " + idString + " )";
             jdbcTemplate.update(ArticleSql);
 
-        }
+//        }
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", 0);
         map.put("message", "删除成功");
@@ -1653,4 +1660,59 @@ public class ArticleDaoIml implements ArticleDao {
 
         return "";
     }
+
+
+    /**
+     * 根据id获取所有下级id
+     * @param id
+     * @return
+     */
+    private String getChildList(String id,String type) {
+        String idString = "'" +
+                id +
+                "',";
+        String table=" zz_wechat.article_type";
+        if("1".equals(type)){
+            table=" zz_wechat.article_type_tmp";
+        }
+
+        String sql="select article_type_id from "+table+" where parentid=?";
+        List<Map<String, Object>> result=new ArrayList<>();
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
+                id
+        });
+        result.addAll(maps);
+        for (Map<String, Object> map:maps){
+
+            if(map.get("article_type_id")!=null){
+                List<Map<String, Object>> article_id = getlist(sql, map.get("article_type_id").toString());
+                result.addAll(article_id);
+            }
+
+        }
+        for (Map<String, Object> map:result){
+            idString=idString+"'"+map.get("article_type_id")+"',";
+        }
+        return idString.substring(0,idString.length()-1);
+    }
+
+
+    private List<Map<String, Object>> getlist(String sql,String id ){
+        List<Map<String, Object>> result=new ArrayList<>();
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
+                id
+        });
+        result.addAll(maps);
+        for (Map<String, Object> map:maps){
+
+            if(map.get("article_type_id")!=null){
+                result.addAll(  getlist(sql,map.get("article_type_id").toString()));
+            }
+
+        }
+        return result;
+    }
+
 }
