@@ -163,7 +163,8 @@ app.directive('tableDirective', ['$timeout',
                          */
                         var xData = barverticaldata.xData, featureSet = barverticaldata.featureSet,
                             legendSet = barverticaldata.legendSet;
-                        var title=barverticaldata.title;
+                        // var title=barverticaldata.title;
+                        var title='';
                         // var yAxisLabelFormatter = barverticaldata.yAxisLabelFormatter;
                         if (xData[0]) {
                             var option = echartsConfigService.barVerticalOption();
@@ -183,13 +184,13 @@ app.directive('tableDirective', ['$timeout',
                                     data: featureSet[f],
                                     markPoint: {
                                         data: [
-                                            {type: 'max', name: '最大值'},
-                                            {type: 'min', name: '最小值'}
+                                            {type: 'max', name: '最大值',symbolSize:5},
+                                            {type: 'min', name: '最小值',symbolSize:5}
                                         ]
                                     },
                                     markLine: {
                                         data: [
-                                            {type: 'average', name: '平均值'}
+                                            {type: 'average', name: '平均值',symbolSize:5}
                                         ]
                                     }
                                 });
