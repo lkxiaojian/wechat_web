@@ -40,7 +40,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             }
         } else if ("2".equals(type)) {
-            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old ,del_type from zz_wechat.article_type_tmp where del_type!=? and parentid=? AND type_state=0";
+            sql = "select article_type_id as id,article_type_name as text,article_type_keyword,iamge_icon,iamge_back,parentid,type_state,issue,article_type_name_old,article_type_keyword_old ,del_type from zz_wechat.article_type_tmp where del_type!=? and parentid=? AND type_state !=1";
 
         }
         List maps = jdbcTemplate.queryForList(sql, new Object[]{
@@ -208,13 +208,20 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
         }
 
-        String updateSqlTmp = "update zz_wechat.article_type_tmp set parentid=?,domain_id=?   where article_type_id=?";
-        int update = jdbcTemplate.update(updateSqlTmp, new Object[]{
-                parentid,
-                domain_id,
-                article_type_id
+        String idlist=getChildList(article_type_id,"1");
+        String updateSqlTmp = "update zz_wechat.article_type_tmp set domain_id='" +
+                domain_id+
+                "'   where article_type_id in(" +
+                idlist +
+                ")";
 
+        String sql="update zz_wechat.article_type_tmp set parentid=? where article_type_id=?";
+
+        jdbcTemplate.update(sql,new Object[]{
+                parentid,
+                article_type_id
         });
+        int update = jdbcTemplate.update(updateSqlTmp);
 
         //对要合并的类型插入到临时表
         String Changesql = "select count(*) as count from zz_wechat.change_article_type where article_type_id=? and type=?";
@@ -245,27 +252,37 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
 
         try {
-            String sqlCount = "select count(*) as count from zz_wechat.article_type where artcicle_type_id=?";
+            String sqlCount = "select count(*) as count from zz_wechat.article_type where article_type_id=?";
             Map<String, Object> map = jdbcTemplate.queryForMap(sqlCount, new Object[]{
                     article_type_id
             });
             if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 1) {
+                String idlist2=getChildList(article_type_id,"2");
 
-                String updateSql = "update zz_wechat.article_type set parentid=?,domain_id=?   where article_type_id=?";
-                jdbcTemplate.update(updateSql, new Object[]{
+
+                String updateSql = "update zz_wechat.article_type set domain_id='" +
+                        domain_id+
+                        "'   where article_type_id in(" +
+                        idlist2 +
+                        ")";
+
+             jdbcTemplate.update(updateSql);
+
+                String sqlTmp="update zz_wechat.article_type_tmp set parentid=? where article_type_id=?";
+
+                jdbcTemplate.update(sqlTmp,new Object[]{
                         parentid,
-                        domain_id,
                         article_type_id
-
                 });
 
             }
 
         } catch (Exception e) {
+            System.out.print(e);
 
         }
 
-        return update;
+        return 1;
 
     }
 

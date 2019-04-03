@@ -203,8 +203,12 @@ public class AlgorithmDataController extends BaseController {
 
         div = div.replaceAll("data-src=", "src=");
         div = div.replaceAll("webp", "png");
-        div = div.substring(0, div.indexOf("<script nonce"));
-        div = div + "</div>";
+        int i = div.indexOf("<script nonce");
+        if(i!=-1){
+            div = div.substring(0,i);
+            div = div + "</div>";
+        }
+
         System.out.print(div);
         try {
             int update = jdbcTemplate.update(insertArticleSql, new Object[]{
