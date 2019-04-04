@@ -77,8 +77,8 @@ public class ExceptiongAspect {
                 &&!joinPoint.toString().contains("algorithm.AlgorithmDataController")){
             String method = joinPoint.getSignature().getName();
             if (session.getAttribute("user") == null && !method.equals("userLogin") && !method.equals("articleImageUpload") && !method.equals("addArticle")) {
-                logger.error("session失效");
-                throw new UserException("请重新登录!");
+//                logger.error("session失效");
+//                throw new UserException("请重新登录!");
             }
         }
 
