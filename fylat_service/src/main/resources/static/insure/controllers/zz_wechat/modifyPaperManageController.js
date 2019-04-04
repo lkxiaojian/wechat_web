@@ -161,14 +161,18 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         // $scope.listObj.selectedItem.article_type_id = data.result.article_type_id;
                         // $scope.listObj.selectedItem.article_type_name = data.result.article_type_name;
                         // $scope.listObj.regionType.selected= $scope.listObj.selectedItem;
-                        if (editor != null && $scope.listObj.integrationQuery.content_type == 0) {
-                            editor.txt.html($scope.listObj.integrationQuery.content_manual)
-                        } else if (editor != null && $scope.listObj.integrationQuery.content_type == 1) {
-                            editor.txt.html($scope.listObj.integrationQuery.details_div)
+                        // if (editor != null && $scope.listObj.integrationQuery.content_type == 0) {
+                        //     editor.txt.html($scope.listObj.integrationQuery.content_manual)
+                        // } else if (editor != null && $scope.listObj.integrationQuery.content_type == 1) {
+                        //     editor.txt.html($scope.listObj.integrationQuery.details_div)
+                        // }
+                        var content = $scope.listObj.integrationQuery.content_manual;
+                        if(!content){
+                            content = $scope.listObj.integrationQuery.details_div;
                         }
                         //兼容下
-                        if(editor != null && !$scope.listObj.integrationQuery.content_manual){
-                            editor.txt.html($scope.listObj.integrationQuery.details_div)
+                        if(editor != null){
+                            editor.txt.html(content)
                         }
                         if($scope.listObj.operate_type == 'view'){
                             $("#add_integration input,#add_integration button,#add_integration select,#add_integration textarea").attr("disabled", "disabled");
