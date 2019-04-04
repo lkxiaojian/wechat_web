@@ -265,10 +265,16 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         "'   where article_type_id in(" +
                         idlist2 +
                         ")";
+                String updateSql2 = "update zz_wechat.article_type set domain_id='" +
+                        domain_id+
+                        "'   where article_type_id in(" +
+                        idlist +
+                        ")";
 
              jdbcTemplate.update(updateSql);
+             jdbcTemplate.update(updateSql2);
 
-                String sqlTmp="update zz_wechat.article_type_tmp set parentid=? where article_type_id=?";
+                String sqlTmp="update zz_wechat.article_type set parentid=? where article_type_id=?";
 
                 jdbcTemplate.update(sqlTmp,new Object[]{
                         parentid,
@@ -1391,6 +1397,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                                     typeMap.get("domain_id"),
                                     1
                             });
+                        }else {
+                            String sql = "update zz_wechat.article_type set issue=1 where article_type_id ='" + artcicle_type_id + "'";
+                            jdbcTemplate.update(sql);
                         }
                     } catch (Exception e) {
                         //插入实际的类型表
