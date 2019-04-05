@@ -756,7 +756,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             map.put("code", 0);
             map.put("message", "审核成功！");
             return map;
-        } else {
+        } else if("1".equals(type)){
             String updateSql = "update zz_wechat.academic_paper set check_type=1 where article_id in (" + idList + ")";
             jdbcTemplate.update(updateSql);
             HashMap<String, Object> map = new HashMap<>();
@@ -764,6 +764,29 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             map.put("message", "审核成功！");
             return map;
 
+        }else if("2".equals(type)){
+
+            String updateSql = "update zz_wechat.article_tmp set check_type=0 where article_id in (" + idList + ")";
+            jdbcTemplate.update(updateSql);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "取消审核成功！");
+            return map;
+
+        }
+        else if("3".equals(type)){
+
+            String updateSql = "update zz_wechat.academic_paper set check_type=0 where article_id in (" + idList + ")";
+            jdbcTemplate.update(updateSql);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("code", 0);
+            map.put("message", "取消审核成功！");
+            return map;
+
+        }
+
+        else {
+           return getErrorMap();
         }
     }
 
@@ -1367,13 +1390,20 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         1,
                         artcicle_type_id
                 });
-                String typeSql = "select * from zz_wechat.article_type_tmp where article_type_id=?";
-                Map<String, Object> typeMap = jdbcTemplate.queryForMap(typeSql, new Object[]{
-                        artcicle_type_id
-                });
+
 
                 //type 0 是发布 1 取消发布
                 if ("0".equals(type) || type.isEmpty()) {
+                    Map<String, Object> typeMap;
+                    try {
+                        String typeSql = "select * from zz_wechat.article_type_tmp where article_type_id=?";
+                         typeMap = jdbcTemplate.queryForMap(typeSql, new Object[]{
+                                artcicle_type_id
+                        });
+                    }catch (Exception e){
+                        continue;
+                    }
+
                     try {
                         String sqlCount = "select count(*) as count from zz_wechat.article_type where article_type_id=?";
                         Map<String, Object> map = jdbcTemplate.queryForMap(sqlCount, new Object[]{
@@ -1421,12 +1451,17 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         });
                     }
                 } else {
+                    String childList = getChildList(artcicle_type_id, "1");
+                    String childList2 = getChildList(artcicle_type_id, "0");
+
                     //临时表
-                    String sqlTmp = "update zz_wechat.article_type_tmp set issue=0 where article_type_id ='" + artcicle_type_id + "'";
+                    String sqlTmp = "update zz_wechat.article_type_tmp set issue=0 where article_type_id in(" + childList + ")";
                     //正式表
-                    String sql = "update zz_wechat.article_type set issue=0 where article_type_id ='" + artcicle_type_id + "'";
+                    String sql = "update zz_wechat.article_type set issue=0 where article_type_id in(" + childList + ")";
+                    String sql2 = "update zz_wechat.article_type set issue=0 where article_type_id in(" + childList2 + ")";
                     jdbcTemplate.update(sqlTmp);
                     jdbcTemplate.update(sql);
+                    jdbcTemplate.update(sql2);
                 }
             }
         } catch (Exception e) {
