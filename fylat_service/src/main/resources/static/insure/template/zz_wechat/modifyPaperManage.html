@@ -44,7 +44,7 @@
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
                         class="text-danger m-r-xs font-bold as-star">*</span>类型</label>
                 <div class="col-lg-4 col-md-4 col-sm-4">
-                    <select name="article_type_id" id = "article_type_id" class="form-control input-sm"  ng-model="listObj.integrationQuery.article_type_id">
+                    <select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm" data-live-search="true"  ng-model="listObj.integrationQuery.article_type_id">
                         <option ng-repeat="x in listObj.articleTypeData" ng-selected="listObj.integrationQuery.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                     </select>
                 </div>

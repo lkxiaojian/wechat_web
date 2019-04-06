@@ -30,6 +30,15 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.typeList = data.result;
+                    $(".selectpicker").empty();
+                    for(var o in $scope.typeList) {
+                        var option = $('<option>', {
+                            'value': $scope.typeList[o].article_type_id
+                        }).append($scope.typeList[o].article_type_name)
+                        $(".selectpicker").append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    $('.selectpicker').selectpicker('render');
                 } else {
                     layer.alert(data.message)
                 }
@@ -491,6 +500,7 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
                         $scope.typeForm.iamge_icon = data.data.iamge_icon;
                         $scope.typeForm.iamge_back = data.data.iamge_back;
                         $scope.typeForm.parentid = data.data.parentid;
+                        $('.selectpicker').selectpicker('val', $scope.typeForm.parentid);
                         $scope.typeForm.article_type_name_old = data.data.article_type_name_old;
                         $scope.typeForm.article_type_keyword_old = data.data.article_type_keyword_old;
                         if(data.data.iamge_icon){

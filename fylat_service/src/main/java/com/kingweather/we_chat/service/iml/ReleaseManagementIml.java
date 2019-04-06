@@ -194,8 +194,8 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map getAllIssueArticleType(String type) {
-        return releaseManagementDao.getAllIssueArticleType(type);
+    public Map getAllIssueArticleType(String type,String message) {
+        return releaseManagementDao.getAllIssueArticleType(type,message);
     }
 
     @Override

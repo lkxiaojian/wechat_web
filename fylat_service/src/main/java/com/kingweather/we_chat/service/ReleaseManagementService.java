@@ -37,7 +37,7 @@ public interface ReleaseManagementService {
 
     Map  combinedScore(String articleTypeId,String paperTypeId);
 
-    Map getAllIssueArticleType(String type);
+    Map getAllIssueArticleType(String type,String message);
 
     Map seachArticleType(String type, String message);
 
