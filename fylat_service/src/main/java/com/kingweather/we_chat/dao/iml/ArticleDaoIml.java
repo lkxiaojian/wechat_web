@@ -58,7 +58,7 @@ public class ArticleDaoIml implements ArticleDao {
 //        if(mapList.size()>0){
 //            Map map1 = mapList.get(0);
         int articleNum = jdbcTemplate.queryForObject("SELECT  COUNT(article_id) FROM article b,article_type a WHERE  a.article_type_id=b.article_type_id AND b.del_type !=1 AND a.del_type !=1 AND b.article_type_id = ? AND  b.state=0   ", Integer.class, new Object[]{articleId});
-        int paperNum = jdbcTemplate.queryForObject("SELECT  COUNT(article_id) FROM article b,article_type a WHERE  a.article_type_id=b.article_type_id AND b.del_type !=1 AND a.del_type !=1 AND b.article_type_id = ? AND  b.state=0  ", Integer.class, new Object[]{articleId});
+        int paperNum = jdbcTemplate.queryForObject("SELECT  COUNT(article_id) FROM article b,article_type a WHERE  a.article_type_id=b.article_type_id AND b.del_type !=1 AND a.del_type !=1 AND b.article_type_id = ? AND  b.state=1  ", Integer.class, new Object[]{articleId});
 
         map.put("articleNum", articleNum);
         map.put("paperCount", paperNum);
