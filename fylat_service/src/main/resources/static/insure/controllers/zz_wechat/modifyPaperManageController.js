@@ -93,6 +93,17 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                 }).success(function (data) {
                     if(data.code == '0'){
                         $scope.listObj.articleTypeData = data.result;
+                        $(".selectpicker").empty();
+                        $(".selectpicker").append('<option value="">--请选择--</option>');
+                        for(var o in $scope.listObj.articleTypeData) {
+                            var option = $('<option>', {
+                                'value': $scope.listObj.articleTypeData[o].article_type_id,
+                                'selected':$scope.listObj.articleTypeData[o].article_type_id==$scope.listObj.integrationQuery.article_type_id?true:false
+                            }).append($scope.listObj.articleTypeData[o].article_type_name)
+                            $(".selectpicker").append(option);
+                        }
+                        $('.selectpicker').selectpicker('refresh');
+                        $('.selectpicker').selectpicker('render');
                     }else{
                         layer.alert("查询类型列表失败");
                     }
@@ -188,7 +199,6 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
         };
 
         $scope.goPreLocation = function(){
-            debugger
             $state.go($scope.listObj.pre_location, {
                 query_params: $scope.listObj.pre_query_params
             });

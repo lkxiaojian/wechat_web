@@ -26,7 +26,7 @@
                     </div>
                     <div class="form-group form-inline">
                         <label class="control-label input-sm">论文类型：</label>
-                        <select name="article_type_id" id = "article_type_id" class="form-control input-sm"  ng-model="query_params.article_type_id">
+                        <select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm" data-live-search="true"  ng-model="query_params.article_type_id">
                             <option value="">--请选择--</option>
                             <option ng-repeat="x in publishedTypeList" ng-selected="query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                         </select>
