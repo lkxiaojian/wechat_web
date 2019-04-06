@@ -51,8 +51,8 @@
 
                     <div class="search-con">
                         <div class="form-group form-inline">
-                            <label class="control-label input-sm">文章类型：</label>
-                            <select name="article_type_id" class="selectpicker show-tick form-control input-sm" data-live-search="true"  ng-model="article_query_params.article_type_id">
+                            <label class="control-label input-sm col-lg-3">文章类型：</label>
+                            <select name="article_type_id" class="selectpicker show-tick form-control input-sm col-lg-9" data-live-search="true"  ng-model="article_query_params.article_type_id">
                                 <option value="">--请选择--</option>
                                 <option ng-repeat="x in publishedTypeList" ng-selected="article_query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                             </select>
@@ -126,8 +126,8 @@
 
                     <div class="search-con">
                         <div class="form-group form-inline">
-                            <label class="control-label input-sm">论文类型：</label>
-                            <select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm" data-live-search="true"  ng-model="paper_query_params.article_type_id">
+                            <label class="control-label input-sm col-lg-3">论文类型：</label>
+                            <select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm col-lg-9" data-live-search="true"  ng-model="paper_query_params.article_type_id">
                                 <option value="">--请选择--</option>
                                 <option ng-repeat="x in publishedTypeList" ng-selected="paper_query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                             </select>

@@ -25,8 +25,8 @@
                         <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="createTime" name="createTime" ng-model="query_params.createTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy',minDate:'1900',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099\'}'})"/>
                     </div>
                     <div class="form-group form-inline">
-                        <label class="control-label input-sm">论文类型：</label>
-                        <select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm" data-live-search="true"  ng-model="query_params.article_type_id">
+                        <label class="control-label input-sm col-lg-3">论文类型：</label>
+                        <select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm col-lg-9" data-live-search="true"  ng-model="query_params.article_type_id">
                             <option value="">--请选择--</option>
                             <option ng-repeat="x in publishedTypeList" ng-selected="query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                         </select>
