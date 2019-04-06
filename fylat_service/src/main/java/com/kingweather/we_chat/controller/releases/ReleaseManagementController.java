@@ -403,9 +403,9 @@ public class ReleaseManagementController extends BaseController {
      */
 
     @RequestMapping(value = "/getAllIssueArticleType/rest", method = RequestMethod.GET)
-    public Map getAllIssueArticleType(String type) {
+    public Map getAllIssueArticleType(String type,String message) {
         try {
-            return releaseManagementService.getAllIssueArticleType(type);
+            return releaseManagementService.getAllIssueArticleType(type,message);
         } catch (Exception e) {
             return getErrorMapService();
         }

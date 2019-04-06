@@ -39,7 +39,7 @@ public interface ReleaseManagementDao {
 
     List<Map<String, java.lang.Object>> combinedScore(int i);
 
-    Map getAllIssueArticleType(String table);
+    Map getAllIssueArticleType(String table,String message);
 
     Map seachArticleType(String type, String message);
 

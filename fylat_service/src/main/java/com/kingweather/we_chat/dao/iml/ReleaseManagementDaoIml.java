@@ -122,7 +122,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
 
-            String updateSqlTmp = "update  zz_wechat.article_type_tmp set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=?,domain_id=?  where article_type_id=?";
+            String updateSqlTmp = "update  zz_wechat.article_type_tmp set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=?,domain_id=?,update_time=now()  where article_type_id=?";
             int update = jdbcTemplate.update(updateSqlTmp, new Object[]{
                     name,
                     keyword,
@@ -144,7 +144,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 if (map != null && map.get("count") != null && Integer.parseInt(map.get("count").toString()) == 0) {
 
                 } else {
-                    String updateSql = "update zz_wechat.article_type set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?, parentid=? ,del_type=?,domain_id=?   where article_type_id=?";
+                    String updateSql = "update zz_wechat.article_type set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?, parentid=? ,del_type=?,domain_id=? ,update_time=now()  where article_type_id=?";
                     jdbcTemplate.update(updateSql, new Object[]{
 
                             name,
@@ -1329,21 +1329,25 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
-    public Map getAllIssueArticleType(String type) {
+    public Map getAllIssueArticleType(String type ,String message) {
 
         String sql = "";
         if ("0".equals(type)) {
-            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where issue=1 and del_type=0 and parentid !='100' and parentid !='1'";
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where issue=1 and del_type=0 and parentid !='100' and parentid !='1' ";
 
         } else if ("1".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state from zz_wechat.article_type where del_type=0 and parentid !='100' and parentid !='1'";
         } else if ("2".equals(type)) {
-            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1'";
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1' ";
 
         } else {
-            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0  and parentid !='1'";
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0  and parentid !='1' ";
 
         }
+        if(message!=null&&!"".equals(message)){
+            sql=sql+" AND article_type_name LIKE '%"+message+"%'";
+        }
+        sql=sql+" ORDER by update_time desc";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         HashMap<String, Object> map = new HashMap<>();
         map.put("code", 0);
