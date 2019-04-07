@@ -1,14 +1,8 @@
 app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         $scope.listObj = {
-            current_location: 'app.insure.article_manage',
-            navigationMsg: '管理平台 >回收站管理',
-            defaultSearchParams: {
-                view: 'select',
-                type:"0", //文章
-                del_type:"0", //非删除
-                tmp_type:"0" //正式发布的
-            },
+            current_location: 'app.insure.recycle_manage',
+            navigationMsg: '管理平台 >回收站管理'
         }
         $scope.query_params = {
             updateTimeStart:'',
@@ -16,12 +10,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             createTime:'',
             language:'',
             article_type_id:'',
-            // details_size_more:'',
-            // details_size_less:'',
             message:''
-        }
-        if($stateParams.query_params){
-            $scope.query_params = JSON.parse($stateParams.query_params);
         }
 
         //文章列表
@@ -36,7 +25,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     $.extend(params, {
                         type:"0", //文章
                         del_type:"1",
-                        tmp_type:"0"
+                        tmp_type:$scope.query_params.dataType == '0'?'1':'0'
                     });
                     return params;
                 },
@@ -152,7 +141,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                                     pre_location:$scope.listObj.current_location,
                                     operate_type:"view",
                                     type: "0",//文章
-                                    tmp_type: $scope.listObj.defaultSearchParams.tmp_type
+                                    tmp_type: $scope.query_params.dataType == '0'?'1':'0'
                                 });
                             },
                             'click .a-recover': function (e, value, row, index) {
@@ -180,7 +169,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     $.extend(params, {
                         type:"1", //论文
                         del_type:"1",
-                        tmp_type:"0"
+                        tmp_type:$scope.query_params.dataType == '0'?'1':'0'
                     });
                     return params;
                 },
@@ -290,7 +279,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
                                 type: "1",//论文
-                                tmp_type: $scope.listObj.defaultSearchParams.tmp_type
+                                tmp_type: $scope.query_params.dataType == '0'?'1':'0'
                             });                        },
                         'click .a-recover': function (e, value, row, index) {
                             recoverData(row.article_id,1);
@@ -313,9 +302,10 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
+                    debugger
                     serializeJson(params, "queryForm");
                     $.extend(params, {
-                        type:"0" //已发布的类型
+                        type: $scope.query_params.dataType == '0'?'1':'0'
                     });
                     return params;
                 },
@@ -361,16 +351,87 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
         $scope.listType();
 
+        //关键词列表
+        $scope.listKeyword = function () {
+
+            $scope.keywordOption = {
+                url: 'article/keywordQuery',
+                resultTag: 'result',
+                method: 'get',
+                queryParams: function (params) {
+                    serializeJson(params, "queryForm");
+                    $.extend(params, {
+                        type:"1",
+                        parent_id:params.article_type_id
+                    });
+                    return params;
+                },
+                pageList: ['All'],
+                pageSize: 10,
+                onLoadSuccess: function (data) {
+                    if (data.code != 0) {
+                        layer.msg(data.message);
+                    }
+                },
+                columns: [{
+                    checkbox: true
+                }, {
+                    title: '类型名称',
+                    class: 'col-md-1',
+                    field: 'article_type_name',
+                    align: 'center'
+                },{
+                    title: '关键词',
+                    class: 'col-md-1',
+                    field: 'keyword_name',
+                    align: 'center'
+                },{
+                    title: '操作',
+                    class: 'col-md-1',
+                    align: 'center',
+                    width: '100px',
+                    formatter: function (value, row, index) {
+                        return '<a class="btn btn-blue btn-xs a-recover" href="javascript:;">恢复</a>&nbsp;' +
+                            '<a class="btn btn-danger btn-xs a-delete" href="javascript:;"> 删除</a>';
+                    },
+                    events: {
+                        'click .a-recover': function (e, value, row, index) {
+                            recoverData(row.article_id,3);
+                        },
+                        'click .a-delete': function (e, value, row, index) {
+                            deleteData(row.article_id,3);
+                        }
+                    }
+                }
+                ]
+            };
+        }
+        $scope.listKeyword();
+
         $scope.query = function(){
-            $scope.articleInstance.bootstrapTable('refresh');
-            $scope.paperInstance.bootstrapTable('refresh');
-            $scope.typeInstance.bootstrapTable('refresh');
+            $scope.articleInstance.bootstrapTable('refresh',{url:"releaseManagement/selectAricleTmpList/rest",pageNumber:1,
+                pageSize:10});
+            $scope.paperInstance.bootstrapTable('refresh',{url:"releaseManagement/selectAricleTmpList/rest",pageNumber:1,
+                pageSize:10});
+            $scope.typeInstance.bootstrapTable('refresh',{url:"releaseManagement/getDelArticleType/rest",pageNumber:1,
+                pageSize:10});
+            $scope.keywordInstance.bootstrapTable('refresh',{url:"article/keywordQuery",pageNumber:1,
+                pageSize:10});
+            // $scope.articleInstance.bootstrapTable('refresh');
+            // $scope.paperInstance.bootstrapTable('refresh');
+            // $scope.typeInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
             $.each($("#queryForm select,#queryForm input"),
                 function(i, n) {
                     $(n).val('');
                 });
+            $('.selectpicker').selectpicker('val', '');
+            $('#dataType').val('0');
+        }
+
+        $scope.changeDataType = function(){
+            $scope.query();
         }
         //清空回收站
         $scope.clearRecycle = function(){
@@ -390,16 +451,14 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     layer.closeAll('loading');
                     if (data.code == 0) {
                         layer.alert(data.message);
-                        $scope.articleInstance.bootstrapTable('refresh');
-                        $scope.paperInstance.bootstrapTable('refresh');
-                        $scope.typeInstance.bootstrapTable('refresh');
+                        $scope.query();
                     } else {
                         layer.alert(data.message);
                     }
 
                 }).error(function (data) {
                     layer.closeAll('loading');
-                    layer.alert("删除失败");
+                    layer.alert("清空回收站失败");
                 })
             });
         }
@@ -414,8 +473,10 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 return $scope.articleInstance;
             }else if(type == '1'){
                 return $scope.paperInstance;
-            }else {
+            }else if(type=='2'){
                 return $scope.typeInstance;
+            }else{
+                return $scope.keywordInstance;
             }
         }
         $scope.batchDelete = function(type){
@@ -434,18 +495,26 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
 
         function deleteData(rowIds,type){
             debugger
+            var url = "article/deletedById";
+            if(type == '2'){
+                url = "delArticleTypeById/rest";//类型
+            }
+            if(type == '3'){
+                url = "article/delKeyword";//关键词
+            }
             var confirm = layer.confirm('确认彻底删除勾选的数据吗？', {
                 btn: ['取消','确认'] //按钮
             }, function(){
                 layer.close(confirm);
             }, function(){
-
                 layer.load(2);
                 $http({
                     method: 'GET',
-                    url: '/article/deletedById',
+                    url: url,
                     params: {
-                        article_id:rowIds,
+                        article_id:rowIds,//文章删除用的
+                        article_type_id:rowIds,//文章类型删除用的
+                        id:rowIds,//关键词删除用的
                         type: '1'
                     }
                 }).success(function (data) {
@@ -479,9 +548,18 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
         function recoverData(rowIds,type){
             debugger
-            var recoverType = '1';//恢复论文和文章传1
-            if(type == 2){
-                recoverType = '0';//恢复关键字传0
+            var recoverType = '1';//恢复已发布论文和文章传1
+            if(type == '3'){
+                recoverType = '0';//关键词
+            }
+            if(type == '0' && $scope.query_params.dataType == '0'){
+                recoverType = '2';//临时的文章
+            }
+            if(type == '1' && $scope.query_params.dataType == '0'){
+                recoverType = '3';//临时的论文
+            }
+            if(type == '2'){
+                recoverType = '4';//类型
             }
             var confirm = layer.confirm('确认恢复勾选的数据吗？', {
                 btn: ['取消','确认'] //按钮
@@ -518,11 +596,22 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 method: 'GET',
                 url: '/releaseManagement/getAllIssueArticleType/rest',
                 params: {
-                    type: "1"
+                    type: "3"
                 }
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
+                    $(".selectpicker").empty();
+                    $(".selectpicker").append('<option value="">--请选择--</option>');
+                    for(var o in $scope.publishedTypeList) {
+                        var option = $('<option>', {
+                            'value': $scope.publishedTypeList[o].article_type_id,
+                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
+                        }).append($scope.publishedTypeList[o].article_type_name)
+                        $(".selectpicker").append(option);
+                    }
+                    $('.selectpicker').selectpicker('refresh');
+                    $('.selectpicker').selectpicker('render');
                 } else {
                     layer.msg(data.message)
                 }
