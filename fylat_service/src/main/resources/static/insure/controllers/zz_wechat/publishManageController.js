@@ -107,6 +107,11 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     field: 'create_time',
                     align: 'center',
                     width: "150px",
+                    cellStyle: {
+                        css: {
+                            "min-widh": "150px"
+                        }
+                    },
                     formatter: function (value, row, index) {
                         if (value) {
                             return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
@@ -119,6 +124,11 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     field: 'update_time',
                     align: 'center',
                     width: "150px",
+                    cellStyle: {
+                        css: {
+                            "min-widh": "150px"
+                        }
+                    },
                     formatter: function (value, row, index) {
                         if (value) {
                             return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
@@ -175,7 +185,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     width: "100px",
                     formatter: function (value, row, index) {
                         if(row.check_type == '1'){
-                            return '已审核';
+                            return '<a class="a-uncheck a-blue btn btn-default btn-sm" href="javascript:;">取消审核</a>';
                         }else {
                             return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
                         }
@@ -183,6 +193,9 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     events: {
                         'click .a-check': function (e, value, row, index) {
                             check(row.article_id, 0);
+                        },
+                        'click .a-uncheck': function (e, value, row, index) {
+                            check(row.article_id, 2);
                         }
                     }
                 }, {
@@ -291,6 +304,11 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     field: 'create_time',
                     align: 'center',
                     width: "150px",
+                    cellStyle: {
+                        css: {
+                            "min-widh": "150px"
+                        }
+                    },
                     formatter: function (value, row, index) {
                         if (value) {
                             return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
@@ -303,6 +321,11 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     field: 'update_time',
                     align: 'center',
                     width: "150px",
+                    cellStyle: {
+                        css: {
+                            "min-widh": "150px"
+                        }
+                    },
                     formatter: function (value, row, index) {
                         if (value) {
                             return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
@@ -353,7 +376,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     width: "100px",
                     formatter: function (value, row, index) {
                         if(row.check_type == '1'){
-                            return '已审核';
+                            return '<a class="a-uncheck a-blue btn btn-default btn-sm" href="javascript:;">取消审核</a>';
                         }else{
                             return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
                         }
@@ -361,6 +384,9 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     events: {
                         'click .a-check': function (e, value, row, index) {
                             check(row.article_id, 1);
+                        },
+                        'click .a-uncheck': function (e, value, row, index) {
+                            check(row.article_id, 3);
                         }
                     }
                 }, {
@@ -602,14 +628,18 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
         //审核
         function check(article_id,type){
-            var confirm = layer.confirm('确认审核勾选的数据吗？', {
+            var msg = '确认审核勾选的数据吗？';
+            if(type == '2' || type == '3'){
+                msg = '确认取消审核勾选的数据吗？';
+            }
+            var confirm = layer.confirm(msg, {
                 btn: ['取消','确认'] //按钮
             }, function(){
                 layer.close(confirm);
             }, function(){
                 layer.load(2);
                 $http({
-                    method: 'GET',//TODO 后台没支持已发布的审核啊
+                    method: 'GET',
                     url: 'releaseManagement/getAricleTmpCheckById/rest',
                     params: {
                         articleIds: article_id,
@@ -619,7 +649,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     layer.closeAll('loading');
                     if (data.code == 0) {
                         layer.alert(data.message);
-                        if(type=='0'){
+                        if(type=='0' || type == '2'){
                             $scope.articleTmpInstance.bootstrapTable('refresh');
                         }else{
                             $scope.paperTmpInstance.bootstrapTable('refresh');
