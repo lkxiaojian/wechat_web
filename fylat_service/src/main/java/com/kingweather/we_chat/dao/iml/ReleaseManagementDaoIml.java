@@ -9,6 +9,7 @@ import com.kingweather.we_chat.dao.ReleaseManagementDao;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -906,6 +907,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
+    @Transactional
     public Map<String, Object> pushAricleTmpById(String articleIds, String type) {
         if (articleIds == null || type == null) {
             return getErrorMap();
@@ -923,7 +925,24 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             List<Map<String, Object>> articleTmpMaps = jdbcTemplate.queryForList(sql);
             for (int i = 0; i < articleTmpMaps.size(); i++) {
                 Map<String, Object> articleTmp = articleTmpMaps.get(i);
+                Map<String, Object> countMap =null;
+                try {
+                    String countSql="select count(*) as count from zz_wechat.article where article_id=?";
+                   countMap = jdbcTemplate.queryForMap(countSql, new Object[]{
+                            articleTmp.get("article_id")
+                    });
+                }catch (Exception e){
 
+                }
+
+                if(countMap!=null&&countMap.get("count")!=null&&Integer.parseInt(countMap.get("count").toString())>0){
+
+                    String delSql = "DELETE  from zz_wechat.article_tmp where article_id=?";
+                    jdbcTemplate.update(delSql, new Object[]{
+                            articleTmp.get("article_id")
+                    });
+                    continue;
+                }
 
                 String insertSql = "insert into zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source" +
                         ",share_count,collect_count,collect_initcount,share_initcount,content_type,content_manual,content_excerpt," +
@@ -954,12 +973,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         DateUtil.getCurrentTimeString()
                 });
 
-                if (update == 1) {
+
                     String delSql = "DELETE  from zz_wechat.article_tmp where article_id=?";
                     jdbcTemplate.update(delSql, new Object[]{
                             articleTmp.get("article_id")
                     });
-                }
+
 
 
             }
@@ -976,6 +995,25 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             for (int i = 0; i < mapList.size(); i++) {
 
                 Map<String, Object> paper = mapList.get(i);
+
+                Map<String, Object> countMap =null;
+                try {
+                    String countSql="select count(*) as count from zz_wechat.article where article_id=?";
+                    countMap = jdbcTemplate.queryForMap(countSql, new Object[]{
+                            paper.get("article_id")
+                    });
+                }catch (Exception e){
+
+                }
+
+                if(countMap!=null&&countMap.get("count")!=null&&Integer.parseInt(countMap.get("count").toString())>0){
+                    String delSql = "DELETE  from zz_wechat.academic_paper where article_id=?";
+                    jdbcTemplate.update(delSql, new Object[]{
+                            paper.get("article_id")
+                    });
+                    continue;
+                }
+
                 String insertSql = "insert into zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source" +
                         ",share_count,collect_count,collect_initcount,share_initcount,content_type,content_excerpt," +
                         "del_type,state " +
@@ -1019,12 +1057,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
                 });
 
-                if (update == 1) {
+
                     String delSql = "DELETE  from zz_wechat.academic_paper where article_id=?";
                     jdbcTemplate.update(delSql, new Object[]{
                             paper.get("article_id")
                     });
-                }
+
 
 
             }
