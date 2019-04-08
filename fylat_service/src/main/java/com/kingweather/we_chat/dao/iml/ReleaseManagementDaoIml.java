@@ -1378,8 +1378,14 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         } else if ("2".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1' ";
 
-        } else {
+        } else if ("3".equals(type)){
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0  and parentid !='1' ";
+
+        }else if ("4".equals(type)){
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where 1=1 ";
+
+        }else if ("5".equals(type)){
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type where 1=1 ";
 
         }
         if(message!=null&&!"".equals(message)){
