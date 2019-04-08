@@ -559,4 +559,21 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
                     }]
             }
         })
+        .state('app.insure.reptitle_manage', {
+            url: '/reptitleManageController',
+            params: {param: null, data: null},
+            templateUrl: 'insure/template/zz_wechat/reptitleManage.html',
+            pageTitle: '爬虫界面',
+            controller: 'reptitleManageController',
+            resolve: {
+                deps: ['$ocLazyLoad',
+                    function ($ocLazyLoad) {
+                        return $ocLazyLoad.load([
+                            'common/directives/custom_directives.js',
+                            'insure/controllers/zz_wechat/reptitleManageController.js',
+                            'ui.select'
+                        ]);
+                    }]
+            }
+        })
 }]);

@@ -439,6 +439,11 @@ app.controller('NavCtrl', ['$scope', '$cookieStore', '$http', 'userMenu', 'userM
         sub_menu8.href = 'app.insure.posting_manage';
         sub_menu8.isLeaf = '1';
         menu.submenus.push(sub_menu8);
+        var sub_menu9 = {};
+        sub_menu9.name = '爬虫界面';
+        sub_menu9.href = 'app.insure.reptitle_manage';
+        sub_menu9.isLeaf = '1';
+        menu.submenus.push(sub_menu9);
         menus.push(menu);
         
         var menuAdmin = {};
