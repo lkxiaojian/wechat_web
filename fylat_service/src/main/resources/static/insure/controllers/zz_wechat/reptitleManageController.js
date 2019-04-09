@@ -383,7 +383,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                 layer.msg("文章类型不能为空");
                 return;
             }*/
-            $scope.articleTmpInstance.bootstrapTable('refresh',{url:"http:// 106.2.13.148:8990/reptile/getArticleData",pageNumber:1,
+            $scope.articleTmpInstance.bootstrapTable('refresh',{url:"http://106.2.13.148:8990/reptile/getArticleData",pageNumber:1,
                 pageSize:10});
             // $scope.articleTmpInstance.bootstrapTable('refresh');
         }
@@ -439,9 +439,9 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                 layer.load(2);
                 var urlTemp='';
                 if(type=='0'){
-                    urlTemp='http:// 106.2.13.148:8990:/reptile/getExcelArticleData';
+                    urlTemp='http://106.2.13.148:8990/reptile/getExcelArticleData';
                 }else{
-                    urlTemp='http:// 106.2.13.148:8990:/reptile/getExcelPaperData';
+                    urlTemp='http://106.2.13.148:8990/reptile/getExcelPaperData';
                 }
                 $http({
                     method: 'GET',
@@ -496,9 +496,9 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                 layer.load(2);
                 var urlTemp='';
                 if(type=='0'){
-                    urlTemp='http:// 106.2.13.148:8990:/reptile/delByArticle';
+                    urlTemp='http://106.2.13.148:8990/reptile/delByArticle';
                 }else{
-                    urlTemp='http:// 106.2.13.148:8990:/reptile/delByPaper';
+                    urlTemp='http://106.2.13.148:8990/reptile/delByPaper';
                 }
                 $http({
                     method: 'GET',
