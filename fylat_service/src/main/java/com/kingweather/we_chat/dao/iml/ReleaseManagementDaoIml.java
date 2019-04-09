@@ -84,6 +84,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
+    @Transactional
     public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack, String parentid, String type) {
         try {
             //获取领域id
@@ -121,6 +122,25 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
                 }
             }
+
+
+            String childList = getChildList(artcicle_type_id, "1");
+            String childList2 = getChildList(artcicle_type_id, "0");
+
+            //临时表
+            String sqlTmp = "update zz_wechat.article_type_tmp set domain_id='" +
+                    domain_id+
+                    "' where article_type_id in(" + childList + ")";
+            //正式表
+            String sql = "update zz_wechat.article_type set domain_id='" +
+                    domain_id+
+                    "' where article_type_id in(" + childList + ")";
+            String sql2 = "update zz_wechat.article_type set domain_id='" +
+                    domain_id +
+                    "' where article_type_id in(" + childList2 + ")";
+            jdbcTemplate.update(sqlTmp);
+            jdbcTemplate.update(sql);
+            jdbcTemplate.update(sql2);
 
 
             String updateSqlTmp = "update  zz_wechat.article_type_tmp set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=?,domain_id=?,update_time=now()  where article_type_id=?";
@@ -1105,8 +1125,64 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             });
             String parent_id = map.get("parentid").toString();
 
+
+
+           String domain_id="";
+            Map<String, Object> maps = new HashMap<>();
+            if ("-1".equals(parent_id) || "100".equals(parent_id)) {
+                domain_id = article_type_id.toString();
+            } else {
+                try {
+                    String typeSql = "select domain_id from zz_wechat.article_type_tmp where article_type_id=?";
+                    maps = jdbcTemplate.queryForMap(typeSql, new Object[]{
+                            article_type_id.toString()
+                    });
+
+                } catch (Exception e) {
+
+
+                }
+
+                if (maps == null || maps.get("domain_id") == null) {
+                    try {
+                        String typeSql = "select domain_id from zz_wechat.article_type where article_type_id=?";
+                        maps = jdbcTemplate.queryForMap(typeSql, new Object[]{
+                                article_type_id.toString()
+                        });
+
+                    } catch (Exception e) {
+
+
+                    }
+                }
+
+                if (maps != null && maps.get("domain_id") != null) {
+                    domain_id = maps.get("domain_id").toString();
+
+                }
+            }
+
+
             for (int i = 0; i < merge_type_idList.length; i++) {
                 mergeIdList = mergeIdList + "'" + merge_type_idList[i].toString() + "',";
+                String artcicle_type_id=merge_type_idList[i].toString();
+                String childList = getChildList(artcicle_type_id, "1");
+                String childList2 = getChildList(artcicle_type_id, "0");
+
+                //临时表
+                String sqlTmp = "update zz_wechat.article_type_tmp set domain_id='" +
+                        domain_id+
+                        "' where article_type_id in(" + childList + ")";
+                //正式表
+                String sql1 = "update zz_wechat.article_type set domain_id='" +
+                        domain_id+
+                        "' where article_type_id in(" + childList + ")";
+                String sql2 = "update zz_wechat.article_type set domain_id='" +
+                        domain_id +
+                        "' where article_type_id in(" + childList2 + ")";
+                jdbcTemplate.update(sqlTmp);
+                jdbcTemplate.update(sql1);
+                jdbcTemplate.update(sql2);
 
 
                 //对要合并的类型插入到临时表
