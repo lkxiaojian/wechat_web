@@ -8,7 +8,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
             pre_location: $stateParams.pre_location,
             comming_type_id: $stateParams.comming_type_id, //带过来的typeId
             wx_type: $stateParams.wx_type, //带过来的wx_type
-            current_location: "app.insure.reptile_manage",
+            current_location: "app.insure.reptitle_manage",
             defaultSearchParams:{
                 tmp_type:1
             }
@@ -56,7 +56,8 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
 
             $scope.articleTmpOption = {
                 url: 'http://106.2.13.148:8990/reptile/getArticleData',
-                resultTag: 'result',
+                resultTag: 'data',
+                totalTag:'count',
                 method: 'get',
                 queryParams: function (params) {
                     serializeJson(params, "queryArticleForm");
@@ -72,7 +73,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                 pageList: ['All'],
                 pageSize: 10,
                 onLoadSuccess: function (data) {
-                    if (data.code != 0) {
+                    if (data.code != 200) {
                         layer.msg(data.message);
                     }
                 },
@@ -81,7 +82,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                 }, {
                     title: '文章名称',
                     class: 'col-md-1',
-                    field: 'articleitle',
+                    field: 'articleTitle',
                     align: 'center',
                     titleTooltip: 'title',
                     // width: "15%",
@@ -94,7 +95,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                 }, {
                     title: '发表时间',
                     class: 'col-md-1',
-                    field: 'createime',
+                    field: 'createTime',
                     align: 'center',
                     width: "150px",
                     cellStyle: {
@@ -144,10 +145,10 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                         },
                         classes: ["overflow"]
                     },formatter:function(value, row, index) {
-                        var values = row.content_excerpt;
+                        var values = row.contentExcerpt;
                         var span=document.createElement('span');
                         span.setAttribute('title',values);
-                        span.innerHTML = row.content_excerpt;
+                        span.innerHTML = row.contentExcerpt;
                         return span.outerHTML;
                     }
                 }, {
@@ -204,7 +205,8 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
 
             $scope.paperTmpOption = {
                 url: 'http://106.2.13.148:8990/reptile/getPaperData',
-                resultTag: 'result',
+                resultTag: 'data',
+                totalTag:'count',
                 method: 'get',
                 queryParams: function (params) {
                     serializeJson(params, "queryPaperForm");
@@ -219,7 +221,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                 pageList: ['All'],
                 pageSize: 10,
                 onLoadSuccess: function (data) {
-                    if (data.code != 0) {
+                    if (data.code != 200) {
                         layer.msg(data.message);
                     }
                 },
@@ -291,10 +293,10 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                         },
                         classes: ["overflow"]
                     },formatter:function(value, row, index) {
-                        var values = row.content_excerpt;
+                        var values = row.contentExcerpt;
                         var span=document.createElement('span');
                         span.setAttribute('title',values);
-                        span.innerHTML = row.content_excerpt;
+                        span.innerHTML = row.contentExcerpt;
                         return span.outerHTML;
                     }
                 }, {
@@ -431,7 +433,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
             download(ids,type);
         }
         function download(rowIds,type){
-            var confirm = layer.confirm('确认发布勾选的数据吗？', {
+            var confirm = layer.confirm('确认下载勾选的数据吗？', {
                 btn: ['取消','确认'] //按钮
             }, function(){
                 layer.close(confirm);
@@ -448,23 +450,29 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                     url: urlTemp,
                     params: {
                         list: rowIds
-                    }
+                    },
+                    responseType: 'arraybuffer'
                 }).success(function (data) {
                     layer.closeAll('loading');
-                    if (data.code == 0) {
-                        layer.alert(data.message);
+                        var blob = new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8"});
+                        var objectUrl = URL.createObjectURL(blob);
+                        var a = document.createElement('a');
+                        document.body.appendChild(a);
+                        a.setAttribute('style', 'display:none');
+                        a.setAttribute('href', objectUrl);
+                        var filename="批量导出.xlsx";
+                        a.setAttribute('download', filename);
+                        a.click();
+                        URL.revokeObjectURL(objectUrl);
                         if(type=='0'){
                             $scope.articleTmpInstance.bootstrapTable('refresh');
                         }else{
                             $scope.paperTmpInstance.bootstrapTable('refresh');
                         }
-                    } else {
-                        layer.alert(data.message);
-                    }
 
                 }).error(function (data) {
                     layer.closeAll('loading');
-                    layer.alert("发布失败");
+                    layer.alert("下载失败");
                 })
             });
         }
@@ -495,7 +503,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
             }, function(){
                 layer.load(2);
                 var urlTemp='';
-                if(type=='0'){
+                if(type=='200'){
                     urlTemp='http://106.2.13.148:8990/reptile/delByArticle';
                 }else{
                     urlTemp='http://106.2.13.148:8990/reptile/delByPaper';
