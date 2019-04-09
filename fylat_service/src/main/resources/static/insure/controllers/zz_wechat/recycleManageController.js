@@ -431,6 +431,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
 
         $scope.changeDataType = function(){
+            $scope.getAllPublishedType();
             $scope.query();
         }
         //清空回收站
@@ -596,7 +597,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 method: 'GET',
                 url: '/releaseManagement/getAllIssueArticleType/rest',
                 params: {
-                    type: "3"
+                    type: $scope.query_params.dataType == '0'?'4':'5'
                 }
             }).success(function (data) {
                 if (data.code == 0) {
