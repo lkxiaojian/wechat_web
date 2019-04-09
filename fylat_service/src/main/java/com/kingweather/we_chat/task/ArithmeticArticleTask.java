@@ -30,7 +30,8 @@ public class ArithmeticArticleTask {
     @Value("${urlTypePath}")
     private String articlePath;
 
-    @Scheduled(cron = "0/30 * * * * ?")
+//    @Scheduled(cron = "0/30 * * * * ?")
+    @Scheduled(cron = "0 15 6 ? * MON")
     public void selectAllType() {
         log.info("获取全部类型");
         String s = HttpUtils.doPost(articlePath + "type_info", "");
