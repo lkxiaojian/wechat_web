@@ -37,9 +37,9 @@
                     <div class="search-con">
                         <div class="form-group form-inline" style = "width:460px;">
                             <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
-                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="startTime" name="startTime"  ng-model="article_query_params.startTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'endTime\')||\'2099-12-31\'}'})"/>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="statTime" name="statTime"  ng-model="article_query_params.statTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'endTime\')||\'2099-12-31\'}'})"/>
                             <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
-                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="endTime" name="endTime"  ng-model="article_query_params.endTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'startTime\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="endTime" name="endTime"  ng-model="article_query_params.endTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'statTime\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
                         </div>
                         <!--<div class="form-group form-inline" style = "width:460px;">-->
                             <!--<label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>-->
@@ -96,9 +96,9 @@
                     <div class="search-con">
                         <div class="form-group form-inline" style = "width:460px;">
                             <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
-                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="startTime2" name="startTime"  ng-model="paper_query_params.startTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'endTime\')||\'2099-12-31\'}'})"/>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="statTime2" name="statTime"  ng-model="paper_query_params.statTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'1900-01-01',maxDate:'#F{$dp.$D(\'endTime\')||\'2099-12-31\'}'})"/>
                             <label style="margin:5px 10px 5px 0;width:12px;" class="control-label input-sm">至</label>
-                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="endTime2" name="endTime"  ng-model="paper_query_params.endTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'startTime\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
+                            <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="endTime2" name="endTime"  ng-model="paper_query_params.endTime" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'statTime\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
                         </div>
                         <!--<div class="form-group form-inline" style = "width:460px;">-->
                         <!--<label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>-->
