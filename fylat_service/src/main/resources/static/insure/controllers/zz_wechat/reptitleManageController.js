@@ -158,12 +158,6 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                     align: 'center',
                     sortable: false
                 }, {
-                    title: '作者',
-                    class: 'col-md-1',
-                    field: 'author',
-                    align: 'center'
-
-                }, {
                     title: '字数',
                     class: 'col-md-1',
                     field: 'num',
@@ -300,23 +294,11 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
                         return span.outerHTML;
                     }
                 }, {
-                    title: '爬取来源',
-                    class: 'col-md-1',
-                    field: 'source',
-                    align: 'center',
-                    sortable: false
-                }, {
                     title: '作者',
                     class: 'col-md-1',
                     field: 'author',
                     align: 'center'
 
-                },{
-                    title: '字数',
-                    class: 'col-md-1',
-                    field: 'num',
-                    align: 'center',
-                    width: "100px"
                 },{
                     title: '操作',
                     class: 'col-md-1',
