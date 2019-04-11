@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -36,6 +37,19 @@ public class MenuManagerDaoImpl implements MenuManagerDao {
         }
         List<Map<String, Object>> menuList =
                 (List<Map<String, Object>>) jdbcTemplate.queryForList(sql, new Object[]{});
+        return menuList;
+    }
+
+    @Override
+    public List<Map<String, Object>> getUserMenu(String userId) {
+        String sql = " select( @rowNO :=@rowNo +1)AS row_number,menu_id, menu_name, action_url, parent_id, menu_sort, img_flag, subnode_flag," +
+                "status, user_group_suffix from zz_wechat.sys_menu, (select @rowNO :=0)b where status=1 ";
+
+        if (StringUtils.isNotBlank(userId)) {
+            sql += " and menu_id in (select menu_id from zz_wechat.sys_user_re_menu where user_id = ?)";
+        }
+        List<Map<String, Object>> menuList =
+                (List<Map<String, Object>>) jdbcTemplate.queryForList(sql, new Object[]{userId});
         return menuList;
     }
 

@@ -347,7 +347,8 @@ public class UserManagerController extends BaseController
 //                    }else{
 //                        menuTree = userManagerServiceImpl.getMenuTreeByUserId(userId);
 //                    }
-					menuTree = menuManagerServiceImpl.getAllMenuTree("1");
+//					menuTree = menuManagerServiceImpl.getAllMenuTree("1");
+					menuTree = menuManagerServiceImpl.getUserMenuTree(user.getId());
                     List<Map<String,Object>> menuList = (List<Map<String,Object>>)menuTree.get("item");
                     if(menuList.isEmpty()){
                         map.put("userCode", UserState.NOAUTHORITY.getCode());

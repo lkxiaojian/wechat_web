@@ -116,6 +116,31 @@ public class MenuManagerServiceImpl implements MenuManagerService
 		menuTree.put("urlMap", urlMap);
 		return menuTree;
 	}
+
+	@Override
+	public Map<String, Object> getUserMenuTree(String userId) {
+		List<Map<String,Object>> menulist = menuManagerDaoImpl.getUserMenu(userId);
+
+		List<Map<String,Object>> parentMenuList = new ArrayList<Map<String,Object>>();
+		Map<String,String> urlMap = new HashMap<String,String>();
+		for(Map<String,Object> menu : menulist){
+			String parentId = menu.get("parent_id").toString();
+			if(menu.get("action_url") != null && StringUtils.isNotEmpty(menu.get("action_url").toString())){
+				urlMap.put(menu.get("action_url").toString(), "1");
+			}
+			if("0".equals(parentId)){
+				Map<String,Object> parentMenu = getTreeMap(menu);
+
+				buildMenuTree(parentMenu, menulist);
+				parentMenuList.add(parentMenu);
+			}
+		}
+		Map<String,Object> menuTree = new HashMap<String, Object>();
+		menuTree.put("id", 0);
+		menuTree.put("item", parentMenuList);
+		menuTree.put("urlMap", urlMap);
+		return menuTree;	}
+
 	@Transactional
 	public boolean addMenu(Menu menu) {
 		// TODO Auto-generated method stub

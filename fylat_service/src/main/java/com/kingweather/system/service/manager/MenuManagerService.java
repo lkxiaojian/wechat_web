@@ -26,7 +26,14 @@ public interface MenuManagerService
      * 获取菜单树
      */
 	Map<String,Object> getAllMenuTree(String menuStatus);
-	
+
+	/**
+	 * 获取当前用户可用的菜单
+	 * @param userId
+	 * @return
+	 */
+	Map<String,Object> getUserMenuTree(String userId);
+
 	/**
      * 查询菜单列表
      */

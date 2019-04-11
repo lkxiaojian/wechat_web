@@ -15,7 +15,11 @@ public interface MenuManagerDao
      * 查询菜单
      */
 	List<Map<String, Object>> getAllMenu(String menuSatus);
-	
+    /**
+     * 查询用户可用菜单
+     */
+	List<Map<String, Object>> getUserMenu(String userId);
+
 	 /**
      * 添加菜单
      */
