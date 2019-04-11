@@ -469,7 +469,7 @@ public class ReleaseManagementController extends BaseController {
      * @return
      */
 
-    @RequestMapping(value = "/getDelArticleType/rest", method = RequestMethod.POST)
+    @RequestMapping(value = "/getDelArticleType/rest")
     @Transactional
     public Map getDelArticleType(@RequestParam  Map<String,Object> data ) {
         try {

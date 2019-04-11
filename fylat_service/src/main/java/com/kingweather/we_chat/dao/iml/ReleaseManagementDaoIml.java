@@ -9,6 +9,7 @@ import com.kingweather.we_chat.dao.ReleaseManagementDao;
 import org.mozilla.universalchardet.UniversalDetector;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -83,6 +84,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
+    @Transactional
     public int updateTypeMessage(String name, String keyword, String artcicle_type_id, String pathICon, String pathBack, String parentid, String type) {
         try {
             //获取领域id
@@ -120,6 +122,25 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
                 }
             }
+
+
+            String childList = getChildList(artcicle_type_id, "1");
+            String childList2 = getChildList(artcicle_type_id, "0");
+
+            //临时表
+            String sqlTmp = "update zz_wechat.article_type_tmp set domain_id='" +
+                    domain_id+
+                    "' where article_type_id in(" + childList + ")";
+            //正式表
+            String sql = "update zz_wechat.article_type set domain_id='" +
+                    domain_id+
+                    "' where article_type_id in(" + childList + ")";
+            String sql2 = "update zz_wechat.article_type set domain_id='" +
+                    domain_id +
+                    "' where article_type_id in(" + childList2 + ")";
+            jdbcTemplate.update(sqlTmp);
+            jdbcTemplate.update(sql);
+            jdbcTemplate.update(sql2);
 
 
             String updateSqlTmp = "update  zz_wechat.article_type_tmp set article_type_name=?,article_type_keyword=?,iamge_icon=?,iamge_back=?,status=?, parentid=?,domain_id=?,update_time=now()  where article_type_id=?";
@@ -906,6 +927,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
     }
 
     @Override
+    @Transactional
     public Map<String, Object> pushAricleTmpById(String articleIds, String type) {
         if (articleIds == null || type == null) {
             return getErrorMap();
@@ -923,7 +945,24 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             List<Map<String, Object>> articleTmpMaps = jdbcTemplate.queryForList(sql);
             for (int i = 0; i < articleTmpMaps.size(); i++) {
                 Map<String, Object> articleTmp = articleTmpMaps.get(i);
+                Map<String, Object> countMap =null;
+                try {
+                    String countSql="select count(*) as count from zz_wechat.article where article_id=?";
+                   countMap = jdbcTemplate.queryForMap(countSql, new Object[]{
+                            articleTmp.get("article_id")
+                    });
+                }catch (Exception e){
 
+                }
+
+                if(countMap!=null&&countMap.get("count")!=null&&Integer.parseInt(countMap.get("count").toString())>0){
+
+                    String delSql = "DELETE  from zz_wechat.article_tmp where article_id=?";
+                    jdbcTemplate.update(delSql, new Object[]{
+                            articleTmp.get("article_id")
+                    });
+                    continue;
+                }
 
                 String insertSql = "insert into zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source" +
                         ",share_count,collect_count,collect_initcount,share_initcount,content_type,content_manual,content_excerpt," +
@@ -954,12 +993,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         DateUtil.getCurrentTimeString()
                 });
 
-                if (update == 1) {
+
                     String delSql = "DELETE  from zz_wechat.article_tmp where article_id=?";
                     jdbcTemplate.update(delSql, new Object[]{
                             articleTmp.get("article_id")
                     });
-                }
+
 
 
             }
@@ -976,6 +1015,25 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             for (int i = 0; i < mapList.size(); i++) {
 
                 Map<String, Object> paper = mapList.get(i);
+
+                Map<String, Object> countMap =null;
+                try {
+                    String countSql="select count(*) as count from zz_wechat.article where article_id=?";
+                    countMap = jdbcTemplate.queryForMap(countSql, new Object[]{
+                            paper.get("article_id")
+                    });
+                }catch (Exception e){
+
+                }
+
+                if(countMap!=null&&countMap.get("count")!=null&&Integer.parseInt(countMap.get("count").toString())>0){
+                    String delSql = "DELETE  from zz_wechat.academic_paper where article_id=?";
+                    jdbcTemplate.update(delSql, new Object[]{
+                            paper.get("article_id")
+                    });
+                    continue;
+                }
+
                 String insertSql = "insert into zz_wechat.article (article_id,article_type_id,article_title,article_keyword,author,source" +
                         ",share_count,collect_count,collect_initcount,share_initcount,content_type,content_excerpt," +
                         "del_type,state " +
@@ -1019,12 +1077,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
                 });
 
-                if (update == 1) {
+
                     String delSql = "DELETE  from zz_wechat.academic_paper where article_id=?";
                     jdbcTemplate.update(delSql, new Object[]{
                             paper.get("article_id")
                     });
-                }
+
 
 
             }
@@ -1067,8 +1125,64 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             });
             String parent_id = map.get("parentid").toString();
 
+
+
+           String domain_id="";
+            Map<String, Object> maps = new HashMap<>();
+            if ("-1".equals(parent_id) || "100".equals(parent_id)) {
+                domain_id = article_type_id.toString();
+            } else {
+                try {
+                    String typeSql = "select domain_id from zz_wechat.article_type_tmp where article_type_id=?";
+                    maps = jdbcTemplate.queryForMap(typeSql, new Object[]{
+                            article_type_id.toString()
+                    });
+
+                } catch (Exception e) {
+
+
+                }
+
+                if (maps == null || maps.get("domain_id") == null) {
+                    try {
+                        String typeSql = "select domain_id from zz_wechat.article_type where article_type_id=?";
+                        maps = jdbcTemplate.queryForMap(typeSql, new Object[]{
+                                article_type_id.toString()
+                        });
+
+                    } catch (Exception e) {
+
+
+                    }
+                }
+
+                if (maps != null && maps.get("domain_id") != null) {
+                    domain_id = maps.get("domain_id").toString();
+
+                }
+            }
+
+
             for (int i = 0; i < merge_type_idList.length; i++) {
                 mergeIdList = mergeIdList + "'" + merge_type_idList[i].toString() + "',";
+                String artcicle_type_id=merge_type_idList[i].toString();
+                String childList = getChildList(artcicle_type_id, "1");
+                String childList2 = getChildList(artcicle_type_id, "0");
+
+                //临时表
+                String sqlTmp = "update zz_wechat.article_type_tmp set domain_id='" +
+                        domain_id+
+                        "' where article_type_id in(" + childList + ")";
+                //正式表
+                String sql1 = "update zz_wechat.article_type set domain_id='" +
+                        domain_id+
+                        "' where article_type_id in(" + childList + ")";
+                String sql2 = "update zz_wechat.article_type set domain_id='" +
+                        domain_id +
+                        "' where article_type_id in(" + childList2 + ")";
+                jdbcTemplate.update(sqlTmp);
+                jdbcTemplate.update(sql1);
+                jdbcTemplate.update(sql2);
 
 
                 //对要合并的类型插入到临时表
@@ -1340,8 +1454,14 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         } else if ("2".equals(type)) {
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0 and parentid !='100' and parentid !='1' ";
 
-        } else {
+        } else if ("3".equals(type)){
             sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where del_type=0  and parentid !='1' ";
+
+        }else if ("4".equals(type)){
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type_tmp where 1=1 ";
+
+        }else if ("5".equals(type)){
+            sql = "select article_type_id,article_type_name,parentid,type_state,issue from zz_wechat.article_type where 1=1 ";
 
         }
         if(message!=null&&!"".equals(message)){

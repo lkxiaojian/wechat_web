@@ -31,6 +31,7 @@ public class ArithmeticArticleTask {
     private String articlePath;
 
 //    @Scheduled(cron = "0/30 * * * * ?")
+    @Scheduled(cron = "0 15 6 ? * MON")
     public void selectAllType() {
         log.info("获取全部类型");
         String s = HttpUtils.doPost(articlePath + "type_info", "");
@@ -77,7 +78,9 @@ public class ArithmeticArticleTask {
                 }
                 if (parentIdMap != null && parentIdMap.get("parent_id") != null) {
                     if (Integer.parseInt(parentIdMap.get("type").toString()) == 0) {
+
                         type_id = parentIdMap.get("keep_type_id").toString();
+                        continue;
                     }
                     parent_id = parentIdMap.get("parent_id").toString();
                 }

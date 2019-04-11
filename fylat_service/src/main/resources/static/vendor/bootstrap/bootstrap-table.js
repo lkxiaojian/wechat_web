@@ -1853,7 +1853,11 @@
          * 如果传进来是一个数组，然后数据某个索引是行数组的话，resultTag="[],0,key",第二个元素是数组的元素索引，第三个是该索引对象的key
          */
         if (this.options.sidePagination === 'server') {
-            this.options.totalRows = data.total;
+            if(this.options.totalTag&&"count"==this.options.totalTag){
+                this.options.totalRows=data.count;
+            }else {
+                this.options.totalRows = data.total;
+            }
             fixedScroll = data.fixedScroll;
             if(this.options.resultTag){
                 if(this.options.resultTag.indexOf(".")!=-1){
