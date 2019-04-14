@@ -73,6 +73,7 @@ public class ExceptiongAspect {
                 && !joinPoint.toString().contains("statistics.StatisticsController")
                 && !joinPoint.toString().contains("usermenu.UserMenuController")
                 && !joinPoint.toString().contains("websysuser.WebSysUserController")
+                && !joinPoint.toString().contains("download.ExcleDownloadController")
                 &&!joinPoint.toString().contains("algorithm.algorithmController")
                 &&!joinPoint.toString().contains("algorithm.AlgorithmDataController")){
             String method = joinPoint.getSignature().getName();
