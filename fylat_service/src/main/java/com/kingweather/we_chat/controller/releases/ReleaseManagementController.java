@@ -387,9 +387,9 @@ public class ReleaseManagementController extends BaseController {
 
 
     @RequestMapping(value = "/combinedScore/rest", method = RequestMethod.GET)
-    public Map combinedScore(String articleTypeId,String paperTypeId) {
+    public Map combinedScore(String articleTypeId,String type) {
         try {
-            return releaseManagementService.combinedScore( articleTypeId, paperTypeId);
+            return releaseManagementService.combinedScore( articleTypeId, type);
         } catch (Exception e) {
             return getErrorMapService();
         }

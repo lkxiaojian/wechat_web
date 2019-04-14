@@ -139,7 +139,7 @@ public class ReleaseManagementIml implements ReleaseManagementService {
     }
 
     @Override
-    public Map combinedScore(String articleTypeId,String paperTypeId) {
+    public Map combinedScore(String articleTypeId,String type) {
         try {
             Map<String, Object> jsonMap = new HashMap<>();
 //            //文章
@@ -152,15 +152,35 @@ public class ReleaseManagementIml implements ReleaseManagementService {
 //            jsonMap.put("cluster_B", artileMap1);
 
             //文章
-            List<Map<String, Object>> articleList = releaseManagementDao.combinedScoreById(articleTypeId);
-            Map artileMap = getArtileMap(articleList);
-            jsonMap.put("cluster_A", artileMap);
-            //论文
-            List<Map<String, Object>> paperList = releaseManagementDao.combinedScoreById(paperTypeId);
+//            List<Map<String, Object>> articleList = releaseManagementDao.combinedScoreById(articleTypeId);
+//            Map artileMap = getArtileMap(articleList);
+//            jsonMap.put("cluster_A", artileMap);
+//            //论文
+//            List<Map<String, Object>> paperList = releaseManagementDao.combinedScoreById(paperTypeId);
+//            Map artileMap1 = getArtileMap(paperList);
+//            jsonMap.put("cluster_B", artileMap1);
+//
+//            jsonMap.put("Topn", 3);
+
+
+            List<Map<String, Object>> articleList= releaseManagementDao.getArticleOldNameById(articleTypeId);
+             Map artileMap = getArtileMap(articleList);
+             jsonMap.put("cluster_A", artileMap);
+             int state=0;
+
+             if(articleList==null||articleList.size()<=0){
+                 Object type_state = articleList.get(0).get("type_state");
+                 if(type_state!=null&&!"".equals(type_state.toString())&&0==Integer.parseInt(type_state.toString())){
+                     state=1;
+                 }
+             }
+
+             List<Map<String, Object>> paperList = releaseManagementDao.combinedScoreByState(state);
             Map artileMap1 = getArtileMap(paperList);
             jsonMap.put("cluster_B", artileMap1);
 
             jsonMap.put("Topn", 3);
+
 
             String json = JSON.toJSONString(jsonMap);
             String sendAbstractsPost = HttpUtils.doPost(urlTypePath + "similarity", json);
