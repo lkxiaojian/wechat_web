@@ -157,10 +157,18 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
         }
         //相似度
         $scope.similarity = function () {
+            var selectedNode = $scope.myTree.getSelected();
+            if(!selectedNode){
+                layer.msg("请选中一个节点");
+                return;
+            }
             layer.load(2);
             $http({
                 method: 'GET',
-                url: 'releaseManagement/combinedScore/rest'
+                url: 'releaseManagement/combinedScore/rest',
+                params: {
+                    articleTypeId: selectedNode
+                }
             }).success(function (data) {
                 layer.closeAll('loading');
                 if (data.code == 0) {
