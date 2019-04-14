@@ -1758,6 +1758,22 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
         return maps;
     }
 
+    @Override
+    public List<Map<String, Object>> getArticleOldNameById(String articleTypeId) {
+        String sql = "select  article_type_id,article_type_name_old,type_state from zz_wechat.article_type_tmp where article_type_id ='"+articleTypeId+"'";
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        return maps;
+    }
+
+    @Override
+    public List<Map<String, Object>> combinedScoreByState(int state) {
+        String sql = "select  article_type_id,article_type_name_old from zz_wechat.article_type_tmp where del_type !=1 and parentid !=100 and  parentid !=-1 and type_state ='"+state+"'";
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
+        return maps;
+    }
+
+
+
     /**
      * 根据id获取所有下级id
      * @param id

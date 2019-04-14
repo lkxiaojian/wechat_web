@@ -55,4 +55,8 @@ public interface ReleaseManagementDao {
     List<Map<String,java.lang.Object>> combinedScoreById(String articleTypeId);
 
     List<Map> getTypeMenuTree(String type, String delType);
+
+    List<Map<String,java.lang.Object>> getArticleOldNameById(String articleTypeId);
+
+    List<Map<String,java.lang.Object>>  combinedScoreByState(int state);
 }
