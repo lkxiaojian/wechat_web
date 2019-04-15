@@ -168,7 +168,7 @@ public class ReleaseManagementIml implements ReleaseManagementService {
              jsonMap.put("cluster_A", artileMap);
              int state=0;
 
-             if(articleList==null||articleList.size()<=0){
+             if(articleList!=null||articleList.size()>0){
                  Object type_state = articleList.get(0).get("type_state");
                  if(type_state!=null&&!"".equals(type_state.toString())&&0==Integer.parseInt(type_state.toString())){
                      state=1;
