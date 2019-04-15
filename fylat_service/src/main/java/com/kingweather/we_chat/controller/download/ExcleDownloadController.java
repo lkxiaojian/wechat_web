@@ -45,6 +45,7 @@ public class ExcleDownloadController {
             for (Map m : list) {
                 List<String> item = new ArrayList<>();
                 item.add(m.get("article_id")==null?"":m.get("article_id").toString());
+                item.add(m.get("state")==null?"":m.get("state").toString());
                 item.add(m.get("article_type_name")==null?"":m.get("article_type_name").toString());
                 item.add(m.get("article_title")==null?"":m.get("article_title").toString());
                 item.add(m.get("article_title_e")==null?"":m.get("article_title_e").toString());
@@ -81,7 +82,7 @@ public class ExcleDownloadController {
 
             List<List<String>> head = new ArrayList<List<String>>();
 
-            String[] headTitle = {"论文id","论文类型","论文标题","题目英文","关键字","关键词英文","作者","作者英文","更新时间","发布时间","来源","论文摘要",
+            String[] headTitle = {"论文id","文章/论文","类型","标题","题目英文","关键字","关键词英文","作者","作者英文","更新时间","发布时间","来源","论文摘要",
                     "摘要英文","图片地址","是否审核","分数","论文去重","刊期名称","pdf路径","参考文献","网站序号","搜索关键词",
                     "刊出卷期","文本信息","字数"};
             for (int i=0,num=headTitle.length;i<num;i++){
