@@ -61,7 +61,6 @@ public class ExcleDownloadController {
                 item.add(m.get("check_type")==null?"":m.get("check_type").toString());
                 item.add(m.get("article_score")==null?"":m.get("article_score").toString());
                 item.add(m.get("simhash")==null?"":m.get("simhash").toString());
-                item.add(m.get("image_path")==null?"":m.get("image_path").toString());
                 item.add(m.get("posting_name")==null?"":m.get("posting_name").toString());
                 item.add(m.get("pdf_path")==null?"":m.get("pdf_path").toString());
                 item.add(m.get("reference")==null?"":m.get("reference").toString());
@@ -205,7 +204,6 @@ public class ExcleDownloadController {
                 item.add(m.get("check_type")==null?"":m.get("check_type").toString());
                 item.add(m.get("article_score")==null?"":m.get("article_score").toString());
                 item.add(m.get("simhash")==null?"":m.get("simhash").toString());
-                item.add(m.get("image_path")==null?"":m.get("image_path").toString());
                 item.add(m.get("posting_name")==null?"":m.get("posting_name").toString());
                 item.add(m.get("pdf_path")==null?"":m.get("pdf_path").toString());
                 item.add(m.get("reference")==null?"":m.get("reference").toString());

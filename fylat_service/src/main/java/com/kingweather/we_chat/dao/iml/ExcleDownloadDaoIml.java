@@ -19,7 +19,7 @@ public class ExcleDownloadDaoIml implements ExcleDownloadDao {
 
     @Override
     public List<Map<String, Object>> selArticle(Map<String, Object> info) throws Exception {
-        String page =   info.get("pageNumber")==null?"0":info.get("pageNumber").toString();
+        String page =   info.get("pageNumber")==null?"1":info.get("pageNumber").toString();
         String size =   info.get("pageSize")==null?"":info.get("pageSize").toString();
         String startTime =   info.get("startTime")==null?"":info.get("startTime").toString();
         String endTime =   info.get("endTime")==null?"":info.get("endTime").toString();
@@ -52,7 +52,7 @@ public class ExcleDownloadDaoIml implements ExcleDownloadDao {
         sql.append("  	a.`content_excerpt`,	 ");
         sql.append("  	a.`image_path`,	 ");
 //        sql.append("  	a.`state` ,	 ");
-//        sql.append("  	case when a.`state`=1 then '论文' else  '文章' end state,	 ");
+        sql.append("  	case when a.`state`=1 then '论文' else  '文章' end state,	 ");
         sql.append("  	a.`details_txt`,	 ");
         sql.append("  	a.`details_div`,	 ");
         sql.append("  	a.`details_path`,	 ");
@@ -112,7 +112,7 @@ public class ExcleDownloadDaoIml implements ExcleDownloadDao {
 
     @Override
     public List<Map<String, Object>> selArticleTmp(Map<String, Object> info) throws Exception {
-        String page =   info.get("pageNumber")==null?"0":info.get("pageNumber").toString();
+        String page =   info.get("pageNumber")==null?"1":info.get("pageNumber").toString();
         String size =   info.get("pageSize")==null?"":info.get("pageSize").toString();
         String startTime =   info.get("startTime")==null?"":info.get("startTime").toString();
         String endTime =   info.get("endTime")==null?"":info.get("endTime").toString();
@@ -139,7 +139,7 @@ public class ExcleDownloadDaoIml implements ExcleDownloadDao {
         sql.append("  	a.`details_txt`,	 ");
         sql.append("  	a.`details_div`,	 ");
         sql.append("  	a.`details_size`,	 ");
-//        sql.append("  	case when a.`state`=1 then '论文' else  '文章' end state,	 ");
+        sql.append("  	case when a.`status`=1 then '论文' else  '文章' end state,	 ");
 //        sql.append("  	a.`state`,	 ");
 //        sql.append("  	a.`check_type`,	 ");
         sql.append("  	case when a.`check_type`=0 then '未审核' else  '审核通过' end check_type,	 ");
@@ -186,7 +186,7 @@ public class ExcleDownloadDaoIml implements ExcleDownloadDao {
 
     @Override
     public List<Map<String, Object>> selAcademicPaper(Map<String, Object> info) throws Exception {
-        String page =   info.get("pageNumber")==null?"0":info.get("pageNumber").toString();
+        String page =   info.get("pageNumber")==null?"1":info.get("pageNumber").toString();
         String size =   info.get("pageSize")==null?"":info.get("pageSize").toString();
         String startTime =   info.get("startTime")==null?"":info.get("startTime").toString();
         String endTime =   info.get("endTime")==null?"":info.get("endTime").toString();
@@ -211,7 +211,7 @@ public class ExcleDownloadDaoIml implements ExcleDownloadDao {
         sql.append("  	a.`image_path`,	 ");
         sql.append("  	a.`article_type_id`,	 ");
 //        sql.append("  	a.`state`,	 ");
-//        sql.append("  	case when a.`state`=1 then '论文' else  '文章' end state,	 ");
+        sql.append("  	case when a.`status`=1 then '论文' else  '文章' end state,	 ");
         sql.append("  	a.`posting_name`,	 ");
         sql.append("  	a.`article_title_e`,	 ");
         sql.append("  	a.`word_count`,	 ");

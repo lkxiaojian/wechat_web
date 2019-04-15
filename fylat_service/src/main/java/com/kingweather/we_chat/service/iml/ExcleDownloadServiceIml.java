@@ -19,22 +19,22 @@ public class ExcleDownloadServiceIml implements ExcleDownloadService {
 
     @Override
     public List<Map<String, Object>> selArticle(Map<String, Object> info) throws Exception {
-        String size =  info.get("pageSize")==null?"0":info.get("pageSize").toString();
-        info.put("pageSize",Integer.valueOf(size)>1000?"10":size) ;
+        String size =  info.get("pageSize")==null?"10":info.get("pageSize").toString();
+        info.put("pageSize",Integer.valueOf(size)>1000?"1000":size) ;
         return excleDownloadDao.selArticle(info);
     }
 
     @Override
     public List<Map<String, Object>> selArticleTmp(Map<String, Object> info) throws Exception {
-        String size =   info.get("pageSize")==null?"0":info.get("pageSize").toString();
-        info.put("pageSize",Integer.valueOf(size)>1000?"10":size) ;
+        String size =   info.get("pageSize")==null?"10":info.get("pageSize").toString();
+        info.put("pageSize",Integer.valueOf(size)>1000?"1000":size) ;
         return excleDownloadDao.selArticleTmp(info);
     }
 
     @Override
     public List<Map<String, Object>> selAcademicPaper(Map<String, Object> info) throws Exception {
-        String size =   info.get("pageSize")==null?"0":info.get("pageSize").toString();
-        info.put("pageSize",Integer.valueOf(size)>1000?"10":size) ;
+        String size =   info.get("pageSize")==null?"10":info.get("pageSize").toString();
+        info.put("pageSize",Integer.valueOf(size)>1000?"1000":size) ;
         return excleDownloadDao.selAcademicPaper(info);
     }
 }
