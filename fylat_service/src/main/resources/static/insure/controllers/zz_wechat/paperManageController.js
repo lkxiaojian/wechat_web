@@ -116,9 +116,9 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                             return span.outerHTML;
                         }
                     }, {
-                        title: '来源',
+                        title: '期刊名称',
                         class: 'col-md-1',
-                        field: 'source',
+                        field: 'posting_name',
                         align: 'center',
                         sortable: false
                     }, {
