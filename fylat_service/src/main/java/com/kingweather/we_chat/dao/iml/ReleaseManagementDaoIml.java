@@ -526,7 +526,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                     " AND a.article_type_id=b.article_type_id ";
 //                    "and a.article_type_id='" + article_type_id + "' ";
 
-            String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
+            String sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name ,a.posting_name  " +
                     "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
                     " AND a.article_type_id=b.article_type_id ";
 //                    "and a.article_type_id='" + article_type_id + "' ";
@@ -534,13 +534,13 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             if (tmp_type != null && !"1".equals(tmp_type.toString())) {
 
-                sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name  " +
+                sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name ,a.posting_name  " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
                         " AND a.article_type_id=b.article_type_id and  a.state=1 ";
 //                        "and a.article_type_id='" + article_type_id + "' ";
 
                 if (language != null && "1".equals(language)) {
-                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,a.content_excerpt_e,a.reference,a.article_score,b.article_type_name  " +
+                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,a.content_excerpt_e,a.reference,a.article_score,b.article_type_name,a.posting_name   " +
                             "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
                             " AND a.article_type_id=b.article_type_id and  a.state=1 ";
 //                            "and a.article_type_id='" + article_type_id + "' ";
@@ -555,7 +555,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             } else {
 
                 if (language != null && "1".equals(language)) {
-                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,b.article_type_name  " +
+                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,b.article_type_name,a.posting_name  " +
                             "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
                             " AND a.article_type_id=b.article_type_id and  a.state=1  ";
 //                            "and a.article_type_id='" + article_type_id + "' ";
