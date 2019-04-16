@@ -50,7 +50,9 @@
 }
 
 .fixed-table-header {
+	/*
 	border-bottom: 1px solid #dddddd;
+	*/
 }
 
 .fixed-table-footer {

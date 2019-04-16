@@ -32,7 +32,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, $scope.listObj.defaultSearchParams);
                     return params;
                 },
@@ -178,11 +178,12 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                 pageSize:10});
         }
         $scope.reset = function(){
-            $.each($("#queryForm select,#queryForm input"),
+            $scope.query_params = {};
+            /*$.each($("#queryForm select,#queryForm input"),
                 function(i, n) {
                     $(n).val('');
                 });
-            $('.selectpicker').selectpicker('val', '');
+            $('.selectpicker').selectpicker('val', '');*/
         }
         $scope.checkAll = function(){
             $scope.tableInstance.bootstrapTable('checkAll');
@@ -253,18 +254,18 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
-
-                    $(".selectpicker").empty();
-                    $(".selectpicker").append('<option value="">--请选择--</option>');
-                    for(var o in $scope.publishedTypeList) {
-                        var option = $('<option>', {
-                            'value': $scope.publishedTypeList[o].article_type_id,
-                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                        }).append($scope.publishedTypeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
+                    $("[name=article_type_id]").trigger('change');
+                    // $(".selectpicker").empty();
+                    // $(".selectpicker").append('<option value="">--请选择--</option>');
+                    // for(var o in $scope.publishedTypeList) {
+                    //     var option = $('<option>', {
+                    //         'value': $scope.publishedTypeList[o].article_type_id,
+                    //         'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
+                    //     }).append($scope.publishedTypeList[o].article_type_name)
+                    //     $(".selectpicker").append(option);
+                    // }
+                    // $('.selectpicker').selectpicker('refresh');
+                    // $('.selectpicker').selectpicker('render');
 
                 } else {
                     layer.alert(data.message)
