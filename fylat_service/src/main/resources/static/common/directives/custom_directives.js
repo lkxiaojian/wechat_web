@@ -1365,7 +1365,6 @@ app.directive('select2', function(select2Query) {
                 }, true);
                 scope.$watch('config', function() {
                     setTimeout(function() {
-                        debugger
                         $element.find('[value^="?"]').remove();
                         $element.select2('val', scope.ngModel);
                     }, 0);
