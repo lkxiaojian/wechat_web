@@ -65,7 +65,8 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryArticleForm");
+                    $.extend(params, $scope.article_query_params);
+                    // serializeJson(params, "queryArticleForm");
                     $.extend(params, {
                         view: 'select',
                         type: "0", //文章
@@ -263,7 +264,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryPaperForm");
+                    $.extend(params, $scope.paper_query_params);
                     $.extend(params, {
                         view: 'select',
                         type: "1", //论文

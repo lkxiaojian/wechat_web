@@ -80,7 +80,6 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                             }
                             return '';
                         }
-
                     }, {
                         title: '关键词',
                         class: 'col-md-1',
@@ -602,17 +601,6 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
-                    $(".selectpicker").empty();
-                    $(".selectpicker").append('<option value="">--请选择--</option>');
-                    for(var o in $scope.publishedTypeList) {
-                        var option = $('<option>', {
-                            'value': $scope.publishedTypeList[o].article_type_id,
-                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                        }).append($scope.publishedTypeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
                 } else {
                     layer.msg(data.message)
                 }

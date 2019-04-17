@@ -33,7 +33,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, $scope.listObj.defaultSearchParams);
                     return params;
                 },
