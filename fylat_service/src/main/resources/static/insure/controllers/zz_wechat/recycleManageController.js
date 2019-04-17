@@ -21,7 +21,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, {
                         type:"0", //文章
                         del_type:"1",
@@ -164,7 +164,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, {
                         type:"1", //论文
                         del_type:"1",
@@ -301,8 +301,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    debugger
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, {
                         type: $scope.query_params.dataType == '0'?'1':'0'
                     });
@@ -358,7 +357,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, {
                         type:"1",
                         parent_id:params.article_type_id
@@ -421,12 +420,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             // $scope.typeInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
-            $.each($("#queryForm select,#queryForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('.selectpicker').selectpicker('val', '');
-            $('#dataType').val('0');
+            $scope.query_params = {};
         }
 
         $scope.changeDataType = function(){
