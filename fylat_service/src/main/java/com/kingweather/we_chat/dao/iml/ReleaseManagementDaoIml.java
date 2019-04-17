@@ -557,7 +557,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                 if (language != null && "1".equals(language)) {
                     sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e,a.article_keyword_e,a.author_e,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.create_time ,a.source,a.content_excerpt_e,a.reference,a.article_score,a.check_type,b.article_type_name,a.posting_name  " +
                             "from zz_wechat.academic_paper a ,zz_wechat.article_type_tmp b where a.del_type " + delTypeSql +
-                            " AND a.article_type_id=b.article_type_id and  a.state=1  ";
+                            " AND a.article_type_id=b.article_type_id   ";
 //                            "and a.article_type_id='" + article_type_id + "' ";
                 }
 
