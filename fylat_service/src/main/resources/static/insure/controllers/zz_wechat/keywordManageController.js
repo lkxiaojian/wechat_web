@@ -47,7 +47,7 @@ app.controller('keywordManageController', ['$scope', '$modal', '$http', 'fylatSe
         };
 
         $scope.listObj = {
-            navigationMsg: '管理平台 > 关键词管理',   //导航栏显示信息
+            navigationMsg: '管理平台 > 爬虫关键词',   //导航栏显示信息
             // projectData: fylatService.projectSelect,   //产品选择框数据
             // /**
             //  * 选择产品后，级联显示类型

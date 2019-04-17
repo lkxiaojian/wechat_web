@@ -101,7 +101,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.keyword_Manage', {
             url: '/keywordManage',
             templateUrl: 'insure/template/zz_wechat/keywordManage.html',
-            pageTitle: '关键词',
+            pageTitle: '爬虫关键词',
             controller: 'keywordManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -215,7 +215,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/keywordList',
             // params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/keywordList.html',
-            pageTitle: '关键词管理',
+            pageTitle: '爬虫关键词列表',
             controller: 'keywordListManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
