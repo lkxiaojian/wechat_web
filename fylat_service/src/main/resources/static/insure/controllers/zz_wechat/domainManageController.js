@@ -57,7 +57,7 @@ app.controller('domainManageController', ['$scope', '$modal', '$http', 'fylatSer
 
 
         $scope.listObj = {
-            navigationMsg: '管理平台 > 领域管理',   //导航栏显示信息
+            navigationMsg: '管理平台 > 添加领域',   //导航栏显示信息
             projectData: fylatService.projectSelect,   //产品选择框数据
             /**
              * 选择产品后，级联显示类型

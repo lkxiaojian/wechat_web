@@ -29,7 +29,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.domain_Manage', {
             url: '/domainManage',
             templateUrl: 'insure/template/zz_wechat/domainManage.html',
-            pageTitle: '领域新增',
+            pageTitle: '添加领域',
             controller: 'domainManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -46,7 +46,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.article_type', {
             url: '/articleTypeManage',
             templateUrl: 'insure/template/zz_wechat/articleTypeManage.html',
-            pageTitle: '文章类型',
+            pageTitle: '人工编辑文章类型',
             controller: 'articleTypeManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -64,7 +64,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/addArticle',
             params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/addArticle.html',
-            pageTitle: '添加文章',
+            pageTitle: '人工编辑添加文章',
             controller: 'addArticleManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -85,7 +85,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/articleList',
             params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/articleList.html',
-            pageTitle: '文章列表',
+            pageTitle: '已发布文章列表',
             controller: 'articleListManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -179,7 +179,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/domainList',
             // params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/domainList.html',
-            pageTitle: '领域管理',
+            pageTitle: '领域列表',
             controller: 'domainListManageController',
             resolve: {
                 deps: ['$ocLazyLoad',

@@ -2,7 +2,7 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         var editor;
         $scope.listObj = {
-            navigationMsg: '管理平台 >文章管理',
+            navigationMsg: '管理平台 >已发布文章列表',
             seachMessage: '',
             seach: function () {
                 var a=$scope.listObj.seachMessage;
