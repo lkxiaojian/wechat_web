@@ -28,11 +28,6 @@
                     <div class="search-con">
                         <div class="form-group form-inline">
                             <label class="control-label input-sm col-lg-3">类型：</label>
-                            <!--<select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm col-lg-9" data-live-search="true"  ng-model="query_params.article_type_id">
-                                <option value="">&#45;&#45;请选择&#45;&#45;</option>
-                                <option ng-repeat="x in publishedTypeList" ng-selected="query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
-                            </select>-->
-
                             <select select2 style="width: 100%;" class="form-control" ng-model="query_params.article_type_id" name = "article_type_id" config="publishedTypeList">
                                 <option value="">请选择</option>
                                 <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>

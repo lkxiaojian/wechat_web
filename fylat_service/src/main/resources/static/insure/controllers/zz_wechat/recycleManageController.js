@@ -420,7 +420,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             // $scope.typeInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
-            $scope.query_params = {};
+            $scope.query_params = {dataType:'0'};
         }
 
         $scope.changeDataType = function(){
@@ -488,7 +488,6 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
 
         function deleteData(rowIds,type){
-            debugger
             var url = "article/deletedById";
             if(type == '2'){
                 url = "delArticleTypeById/rest";//类型
