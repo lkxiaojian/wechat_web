@@ -2,7 +2,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         $scope.listObj = {
             current_location: 'app.insure.paper_manage',
-            navigationMsg: '管理平台 >论文管理',
+            navigationMsg: '管理平台 >已发布的论文管理',
             defaultSearchParams: {
                 view: 'select',
                 type:"1", //论文
@@ -179,11 +179,6 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
         }
         $scope.reset = function(){
             $scope.query_params = {};
-            /*$.each($("#queryForm select,#queryForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('.selectpicker').selectpicker('val', '');*/
         }
         $scope.checkAll = function(){
             $scope.tableInstance.bootstrapTable('checkAll');
@@ -254,19 +249,6 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
-                    $("[name=article_type_id]").trigger('change');
-                    // $(".selectpicker").empty();
-                    // $(".selectpicker").append('<option value="">--请选择--</option>');
-                    // for(var o in $scope.publishedTypeList) {
-                    //     var option = $('<option>', {
-                    //         'value': $scope.publishedTypeList[o].article_type_id,
-                    //         'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                    //     }).append($scope.publishedTypeList[o].article_type_name)
-                    //     $(".selectpicker").append(option);
-                    // }
-                    // $('.selectpicker').selectpicker('refresh');
-                    // $('.selectpicker').selectpicker('render');
-
                 } else {
                     layer.alert(data.message)
                 }
