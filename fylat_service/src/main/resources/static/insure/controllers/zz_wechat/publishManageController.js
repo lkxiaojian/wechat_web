@@ -1,5 +1,6 @@
 app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
+    debugger
         var artcicle_type_id = $stateParams.type_id;
         $scope.activeTab=1;
         $scope.listObj = {
@@ -223,7 +224,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     events: {
                         'click .a-view': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
-                                pre_query_params: JSON.stringify($scope.query_params),
+                                pre_query_params: JSON.stringify($scope.article_query_params),
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
@@ -234,7 +235,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         'click .a-edit': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
-                                pre_query_params: JSON.stringify($scope.query_params),
+                                pre_query_params: JSON.stringify($scope.article_query_params),
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"edit",
@@ -414,7 +415,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     events: {
                         'click .a-view': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
-                                pre_query_params: JSON.stringify($scope.query_params),
+                                pre_query_params: JSON.stringify($scope.paper_query_params),
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"view",
@@ -425,7 +426,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         'click .a-edit': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
-                                pre_query_params: JSON.stringify($scope.query_params),
+                                pre_query_params: JSON.stringify($scope.paper_query_params),
                                 article_id: row.article_id,
                                 pre_location:$scope.listObj.current_location,
                                 operate_type:"edit",
@@ -470,7 +471,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 pageSize:10});
         }
         $scope.resetArticle=function () {
-            $scope.article_query_params = {};
+            $scope.article_query_params = {type:0};
         }
 
         $scope.queryPager=function () {
@@ -478,7 +479,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 pageSize:10});
         }
         $scope.resetPager=function () {
-            $scope.paper_query_params = {};
+            $scope.paper_query_params = {type:1};
         }
 
         $scope.checkAll=function (type) {
