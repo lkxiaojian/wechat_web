@@ -49,15 +49,16 @@
                 </div>
 
                 <form class="form-horizontal" role="form"  name="searchuserForm" style="padding-top: 15px;padding-right: 10px;">
-<!--
-                    <input type="hidden" class="form-control input-sm" ng-model="typeForm.parentid">
--->
                     <input type="hidden" class="form-control input-sm" ng-model="typeForm.article_type_id">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">上级类型:</label>
                         <div class="col-sm-10">
-                            <select ng-model="typeForm.parentid" class="selectpicker show-tick form-control input-sm" data-live-search="true">
+                            <!--<select ng-model="typeForm.parentid" class="selectpicker show-tick form-control input-sm" data-live-search="true">
                                 <option ng-repeat="x in typeList" value="{{x.article_type_id}}" ngf-select="typeForm.parentid==x.article_type_id">{{x.article_type_name}}</option>
+                            </select>-->
+                            <select select2 style="width: 100%;" class="form-control" ng-model="typeForm.parentid" name = "article_type_id" config="typeList">
+                                <option value="">请选择</option>
+                                <option ng-repeat="x in typeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                             </select>
                         </div>
                     </div>
@@ -207,7 +208,11 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">一级领域:</label>
                         <div class="col-sm-10">
-                            <select ng-model="updateDomainObj.parentid" class="form-control input-sm">
+                           <!-- <select ng-model="updateDomainObj.parentid" class="form-control input-sm">
+                                <option ng-repeat="x in domainDataList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                            </select>-->
+                            <select select2 style="width: 100%;" class="form-control" ng-model="updateDomainObj.parentid" name = "article_type_id" config="domainDataList">
+                                <option value="">请选择</option>
                                 <option ng-repeat="x in domainDataList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                             </select>
                         </div>

@@ -181,9 +181,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 pageSize:10});
         }
         $scope.reset = function(){
-            $scope.reset = function(){
-                $scope.query_params = {};
-            }
+            $scope.query_params = {};
             // $scope.tableInstance.bootstrapTable()
         }
         $scope.checkAll = function(){

@@ -1,17 +1,17 @@
 app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'FileUploader', 'Upload', 'insureUtil', '$window', 'modalTip', '$compile', '$timeout',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, FileUploader, Upload, insureUtil, $window, modalTip) {
         $scope.listObj = {
-            navigationMsg: "管理平台 >分类管理",
+            navigationMsg: "管理平台 >分类及领域管理",
             type: $stateParams.type,//0:分类管理 1:精品名称管理 2:待修复分类管理
             current_location: "app.insure.type_manage",
             pic_location: "http://106.2.11.94:7902"
         };
         if($scope.listObj.type == '2'){
-            $scope.listObj.navigationMsg = "管理平台 >待修复分类管理";
+            $scope.listObj.navigationMsg = "管理平台 >文章领域人工确认";
         }else if($scope.listObj.type == '1'){
-            $scope.listObj.navigationMsg = "管理平台 >精品名称管理";
+            $scope.listObj.navigationMsg = "管理平台 >已发表分类名称管理";
         }else{
-            $scope.listObj.navigationMsg = "管理平台 >分类管理";
+            $scope.listObj.navigationMsg = "管理平台 >分类及领域管理";
         }
         //聚焦
         $scope.focusNode = $stateParams.focus_node;
@@ -30,15 +30,6 @@ app.controller('typeManageController', ['$scope', '$modal', '$http', 'fylatServi
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.typeList = data.result;
-                    $(".selectpicker").empty();
-                    for(var o in $scope.typeList) {
-                        var option = $('<option>', {
-                            'value': $scope.typeList[o].article_type_id
-                        }).append($scope.typeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
                 } else {
                     layer.alert(data.message)
                 }

@@ -456,17 +456,6 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
-                    $(".selectpicker").empty();
-                    $(".selectpicker").append('<option value="">--请选择--</option>');
-                    for(var o in $scope.publishedTypeList) {
-                        var option = $('<option>', {
-                            'value': $scope.publishedTypeList[o].article_type_id,
-                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                        }).append($scope.publishedTypeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
                 } else {
                     layer.msg(data.message)
                 }
@@ -477,37 +466,19 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         $scope.getAllPublishedType();
 
         $scope.queryArticle=function () {
-            /*if(!$("#queryArticleForm [name=article_type_id]").val()){
-                layer.msg("文章类型不能为空");
-                return;
-            }*/
             $scope.articleTmpInstance.bootstrapTable('refresh',{url:"releaseManagement/selectAricleTmpList/rest",pageNumber:1,
                 pageSize:10});
-            // $scope.articleTmpInstance.bootstrapTable('refresh');
         }
         $scope.resetArticle=function () {
-            $.each($("#queryArticleForm select,#queryArticleForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('#queryArticleForm .selectpicker').selectpicker('val', '');
+            $scope.article_query_params = {};
         }
 
         $scope.queryPager=function () {
-            /*if(!$("#queryPaperForm [name=article_type_id]").val()){
-                layer.msg("论文类型不能为空");
-                return;
-            }*/
             $scope.paperTmpInstance.bootstrapTable('refresh',{url:"releaseManagement/selectAricleTmpList/rest",pageNumber:1,
                 pageSize:10});
-            // $scope.paperTmpInstance.bootstrapTable('refresh');
         }
         $scope.resetPager=function () {
-            $.each($("#queryPaperForm select,#queryPaperForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('#queryPaperForm .selectpicker').selectpicker('val', '');
+            $scope.paper_query_params = {};
         }
 
         $scope.checkAll=function (type) {
