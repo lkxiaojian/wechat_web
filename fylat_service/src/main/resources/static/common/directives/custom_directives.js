@@ -1347,7 +1347,6 @@ app.directive('select2', function(select2Query) {
             select2Model: '='
         },
         link: function(scope, element, attrs) {
-            debugger
             var tagName = element[0].tagName
                 , config = {
                 allowClear: true,
@@ -1357,11 +1356,18 @@ app.directive('select2', function(select2Query) {
             if (tagName === 'SELECT') {
                 var $element = $(element);
                 delete config.multiple;
-                $element.prepend('<option value=""></option>').val('').select2(config);
+                $element.val('').select2(config);
                 scope.$watch('ngModel', function(newVal) {
                     setTimeout(function() {
                         $element.find('[value^="?"]').remove();
                         $element.select2('val', newVal);
+                    }, 0);
+                }, true);
+                scope.$watch('config', function() {
+                    setTimeout(function() {
+                        debugger
+                        $element.find('[value^="?"]').remove();
+                        $element.select2('val', scope.ngModel);
                     }, 0);
                 }, true);
                 return false;

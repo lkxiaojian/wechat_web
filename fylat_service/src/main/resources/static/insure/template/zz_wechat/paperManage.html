@@ -14,7 +14,7 @@
         <div class="box-header with-border">
             <form class="navbar-form navbar-left" role="search" id = "queryForm">
                 <div class="search-con">
-                    <div class="form-group form-inline" style = "width:460px;">
+                    <div class="form-group form-inline" style = "width:480px;">
                         <label style=" padding-left:13px;width:95px;" class="control-label input-sm">入库时间：</label>
                         <wui-date
                                 format="yyyy-mm-dd hh:mm:ss"
@@ -32,7 +32,7 @@
                         <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd2" name="updateTimeEnd" ng-model="query_params.updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
 -->
                     </div>
-                    <div class="form-group form-inline" style = "width:460px;">
+                    <div class="form-group form-inline" style = "width:280px;">
                         <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
                         <wui-date
                                 format="yyyy-mm-dd"
@@ -46,7 +46,7 @@
                     <div class="form-group form-inline">
                         <label class="control-label input-sm col-lg-3">论文类型：</label>
 
-                        <select select2 style="width: 100%;" class="form-control" ng-model="query_params.article_type_id" name = "article_type_id">
+                        <select select2 style="width: 100%;" class="form-control" ng-model="query_params.article_type_id" name = "article_type_id" config="publishedTypeList">
                             <option value="" ng-selected="query_params.article_type_id==''">请选择</option>
                             <option ng-repeat="x in publishedTypeList" ng-selected="query_params.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                         </select>
