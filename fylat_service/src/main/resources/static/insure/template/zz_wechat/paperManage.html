@@ -29,12 +29,13 @@
                                 ng-model="query_params.updateTimeEnd"></wui-date>
                     </div>
                     <div class="form-group form-inline" style = "width:280px;">
-                        <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
-                        <wui-date
+                        <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表日期：</label>
+                        <input name="message" class="form-control input-sm" placeholder="请输入年份" ng-model="query_params.createTime">
+                        <!--<wui-date
                                 format="yyyy-mm"
                                 placeholder="请选择或输入日期"
                                 btns="{'ok':'确定','now':'今天'}"
-                                ng-model="query_params.createTime"></wui-date>
+                                ng-model="query_params.createTime"></wui-date>-->
                     </div>
                     <div class="form-group form-inline" style="width: 350px;">
                         <label class="control-label input-sm col-lg-3">论文类型：</label>
