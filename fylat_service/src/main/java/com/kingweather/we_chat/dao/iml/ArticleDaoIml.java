@@ -475,6 +475,9 @@ public class ArticleDaoIml implements ArticleDao {
             if (num < 0) {
                 num = 0;
             }
+            if(page==0){
+                num = 0;
+            }
 
 
             String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
