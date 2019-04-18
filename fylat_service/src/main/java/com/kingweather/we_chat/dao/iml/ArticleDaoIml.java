@@ -875,6 +875,19 @@ public class ArticleDaoIml implements ArticleDao {
                     0,
                     domian_id
             });
+
+            String sqlTmp = "insert into zz_wechat.article_type_tmp (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id,type_state) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?,2)";
+
+            jdbcTemplate.update(sqlTmp, new Object[]{
+                    name,
+                    keyword,
+                    sysTime,
+                    pathICon,
+                    artcicle_type_id,
+                    pathback,
+                    0,
+                    domian_id
+            });
             if (update == 1) {
                 return true;
             }
