@@ -34,17 +34,21 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
         if($scope.query_params.type == '0'){
             $scope.article_query_params = $scope.query_params;
+            $scope.article_query_params.type = "0";
             if(!$scope.paper_query_params){
                 $scope.paper_query_params = $scope.article_query_params;
+                $scope.paper_query_params.type = "1";
             }
         }else{
             $scope.paper_query_params = $scope.query_params;
+            $scope.paper_query_params.type = "1";
             $("#tab2Btn").trigger("click");
             $scope.activeTab=2;
         }
 
         if($stateParams.type == '1'){
             $scope.paper_query_params = $scope.query_params;
+            $scope.paper_query_params.type = "1";
             $("#tab2Btn").trigger("click");
             $scope.activeTab=2;
         }
