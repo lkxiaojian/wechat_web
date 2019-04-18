@@ -59,9 +59,9 @@
                     </div>
 
                     <div class="search-con">
-                        <div class="form-group form-inline">
+                        <div class="form-group form-inline" style="width: 350px;">
                             <label class="control-label input-sm col-lg-3">文章类型：</label>
-                            <div class="form-control" style="padding: 0px;border: 0px;">
+                            <div class="form-control" style="padding: 0px;border: 0px;width: 250px;">
                                 <select select2 style="width: 100%;"  class="form-control" ng-model="article_query_params.article_type_id" name = "article_type_id" config="publishedTypeList">
                                     <option value="">请选择</option>
                                     <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
@@ -81,7 +81,7 @@
                         <div class="form-group form-inline">
                             <label class="control-label input-sm">是否审核：</label>
                             <select name="checkType" class="form-control input-sm" ng-model="article_query_params.checkType">
-                                <option value="">--请选择--</option>
+                                <option value="" ng-selected="article_query_params.checkType==''">--请选择--</option>
                                 <option value="0" ng-selected="article_query_params.checkType=='0'">未审核</option>
                                 <option value="1" ng-selected="article_query_params.checkType=='1'">已审核</option>
                             </select>
@@ -128,7 +128,7 @@
                         <div class="form-group form-inline" style = "width:280px;">
                             <label style=" padding-left:13px;width:95px;" class="control-label input-sm">发表时间：</label>
                             <wui-date
-                                    format="yyyy-mm-dd"
+                                    format="yyyy-mm"
                                     placeholder="请选择或输入日期"
                                     btns="{'ok':'确定','now':'今天'}"
                                     ng-model="paper_query_params.createTime"></wui-date>
@@ -136,18 +136,18 @@
 
                         <div class="form-group form-inline">
                             <label class="control-label input-sm">语言：</label>
-                            <select name="language" class="form-control input-sm" ng-model="query_params.language">
-                                <option value="">--请选择--</option>
-                                <option value="0" ng-selected="paper_query_params.article_type_id=='0'">中文</option>
-                                <option value="1" ng-selected="paper_query_params.article_type_id=='1'">英文</option>
+                            <select name="language" class="form-control input-sm" ng-model="paper_query_params.language">
+                                <option value="" ng-selected="paper_query_params.language==''">--请选择--</option>
+                                <option value="0" ng-selected="paper_query_params.language=='0'">中文</option>
+                                <option value="1" ng-selected="paper_query_params.language=='1'">英文</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="search-con">
-                        <div class="form-group form-inline">
+                        <div class="form-group form-inline" style = "width:350px;">
                             <label class="control-label input-sm col-lg-3">论文类型：</label>
-                            <div class="form-control" style="padding: 0px;border: 0px;">
+                            <div class="form-control" style="padding: 0px;border: 0px;width: 250px;">
                                 <select select2 style="width: 100%;" class="form-control" ng-model="paper_query_params.article_type_id" name = "article_type_id" config="publishedTypeList">
                                     <option value="">请选择</option>
                                     <option ng-repeat="x in publishedTypeList" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
@@ -156,8 +156,8 @@
                         </div>
                         <div class="form-group form-inline">
                             <label class="control-label input-sm">是否审核：</label>
-                            <select name="checkType" class="form-control input-sm" ng-model="article_query_params.checkType">
-                                <option value="">--请选择--</option>
+                            <select name="checkType" class="form-control input-sm" ng-model="paper_query_params.checkType">
+                                <option value="" ng-selected="paper_query_params.checkType==''">--请选择--</option>
                                 <option value="0" ng-selected="paper_query_params.checkType=='0'">未审核</option>
                                 <option value="1" ng-selected="paper_query_params.checkType=='1'">已审核</option>
                             </select>
