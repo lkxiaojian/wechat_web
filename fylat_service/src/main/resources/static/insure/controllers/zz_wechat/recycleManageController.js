@@ -55,7 +55,20 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         title: '所属分类',
                         class: 'col-md-1',
                         field: 'article_type_name',
-                        align: 'center'
+                        align: 'center',
+                        cellStyle: {
+                            css: {
+                                "min-width": "100px",
+                                "max-width": "200px"
+                            },
+                            classes: ["overflow"]
+                        },formatter:function(value, row, index) {
+                            var values = row.article_type_name;
+                            var span=document.createElement('span');
+                            span.setAttribute('title',values);
+                            span.innerHTML = row.article_type_name;
+                            return span.outerHTML;
+                        }
                     }, {
                         title: '发表时间',
                         class: 'col-md-1',
@@ -198,7 +211,20 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '所属分类',
                     class: 'col-md-1',
                     field: 'article_type_name',
-                    align: 'center'
+                    align: 'center',
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
+                        },
+                        classes: ["overflow"]
+                    },formatter:function(value, row, index) {
+                        var values = row.article_type_name;
+                        var span=document.createElement('span');
+                        span.setAttribute('title',values);
+                        span.innerHTML = row.article_type_name;
+                        return span.outerHTML;
+                    }
                 }, {
                     title: '发表时间',
                     class: 'col-md-1',
@@ -320,7 +346,20 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '类型名称',
                     class: 'col-md-1',
                     field: 'article_type_name',
-                    align: 'center'
+                    align: 'center',
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
+                        },
+                        classes: ["overflow"]
+                    },formatter:function(value, row, index) {
+                        var values = row.article_type_name;
+                        var span=document.createElement('span');
+                        span.setAttribute('title',values);
+                        span.innerHTML = row.article_type_name;
+                        return span.outerHTML;
+                    }
                 },{
                     title: '关键词',
                     class: 'col-md-1',
@@ -377,7 +416,20 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '类型名称',
                     class: 'col-md-1',
                     field: 'article_type_name',
-                    align: 'center'
+                    align: 'center',
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
+                        },
+                        classes: ["overflow"]
+                    },formatter:function(value, row, index) {
+                        var values = row.article_type_name;
+                        var span=document.createElement('span');
+                        span.setAttribute('title',values);
+                        span.innerHTML = row.article_type_name;
+                        return span.outerHTML;
+                    }
                 },{
                     title: '关键词',
                     class: 'col-md-1',
