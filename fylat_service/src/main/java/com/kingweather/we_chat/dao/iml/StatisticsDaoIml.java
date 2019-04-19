@@ -56,7 +56,7 @@ public class StatisticsDaoIml implements StatisticsDao {
             xData[i]=XdataList.get(i).get("name").toString();
         }
 
-        List<Map<String,Object>> articleTypeList = jdbcTemplate.queryForList("SELECT article_type_id,article_type_name FROM article_type WHERE parentid=100");
+        List<Map<String,Object>> articleTypeList = jdbcTemplate.queryForList("SELECT article_type_id,article_type_name FROM article_type WHERE parentid=100  AND del_type=0");
 
         List dataList = new ArrayList();
 
