@@ -314,12 +314,6 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         css: {
                             "min-widh": "150px"
                         }
-                    },
-                    formatter: function (value, row, index) {
-                        if (value) {
-                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
-                        }
-                        return '';
                     }
                 }, {
                     title: '入库时间',

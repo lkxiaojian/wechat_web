@@ -71,13 +71,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         class: 'col-md-1',
                         field: 'create_time',
                         align: 'center',
-                        width: "150px",
-                        formatter: function (value, row, index) {
-                            if (value) {
-                                return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
-                            }
-                            return '';
-                        }
+                        width: "150px"
                     }, {
                         title: '入库时间',
                         class: 'col-md-1',
