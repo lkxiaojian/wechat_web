@@ -206,6 +206,11 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                             "min-width":"100px",
                             "max-width":"200px"
                         }
+                    },formatter: function (value, row, index) {
+                        if (!row.article_title) {
+                            return row.article_title_e;
+                        }
+                        return row.article_title;
                     }
                 }, {
                     title: '所属分类',
@@ -254,7 +259,13 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '关键词',
                     class: 'col-md-1',
                     field: 'article_keyword',
-                    align: 'center'
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        if (!row.article_keyword) {
+                            return row.article_keyword_e;
+                        }
+                        return row.article_keyword;
+                    }
 
                 }, {
                     title: '摘要',
@@ -269,9 +280,11 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         classes:["overflow"]
                     },formatter:function(value, row, index) {
                         var values = row.content_excerpt;
-                        var span=document.createElement('span');
+                        if(!row.content_excerpt){
+                            values = row.content_excerpt_e;
+                        }                        var span=document.createElement('span');
                         span.setAttribute('title',values);
-                        span.innerHTML = row.content_excerpt;
+                        span.innerHTML = row.values;
                         return span.outerHTML;
                     }
                 }, {
