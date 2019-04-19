@@ -133,6 +133,7 @@
 .fixed-table-container input[type="radio"], .fixed-table-container input[type="checkbox"]
 	{
 	margin: 0 auto !important;
+	height: 12px !important;
 }
 
 .fixed-table-container .no-records-found {
