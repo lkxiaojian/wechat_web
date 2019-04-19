@@ -2,7 +2,7 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         $scope.listObj = {
             current_location: 'app.insure.paper_data',
-            navigationMsg: '管理平台 >论文统计',
+            navigationMsg: '管理平台 >已发表论文统计',
             defaultSearchParams: {
                 view: 'select',
                 type:"1", //论文

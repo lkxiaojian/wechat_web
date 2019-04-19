@@ -21,7 +21,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, {
                         type:"0", //文章
                         del_type:"1",
@@ -80,7 +80,6 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                             }
                             return '';
                         }
-
                     }, {
                         title: '关键词',
                         class: 'col-md-1',
@@ -165,7 +164,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, {
                         type:"1", //论文
                         del_type:"1",
@@ -302,8 +301,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    debugger
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, {
                         type: $scope.query_params.dataType == '0'?'1':'0'
                     });
@@ -339,10 +337,10 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     },
                     events: {
                         'click .a-recover': function (e, value, row, index) {
-                            recoverData(row.article_id,2);
+                            recoverData(row.article_type_id,2);
                         },
                         'click .a-delete': function (e, value, row, index) {
-                            deleteData(row.article_id,2);
+                            deleteData(row.article_type_id,2);
                         }
                     }
                 }
@@ -359,7 +357,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, {
                         type:"1",
                         parent_id:params.article_type_id
@@ -396,10 +394,10 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     },
                     events: {
                         'click .a-recover': function (e, value, row, index) {
-                            recoverData(row.article_id,3);
+                            recoverData(row.id,3);
                         },
                         'click .a-delete': function (e, value, row, index) {
-                            deleteData(row.article_id,3);
+                            deleteData(row.id,3);
                         }
                     }
                 }
@@ -422,12 +420,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             // $scope.typeInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
-            $.each($("#queryForm select,#queryForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('.selectpicker').selectpicker('val', '');
-            $('#dataType').val('0');
+            $scope.query_params = {dataType:'0'};
         }
 
         $scope.changeDataType = function(){
@@ -488,17 +481,16 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             }
             var ids = "";
             for(var i = 0;i<array.length;i++){
-                ids += array[i].article_id;
+                ids += array[i][getField(type)];
                 ids += ",";
             }
             deleteData(ids,type);
         }
 
         function deleteData(rowIds,type){
-            debugger
             var url = "article/deletedById";
             if(type == '2'){
-                url = "delArticleTypeById/rest";//类型
+                url = "releaseManagement/delArticleTypeById/rest";//类型
             }
             if(type == '3'){
                 url = "article/delKeyword";//关键词
@@ -519,6 +511,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         type: '1'
                     }
                 }).success(function (data) {
+                    debugger
                     layer.closeAll('loading');
                     if (data.code == 0) {
                         layer.alert(data.message);
@@ -542,13 +535,21 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             }
             var ids = "";
             for(var i = 0;i<array.length;i++){
-                ids += array[i].article_id;
+                ids += array[i][getField(type)];
                 ids += ",";
             }
             recoverData(ids,type);
         }
+        function getField(type) {
+            if(type == '0' || type == '1'){文章
+                return "article_id";
+            }else if(type == '2'){//类型
+                return "article_type_id";
+            }else if(type == '3'){//关键词
+                return "id";
+            }
+        }
         function recoverData(rowIds,type){
-            debugger
             var recoverType = '1';//恢复已发布论文和文章传1
             if(type == '3'){
                 recoverType = '0';//关键词
@@ -602,17 +603,6 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
-                    $(".selectpicker").empty();
-                    $(".selectpicker").append('<option value="">--请选择--</option>');
-                    for(var o in $scope.publishedTypeList) {
-                        var option = $('<option>', {
-                            'value': $scope.publishedTypeList[o].article_type_id,
-                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                        }).append($scope.publishedTypeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
                 } else {
                     layer.msg(data.message)
                 }

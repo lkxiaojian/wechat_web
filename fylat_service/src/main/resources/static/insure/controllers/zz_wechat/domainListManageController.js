@@ -2,7 +2,7 @@ app.controller('domainListManageController', ['$scope', '$modal', '$http', 'fyla
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         var editor;
         $scope.listObj = {
-            navigationMsg: '管理平台 >领域管理',
+            navigationMsg: '管理平台 >领域列表',
             seachMessage: '',
             seach: function () {
                 // var a=$scope.listObj.seachMessage;

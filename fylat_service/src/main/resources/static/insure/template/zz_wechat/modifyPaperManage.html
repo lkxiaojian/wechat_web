@@ -15,9 +15,6 @@
 
 <!--内容区-->
 <div class="wrapper-md">
-<!--
-            <tab-heading>修改文章</tab-heading>
--->
     <div class="modal-body" style="padding: 0;">
         <form class="form-horizontal m-b-md" id="add_integration"
               name="addIntegrationFormValidate" novalidate>
@@ -44,25 +41,14 @@
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
                         class="text-danger m-r-xs font-bold as-star">*</span>类型</label>
                 <div class="col-lg-4 col-md-4 col-sm-4">
-                    <select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm" data-live-search="true"  ng-model="listObj.integrationQuery.article_type_id">
+                    <!--<select name="article_type_id" id = "article_type_id" class="selectpicker show-tick form-control input-sm" data-live-search="true"  ng-model="listObj.integrationQuery.article_type_id">
                         <option ng-repeat="x in listObj.articleTypeData" ng-selected="listObj.integrationQuery.article_type_id==x.article_type_id" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
+                    </select>-->
+                    <select select2 style="width: 100%;" class="form-control" ng-model="listObj.integrationQuery.article_type_id" name = "article_type_id" config="listObj.articleTypeData">
+                        <option value="">请选择</option>
+                        <option ng-repeat="x in listObj.articleTypeData" value="{{x.article_type_id}}">{{x.article_type_name}}</option>
                     </select>
                 </div>
-               <!-- <div class="col-lg-4 col-md-4 col-sm-4">
-                    <ui-select ng-model="listObj.regionType.selected" id = "article_type"
-                               on-select="listObj.getRegionTypeSelect($item)"
-                               theme="bootstrap">
-
-                        <ui-select-match
-                                placeholder="{{'请选择类型' | translate}}">
-                            {{$select.selected.article_type_name}}
-                        </ui-select-match>
-                        <ui-select-choices group-by="'group'"
-                                           repeat="item in listObj.articleTypeData | filter: $select.search">
-                            <span ng-bind-html="item.article_type_name | highlight: $select.search"></span>
-                        </ui-select-choices>
-                    </ui-select>
-                </div>-->
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
                         class="text-danger m-r-xs font-bold as-star">*</span>来源</label>
                 <div class="col-lg-4 col-md-4 col-sm-4">
@@ -76,31 +62,26 @@
                         class="text-danger m-r-xs font-bold as-star"></span>发表时间</label>
                 <div class="col-lg-4 col-md-4 col-sm-4">
 
-<!--
-                    <input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;" id="updateTimeEnd2" name="updateTimeEnd" class="Wdate" readonly="readonly"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'createTimeStart\')||\'1900-01-01\'}',maxDate:'#F{\'2099-12-31\'}'})"/>
--->
-
-                    <!--<input type="text" style = "width:150px;height:30px;border-color:#CCCCCC;padding-left:5px;font-size:12px;"
-                           id="create_time" class="Wdate" readonly="readonly"  value="{{listObj.integrationQuery.create_time}}"
-                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'1900',maxDate:'#F{$dp.$D(\'createTimeEnd\')||\'2099\'}'})"/>
-                    -->
-                  <!--  <input type="text" class="form-control" value="{{listObj.dataTime}}"
-                           ng-click="listObj.setTime('time', '%y-%M-%d', 'yyyy-MM-dd ')"
-                           id="time" require/>-->
-                    <input type="text" class="form-control" value="{{listObj.integrationQuery.create_time}}"
+    <!--                <input type="text" class="form-control" value="{{listObj.integrationQuery.create_time}}"
                            ng-click="listObj.setTime('create_time', '%y-%M-%d', 'yyyy-MM-dd ')"
-                           id="create_time" readonly/>
+                           id="create_time" readonly/>-->
+                    <wui-date
+                            format="yyyy-mm-dd"
+                            placeholder="请选择或输入日期"
+                            btns="{'ok':'确定','now':'今天'}"
+                            ng-model="listObj.integrationQuery.create_time"></wui-date>
                 </div>
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
                         class="text-danger m-r-xs font-bold as-star"></span>入库时间</label>
                 <div class="col-lg-4 col-md-4 col-sm-4">
-                    <input type="text" class="form-control" value="{{listObj.integrationQuery.update_time}}"
+                    <!--<input type="text" class="form-control" value="{{listObj.integrationQuery.update_time}}"
                            ng-click="listObj.setTime('update_time', '%y-%M-%d', 'yyyy-MM-dd ')"
-                           id="update_time" readonly/>
-                    <!--
-                    <input type="text" class="form-control" value="{{listObj.integrationQuery.update_time}}"
-                           ng-click="listObj.setTime('time', '%y-%M-%d', 'yyyy-MM-dd ')"
-                           id="update_time" require/>-->
+                           id="update_time" readonly/>-->
+                    <wui-date
+                            format="yyyy-mm-dd"
+                            placeholder="请选择或输入日期"
+                            btns="{'ok':'确定','now':'今天'}"
+                            ng-model="listObj.integrationQuery.update_time"></wui-date>
                 </div>
             </div>
 

@@ -449,7 +449,14 @@ public class UserManagerDaoImpl implements UserManagerDao {
 		String sql = "select * " +
 				" from zz_wechat.sys_user " +
 				" where nick_name = ? and password= ?";
-		Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[]{userName, password});
+		Map<String, Object> map =null;
+		try {
+			map=	jdbcTemplate.queryForMap(sql, new Object[]{userName, password});
+
+		}catch (Exception e){
+
+		}
+
 		if (null == map) {
 			return null;
 		}

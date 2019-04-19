@@ -29,7 +29,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.domain_Manage', {
             url: '/domainManage',
             templateUrl: 'insure/template/zz_wechat/domainManage.html',
-            pageTitle: '领域新增',
+            pageTitle: '添加领域',
             controller: 'domainManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -46,7 +46,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.article_type', {
             url: '/articleTypeManage',
             templateUrl: 'insure/template/zz_wechat/articleTypeManage.html',
-            pageTitle: '文章类型',
+            pageTitle: '人工编辑文章类型',
             controller: 'articleTypeManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -64,7 +64,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/addArticle',
             params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/addArticle.html',
-            pageTitle: '添加文章',
+            pageTitle: '人工编辑添加文章',
             controller: 'addArticleManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -85,7 +85,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/articleList',
             params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/articleList.html',
-            pageTitle: '文章列表',
+            pageTitle: '已发布文章列表',
             controller: 'articleListManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -101,7 +101,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         .state('app.insure.keyword_Manage', {
             url: '/keywordManage',
             templateUrl: 'insure/template/zz_wechat/keywordManage.html',
-            pageTitle: '关键词',
+            pageTitle: '爬虫关键词',
             controller: 'keywordManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -179,7 +179,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/domainList',
             // params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/domainList.html',
-            pageTitle: '领域管理',
+            pageTitle: '领域列表',
             controller: 'domainListManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -215,7 +215,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/keywordList',
             // params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/keywordList.html',
-            pageTitle: '关键词管理',
+            pageTitle: '爬虫关键词列表',
             controller: 'keywordListManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -288,7 +288,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/articleManage',
             params: {param: null, data: null,query_params:null},
             templateUrl: 'insure/template/zz_wechat/articleManage.html',
-            pageTitle: '文章管理',
+            pageTitle: '已发表文章管理',
             controller: 'articleManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -305,7 +305,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/articleData',
             params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/articleData.html',
-            pageTitle: '文章统计',
+            pageTitle: '已发表文章统计',
             controller: 'articleDataController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -323,7 +323,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/paperManage',
             params: {param: null, data: null,query_params:null},
             templateUrl: 'insure/template/zz_wechat/paperManage.html',
-            pageTitle: '论文管理',
+            pageTitle: '已发表论文管理',
             controller: 'paperManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -342,7 +342,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/paperData',
             params: {param: null, data: null},
             templateUrl: 'insure/template/zz_wechat/paperData.html',
-            pageTitle: '论文统计',
+            pageTitle: '已发表论文统计',
             controller: 'paperDataController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -359,7 +359,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/typeManage',
             params: {param: null, data: null, focus_node:'', type:'0'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
-            pageTitle: '分类管理',
+            pageTitle: '分类及领域管理',
             controller: 'typeManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -379,7 +379,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/pubTypeManage',
             params: {param: null, data: null, focus_node:'', type:'1'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
-            pageTitle: '精品名称管理',
+            pageTitle: '已发表分类名称管理',
             controller: 'typeManageController',
             resolve: {
                 deps: ['$ocLazyLoad',
@@ -399,7 +399,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             url: '/pubTypeManage',
             params: {param: null, data: null, focus_node:'', type:'2'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
-            pageTitle: '待修复分类管理',
+            pageTitle: '文章领域人工确认',
             controller: 'typeManageController',
             resolve: {
                 deps: ['$ocLazyLoad',

@@ -99,7 +99,7 @@ app.controller('articleTypeManageController', ['$scope', '$modal', '$http', 'fyl
 
 
         $scope.listObj = {
-            navigationMsg: '管理平台 > 文章类型',   //导航栏显示信息
+            navigationMsg: '管理平台 > 人工编辑文章类型',   //导航栏显示信息
             // projectData: fylatService.projectSelect,   //产品选择框数据
 
             //查询参数

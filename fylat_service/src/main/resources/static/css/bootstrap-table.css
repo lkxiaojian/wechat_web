@@ -42,7 +42,7 @@
 }
 
 .fixed-table-footer, .fixed-table-header {
-	height: 37px; /*cellHeight*/
+	height: 39px; /*cellHeight*/
 	overflow: hidden;
 	border-radius: 4px 4px 0 0;
 	-webkit-border-radius: 4px 4px 0 0;
@@ -50,7 +50,9 @@
 }
 
 .fixed-table-header {
+	/*
 	border-bottom: 1px solid #dddddd;
+	*/
 }
 
 .fixed-table-footer {

@@ -2,7 +2,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         $scope.listObj = {
             current_location: 'app.insure.article_manage',
-            navigationMsg: '管理平台 >文章管理',
+            navigationMsg: '管理平台 >已发布的文章管理',
             defaultSearchParams: {
                 view: 'select',
                 type:"0", //文章
@@ -33,7 +33,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, $scope.listObj.defaultSearchParams);
                     return params;
                 },
@@ -181,11 +181,7 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 pageSize:10});
         }
         $scope.reset = function(){
-            $.each($("#queryForm select,#queryForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('.selectpicker').selectpicker('val', '');
+            $scope.query_params = {};
             // $scope.tableInstance.bootstrapTable()
         }
         $scope.checkAll = function(){
@@ -259,17 +255,6 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
-                    $(".selectpicker").empty();
-                    $(".selectpicker").append('<option value="">--请选择--</option>');
-                    for(var o in $scope.publishedTypeList) {
-                        var option = $('<option>', {
-                            'value': $scope.publishedTypeList[o].article_type_id,
-                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                        }).append($scope.publishedTypeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
                 } else {
                     layer.msg(data.message)
                 }

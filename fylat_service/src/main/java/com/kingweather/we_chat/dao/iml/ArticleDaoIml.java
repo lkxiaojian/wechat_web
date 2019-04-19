@@ -475,6 +475,9 @@ public class ArticleDaoIml implements ArticleDao {
             if (num < 0) {
                 num = 0;
             }
+            if(page==0){
+                num = 0;
+            }
 
 
             String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid.toString() + "'";
@@ -828,10 +831,17 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         String doNameSql = "select count(*) as count from zz_wechat.article_type where article_type_name=? and parentid=?";
-        Map<String, Object> countMap = jdbcTemplate.queryForMap(doNameSql, new Object[]{
-                name.toString(),
-                artcicle_type_id
-        });
+        Map<String, Object> countMap=null;
+        String typeId=UuidUtils.getUUid();
+        try {
+            countMap = jdbcTemplate.queryForMap(doNameSql, new Object[]{
+                    name.toString(),
+                    typeId
+            });
+        }catch (Exception e){
+
+        }
+
         //没有查找到
         if (countMap == null || countMap.get("count") == null || "0".equals(countMap.get("count").toString())) {
 
@@ -864,7 +874,7 @@ public class ArticleDaoIml implements ArticleDao {
 
 
             //插入
-            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id,type_state) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?,2)";
+            String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id,type_state,article_type_id) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?,2,?)";
             int update = jdbcTemplate.update(sql, new Object[]{
                     name,
                     keyword,
@@ -873,7 +883,22 @@ public class ArticleDaoIml implements ArticleDao {
                     artcicle_type_id,
                     pathback,
                     0,
-                    domian_id
+                    domian_id,
+                    typeId
+            });
+
+            //插入
+            String sqlTmp = "insert into zz_wechat.article_type_tmp (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id,type_state,article_type_id) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?,2,?)";
+              jdbcTemplate.update(sqlTmp, new Object[]{
+                    name,
+                    keyword,
+                    sysTime,
+                    pathICon,
+                    artcicle_type_id,
+                    pathback,
+                    0,
+                    domian_id,
+                      typeId
             });
             if (update == 1) {
                 return true;

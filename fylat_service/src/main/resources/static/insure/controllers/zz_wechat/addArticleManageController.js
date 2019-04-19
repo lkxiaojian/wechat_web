@@ -26,7 +26,7 @@ app.controller('addArticleManageController', ['$scope', '$modal', '$http','fylat
         };
 
         $scope.listObj = {
-            navigationMsg: '管理平台 >文章管理',
+            navigationMsg: '管理平台 >人工编辑添加文章',
             region: {selected: undefined},//领域
             regionType: {selected: undefined},//文章类型
             dataTime: insureUtil.dateToString(new Date(), "yyyy-MM-dd"),

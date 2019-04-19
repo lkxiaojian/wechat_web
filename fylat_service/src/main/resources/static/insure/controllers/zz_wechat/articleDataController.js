@@ -2,7 +2,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         $scope.listObj = {
             current_location: 'app.insure.article_data',
-            navigationMsg: '管理平台 >文章统计',
+            navigationMsg: '管理平台 >已发表文章统计',
             defaultSearchParams: {
                 view: 'select',
                 type:"0", //文章
