@@ -872,6 +872,10 @@ public class ArticleDaoIml implements ArticleDao {
                 domian_id=maps.get(1).get("article_type_id").toString();
             }
 
+            if("".equals(domian_id)){
+                domian_id=artcicle_type_id;
+            }
+
 
             //插入
             String sql = "insert into zz_wechat.article_type (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id,type_state,article_type_id) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?,2,?)";
