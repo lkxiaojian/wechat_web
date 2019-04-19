@@ -337,10 +337,10 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     },
                     events: {
                         'click .a-recover': function (e, value, row, index) {
-                            recoverData(row.article_id,2);
+                            recoverData(row.article_type_id,2);
                         },
                         'click .a-delete': function (e, value, row, index) {
-                            deleteData(row.article_id,2);
+                            deleteData(row.article_type_id,2);
                         }
                     }
                 }
@@ -394,10 +394,10 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     },
                     events: {
                         'click .a-recover': function (e, value, row, index) {
-                            recoverData(row.article_id,3);
+                            recoverData(row.id,3);
                         },
                         'click .a-delete': function (e, value, row, index) {
-                            deleteData(row.article_id,3);
+                            deleteData(row.id,3);
                         }
                     }
                 }
@@ -481,7 +481,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             }
             var ids = "";
             for(var i = 0;i<array.length;i++){
-                ids += array[i].article_id;
+                ids += array[i][getField(type)];
                 ids += ",";
             }
             deleteData(ids,type);
@@ -490,7 +490,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
         function deleteData(rowIds,type){
             var url = "article/deletedById";
             if(type == '2'){
-                url = "delArticleTypeById/rest";//类型
+                url = "releaseManagement/delArticleTypeById/rest";//类型
             }
             if(type == '3'){
                 url = "article/delKeyword";//关键词
@@ -511,6 +511,7 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         type: '1'
                     }
                 }).success(function (data) {
+                    debugger
                     layer.closeAll('loading');
                     if (data.code == 0) {
                         layer.alert(data.message);
@@ -534,13 +535,21 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
             }
             var ids = "";
             for(var i = 0;i<array.length;i++){
-                ids += array[i].article_id;
+                ids += array[i][getField(type)];
                 ids += ",";
             }
             recoverData(ids,type);
         }
+        function getField(type) {
+            if(type == '0' || type == '1'){文章
+                return "article_id";
+            }else if(type == '2'){//类型
+                return "article_type_id";
+            }else if(type == '3'){//关键词
+                return "id";
+            }
+        }
         function recoverData(rowIds,type){
-            debugger
             var recoverType = '1';//恢复已发布论文和文章传1
             if(type == '3'){
                 recoverType = '0';//关键词
