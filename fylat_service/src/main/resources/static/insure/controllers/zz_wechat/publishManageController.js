@@ -323,9 +323,6 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             }
                             return row.article_title;
                         }
-
-
-
                     }
                 }, {
                     title: '所属分类',
@@ -379,10 +376,17 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     field: 'article_keyword',
                     align: 'center',
                     formatter: function (value, row, index) {
-                        if (!row.article_keyword) {
+                        if ($scope.query_params.language == 1) {
+                            if (!row.article_keyword_e) {
+                                return row.article_keyword;
+                            }
                             return row.article_keyword_e;
+                        } else {
+                            if (!row.article_keyword) {
+                                return row.article_keyword_e;
+                            }
+                            return row.article_keyword;
                         }
-                        return row.article_keyword;
                     }
                 }, {
                     title: '摘要',
@@ -396,9 +400,17 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         classes: ["overflow"]
                     }, formatter: function (value, row, index) {
-                        var values = row.content_excerpt;
-                        if (!row.content_excerpt) {
+                        var values = "";
+                        if ($scope.query_params.language == 1) {
+                            if (!row.content_excerpt_e) {
+                                values = row.content_excerpt;
+                            }
                             values = row.content_excerpt_e;
+                        } else {
+                            if (!row.content_excerpt) {
+                                values = row.content_excerpt_e;
+                            }
+                            values = row.content_excerpt;
                         }
                         var span = document.createElement('span');
                         span.setAttribute('title', values);
