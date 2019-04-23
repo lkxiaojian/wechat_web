@@ -622,7 +622,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         " AND a.article_type_id=b.article_type_id and  a.state=1 ";
 
                 if (language != null && "1".equals(language)) {
-                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e as article_title,a.article_keyword_e as article_keyword,a.author_e as author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,a.content_excerpt_e as content_excerpt,a.reference,a.article_score,b.article_type_name,a.posting_name ,a.article_title,a.content_excerpt,a.article_keyword,a.author  " +
+                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e ,a.article_keyword_e ,a.author_e ,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,a.content_excerpt_e as content_excerpt,a.reference,a.article_score,b.article_type_name,a.posting_name ,a.article_title,a.content_excerpt,a.article_keyword,a.author  " +
                             "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
                             " AND a.article_type_id=b.article_type_id and  a.state=1 ";
 
