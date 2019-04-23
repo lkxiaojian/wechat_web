@@ -693,7 +693,10 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             if ("".equals(language)) {
                 language = null;
             }
-            message = message.toString().toLowerCase();
+            if(message!=null){
+                message = message.toString().toLowerCase();
+            }
+
             if (message != null && !message.toString().equals("")) {
                 if (language == null) {
                     sqlCount = sqlCount + " and (BINARY LOWER(a.article_title) like '%" + message.toString() + "%' or BINARY LOWER(a.author) like '%" + message.toString() + "%' or BINARY LOWER(a.source) like '%" + message.toString() + "%' " +
