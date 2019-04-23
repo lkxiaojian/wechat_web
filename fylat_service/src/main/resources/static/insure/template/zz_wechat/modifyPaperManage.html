@@ -19,18 +19,16 @@
         <form class="form-horizontal m-b-md" id="add_integration"
               name="addIntegrationFormValidate" novalidate>
 
-            <div class="form-group">
-                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
-                        class="text-danger m-r-xs font-bold as-star">*</span>标题</label>
+            <div class="form-group" ng-hide="listObj.type == '1' && listObj.integrationQuery.article_title==''&& listObj.integrationQuery.article_title_e!=''">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>标题</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input type="text" class="form-control"
                            ng-model="listObj.integrationQuery.article_title" value="请输入标题"
-                           ng-maxlength="50" id="article_title" required/>
+                           ng-maxlength="50" id="article_title"/>
                 </div>
             </div>
             <div class="form-group" ng-show="listObj.type == '1' && listObj.integrationQuery.article_title_e!=''">
-                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
-                        class="text-danger m-r-xs font-bold as-star">*</span>英文标题</label>
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>英文标题</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input type="text" class="form-control"
                            ng-model="listObj.integrationQuery.article_title_e" value="请输入英文标题"
@@ -88,11 +86,13 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0">
-                    <span class="text-danger m-r-xs font-bold as-star"></span>作者</label>
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                    <input type="text" class="form-control" name="itName"
-                           ng-model="listObj.integrationQuery.author" value="请输入作者"/>
+                <div ng-hide="listObj.type == '1' && listObj.integrationQuery.author==''&& listObj.integrationQuery.author_e!=''">
+                    <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0">
+                        <span class="text-danger m-r-xs font-bold as-star"></span>作者</label>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <input type="text" class="form-control" name="itName"
+                               ng-model="listObj.integrationQuery.author" value="请输入作者"/>
+                    </div>
                 </div>
                 <div ng-show="listObj.type == '1' && listObj.integrationQuery.author_e!=''">
                     <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0">
@@ -104,13 +104,11 @@
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
                         class="text-danger m-r-xs font-bold as-star"></span>字数</label>
                 <div class="col-lg-4 col-md-4 col-sm-4">
-                    <input type="number" class="form-control" name="itName"
-                           ng-model="listObj.integrationQuery.word_count" value="请输入字数"/>
+                    <input type="number" class="form-control" ng-model="listObj.integrationQuery.word_count" value="请输入字数"/>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
-                        class="text-danger m-r-xs font-bold as-star">*</span>关键词</label>
+            <div class="form-group" ng-hide="listObj.type == '1' && listObj.integrationQuery.article_keyword==''&& listObj.integrationQuery.article_keyword_e!=''">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>关键词</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input type="text" class="form-control" id="article_keyword"
                            ng-maxlength="50" id="policy_code" value="请输入关键词"
@@ -118,15 +116,14 @@
                 </div>
             </div>
             <div class="form-group"  ng-show="listObj.type == '1' && listObj.integrationQuery.article_keyword_e!=''">
-                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0">英文关键词</label>
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>英文关键词</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input type="text" class="form-control" id="article_keyword_e" ng-maxlength="50" value="请输入关键词"
                            ng-model="listObj.integrationQuery.article_keyword_e"/>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span
-                        class="text-danger m-r-xs font-bold as-star">*</span>摘要</label>
+            <div class="form-group" ng-hide="listObj.type == '1' && listObj.integrationQuery.content_excerpt==''&& listObj.integrationQuery.content_excerpt_e!=''">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>摘要</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                    <textarea class="form-control" rows="3"
                              ng-model="listObj.integrationQuery.content_excerpt"
@@ -134,7 +131,7 @@
                 </div>
             </div>
             <div class="form-group"  ng-show="listObj.type == '1' && listObj.integrationQuery.content_excerpt_e!=''">
-                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0">英文摘要</label>
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>英文摘要</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                    <textarea class="form-control" rows="3"
                              ng-model="listObj.integrationQuery.content_excerpt_e"

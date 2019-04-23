@@ -290,41 +290,34 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
         }
 
         $scope.save = function(callback){
-            if(!$scope.listObj.integrationQuery.article_title){
+            if(!$scope.listObj.integrationQuery.article_title&&!$scope.listObj.integrationQuery.article_title_e){
                 layer.msg("请输入标题");
-                // layer.tips("请输入标题","#article_title");
                 return;
             }
             if(!$scope.listObj.integrationQuery.article_type_id){
                 layer.msg("请选择类型");
-                // layer.tips("请选择类型","#article_type");
                 return;
             }
             if($scope.listObj.type == '0') {
                 if (!$scope.listObj.integrationQuery.source) {
                     layer.msg("请输入来源");
-                    // layer.tips("请输入来源","#source");
                     return;
                 }
             }
             if(!$scope.listObj.integrationQuery.create_time){
                 layer.msg("请选择发表时间");
-                // layer.tips("请选择发表时间","#create_time");
                 return;
             }
             if(!$scope.listObj.integrationQuery.update_time){
                 layer.msg("请选择入库时间");
-                // layer.tips("请选择入库时间","#update_time");
                 return;
             }
-            if(!$scope.listObj.integrationQuery.article_keyword){
+            if(!$scope.listObj.integrationQuery.article_keyword && !$scope.listObj.integrationQuery.article_keyword_e){
                 layer.msg("请输入关键字");
-                // layer.tips("请输入关键字","#article_keyword");
                 return;
             }
-            if(!$scope.listObj.integrationQuery.content_excerpt){
+            if(!$scope.listObj.integrationQuery.content_excerpt && !$scope.listObj.integrationQuery.content_excerpt_e){
                 layer.msg("请输入摘要");
-                // layer.tips("请输入摘要","#content_excerpt");
                 return;
             }
             // 获取编辑器区域完整html代码
