@@ -177,7 +177,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         field: 'author',
                         align: 'center',
                         formatter: function (value, row, index) {
-                            if ($scope.paper_query_params.language == 1) {
+                            if ($scope.query_params.language == 1) {
                                 if (!row.author_e) {
                                     return row.author;
                                 }
