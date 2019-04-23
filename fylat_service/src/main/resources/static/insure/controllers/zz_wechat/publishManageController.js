@@ -312,7 +312,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             "max-width": "200px"
                         }
                     }, formatter: function (value, row, index) {
-                        if ($scope.query_params.language == 1) {
+                        if ($scope.paper_query_params.language == 1) {
                             if (!row.article_title_e) {
                                 return row.article_title;
                             }
@@ -376,7 +376,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     field: 'article_keyword',
                     align: 'center',
                     formatter: function (value, row, index) {
-                        if ($scope.query_params.language == 1) {
+                        if ($scope.paper_query_params.language == 1) {
                             if (!row.article_keyword_e) {
                                 return row.article_keyword;
                             }
@@ -401,16 +401,18 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         classes: ["overflow"]
                     }, formatter: function (value, row, index) {
                         var values = "";
-                        if ($scope.query_params.language == 1) {
+                        if ($scope.paper_query_params.language == 1) {
                             if (!row.content_excerpt_e) {
                                 values = row.content_excerpt;
+                            }else {
+                                values = row.content_excerpt_e;
                             }
-                            values = row.content_excerpt_e;
                         } else {
                             if (!row.content_excerpt) {
                                 values = row.content_excerpt_e;
+                            }else {
+                                values = row.content_excerpt;
                             }
-                            values = row.content_excerpt;
                         }
                         var span = document.createElement('span');
                         span.setAttribute('title', values);
