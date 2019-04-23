@@ -60,7 +60,19 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                                     "min-width":"100px",
                                     "max-width":"200px"
                                 }
-                        }
+                        }, formatter: function (value, row, index) {
+                                if ($scope.query_params.language == 1) {
+                                    if (!row.article_title_e) {
+                                        return row.article_title;
+                                    }
+                                    return row.article_title_e;
+                                } else {
+                                    if (!row.article_title) {
+                                        return row.article_title_e;
+                                    }
+                                    return row.article_title;
+                                }
+                            }
                     }, {
                         title: '所属分类',
                         class: 'col-md-1',
@@ -108,8 +120,20 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         title: '关键词',
                         class: 'col-md-1',
                         field: 'article_keyword',
-                        align: 'center'
-
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if ($scope.query_params.language == 1) {
+                                if (!row.article_keyword_e) {
+                                    return row.article_keyword;
+                                }
+                                return row.article_keyword_e;
+                            } else {
+                                if (!row.article_keyword) {
+                                    return row.article_keyword_e;
+                                }
+                                return row.article_keyword;
+                            }
+                        }
                     }, {
                         title: '摘要',
                         class: 'col-md-1',
@@ -122,10 +146,23 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                             },
                             classes:["overflow"]
                         },formatter:function(value, row, index) {
-                            var values = row.content_excerpt;
+                            var values = "";
+                            if ($scope.query_params.language == 1) {
+                                if (!row.content_excerpt_e) {
+                                    values = row.content_excerpt;
+                                }else{
+                                    values = row.content_excerpt_e;
+                                }
+                            } else {
+                                if (!row.content_excerpt) {
+                                    values = row.content_excerpt_e;
+                                }else{
+                                    values = row.content_excerpt;
+                                }
+                            }
                             var span=document.createElement('span');
                             span.setAttribute('title',values);
-                            span.innerHTML = row.content_excerpt;
+                            span.innerHTML = values;
                             return span.outerHTML;
                         }
                     }, {
