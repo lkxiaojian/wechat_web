@@ -429,8 +429,20 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '作者',
                     class: 'col-md-1',
                     field: 'author',
-                    align: 'center'
-
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        if ($scope.paper_query_params.language == 1) {
+                            if (!row.author_e) {
+                                return row.author;
+                            }
+                            return row.author_e;
+                        } else {
+                            if (!row.author) {
+                                return row.author_e;
+                            }
+                            return row.author;
+                        }
+                    }
                 }, {
                     title: '审核',
                     class: 'col-md-1',
