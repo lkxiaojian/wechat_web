@@ -115,7 +115,7 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         //获取相关文章（后期改成随机三遍文章）
-        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? and a.state=0 ORDER BY a.create_time DESC limit 0,3";
+        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,a.image_path,a.content_type,a.state FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? and a.state=0 ORDER BY a.create_time DESC limit 0,3";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{articleId,
                 messageMap.get("article_type_id").toString()
         });
@@ -211,7 +211,7 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         //获取相关文章（后期改成随机三遍文章）
-        String moreSql = "SELECT a.create_time ,a.article_id,case  a.article_title when '' then a.article_title_e else a.article_title end as article_title,case a.article_keyword when '' then a.article_keyword_e else a.article_keyword   end as article_keyword,(SELECT c.image_path FROM posting_paper c WHERE c.posting_name=a.posting_name) image_path \n" +
+        String moreSql = "SELECT a.state,a.content_type, a.paper_create_time ,a.article_id,case  a.article_title when '' then a.article_title_e else a.article_title end as article_title,case a.article_keyword when '' then a.article_keyword_e else a.article_keyword   end as article_keyword,(SELECT c.image_path FROM posting_paper c WHERE c.posting_name=a.posting_name) image_path \n" +
                 " FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? and a.state=1  ORDER BY a.create_time DESC limit 0,3";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{articleId,
                 messageMap.get("article_type_id").toString()
