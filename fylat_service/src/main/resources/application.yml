@@ -53,7 +53,7 @@ logging:
     org.springframework.jdbc.core: DEBUG
     com.kingweather: DEBUG
 #关键词
-urlPath: http://106.2.13.148:80/
+urlPath: https://www.zhuanzhichinalink.com/
 
 #urlPath: http://localhost:8990/
 

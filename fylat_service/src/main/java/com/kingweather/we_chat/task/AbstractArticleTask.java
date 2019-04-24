@@ -8,14 +8,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Component
+@EnableScheduling
 public class AbstractArticleTask {
     private static final Logger log = LoggerFactory.getLogger(ArithmeticArticleTask.class);
 
@@ -25,27 +28,26 @@ public class AbstractArticleTask {
     private String articlePath;
 
 
-    //    @Scheduled(cron = "0/30 * * * * ?")
-//    @Scheduled(cron = "0 15 6 ? * MON")
+
+    @Scheduled(cron = "0 30 1 * * ?")
+     // @Scheduled(cron = "0/30 * * * * ?")
     public void AbstractArticle() {
-        String sql="select * from zz_wechat.abstract";
-
-
+        String sql = "select * from zz_wechat.abstract";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
-        for(Map<String, Object> map:maps){
+        for (Map<String, Object> map : maps) {
             try {
                 Object oState = map.get("state");
 
-                int state=Integer.parseInt(oState.toString());
+                int state = Integer.parseInt(oState.toString());
                 //文章
-                if(state==0){
-                    String articleSql="select article_id,article_title,details_txt from zz_wechat.article where article_type_id=? and state=?";
+                if (state == 0) {
+                    String articleSql = "select article_id,article_title,details_txt from zz_wechat.article where article_type_id=? and state=?";
                     List<Map<String, Object>> articleList = jdbcTemplate.queryForList(articleSql, new Object[]{
                             map.get("article_type_id"),
                             state
                     });
 
-                    String articleSqlTmp="select article_id,article_title,details_txt from zz_wechat.article_tmp where article_type_id=?";
+                    String articleSqlTmp = "select article_id,article_title,details_txt from zz_wechat.article_tmp where article_type_id=?";
                     List<Map<String, Object>> articleListTmp = jdbcTemplate.queryForList(articleSqlTmp, new Object[]{
                             map.get("article_type_id")
                     });
@@ -74,7 +76,7 @@ public class AbstractArticleTask {
                             }
                             //解析算法返回文章的类型
                             ArticleTmp article_tmp = (ArticleTmp) JSON.parseObject(sendTypePost, ArticleTmp.class);
-                            if(article_tmp!=null&&article_tmp.getResult().size()>0){
+                            if (article_tmp != null && article_tmp.getResult().size() > 0) {
                                 List<String> typeList = article_tmp.getResult().get(0).getType_id();
                                 String type_id = "";
 
@@ -89,15 +91,15 @@ public class AbstractArticleTask {
 
                                 }
 
-                               String updataSql="update zz_wechat.article set article_type_id=? where article_id=?";
-                                jdbcTemplate.update(updataSql,new Object[]{
+                                String updataSql = "update zz_wechat.article set article_type_id=? where article_id=?";
+                                jdbcTemplate.update(updataSql, new Object[]{
                                         type_id,
                                         maps.get(i).get("article_id")
 
 
                                 });
-                                String updataSqlTmp="update zz_wechat.article_tmp set article_type_id=? where article_id=?";
-                                jdbcTemplate.update(updataSqlTmp,new Object[]{
+                                String updataSqlTmp = "update zz_wechat.article_tmp set article_type_id=? where article_id=?";
+                                jdbcTemplate.update(updataSqlTmp, new Object[]{
                                         type_id,
                                         maps.get(i).get("article_id")
 
@@ -113,17 +115,16 @@ public class AbstractArticleTask {
                     }
 
 
-
-                }else {
+                } else {
                     //论文
 
-                    String articleSql="select article_id,article_title,article_title_e,content_excerpt,content_excerpt_e from zz_wechat.article where article_type_id=? and state=?";
+                    String articleSql = "select article_id,article_title,article_title_e,content_excerpt,content_excerpt_e from zz_wechat.article where article_type_id=? and state=?";
                     List<Map<String, Object>> articleList = jdbcTemplate.queryForList(articleSql, new Object[]{
                             map.get("article_type_id"),
                             state
                     });
 
-                    String articleSqlTmp="select article_id,article_title,article_title_e,content_excerpt,content_excerpt_e from zz_wechat.academic_paper where article_type_id=?";
+                    String articleSqlTmp = "select article_id,article_title,article_title_e,content_excerpt,content_excerpt_e from zz_wechat.academic_paper where article_type_id=?";
                     List<Map<String, Object>> articleListTmp = jdbcTemplate.queryForList(articleSqlTmp, new Object[]{
                             map.get("article_type_id")
                     });
@@ -140,7 +141,7 @@ public class AbstractArticleTask {
                         if (article_title == null || article_title.toString().length() == 0) {
                             article_title = dataMap.get("article_title_e");
                             content = dataMap.get("content_excerpt_e");
-                            is_english=1;
+                            is_english = 1;
                         }
                         if (article_title == null || article_title.toString().length() == 0) {
                             continue;
@@ -153,7 +154,7 @@ public class AbstractArticleTask {
                         String type = JSON.toJSONString(paperMaps);
                         if (type.length() > 2) {
                             type = "{ \"articles\": [" + type.substring(1, type.length() - 1) + "    ], \"is_english\":" +
-                                    is_english+
+                                    is_english +
                                     "}";
                         }
 
@@ -163,7 +164,7 @@ public class AbstractArticleTask {
                         }
                         //解析算法返回文章的类型
                         ArticleTmp article_tmp = (ArticleTmp) JSON.parseObject(sendTypePost, ArticleTmp.class);
-                        if(article_tmp!=null&&article_tmp.getResult().size()>0){
+                        if (article_tmp != null && article_tmp.getResult().size() > 0) {
                             List<String> typeList = article_tmp.getResult().get(0).getType_id();
                             String type_id = "";
                             if (typeList != null) {
@@ -176,15 +177,15 @@ public class AbstractArticleTask {
 
                             }
 
-                            String updataSql="update zz_wechat.article set article_type_id=? where article_id=?";
-                            jdbcTemplate.update(updataSql,new Object[]{
+                            String updataSql = "update zz_wechat.article set article_type_id=? where article_id=?";
+                            jdbcTemplate.update(updataSql, new Object[]{
                                     type_id,
                                     maps.get(i).get("article_id")
 
 
                             });
-                            String updataSqlTmp="update zz_wechat.academic_paper set article_type_id=? where article_id=?";
-                            jdbcTemplate.update(updataSqlTmp,new Object[]{
+                            String updataSqlTmp = "update zz_wechat.academic_paper set article_type_id=? where article_id=?";
+                            jdbcTemplate.update(updataSqlTmp, new Object[]{
                                     type_id,
                                     maps.get(i).get("article_id")
 
@@ -197,22 +198,54 @@ public class AbstractArticleTask {
                     }
 
 
+                }
 
 
+                String article_type_id = map.get("article_type_id").toString();
 
+                String sqlp = "select article_type_id from article_type_tmp where parentid=? ";
+                List<Map<String, Object>> chrildList = jdbcTemplate.queryForList(sqlp, new Object[]{
+                        article_type_id
+                });
+
+                String childs = "";
+
+                for (Map<String, Object> child : chrildList) {
+                    childs = childs + "'" + child.get("article_type_id") + "',";
+                }
+
+                if (childs.length() > 1) {
+
+                    childs = childs.substring(0, childs.length() - 1);
+                    String gzSql = "select user_id from user_articletype where article_type_id in(" + childs + ")";
+                    List<Map<String, Object>> gzList = jdbcTemplate.queryForList(gzSql);
+                    if (gzList != null && gzList.size() > 0) {
+                        for (int m = 0; m < gzList.size(); m++) {
+                            //插入新的关注类型
+                            String insertSql = "insert into user_articletype (article_type_id,user_id,del_type) values(?,?,0)";
+                            jdbcTemplate.update(insertSql, new Object[]{
+                                    article_type_id,
+                                    gzList.get(m).get("user_id")
+                            });
+                            //删除旧的关注类型
+                            String delSql="DELETE FROM user_articletype where article_type_id=? and user_id=? ";
+
+                            jdbcTemplate.update(delSql,new Object[]{
+                                    article_type_id,
+                                    gzList.get(m).get("user_id")
+                            });
+
+                        }
+
+                    }
 
                 }
 
 
 
-
-
-
-
-            }catch (Exception e){
+            } catch (Exception e) {
                 continue;
             }
-
 
 
         }
