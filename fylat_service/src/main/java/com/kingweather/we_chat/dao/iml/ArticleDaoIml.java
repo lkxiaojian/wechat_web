@@ -194,8 +194,8 @@ public class ArticleDaoIml implements ArticleDao {
         //获取文章的详细信息 content_manual
 //        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,DATE_ADD(a.create_time,INTERVAL -13 hour) as create_time,(a.share_count+a.collect_initcount) as share_count,(a.collect_count+a.collect_initcount) as collect_count ,a.content_type,a.content_crawl,a.details_div,b.iamge_back ,a.content_manual FROM  article a,article_type b where a.article_type_id=b.article_type_id AND a.article_id=? ";
 
-        String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title, a.article_title_e,a.content_excerpt,a.content_excerpt_e,a.posting_name,"
-                + "a.article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,"
+        String messageSql = "SELECT a.article_id,a.article_type_id,case  a.article_title when '' then a.article_title_e else a.article_title end as article_title, a.article_title_e,case a.content_excerpt when '' then a.content_excerpt_e else a.content_excerpt  end as content_excerpt,a.content_excerpt_e,a.posting_name,"
+                + "case a.article_keyword when '' then a.article_keyword_e else a.article_keyword   end as article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,"
                 + "(a.share_count+a.collect_initcount) AS share_count,"
                 + "(a.collect_count+a.collect_initcount) AS collect_count ,"
                 + "a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path,a.reference ,a.paper_create_time,a.site_number "
@@ -211,7 +211,7 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         //获取相关文章（后期改成随机三遍文章）
-        String moreSql = "SELECT a.create_time ,a.article_id,a.article_title,a.article_keyword,(SELECT c.image_path FROM posting_paper c WHERE c.posting_name=a.posting_name) image_path \n" +
+        String moreSql = "SELECT a.create_time ,a.article_id,case  a.article_title when '' then a.article_title_e else a.article_title end as article_title,case a.article_keyword when '' then a.article_keyword_e else a.article_keyword   end as article_keyword,(SELECT c.image_path FROM posting_paper c WHERE c.posting_name=a.posting_name) image_path \n" +
                 " FROM  article a, article_type b where a.article_type_id=b.article_type_id AND a.article_id !=? AND a.article_type_id=? and a.state=1  ORDER BY a.create_time DESC limit 0,3";
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(moreSql, new Object[]{articleId,
                 messageMap.get("article_type_id").toString()
