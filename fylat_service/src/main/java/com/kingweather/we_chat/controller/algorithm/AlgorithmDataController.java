@@ -144,7 +144,7 @@ public class AlgorithmDataController extends BaseController {
             });
             int articleCount = Integer.parseInt(countTmp.get("count").toString()) + Integer.parseInt(countA.get("count").toString());
 
-            if (articleCount >= 1000) {
+            if (articleCount >= 10000) {
 
 
                 //通知算法
@@ -438,7 +438,7 @@ public class AlgorithmDataController extends BaseController {
                 });
                 int articleCount = Integer.parseInt(countTmp.get("count").toString()) + Integer.parseInt(countA.get("count").toString());
 
-                if (articleCount >= 1000) {
+                if (articleCount >= 10000) {
 
                     //通知算法
                     StringBuffer jsonCount = new StringBuffer();
