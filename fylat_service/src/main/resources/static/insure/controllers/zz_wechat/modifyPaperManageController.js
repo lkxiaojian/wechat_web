@@ -67,9 +67,6 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             articleTypeData: [],//
             region: [],//
             articleMessage: {},
-            // getRegionTypeSelect: function (item) {
-            //     $scope.listObj.regionType.selected = item;
-            // },
             postDownload: function () {//类型查询
                 var article_type_id;
                 if ($scope.listObj.region.selected != null) {
@@ -93,17 +90,6 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                 }).success(function (data) {
                     if(data.code == '0'){
                         $scope.listObj.articleTypeData = data.result;
-                        $(".selectpicker").empty();
-                        $(".selectpicker").append('<option value="">--请选择--</option>');
-                        for(var o in $scope.listObj.articleTypeData) {
-                            var option = $('<option>', {
-                                'value': $scope.listObj.articleTypeData[o].article_type_id,
-                                'selected':$scope.listObj.articleTypeData[o].article_type_id==$scope.listObj.integrationQuery.article_type_id?true:false
-                            }).append($scope.listObj.articleTypeData[o].article_type_name)
-                            $(".selectpicker").append(option);
-                        }
-                        $('.selectpicker').selectpicker('refresh');
-                        $('.selectpicker').selectpicker('render');
                     }else{
                         layer.alert("查询类型列表失败");
                     }
@@ -112,16 +98,15 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
 
                 });
             },
-            setTime: function (endTimeId, maxDate, dateFmt) {
+            /*setTime: function (endTimeId, maxDate, dateFmt) {
                 WdatePicker({
                     el: endTimeId,
                     maxDate: maxDate,
                     dateFmt: dateFmt
                 })
-            },
+            },*/
 
             getAtirlceMessage: function () {
-
                 var url = "releaseManagement/getAricleTmpMessageById/rest";
                 if($scope.listObj.tmp_type == '0'){
                     url = 'article/webMessage';
@@ -135,7 +120,6 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                         type : $scope.listObj.type
                     }
                 }).success(function (data) {
-                    debugger
                     if (data != null && data.result != null) {
                         $scope.listObj.integrationQuery.article_title = data.result.article_title;
                         $scope.listObj.integrationQuery.author = data.result.author;
@@ -164,6 +148,8 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
 
                         $scope.listObj.integrationQuery.create_time = insureUtil.dateToString(new Date(data.result.create_time), "yyyy-MM-dd");
                         $scope.listObj.integrationQuery.update_time = insureUtil.dateToString(new Date(data.result.update_time), "yyyy-MM-dd");
+                        // $scope.listObj.integrationQuery.create_time = data.result.create_time;
+                        // $scope.listObj.integrationQuery.update_time = data.result.update_time;
                         $scope.listObj.integrationQuery.check_type = data.result.check_type;
                         $scope.listObj.integrationQuery.posting_name = data.result.posting_name;
 
@@ -304,41 +290,34 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
         }
 
         $scope.save = function(callback){
-            if(!$scope.listObj.integrationQuery.article_title){
+            if(!$scope.listObj.integrationQuery.article_title&&!$scope.listObj.integrationQuery.article_title_e){
                 layer.msg("请输入标题");
-                // layer.tips("请输入标题","#article_title");
                 return;
             }
             if(!$scope.listObj.integrationQuery.article_type_id){
                 layer.msg("请选择类型");
-                // layer.tips("请选择类型","#article_type");
                 return;
             }
             if($scope.listObj.type == '0') {
                 if (!$scope.listObj.integrationQuery.source) {
                     layer.msg("请输入来源");
-                    // layer.tips("请输入来源","#source");
                     return;
                 }
             }
             if(!$scope.listObj.integrationQuery.create_time){
                 layer.msg("请选择发表时间");
-                // layer.tips("请选择发表时间","#create_time");
                 return;
             }
             if(!$scope.listObj.integrationQuery.update_time){
                 layer.msg("请选择入库时间");
-                // layer.tips("请选择入库时间","#update_time");
                 return;
             }
-            if(!$scope.listObj.integrationQuery.article_keyword){
+            if(!$scope.listObj.integrationQuery.article_keyword && !$scope.listObj.integrationQuery.article_keyword_e){
                 layer.msg("请输入关键字");
-                // layer.tips("请输入关键字","#article_keyword");
                 return;
             }
-            if(!$scope.listObj.integrationQuery.content_excerpt){
+            if(!$scope.listObj.integrationQuery.content_excerpt && !$scope.listObj.integrationQuery.content_excerpt_e){
                 layer.msg("请输入摘要");
-                // layer.tips("请输入摘要","#content_excerpt");
                 return;
             }
             // 获取编辑器区域完整html代码
@@ -392,8 +371,6 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
                     author_e: $scope.listObj.integrationQuery.author_e,
                     publication_date: $scope.listObj.integrationQuery.publication_date,
                     article_score: $scope.listObj.integrationQuery.article_score
-
-
                 }
             }).success(function (data) {
                 layer.closeAll('loading');

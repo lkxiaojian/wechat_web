@@ -2,7 +2,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         $scope.listObj = {
             current_location: 'app.insure.paper_manage',
-            navigationMsg: '管理平台 >论文管理',
+            navigationMsg: '管理平台 >已发布的论文管理',
             defaultSearchParams: {
                 view: 'select',
                 type:"1", //论文
@@ -32,7 +32,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryForm");
+                    $.extend(params, $scope.query_params);
                     $.extend(params, $scope.listObj.defaultSearchParams);
                     return params;
                 },
@@ -60,12 +60,37 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                                     "min-width":"100px",
                                     "max-width":"200px"
                                 }
-                        }
+                        }, formatter: function (value, row, index) {
+                                if ($scope.query_params.language == 1) {
+                                    if (!row.article_title_e) {
+                                        return row.article_title;
+                                    }
+                                    return row.article_title_e;
+                                } else {
+                                    if (!row.article_title) {
+                                        return row.article_title_e;
+                                    }
+                                    return row.article_title;
+                                }
+                            }
                     }, {
                         title: '所属分类',
                         class: 'col-md-1',
                         field: 'article_type_name',
-                        align: 'center'
+                        align: 'center',
+                        cellStyle: {
+                            css: {
+                                "min-width": "100px",
+                                "max-width": "200px"
+                            },
+                            classes: ["overflow"]
+                        },formatter:function(value, row, index) {
+                            var values = row.article_type_name;
+                            var span=document.createElement('span');
+                            span.setAttribute('title',values);
+                            span.innerHTML = row.article_type_name;
+                            return span.outerHTML;
+                        }
                     }, {
                         title: '发表时间',
                         class: 'col-md-1',
@@ -95,8 +120,20 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                         title: '关键词',
                         class: 'col-md-1',
                         field: 'article_keyword',
-                        align: 'center'
-
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if ($scope.query_params.language == 1) {
+                                if (!row.article_keyword_e) {
+                                    return row.article_keyword;
+                                }
+                                return row.article_keyword_e;
+                            } else {
+                                if (!row.article_keyword) {
+                                    return row.article_keyword_e;
+                                }
+                                return row.article_keyword;
+                            }
+                        }
                     }, {
                         title: '摘要',
                         class: 'col-md-1',
@@ -109,24 +146,49 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                             },
                             classes:["overflow"]
                         },formatter:function(value, row, index) {
-                            var values = row.content_excerpt;
+                            var values = "";
+                            if ($scope.query_params.language == 1) {
+                                if (!row.content_excerpt_e) {
+                                    values = row.content_excerpt;
+                                }else{
+                                    values = row.content_excerpt_e;
+                                }
+                            } else {
+                                if (!row.content_excerpt) {
+                                    values = row.content_excerpt_e;
+                                }else{
+                                    values = row.content_excerpt;
+                                }
+                            }
                             var span=document.createElement('span');
                             span.setAttribute('title',values);
-                            span.innerHTML = row.content_excerpt;
+                            span.innerHTML = values;
                             return span.outerHTML;
                         }
                     }, {
-                        title: '来源',
+                        title: '期刊名称',
                         class: 'col-md-1',
-                        field: 'source',
+                        field: 'posting_name',
                         align: 'center',
                         sortable: false
                     }, {
                         title: '作者',
                         class: 'col-md-1',
                         field: 'author',
-                        align: 'center'
-
+                        align: 'center',
+                        formatter: function (value, row, index) {
+                            if ($scope.query_params.language == 1) {
+                                if (!row.author_e) {
+                                    return row.author;
+                                }
+                                return row.author_e;
+                            } else {
+                                if (!row.author) {
+                                    return row.author_e;
+                                }
+                                return row.author;
+                            }
+                        }
                     }, {
                         title: '操作',
                         class: 'col-md-1',
@@ -178,11 +240,7 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
                 pageSize:10});
         }
         $scope.reset = function(){
-            $.each($("#queryForm select,#queryForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('.selectpicker').selectpicker('val', '');
+            $scope.query_params = {};
         }
         $scope.checkAll = function(){
             $scope.tableInstance.bootstrapTable('checkAll');
@@ -253,19 +311,6 @@ app.controller('paperManageController', ['$scope', '$modal', '$http', 'fylatServ
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
-
-                    $(".selectpicker").empty();
-                    $(".selectpicker").append('<option value="">--请选择--</option>');
-                    for(var o in $scope.publishedTypeList) {
-                        var option = $('<option>', {
-                            'value': $scope.publishedTypeList[o].article_type_id,
-                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                        }).append($scope.publishedTypeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
-
                 } else {
                     layer.alert(data.message)
                 }

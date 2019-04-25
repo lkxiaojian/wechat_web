@@ -2,7 +2,7 @@ app.controller('keywordListManageController', ['$scope', '$modal', '$http', 'fyl
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         var editor;
         $scope.listObj = {
-            navigationMsg: '管理平台 >关键词管理',
+            navigationMsg: '管理平台 >爬虫关键词列表',
             seachMessage: '',
             parent_id: null,
             seach: function () {

@@ -6,6 +6,8 @@ import com.kingweather.common.util.DateUtil;
 import com.kingweather.fylat_service.controller.other.DataManageController;
 import com.kingweather.system.manager.domain.Log;
 import com.kingweather.we_chat.bean.ArticleTmp;
+import com.kingweather.we_chat.constants.HttpUtils;
+import com.kingweather.we_chat.task.ArithmeticArticleTask;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -35,6 +37,9 @@ public class AlgorithmDataController extends BaseController {
 
     @Value("${upload.pafpath}")
     private String pafpath;
+
+    @Value("${urlTypePath}")
+    private String articlePath;
     Logger log = LoggerFactory.getLogger(DataManageController.class);
 
     @RequestMapping(value = "/algorithm/wxdata", method = RequestMethod.POST)
@@ -77,16 +82,16 @@ public class AlgorithmDataController extends BaseController {
         String articleKeyword = "";
         String parent_id = "";
         //领域id
-        String domain_id="";
+        String domain_id = "";
         if (typeList != null) {
             if (typeList.size() == 1) {
                 parent_id = "-2";
                 type_id = typeList.get(0);
-                domain_id=type_id;
+                domain_id = type_id;
             } else {
                 parent_id = typeList.get(typeList.size() - 2);
                 type_id = typeList.get(typeList.size() - 1);
-                domain_id=typeList.get(1);
+                domain_id = typeList.get(1);
             }
 
         } else {
@@ -123,6 +128,57 @@ public class AlgorithmDataController extends BaseController {
                 type_id = parentIdMap.get("keep_type_id").toString();
             }
             parent_id = parentIdMap.get("parent_id").toString();
+        }
+//        type_id="34852f34808471f68a16cd5f244463a863bfbe37872b4bc42f4e3f80";
+        try {
+            //判断该类型的文章的数量，是否超过某个值 如果超过，通知算法继续分组
+            String countTmpSql = "select count(*) as count from article_tmp where article_type_id =?";
+            Map<String, Object> countTmp = jdbcTemplate.queryForMap(countTmpSql, new Object[]{
+                    type_id
+            });
+
+            String countASql = "select count(*) as count from article where article_type_id =? and state=?";
+            Map<String, Object> countA = jdbcTemplate.queryForMap(countASql, new Object[]{
+                    type_id,
+                    0
+            });
+            int articleCount = Integer.parseInt(countTmp.get("count").toString()) + Integer.parseInt(countA.get("count").toString());
+
+            if (articleCount >= 10000) {
+
+
+                //通知算法
+                StringBuffer jsonCount = new StringBuffer();
+                jsonCount.append("{'type_id': ");
+                jsonCount.append(type_id);
+                jsonCount.append("}");
+                String delete = HttpUtils.doPost(articlePath + "split", jsonCount.toString());
+
+
+                Map<String, Object> objectMap = null;
+                try {
+                    String sqlcount = "select count(*) as count from abstract where article_type_id=? and state=?";
+                    objectMap = jdbcTemplate.queryForMap(sqlcount, new Object[]{
+                            type_id,
+                            0
+                    });
+
+                } catch (Exception e) {
+
+                }
+                if (objectMap == null || Integer.parseInt(objectMap.get("count").toString()) == 0) {
+                    //插入表
+                    String sqlCountSql = "insert into abstract (article_type_id,state,updata_time) values (?,0,now())";
+                    jdbcTemplate.update(sqlCountSql, new Object[]{
+                            type_id
+                    });
+
+                }
+            }
+
+
+        } catch (Exception e) {
+
         }
 
 
@@ -204,8 +260,8 @@ public class AlgorithmDataController extends BaseController {
         div = div.replaceAll("data-src=", "src=");
         div = div.replaceAll("webp", "png");
         int i = div.indexOf("<script nonce");
-        if(i!=-1){
-            div = div.substring(0,i);
+        if (i != -1) {
+            div = div.substring(0, i);
             div = div + "</div>";
         }
 
@@ -366,6 +422,63 @@ public class AlgorithmDataController extends BaseController {
                 }
                 parent_id = parentIdMap.get("parent_id").toString();
             }
+//            type_id="34852f34808471f68a16cd5f244463a863bfbe37872b4bc42f4e3f80";
+
+            try {
+                //判断该类型的文章的数量，是否超过某个值 如果超过，通知算法继续分组
+                String countTmpSql = "select count(*) as count from academic_paper where article_type_id =?";
+                Map<String, Object> countTmp = jdbcTemplate.queryForMap(countTmpSql, new Object[]{
+                        type_id
+                });
+
+                String countASql = "select count(*) as count from article where article_type_id =? and state=?";
+                Map<String, Object> countA = jdbcTemplate.queryForMap(countASql, new Object[]{
+                        type_id,
+                        1
+                });
+                int articleCount = Integer.parseInt(countTmp.get("count").toString()) + Integer.parseInt(countA.get("count").toString());
+
+                if (articleCount >= 10000) {
+
+                    //通知算法
+                    StringBuffer jsonCount = new StringBuffer();
+                    jsonCount.append("{\"type_id\": \"");
+                    jsonCount.append(type_id);
+                    jsonCount.append("\"}");
+                    String delete = HttpUtils.doPost(articlePath + "split", jsonCount.toString());
+                    System.out.print(delete);
+
+                    Map<String, Object> objectMap = null;
+                    try {
+                        String sqlcount = "select count(*) as count from abstract where article_type_id=? and state=?";
+                        objectMap = jdbcTemplate.queryForMap(sqlcount, new Object[]{
+                                type_id,
+                                1
+                        });
+
+                    } catch (Exception e) {
+
+                    }
+                    if (objectMap == null || Integer.parseInt(objectMap.get("count").toString()) == 0) {
+                        //插入表
+                        String sqlCountSql = "insert into abstract (article_type_id,state,updata_time) values (?,1,now())";
+                        jdbcTemplate.update(sqlCountSql, new Object[]{
+                                type_id
+                        });
+                        //重新拉取类型
+                        ArithmeticArticleTask articleTask = new ArithmeticArticleTask();
+                        articleTask.selectAllType();
+
+                    }
+
+
+                }
+
+
+            } catch (Exception e) {
+
+
+            }
 
             //根据posting_name
             String countPostSql = "select count(*) as  count from zz_wechat.posting_paper where posting_name=?";
@@ -482,13 +595,13 @@ public class AlgorithmDataController extends BaseController {
         for (; i < longbytes.length; i++) {
             xorstr[i] = longbytes[i];
         }
-        int value=0;
+        int value = 0;
 
-        for(byte e : xorstr) {
-         String t=""+e;
-         if("1".equals(t)){
-             value=value+1;
-         }
+        for (byte e : xorstr) {
+            String t = "" + e;
+            if ("1".equals(t)) {
+                value = value + 1;
+            }
         }
 //        String s = new String(xorstr);
 //        String str = guessEncoding(xorstr);

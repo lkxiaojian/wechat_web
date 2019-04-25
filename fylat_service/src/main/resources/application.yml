@@ -53,9 +53,11 @@ logging:
     org.springframework.jdbc.core: DEBUG
     com.kingweather: DEBUG
 #关键词
-urlPath: http://106.2.13.148:8990/
+urlPath: https://www.zhuanzhichinalink.com/
 
 #urlPath: http://localhost:8990/
 
 #类型 和类型比较
 urlTypePath: http://106.2.13.136:8889/
+#urlTypePath: http://10.34.2.9:8889/
+

@@ -38,6 +38,18 @@ public class JdbcUtil {
         return page;
     }
 
+    public Page<Map<String, Object>> queryForPageCurs(int pageNo, int pageSize,
+                                                  String countSql, String sql, Object... args) {
+        Page<Map<String, Object>> page = new Page<Map<String, Object>>(pageSize);
+        if (sql != null && sql.length() > 0) {
+            Number number = jdbcTemplate.queryForObject(countSql, args, Long.class);
+            page.setTotalCount(number != null ? number.longValue() : 0);
+            page.setResult(jdbcTemplate.queryForList(sql));
+        }
+        return page;
+    }
+
+
 
     public void createTable(String tableName, Set<String> fieldSet) {
         StringBuilder sb = new StringBuilder();

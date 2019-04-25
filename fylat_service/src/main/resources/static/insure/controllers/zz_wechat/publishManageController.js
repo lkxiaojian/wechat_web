@@ -1,7 +1,8 @@
 app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatService', '$state', 'switchLang', '$stateParams', 'insureUtil', '$window', 'modalTip', '$compile',
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
+        debugger
         var artcicle_type_id = $stateParams.type_id;
-        $scope.activeTab=1;
+        $scope.activeTab = 1;
         $scope.listObj = {
             navigationMsg: '管理平台 >发布管理',
             artcicle_type_id: $stateParams.type_id,//类型id
@@ -9,50 +10,54 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             comming_type_id: $stateParams.comming_type_id, //带过来的typeId
             wx_type: $stateParams.wx_type, //带过来的wx_type
             current_location: "app.insure.publish_manage",
-            defaultSearchParams:{
-                tmp_type:1
+            defaultSearchParams: {
+                tmp_type: 1
             }
         };
 
         $scope.query_params = {
-            type:'0',
-            updateTimeStart:'',
-            updateTimeEnd:'',
-            createTimeStart:'',
-            createTimeEnd:'',
-            createTime:'',
-            language:'',
-            checkType:'',
-            article_type_id: $scope.listObj.comming_type_id?$scope.listObj.comming_type_id:'',
-            details_size_more:'',
-            details_size_less:'',
-            message:''
+            type: '0',
+            updateTimeStart: '',
+            updateTimeEnd: '',
+            createTimeStart: '',
+            createTimeEnd: '',
+            createTime: '',
+            language: '',
+            checkType: '',
+            article_type_id: $scope.listObj.comming_type_id ? $scope.listObj.comming_type_id : '',
+            details_size_more: '',
+            details_size_less: '',
+            message: ''
         }
-        if($stateParams.query_params){
+        if ($stateParams.query_params) {
             $scope.query_params = JSON.parse($stateParams.query_params);
         }
-        if($scope.query_params.type == '0'){
+        if ($scope.query_params.type == '0') {
             $scope.article_query_params = $scope.query_params;
-            if(!$scope.paper_query_params){
+            $scope.article_query_params.type = "0";
+            if (!$scope.paper_query_params) {
                 $scope.paper_query_params = $scope.article_query_params;
+                $scope.paper_query_params.type = "1";
             }
-        }else{
+        } else {
             $scope.paper_query_params = $scope.query_params;
+            $scope.paper_query_params.type = "1";
             $("#tab2Btn").trigger("click");
-            $scope.activeTab=2;
+            $scope.activeTab = 2;
         }
 
-        if($stateParams.type == '1'){
+        if ($stateParams.type == '1') {
             $scope.paper_query_params = $scope.query_params;
+            $scope.paper_query_params.type = "1";
             $("#tab2Btn").trigger("click");
-            $scope.activeTab=2;
+            $scope.activeTab = 2;
         }
 
 
-        $scope.goPreLocation = function(){
+        $scope.goPreLocation = function () {
             $state.go($scope.listObj.pre_location, {
                 focus_node: $stateParams.comming_type_id,
-                type:$stateParams.menu_type
+                type: $stateParams.menu_type
             });
 
         }
@@ -64,7 +69,8 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryArticleForm");
+                    $.extend(params, $scope.article_query_params);
+                    // serializeJson(params, "queryArticleForm");
                     $.extend(params, {
                         view: 'select',
                         type: "0", //文章
@@ -100,7 +106,20 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '所属分类',
                     class: 'col-md-1',
                     field: 'article_type_name',
-                    align: 'center'
+                    align: 'center',
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
+                        },
+                        classes: ["overflow"]
+                    }, formatter: function (value, row, index) {
+                        var values = row.article_type_name;
+                        var span = document.createElement('span');
+                        span.setAttribute('title', values);
+                        span.innerHTML = row.article_type_name;
+                        return span.outerHTML;
+                    }
                 }, {
                     title: '发表时间',
                     class: 'col-md-1',
@@ -153,10 +172,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             "max-width": "200px"
                         },
                         classes: ["overflow"]
-                    },formatter:function(value, row, index) {
+                    }, formatter: function (value, row, index) {
                         var values = row.content_excerpt;
-                        var span=document.createElement('span');
-                        span.setAttribute('title',values);
+                        var span = document.createElement('span');
+                        span.setAttribute('title', values);
                         span.innerHTML = row.content_excerpt;
                         return span.outerHTML;
                     }
@@ -184,9 +203,9 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     align: 'center',
                     width: "100px",
                     formatter: function (value, row, index) {
-                        if(row.check_type == '1'){
+                        if (row.check_type == '1') {
                             return '<a class="a-uncheck a-blue btn btn-default btn-sm" href="javascript:;">取消审核</a>';
-                        }else {
+                        } else {
                             return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
                         }
                     },
@@ -223,10 +242,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     events: {
                         'click .a-view': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
-                                pre_query_params: JSON.stringify($scope.query_params),
+                                pre_query_params: JSON.stringify($scope.article_query_params),
                                 article_id: row.article_id,
-                                pre_location:$scope.listObj.current_location,
-                                operate_type:"view",
+                                pre_location: $scope.listObj.current_location,
+                                operate_type: "view",
                                 type: "0",//文章
                                 tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                             });
@@ -234,17 +253,17 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         'click .a-edit': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
-                                pre_query_params: JSON.stringify($scope.query_params),
+                                pre_query_params: JSON.stringify($scope.article_query_params),
                                 article_id: row.article_id,
-                                pre_location:$scope.listObj.current_location,
-                                operate_type:"edit",
+                                pre_location: $scope.listObj.current_location,
+                                operate_type: "edit",
                                 type: "0",//文章
                                 tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                             });
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
                         'click .a-delete': function (e, value, row, index) {
-                            deleteData(row.article_id,'0');
+                            deleteData(row.article_id, '0');
                         }
                     }
                 }
@@ -262,7 +281,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 resultTag: 'result',
                 method: 'get',
                 queryParams: function (params) {
-                    serializeJson(params, "queryPaperForm");
+                    $.extend(params, $scope.paper_query_params);
                     $.extend(params, {
                         view: 'select',
                         type: "1", //论文
@@ -292,12 +311,37 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             "min-width": "100px",
                             "max-width": "200px"
                         }
+                    }, formatter: function (value, row, index) {
+                        if ($scope.paper_query_params.language == 1) {
+                            if (!row.article_title_e) {
+                                return row.article_title;
+                            }
+                            return row.article_title_e;
+                        } else {
+                            if (!row.article_title) {
+                                return row.article_title_e;
+                            }
+                            return row.article_title;
+                        }
                     }
                 }, {
                     title: '所属分类',
                     class: 'col-md-1',
                     field: 'article_type_name',
-                    align: 'center'
+                    align: 'center',
+                    cellStyle: {
+                        css: {
+                            "min-width": "100px",
+                            "max-width": "200px"
+                        },
+                        classes: ["overflow"]
+                    }, formatter: function (value, row, index) {
+                        var values = row.article_type_name;
+                        var span = document.createElement('span');
+                        span.setAttribute('title', values);
+                        span.innerHTML = row.article_type_name;
+                        return span.outerHTML;
+                    }
                 }, {
                     title: '发表时间',
                     class: 'col-md-1',
@@ -308,12 +352,6 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         css: {
                             "min-widh": "150px"
                         }
-                    },
-                    formatter: function (value, row, index) {
-                        if (value) {
-                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
-                        }
-                        return '';
                     }
                 }, {
                     title: '入库时间',
@@ -325,8 +363,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         css: {
                             "min-widh": "150px"
                         }
-                    },
-                    formatter: function (value, row, index) {
+                    }, formatter: function (value, row, index) {
                         if (value) {
                             return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
                         }
@@ -337,8 +374,20 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     title: '关键词',
                     class: 'col-md-1',
                     field: 'article_keyword',
-                    align: 'center'
-
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        if ($scope.paper_query_params.language == 1) {
+                            if (!row.article_keyword_e) {
+                                return row.article_keyword;
+                            }
+                            return row.article_keyword_e;
+                        } else {
+                            if (!row.article_keyword) {
+                                return row.article_keyword_e;
+                            }
+                            return row.article_keyword;
+                        }
+                    }
                 }, {
                     title: '摘要',
                     class: 'col-md-1',
@@ -350,34 +399,59 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                             "max-width": "200px"
                         },
                         classes: ["overflow"]
-                    },formatter:function(value, row, index) {
-                        var values = row.content_excerpt;
-                        var span=document.createElement('span');
-                        span.setAttribute('title',values);
-                        span.innerHTML = row.content_excerpt;
+                    }, formatter: function (value, row, index) {
+                        var values = "";
+                        if ($scope.paper_query_params.language == 1) {
+                            if (!row.content_excerpt_e) {
+                                values = row.content_excerpt;
+                            }else {
+                                values = row.content_excerpt_e;
+                            }
+                        } else {
+                            if (!row.content_excerpt) {
+                                values = row.content_excerpt_e;
+                            }else {
+                                values = row.content_excerpt;
+                            }
+                        }
+                        var span = document.createElement('span');
+                        span.setAttribute('title', values);
+                        span.innerHTML = values;
                         return span.outerHTML;
                     }
                 }, {
-                    title: '来源',
+                    title: '期刊名称',
                     class: 'col-md-1',
-                    field: 'source',
+                    field: 'posting_name',
                     align: 'center',
                     sortable: false
                 }, {
                     title: '作者',
                     class: 'col-md-1',
                     field: 'author',
-                    align: 'center'
-
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        if ($scope.paper_query_params.language == 1) {
+                            if (!row.author_e) {
+                                return row.author;
+                            }
+                            return row.author_e;
+                        } else {
+                            if (!row.author) {
+                                return row.author_e;
+                            }
+                            return row.author;
+                        }
+                    }
                 }, {
                     title: '审核',
                     class: 'col-md-1',
                     align: 'center',
                     width: "100px",
                     formatter: function (value, row, index) {
-                        if(row.check_type == '1'){
+                        if (row.check_type == '1') {
                             return '<a class="a-uncheck a-blue btn btn-default btn-sm" href="javascript:;">取消审核</a>';
-                        }else{
+                        } else {
                             return '<a class="a-check a-blue btn btn-default btn-sm" href="javascript:;">审核</a>';
                         }
                     },
@@ -414,10 +488,10 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     events: {
                         'click .a-view': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
-                                pre_query_params: JSON.stringify($scope.query_params),
+                                pre_query_params: JSON.stringify($scope.paper_query_params),
                                 article_id: row.article_id,
-                                pre_location:$scope.listObj.current_location,
-                                operate_type:"view",
+                                pre_location: $scope.listObj.current_location,
+                                operate_type: "view",
                                 type: "1",//论文
                                 tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                             });
@@ -425,17 +499,17 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         'click .a-edit': function (e, value, row, index) {
                             $state.go('app.insure.modify_paper', {
-                                pre_query_params: JSON.stringify($scope.query_params),
+                                pre_query_params: JSON.stringify($scope.paper_query_params),
                                 article_id: row.article_id,
-                                pre_location:$scope.listObj.current_location,
-                                operate_type:"edit",
+                                pre_location: $scope.listObj.current_location,
+                                operate_type: "edit",
                                 type: "1",//论文
                                 tmp_type: $scope.listObj.defaultSearchParams.tmp_type
                             });
                             // $scope.tableInstance.bootstrapTable('refresh');
                         },
                         'click .a-delete': function (e, value, row, index) {
-                            deleteData(row.article_id,'1');
+                            deleteData(row.article_id, '1');
                         }
                     }
                 }
@@ -456,17 +530,6 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
             }).success(function (data) {
                 if (data.code == 0) {
                     $scope.publishedTypeList = data.result;
-                    $(".selectpicker").empty();
-                    $(".selectpicker").append('<option value="">--请选择--</option>');
-                    for(var o in $scope.publishedTypeList) {
-                        var option = $('<option>', {
-                            'value': $scope.publishedTypeList[o].article_type_id,
-                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                        }).append($scope.publishedTypeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
                 } else {
                     layer.msg(data.message)
                 }
@@ -476,93 +539,80 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         }
         $scope.getAllPublishedType();
 
-        $scope.queryArticle=function () {
-            /*if(!$("#queryArticleForm [name=article_type_id]").val()){
-                layer.msg("文章类型不能为空");
-                return;
-            }*/
-            $scope.articleTmpInstance.bootstrapTable('refresh',{url:"releaseManagement/selectAricleTmpList/rest",pageNumber:1,
-                pageSize:10});
-            // $scope.articleTmpInstance.bootstrapTable('refresh');
+        $scope.queryArticle = function () {
+            $scope.articleTmpInstance.bootstrapTable('refresh', {
+                url: "releaseManagement/selectAricleTmpList/rest", pageNumber: 1,
+                pageSize: 10
+            });
         }
-        $scope.resetArticle=function () {
-            $.each($("#queryArticleForm select,#queryArticleForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('#queryArticleForm .selectpicker').selectpicker('val', '');
+        $scope.resetArticle = function () {
+            $scope.article_query_params = {type: 0};
         }
 
-        $scope.queryPager=function () {
-            /*if(!$("#queryPaperForm [name=article_type_id]").val()){
-                layer.msg("论文类型不能为空");
-                return;
-            }*/
-            $scope.paperTmpInstance.bootstrapTable('refresh',{url:"releaseManagement/selectAricleTmpList/rest",pageNumber:1,
-                pageSize:10});
-            // $scope.paperTmpInstance.bootstrapTable('refresh');
+        $scope.queryPager = function () {
+            $scope.paperTmpInstance.bootstrapTable('refresh', {
+                url: "releaseManagement/selectAricleTmpList/rest", pageNumber: 1,
+                pageSize: 10
+            });
         }
-        $scope.resetPager=function () {
-            $.each($("#queryPaperForm select,#queryPaperForm input"),
-                function(i, n) {
-                    $(n).val('');
-                });
-            $('#queryPaperForm .selectpicker').selectpicker('val', '');
+        $scope.resetPager = function () {
+            $scope.paper_query_params = {type: 1};
         }
 
-        $scope.checkAll=function (type) {
-            if(type=='0'){
+        $scope.checkAll = function (type) {
+            if (type == '0') {
                 $scope.articleTmpInstance.bootstrapTable('checkAll');
-            }else{
+            } else {
                 $scope.paperTmpInstance.bootstrapTable('checkAll');
             }
         }
-        $scope.uncheckAll=function (type) {
-            if(type=='0'){
+        $scope.uncheckAll = function (type) {
+            if (type == '0') {
                 $scope.articleTmpInstance.bootstrapTable('uncheckAll');
-            }else{
+            } else {
                 $scope.paperTmpInstance.bootstrapTable('uncheckAll');
             }
         }
-        $scope.batchPublish=function (type) {
+        $scope.batchPublish = function (type) {
             var array;
-            if(type=='0'){
+            if (type == '0') {
                 array = $scope.articleTmpInstance.bootstrapTable('getSelections');
-            }else{
+            } else {
                 array = $scope.paperTmpInstance.bootstrapTable('getSelections');
             }
-            if(!array || array.length == 0){
+            if (!array || array.length == 0) {
                 layer.msg("请至少勾选一条数据");
                 return;
             }
             var ids = "";
-            for(var i = 0;i<array.length;i++){
+            for (var i = 0; i < array.length; i++) {
                 ids += array[i].article_id;
                 ids += ",";
             }
-            publish(ids,type);
+            publish(ids, type);
         }
-        function publish(rowIds,type){
+
+        function publish(rowIds, type) {
             var confirm = layer.confirm('确认发布勾选的数据吗？', {
-                btn: ['取消','确认'] //按钮
-            }, function(){
+                btn: ['取消', '确认'] //按钮
+            }, function () {
                 layer.close(confirm);
-            }, function(){
+            }, function () {
                 layer.load(2);
                 $http({
                     method: 'GET',
                     url: 'releaseManagement/pushAricleTmpById/rest',
                     params: {
                         articleIds: rowIds,
-                        type:type
+                        type: type
                     }
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
                         layer.alert(data.message);
-                        if(type=='0'){
+                        if (type == '0') {
                             $scope.articleTmpInstance.bootstrapTable('refresh');
-                        }else{
+                        } else {
                             $scope.paperTmpInstance.bootstrapTable('refresh');
                         }
                     } else {
@@ -575,31 +625,32 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 })
             });
         }
-        $scope.batchDelete=function (type) {
+
+        $scope.batchDelete = function (type) {
             var array;
-            if(type=='0'){
+            if (type == '0') {
                 array = $scope.articleTmpInstance.bootstrapTable('getSelections');
-            }else{
+            } else {
                 array = $scope.paperTmpInstance.bootstrapTable('getSelections');
             }
-            if(!array || array.length == 0){
+            if (!array || array.length == 0) {
                 layer.msg("请至少勾选一条数据");
                 return;
             }
             var ids = "";
-            for(var i = 0;i<array.length;i++){
+            for (var i = 0; i < array.length; i++) {
                 ids += array[i].article_id;
                 ids += ",";
             }
-            deleteData(ids,type);
+            deleteData(ids, type);
         }
 
-        function deleteData(rowIds,type){
+        function deleteData(rowIds, type) {
             var confirm = layer.confirm('确认删除勾选的数据吗？', {
-                btn: ['取消','确认'] //按钮
-            }, function(){
+                btn: ['取消', '确认'] //按钮
+            }, function () {
                 layer.close(confirm);
-            }, function(){
+            }, function () {
                 layer.load(2);
                 $http({
                     method: 'GET',
@@ -611,9 +662,9 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                     layer.closeAll('loading');
                     if (data.code == 0) {
                         layer.alert(data.message);
-                        if(type=='0'){
+                        if (type == '0') {
                             $scope.articleTmpInstance.bootstrapTable('refresh');
-                        }else{
+                        } else {
                             $scope.paperTmpInstance.bootstrapTable('refresh');
                         }
                     } else {
@@ -626,32 +677,33 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
                 })
             });
         }
+
         //审核
-        function check(article_id,type){
+        function check(article_id, type) {
             var msg = '确认审核勾选的数据吗？';
-            if(type == '2' || type == '3'){
+            if (type == '2' || type == '3') {
                 msg = '确认取消审核勾选的数据吗？';
             }
             var confirm = layer.confirm(msg, {
-                btn: ['取消','确认'] //按钮
-            }, function(){
+                btn: ['取消', '确认'] //按钮
+            }, function () {
                 layer.close(confirm);
-            }, function(){
+            }, function () {
                 layer.load(2);
                 $http({
                     method: 'GET',
                     url: 'releaseManagement/getAricleTmpCheckById/rest',
                     params: {
                         articleIds: article_id,
-                        type:type
+                        type: type
                     }
                 }).success(function (data) {
                     layer.closeAll('loading');
                     if (data.code == 0) {
                         layer.alert(data.message);
-                        if(type=='0' || type == '2'){
+                        if (type == '0' || type == '2') {
                             $scope.articleTmpInstance.bootstrapTable('refresh');
-                        }else{
+                        } else {
                             $scope.paperTmpInstance.bootstrapTable('refresh');
                         }
                     } else {

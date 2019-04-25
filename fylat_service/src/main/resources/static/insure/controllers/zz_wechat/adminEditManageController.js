@@ -2,7 +2,7 @@ app.controller('adminEditManageController', ['$scope', '$modal', '$http', 'fylat
     function ($scope, $modal, $http, fylatService, $state, switchLang, $stateParams, insureUtil, $window, modalTip, $compile) {
         var editor;
         $scope.listObj = {
-            navigationMsg: '管理平台 >编辑',
+            navigationMsg: '管理平台 >编辑管理员',
             seachMessage: '',
             parent_id: null,
             userId:$stateParams.userId,

@@ -31,7 +31,7 @@ public class ArithmeticArticleTask {
     private String articlePath;
 
 //    @Scheduled(cron = "0/30 * * * * ?")
-    @Scheduled(cron = "0 15 6 ? * MON")
+    @Scheduled(cron = "0 10 1 * * ?")
     public void selectAllType() {
         log.info("获取全部类型");
         String s = HttpUtils.doPost(articlePath + "type_info", "");
