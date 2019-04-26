@@ -617,12 +617,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
 
             if (tmp_type != null && !"1".equals(tmp_type.toString())) {
 
-                sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name ,a.posting_name ,a.article_title_e,a.content_excerpt_e,a.article_keyword_e,a.author_e   " +
+                sqlMessage = "select a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time as create_time ,a.source,a.content_excerpt,a.check_type,a.reference,a.article_score,b.article_type_name ,a.posting_name ,a.article_title_e,a.content_excerpt_e,a.article_keyword_e,a.author_e   " +
                         "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
                         " AND a.article_type_id=b.article_type_id and  a.state=1 ";
 
                 if (language != null && "1".equals(language)) {
-                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e ,a.article_keyword_e ,a.author_e ,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time,a.source,content_excerpt_e,a.reference,a.article_score,b.article_type_name,a.posting_name ,a.article_title,a.content_excerpt,a.article_keyword,a.author  " +
+                    sqlMessage = "select a.article_id,a.article_type_id,a.article_title_e ,a.article_keyword_e ,a.author_e ,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time,a.paper_create_time as create_time,a.source,content_excerpt_e,a.reference,a.article_score,b.article_type_name,a.posting_name ,a.article_title,a.content_excerpt,a.article_keyword,a.author  " +
                             "from zz_wechat.article a ,zz_wechat.article_type b where a.del_type " + delTypeSql +
                             " AND a.article_type_id=b.article_type_id and  a.state=1 ";
 

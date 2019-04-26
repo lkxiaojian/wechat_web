@@ -396,7 +396,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
             }
         })
         .state('app.insure.todo_type_manage', {
-            url: '/pubTypeManage',
+            url: '/todoTypeManage',
             params: {param: null, data: null, focus_node:'', type:'2'},
             templateUrl: 'insure/template/zz_wechat/typeManage.html',
             pageTitle: '文章领域人工确认',
