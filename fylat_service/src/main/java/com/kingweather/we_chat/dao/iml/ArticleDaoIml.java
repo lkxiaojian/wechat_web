@@ -1026,7 +1026,7 @@ public class ArticleDaoIml implements ArticleDao {
         if (message != null && !"".equals(message.toString())) {
             countSql = countSql + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
         }
-        String sql = "select article_id,article_type_id,article_title,author,source, word_count,article_keyword, create_time from zz_wechat.article where del_type !='1' ";
+        String sql = "select article_id,article_type_id,article_title,article_title_e,author,author_e,source, word_count,article_keyword,article_keyword_e,state,content_type, create_time from zz_wechat.article where del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
             sql = sql + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
         }
