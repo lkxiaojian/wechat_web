@@ -4,7 +4,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
         $scope.activeTab=1;
         $scope.listObj = {
             navigationMsg: '管理平台 >爬虫界面',
-            artcicle_type_id: $stateParams.type_id,//类型id
+            // artcicle_type_id: $stateParams.type_id,//类型id
             pre_location: $stateParams.pre_location,
             comming_type_id: $stateParams.comming_type_id, //带过来的typeId
             wx_type: $stateParams.wx_type, //带过来的wx_type
@@ -19,7 +19,7 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
             startTime:'',
             endTime:'',
             checkType:'',
-            articleTypeId: '',
+            // articleTypeId: '',
             articleTitle:'',
             articleKeyword:''
         }
@@ -332,35 +332,35 @@ app.controller('reptitleManageController', ['$scope', '$modal', '$http', 'fylatS
 
 
         //获取所有已发布的类型
-        $scope.getAllPublishedType = function () {
-            $http({
-                method: 'GET',
-                url: '/releaseManagement/getAllIssueArticleType/rest',
-                params: {
-                    type: "2"
-                }
-            }).success(function (data) {
-                if (data.code == 0) {
-                    $scope.publishedTypeList = data.result;
-                    $(".selectpicker").empty();
-                    $(".selectpicker").append('<option value="">--请选择--</option>');
-                    for(var o in $scope.publishedTypeList) {
-                        var option = $('<option>', {
-                            'value': $scope.publishedTypeList[o].article_type_id,
-                            'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
-                        }).append($scope.publishedTypeList[o].article_type_name)
-                        $(".selectpicker").append(option);
-                    }
-                    $('.selectpicker').selectpicker('refresh');
-                    $('.selectpicker').selectpicker('render');
-                } else {
-                    layer.msg(data.message)
-                }
-            }).error(function (data) {
-                layer.alert("请求失败", {icon: 2})
-            })
-        }
-        $scope.getAllPublishedType();
+        // $scope.getAllPublishedType = function () {
+        //     $http({
+        //         method: 'GET',
+        //         url: '/releaseManagement/getAllIssueArticleType/rest',
+        //         params: {
+        //             type: "2"
+        //         }
+        //     }).success(function (data) {
+        //         if (data.code == 0) {
+        //             $scope.publishedTypeList = data.result;
+        //             $(".selectpicker").empty();
+        //             $(".selectpicker").append('<option value="">--请选择--</option>');
+        //             for(var o in $scope.publishedTypeList) {
+        //                 var option = $('<option>', {
+        //                     'value': $scope.publishedTypeList[o].article_type_id,
+        //                     'selected':$scope.publishedTypeList[o].article_type_id==$scope.query_params.article_type_id?true:false
+        //                 }).append($scope.publishedTypeList[o].article_type_name)
+        //                 $(".selectpicker").append(option);
+        //             }
+        //             $('.selectpicker').selectpicker('refresh');
+        //             $('.selectpicker').selectpicker('render');
+        //         } else {
+        //             layer.msg(data.message)
+        //         }
+        //     }).error(function (data) {
+        //         layer.alert("请求失败", {icon: 2})
+        //     })
+        // }
+        // $scope.getAllPublishedType();
 
         $scope.queryArticle=function () {
             /*if(!$("#queryArticleForm [name=article_type_id]").val()){
