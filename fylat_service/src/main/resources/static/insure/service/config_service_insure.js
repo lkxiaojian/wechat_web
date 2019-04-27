@@ -320,7 +320,7 @@ app.service("echartsConfigService", ['$filter', '$http', function ($filter, $htt
             },
             legend: {
                 //data:['触发次数']
-                x:'left',
+                x:'60',
                 data: [],
                 padding:[0,10,10,-200]
             },
