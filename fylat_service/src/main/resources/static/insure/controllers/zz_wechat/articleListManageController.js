@@ -40,13 +40,31 @@ app.controller('articleListManageController', ['$scope', '$modal', '$http', 'fyl
                         class: 'col-md-1',
                         field: 'article_title',
                         align: 'center',
-                        width: "15%"
+                        width: "15%",
+                        formatter: function (value, row, index) {
+                            if (!row.article_title) {
+                                return row.article_title_e;
+                            }
+                            return row.article_title;
+                        }
+                    }, {
+                        title: '期刊名称',
+                        class: 'col-md-1',
+                        field: 'posting_name',
+                        align: 'center',
+                        width: "4%"
                     }, {
                         title: '作者',
                         class: 'col-md-1',
                         field: 'author',
                         align: 'center',
-                        width: "4%"
+                        width: "4%",
+                        formatter: function (value, row, index) {
+                            if (!row.author) {
+                                return row.author_e;
+                            }
+                            return row.author;
+                        }
 
                     }, {
                         title: '来源',
