@@ -392,7 +392,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
         }
 
         $scope.listObj.getAtirlceMessage();
-        $timeout(function () {
+        // $timeout(function () {
             var E = $window.wangEditor;
             editor = new E('#weEditor');
             // 忽略粘贴内容中的图片
@@ -429,7 +429,7 @@ app.controller('modifyPaperManageController', ['$scope', '$modal', '$http', 'fyl
             // if(editor != null && !$scope.listObj.integrationQuery.content_manual){
             //     editor.txt.html($scope.listObj.integrationQuery.details_div)
             // }
-        }, 0);
+        // }, 0);
     }])
 ;
 
