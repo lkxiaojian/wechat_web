@@ -19,7 +19,8 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
             article_type_id:'',
             details_size_more:'',
             details_size_less:'',
-            message:''
+            message:'',
+            pageNo:1//传参用，不用于分页
         }
         if($stateParams.query_params){
             $scope.query_params = JSON.parse($stateParams.query_params);
@@ -39,6 +40,10 @@ app.controller('articleManageController', ['$scope', '$modal', '$http', 'fylatSe
                 },
                 pageList: ['All'],
                 pageSize: 10,
+                pageNumber: $scope.query_params.pageNo,
+                onPageChange: function(number,size){
+                    $scope.query_params.pageNo = number;
+                },
                 onLoadSuccess: function (data) {
                     if (data.code != 0) {
                         modalTip({
