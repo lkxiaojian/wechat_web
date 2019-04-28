@@ -82,7 +82,7 @@ public class StatisticsDaoIml implements StatisticsDao {
                 sql.append("  and a.article_type = ?  	 ");
                 parameterList.add(articleType);
             }
-            sql.append("  	AND c.id IN (SELECT w.article_type_id  FROM article_type w WHERE w.parentid= ? )	     ");
+            sql.append("  	AND c.id IN (SELECT w.article_type_id  FROM article_type w WHERE w.domain_id= ? )	     ");
             parameterList.add(parentid);
             sql.append("  	AND c.del_type=0 	     ");
             if(statisticsType!=null&&!"".equals(statisticsType)){
@@ -145,24 +145,30 @@ public class StatisticsDaoIml implements StatisticsDao {
         sql.append(" 	SELECT a.article_id articleId,	  ");
         sql.append(" 	a.article_type_id articleTypeId,	  ");
         sql.append(" 	c.article_type_name articleTypeName,	  ");
-        sql.append(" 	a.article_title articleTitle,	  ");
-        sql.append(" 	a.article_keyword articleKeyword,	  ");
+        sql.append(" 	case a.article_title when '' then a.article_title_e else a.article_title  end articleTitle,	  ");
+        sql.append(" 	case a.article_Keyword when  '' then a.article_Keyword_e else a.article_Keyword  end articleKeyword,	  ");
+        sql.append(" 	case a.source when '' then a.source else a.posting_name end  source,	  ");
+        sql.append(" 	case a.create_time when null then a.create_time else a.paper_create_time end  create_time,	  ");
+//        sql.append(" 	a.article_keyword articleKeyword,	  ");
         sql.append(" 	a.author author,	  ");
-        sql.append(" 	a.create_time createTime,	  ");
-        sql.append(" 	a.content_excerpt contentExcerpt,	  ");
-        sql.append(" 	a.content_excerpt_e contentExcerptE ,	  ");
+//        sql.append(" 	a.create_time createTime,	  ");
+        sql.append(" 	case a.content_excerpt when '' then a.content_excerpt_e else a.content_excerpt end  contentExcerpt,	  ");
+//        sql.append(" 	a.content_excerpt contentExcerpt,	  ");
+//        sql.append(" 	a.content_excerpt_e contentExcerptE ,	  ");
         sql.append(" 	DATE_FORMAT(a.update_time,'%Y-%m-%d %H:%i:%S') updateTime,	  ");
-        sql.append(" 	a.details_txt detailsTxt,	  ");
+        sql.append(" 	case a.details_txt when '' then a.pdf_path else a.details_txt end  detailsTxt,	  ");
+
+//        sql.append(" 	a.details_txt detailsTxt,	  ");
 //        sql.append(" 	CHAR_LENGTH( a.details_txt) charNum,	  ");
         sql.append(" 	b.statistics_type statisticsType,	  ");
-        sql.append(" 	a.source source,	  ");
+//        sql.append(" 	a.source source,	  ");
 //        sql.append(" 	SUM(b.count_num) num	  ");
         sql.append(" 	SUM((CASE WHEN statistics_type=1 THEN statistics_type ELSE 0 END)) num1,	  ");
         sql.append(" 	SUM((CASE WHEN statistics_type=2 THEN statistics_type ELSE 0 END)) num2,	  ");
         sql.append(" 	SUM((CASE WHEN statistics_type=3 THEN statistics_type ELSE 0 END)) num3 	  ");
         sql.append(" 	FROM article a , statistics_info b,article_type c	  ");
         sql.append(" 	WHERE a.article_id = b.article_id and a.article_type_id = c.article_type_id	  ");
-        sql.append(" AND c.del_type = 0 ");
+        sql.append(" AND c.del_type = 0 and c.issue=1  ");
 
         sql.append(" AND b.dispose_time BETWEEN ? AND ? ");
         parameterList.add(startTime);
@@ -206,12 +212,16 @@ public class StatisticsDaoIml implements StatisticsDao {
         sql.append("  	LIMIT ?, ? 	 ");
 
         List<Map<String,Object>> obj = jdbcTemplate.queryForList(sql.toString(),parameterList.toArray());
-
         for (Map m:obj ) {
             byte[] bytts = (byte[]) m.get("detailsTxt");
-            String detailsTxt = new String(bytts,"utf-8");
-            m.put("charNum",detailsTxt.length());
-            m.put("detailsTxt",detailsTxt);
+            if(bytts!=null){
+                String detailsTxt = new String(bytts,"utf-8");
+                m.put("charNum",detailsTxt.length());
+                m.put("detailsTxt",detailsTxt);
+            }else{
+                m.put("charNum",0);
+                m.put("detailsTxt","");
+            }
         }
 
         Map map = new HashMap();
