@@ -198,7 +198,7 @@ public class ArticleDaoIml implements ArticleDao {
                 + "case a.article_keyword when '' then a.article_keyword_e else a.article_keyword   end as article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,"
                 + "(a.share_count+a.collect_initcount) AS share_count,"
                 + "(a.collect_count+a.collect_initcount) AS collect_count ,"
-                + "a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,(SELECT c.image_path FROM posting_paper c WHERE c.posting_name=a.posting_name) image_path , a.content_type ,a.pdf_path,a.reference ,a.paper_create_time,a.site_number "
+                + "a.publication_date,a.content_type,a.content_crawl,a.image_path,b.iamge_back ,(SELECT c.image_path FROM posting_paper c WHERE c.posting_name=a.posting_name) post_image_path , a.content_type ,a.pdf_path,a.reference ,a.paper_create_time,a.site_number "
                 + "FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
