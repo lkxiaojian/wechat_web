@@ -15,7 +15,7 @@ app.controller('publishManageController', ['$scope', '$modal', '$http', 'fylatSe
         };
 
         $scope.query_params = {
-            type: '0',
+            type: '',
             updateTimeStart: '',
             updateTimeEnd: '',
             createTimeStart: '',
