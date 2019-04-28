@@ -236,11 +236,10 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     field: 'create_time',
                     align: 'center',
                     width: "150px",
-                    formatter: function (value, row, index) {
-                        if (value) {
-                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
+                    cellStyle: {
+                        css: {
+                            "min-widh": "150px"
                         }
-                        return '';
                     }
                 }, {
                     title: '入库时间',

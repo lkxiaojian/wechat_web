@@ -305,7 +305,9 @@ public class AlgorithmDataController extends BaseController {
         try {
             String path = "";
 
-            String article_id = req.getParameter("article_id");
+//            String article_id = req.getParameter("article_id");
+            String article_id = "222";
+
             String exitArticle = "SELECT count(*) as count  from zz_wechat.academic_paper where article_id=?";
             Map<String, Object> exitArticleMap = null;
             try {
@@ -356,6 +358,8 @@ public class AlgorithmDataController extends BaseController {
             String article_title_e = req.getParameter("article_title_e");
             String content_excerpt_e = req.getParameter("content_excerpt_e");
             String source = req.getParameter("source");
+            String image_path = req.getParameter("image_path");
+
             if (article_keyword != null && article_keyword.length() > 1) {
                 article_keyword = article_keyword.substring(0, article_keyword.length() - 1);
             }
@@ -538,8 +542,8 @@ public class AlgorithmDataController extends BaseController {
                     "author,update_time,create_time,source" +
                     ",content_excerpt,article_type_id,status,posting_name" +
                     ",article_title_e,content_excerpt_e," +
-                    "pdf_path,article_keyword_e,author_e,reference,site_number,seach_keyword,publication_date,check_type,article_score,del_type) " +
-                    "values(?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "pdf_path,article_keyword_e,author_e,reference,site_number,seach_keyword,publication_date,check_type,article_score,del_type,image_path) " +
+                    "values(?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             int update = jdbcTemplate.update(insertPaperSql, new Object[]{
                     article_id,
                     article_title,
@@ -563,7 +567,8 @@ public class AlgorithmDataController extends BaseController {
                     publication_date,
                     0,
                     0,
-                    0
+                    0,
+                    image_path
             });
 
 

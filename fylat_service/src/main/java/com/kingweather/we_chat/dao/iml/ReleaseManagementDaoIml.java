@@ -1124,12 +1124,12 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         "del_type,state " +
                         ",paper_create_time,update_time," +
                         "posting_name,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e," +
-                        "reference,site_number,publication_date,article_score" +
+                        "reference,site_number,publication_date,article_score,image_path" +
                         ") values(?,?,?,?,?,?," +
                         "?,?,?,?,?,?,?,?" +
                         ",?,date_format(?,'%Y-%m-%d %H:%i:%s')" +
                         ",?,?,?,?,?,?," +
-                        "?,?,?,?)";
+                        "?,?,?,?,?)";
 
 
                 int update = jdbcTemplate.update(insertSql, new Object[]{
@@ -1158,7 +1158,9 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
                         paper.get("reference"),
                         paper.get("site_number"),
                         paper.get("publication_date"),
-                        paper.get("article_score")
+                        paper.get("article_score"),
+                        paper.get("image_path")
+
 
                 });
 

@@ -198,7 +198,7 @@ public class ArticleDaoIml implements ArticleDao {
                 + "case a.article_keyword when '' then a.article_keyword_e else a.article_keyword   end as article_keyword,a.article_keyword_e,a.author,a.author_e,a.source,"
                 + "(a.share_count+a.collect_initcount) AS share_count,"
                 + "(a.collect_count+a.collect_initcount) AS collect_count ,"
-                + "a.publication_date,a.content_type,a.content_crawl,b.iamge_back ,a.content_type ,a.pdf_path,a.reference ,a.paper_create_time,a.site_number "
+                + "a.publication_date,a.content_type,a.content_crawl,a.image_path,b.iamge_back ,(SELECT c.image_path FROM posting_paper c WHERE c.posting_name=a.posting_name) post_image_path , a.content_type ,a.pdf_path,a.reference ,a.paper_create_time,a.site_number "
                 + "FROM  article a,article_type b WHERE a.article_type_id=b.article_type_id AND a.article_id=?";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{articleId});
 
@@ -1026,7 +1026,10 @@ public class ArticleDaoIml implements ArticleDao {
         if (message != null && !"".equals(message.toString())) {
             countSql = countSql + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
         }
-        String sql = "select article_id,article_type_id,article_title,article_title_e,author,author_e,source, word_count,article_keyword,article_keyword_e,state,content_type, create_time from zz_wechat.article where del_type !='1' ";
+        String sql = "select article_id,article_type_id,article_title," +
+                "case source when '' then source else posting_name end  source,"+
+                "case create_time when null then create_time else paper_create_time end  create_time,"+
+                "article_title_e,author,author_e, word_count,article_keyword,article_keyword_e,state,content_type from zz_wechat.article where del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
             sql = sql + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
         }
