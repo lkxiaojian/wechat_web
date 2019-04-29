@@ -470,7 +470,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
 
-            sqlMessage = sqlMessage + " ORDER BY a.update_time asc";
+            sqlMessage = sqlMessage + " ORDER BY a.update_time desc";
             Page<Map<String, Object>> page = jdbc.queryForPage(Integer.parseInt(startNum.toString()), Integer.parseInt(pageSize.toString()), sqlCount, sqlMessage, new Object[]{});
             map.put("code", 0);
             map.put("message", "查询成功");
@@ -737,7 +737,7 @@ public class ReleaseManagementDaoIml implements ReleaseManagementDao {
             }
 
 
-            sqlMessage = sqlMessage + " ORDER BY a.update_time asc";
+            sqlMessage = sqlMessage + " ORDER BY a.update_time desc";
             Page<Map<String, Object>> page = jdbc.queryForPage(Integer.parseInt(startNum.toString()), Integer.parseInt(pageSize.toString()), sqlCount, sqlMessage, new Object[]{});
             map.put("code", 0);
             map.put("message", "查询成功");
