@@ -545,7 +545,7 @@ public class ArticleDaoIml implements ArticleDao {
         String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
-        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=100 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
+        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=100 AND  parentid !=-1 and issue =0 AND (binary article_type_name LIKE '%" +
                 message +
                 "%' or binary article_type_keyword  LIKE '%" +
                 message +
@@ -555,7 +555,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         List<Map<String, Object>> gzMapList = jdbcTemplate.queryForList(gzSeachSql);
 
-        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=100 AND  parentid !=-1 AND (binary article_type_name LIKE '%" +
+        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id from zz_wechat.article_type WHERE del_type !=1 and  parentid !=100 AND  parentid !=-1 and issue =0 AND (binary article_type_name LIKE '%" +
                 message +
                 "%' or article_type_keyword  LIKE '%" +
                 message +
@@ -615,7 +615,7 @@ public class ArticleDaoIml implements ArticleDao {
 //        if (count > 0 && pageSize * page <= count || count < 10) {
 
         String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
-                "FROM zz_wechat.article WHERE del_type !=1 " +
+                "FROM zz_wechat.article WHERE del_type !=1 and issue =0 " +
 //                    "and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
 //                    user_id +
 //                    "' ) " +
