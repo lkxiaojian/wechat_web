@@ -147,7 +147,7 @@ public class StatisticsDaoIml implements StatisticsDao {
         sql.append(" 	c.article_type_name articleTypeName,	  ");
         sql.append(" 	case a.article_title when '' then a.article_title_e else a.article_title  end articleTitle,	  ");
         sql.append(" 	case a.article_Keyword when  '' then a.article_Keyword_e else a.article_Keyword  end articleKeyword,	  ");
-        sql.append(" 	case a.source when '' then a.source else a.posting_name end  source,	  ");
+        sql.append(" 	case a.source when '' then a.source else a.publication_date end  source,	  ");
         sql.append(" 	case a.create_time when null then a.create_time else a.paper_create_time end  create_time,	  ");
 //        sql.append(" 	a.article_keyword articleKeyword,	  ");
         sql.append(" 	a.author author,	  ");
