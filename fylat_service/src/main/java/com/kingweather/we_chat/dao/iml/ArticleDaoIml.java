@@ -42,7 +42,7 @@ public class ArticleDaoIml implements ArticleDao {
         }
 
 
-        String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back,b.article_keyword,b.article_title,b.content_excerpt ,b.content_type,b.state,b.pdf_path " +
+        String sql = "SELECT a.article_type_id,b.article_id,a.iamge_back, case b.article_keyword when '' then b.article_keyword_e else b.article_keyword   end as article_keyword,case b.article_title when '' then b.article_title_e else b.article_title   end as article_title,case b.content_excerpt when '' then b.content_excerpt_e else b.content_excerpt   end as content_excerpt  ,b.content_type,b.state,b.pdf_path " +
                 "FROM zz_wechat.article_type a,zz_wechat.article b where b.del_type !=1 and a.del_type !=1 and a.article_type_id=b.article_type_id and b.article_type_id=? ORDER BY b.create_time DESC LIMIT ?,?";
 
 
