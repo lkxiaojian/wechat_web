@@ -144,15 +144,22 @@ public class AlgorithmDataController extends BaseController {
             });
             int articleCount = Integer.parseInt(countTmp.get("count").toString()) + Integer.parseInt(countA.get("count").toString());
 
-            if (articleCount >= 10000) {
+            if (articleCount >= 15000) {
 
 
+//                //通知算法
+//                StringBuffer jsonCount = new StringBuffer();
+//                jsonCount.append("{'type_id': ");
+//                jsonCount.append(type_id);
+//                jsonCount.append("}");
+//                String delete = HttpUtils.doPost(articlePath + "split", jsonCount.toString());
                 //通知算法
                 StringBuffer jsonCount = new StringBuffer();
-                jsonCount.append("{'type_id': ");
+                jsonCount.append("{\"type_id\": \"");
                 jsonCount.append(type_id);
-                jsonCount.append("}");
+                jsonCount.append("\"}");
                 String delete = HttpUtils.doPost(articlePath + "split", jsonCount.toString());
+                System.out.print(delete);
 
 
                 Map<String, Object> objectMap = null;
@@ -305,8 +312,8 @@ public class AlgorithmDataController extends BaseController {
         try {
             String path = "";
 
-//            String article_id = req.getParameter("article_id");
-            String article_id = "222";
+            String article_id = req.getParameter("article_id");
+//            String article_id = "222";
 
             String exitArticle = "SELECT count(*) as count  from zz_wechat.academic_paper where article_id=?";
             Map<String, Object> exitArticleMap = null;
