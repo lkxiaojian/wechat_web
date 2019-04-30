@@ -145,14 +145,6 @@ public class AlgorithmDataController extends BaseController {
             int articleCount = Integer.parseInt(countTmp.get("count").toString()) + Integer.parseInt(countA.get("count").toString());
 
             if (articleCount >= 15000) {
-
-
-//                //通知算法
-//                StringBuffer jsonCount = new StringBuffer();
-//                jsonCount.append("{'type_id': ");
-//                jsonCount.append(type_id);
-//                jsonCount.append("}");
-//                String delete = HttpUtils.doPost(articlePath + "split", jsonCount.toString());
                 //通知算法
                 StringBuffer jsonCount = new StringBuffer();
                 jsonCount.append("{\"type_id\": \"");
@@ -433,7 +425,6 @@ public class AlgorithmDataController extends BaseController {
                 }
                 parent_id = parentIdMap.get("parent_id").toString();
             }
-//            type_id="34852f34808471f68a16cd5f244463a863bfbe37872b4bc42f4e3f80";
 
             try {
                 //判断该类型的文章的数量，是否超过某个值 如果超过，通知算法继续分组
