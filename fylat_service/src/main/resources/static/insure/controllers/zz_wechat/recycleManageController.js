@@ -207,10 +207,17 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                             "max-width":"200px"
                         }
                     },formatter: function (value, row, index) {
-                        if (!row.article_title) {
+                        if ($scope.query_params.language == 1) {
+                            if (!row.article_title_e) {
+                                return row.article_title;
+                            }
                             return row.article_title_e;
+                        } else {
+                            if (!row.article_title) {
+                                return row.article_title_e;
+                            }
+                            return row.article_title;
                         }
-                        return row.article_title;
                     }
                 }, {
                     title: '所属分类',
@@ -260,10 +267,17 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     field: 'article_keyword',
                     align: 'center',
                     formatter: function (value, row, index) {
-                        if (!row.article_keyword) {
+                        if ($scope.query_params.language == 1) {
+                            if (!row.article_keyword_e) {
+                                return row.article_keyword;
+                            }
                             return row.article_keyword_e;
+                        } else {
+                            if (!row.article_keyword) {
+                                return row.article_keyword_e;
+                            }
+                            return row.article_keyword;
                         }
-                        return row.article_keyword;
                     }
 
                 }, {
@@ -278,12 +292,23 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                         },
                         classes:["overflow"]
                     },formatter:function(value, row, index) {
-                        var values = row.content_excerpt;
-                        if(!row.content_excerpt){
-                            values = row.content_excerpt_e;
-                        }                        var span=document.createElement('span');
+                        var values = "";
+                        if ($scope.query_params.language == 1) {
+                            if (!row.content_excerpt_e) {
+                                values = row.content_excerpt;
+                            }else{
+                                values = row.content_excerpt_e;
+                            }
+                        } else {
+                            if (!row.content_excerpt) {
+                                values = row.content_excerpt_e;
+                            }else{
+                                values = row.content_excerpt;
+                            }
+                        }
+                        var span=document.createElement('span');
                         span.setAttribute('title',values);
-                        span.innerHTML = row.values;
+                        span.innerHTML = values;
                         return span.outerHTML;
                     }
                 }, {
@@ -293,11 +318,29 @@ app.controller('recycleManageController', ['$scope', '$modal', '$http', 'fylatSe
                     align: 'center',
                     sortable: false
                 }, {
+                    title: '期刊名称',
+                    class: 'col-md-1',
+                    field: 'posting_name',
+                    align: 'center',
+                    sortable: false
+                }, {
                     title: '作者',
                     class: 'col-md-1',
                     field: 'author',
-                    align: 'center'
-
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        if ($scope.query_params.language == 1) {
+                            if (!row.author_e) {
+                                return row.author;
+                            }
+                            return row.author_e;
+                        } else {
+                            if (!row.author) {
+                                return row.author_e;
+                            }
+                            return row.author;
+                        }
+                    }
                 }, {
                     title: '操作',
                     class: 'col-md-1',
