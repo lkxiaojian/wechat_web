@@ -32,13 +32,13 @@ public class AbstractArticleTask {
 //    @Scheduled(cron = "0 30 1 * * ?")
      @Scheduled(cron = "0/30 * * * * ?")
     public void AbstractArticle() {
-        String sql = "select * from zz_wechat.abstract";
+        String sql = "select * from zz_wechat.abstract order by updata_time asc";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         for (Map<String, Object> map : maps) {
             try {
                 String chrildCoutSql = "select * from zz_wechat.article_type_tmp where parentid=?";
                 List<Map<String, Object>> chrildCout = jdbcTemplate.queryForList(chrildCoutSql, new Object[]{
-                        map.get("article_type_id")
+                        map.get("article_type_id").toString()
                 });
 
                 if (chrildCout != null && chrildCout.size() > 0) {
@@ -289,7 +289,7 @@ public class AbstractArticleTask {
                     jsonCount.append(map.get("article_type_id"));
                     jsonCount.append("\"}");
                     String delete = HttpUtils.doPost(articlePath + "split", jsonCount.toString());
-                    break;
+                    continue;
                 }
 
 
