@@ -820,7 +820,7 @@ public class UserDaoIml implements userDao {
                     count = Integer.parseInt(objCount.toString());
                 }
                 int pageSize = 10;
-                String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,case  b.article_title when '' then b.article_title_e else b.article_title end as article_title,case b.article_keyword when '' then b.article_keyword_e else b.article_keyword   end as article_keyword ,b.create_time,b.content_excerpt FROM " +
+                String sql = "SELECT a.article_type_id,b.state,b.content_type,a.iamge_icon,a.article_type_name,b.article_id,case  b.article_title when '' then b.article_title_e else b.article_title end as article_title,case b.article_keyword when '' then b.article_keyword_e else b.article_keyword   end as article_keyword ,b.create_time,b.content_excerpt FROM " +
                         " zz_wechat.article_type a,zz_wechat.article b WHERE b.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
                         " AND b.article_type_id='" +
                         article_type_id +
@@ -896,7 +896,7 @@ public class UserDaoIml implements userDao {
                     }
                 }
 
-                String sql = "SELECT a.article_type_id,a.iamge_icon,a.article_type_name,b.article_id,case  b.article_title when '' then b.article_title_e else b.article_title end as article_title ,case b.article_keyword when '' then b.article_keyword_e else b.article_keyword   end as article_keyword,b.create_time,case b.content_excerpt when '' then b.content_excerpt_e else b.content_excerpt  end as content_excerpt FROM " +
+                String sql = "SELECT a.article_type_id,a.iamge_icon,b.state,b.content_type,a.article_type_name,b.article_id,case  b.article_title when '' then b.article_title_e else b.article_title end as article_title ,case b.article_keyword when '' then b.article_keyword_e else b.article_keyword   end as article_keyword,b.create_time,case b.content_excerpt when '' then b.content_excerpt_e else b.content_excerpt  end as content_excerpt FROM " +
                         " zz_wechat.article_type a,zz_wechat.article b WHERE b.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
                         " AND b.article_type_id='" +
                         article_type_id +
