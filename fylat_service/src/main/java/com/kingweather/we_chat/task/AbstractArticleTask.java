@@ -289,6 +289,11 @@ public class AbstractArticleTask {
                         }
 
                     }
+                String delTMpSql = "DELETE FROM zz_wechat.abstract where article_type_id=?";
+                    jdbcTemplate.update(delTMpSql,new Object[]{
+                            article_type_id
+                    });
+
             /*    }else {
 
                     //通知算法
