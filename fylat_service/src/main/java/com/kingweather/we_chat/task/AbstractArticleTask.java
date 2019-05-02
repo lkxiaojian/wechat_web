@@ -30,7 +30,7 @@ public class AbstractArticleTask {
 
 
 //    @Scheduled(cron = "0 30 1 * * ?")
-     @Scheduled(cron = "0/30 * * * * ?")
+//     @Scheduled(cron = "0/30 * * * * ?")
     public void AbstractArticle() {
         String sql = "select * from zz_wechat.abstract order by updata_time asc";
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
