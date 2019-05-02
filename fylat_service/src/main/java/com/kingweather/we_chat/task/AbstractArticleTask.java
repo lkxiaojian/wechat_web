@@ -29,7 +29,7 @@ public class AbstractArticleTask {
     private String articlePath;
 
 
-//    @Scheduled(cron = "0 30 1 * * ?")
+    @Scheduled(cron = "0 30 1 * * ?")
 //     @Scheduled(cron = "0/30 * * * * ?")
     public void AbstractArticle() {
         String sql = "select * from zz_wechat.abstract order by updata_time asc";
@@ -41,7 +41,15 @@ public class AbstractArticleTask {
                         map.get("article_type_id").toString()
                 });
 
-                if (chrildCout != null && chrildCout.size() > 0) {
+
+                //通知算法
+                StringBuffer jsonCount = new StringBuffer();
+                jsonCount.append("{\"type_id\": \"");
+                jsonCount.append(map.get("article_type_id"));
+                jsonCount.append("\"}");
+                HttpUtils.doPost(articlePath + "split", jsonCount.toString());
+
+//                if (chrildCout != null && chrildCout.size() > 0) {
                     Object oState = map.get("state");
                     int state = Integer.parseInt(oState.toString());
                     //文章
@@ -221,14 +229,14 @@ public class AbstractArticleTask {
                                 String updataSql = "update zz_wechat.article set article_type_id=? where article_id=?";
                                 jdbcTemplate.update(updataSql, new Object[]{
                                         type_id,
-                                        maps.get(i).get("article_id")
+                                        dataMap.get("article_id")
 
 
                                 });
                                 String updataSqlTmp = "update zz_wechat.academic_paper set article_type_id=? where article_id=?";
                                 jdbcTemplate.update(updataSqlTmp, new Object[]{
                                         type_id,
-                                        maps.get(i).get("article_id")
+                                        dataMap.get("article_id")
 
 
                                 });
@@ -281,7 +289,7 @@ public class AbstractArticleTask {
                         }
 
                     }
-                }else {
+            /*    }else {
 
                     //通知算法
                     StringBuffer jsonCount = new StringBuffer();
@@ -290,7 +298,7 @@ public class AbstractArticleTask {
                     jsonCount.append("\"}");
                     String delete = HttpUtils.doPost(articlePath + "split", jsonCount.toString());
                     continue;
-                }
+                }*/
 
 
             } catch (Exception e) {
