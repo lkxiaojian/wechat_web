@@ -220,7 +220,7 @@ public class AbstractArticleTask {
                                 }
 
                                 if (parentIdMap != null && parentIdMap.get("parent_id") != null) {
-                                    if (Integer.parseInt(parentIdMap.get("type").toString()) == 1) {
+                                    if (Integer.parseInt(parentIdMap.get("type").toString()) == 0) {
                                         type_id = parentIdMap.get("keep_type_id").toString();
                                     }
                                 }
