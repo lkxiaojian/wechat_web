@@ -29,6 +29,7 @@ public class StatisticsController {
          int i  = statisticsService.insertStatisticsInfo(info);
             if (i>0){
                 map.put("code", 0);
+                map.put("result", info);
                 map.put("message", "记录成功！");
             }
             return map;

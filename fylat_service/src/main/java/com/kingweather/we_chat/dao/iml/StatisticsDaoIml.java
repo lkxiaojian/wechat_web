@@ -70,19 +70,18 @@ public class StatisticsDaoIml implements StatisticsDao {
 
             sql.append("  	SELECT COUNT(s.count_num) num FROM (	     ");
             sql.append("  	SELECT a.article_id,a.count_num,a.dispose_time  	     ");
-            sql.append("  	FROM statistics_info a,keyword c,article d 	     ");
+            sql.append("  	FROM statistics_info a,article_type c,article d 	     ");
             sql.append("  	WHERE count_num IS NOT  NULL	     ");
-            sql.append("  	AND c.id = a.article_type 	     ");
+            sql.append("  	AND c.article_type_id = a.article_type 	     ");
             sql.append("  	AND a.article_id = d.article_id 	     ");
             sql.append("  	AND a.dispose_time BETWEEN ? AND ?  	     ");
             parameterList.add(startTime);
             parameterList.add(endTime);
-            sql.append("  	AND a.statistics_Type = 1  	     ");
             if(articleType!=null&&!"".equals(articleType)){
                 sql.append("  and a.article_type = ?  	 ");
                 parameterList.add(articleType);
             }
-            sql.append("  	AND c.id IN (SELECT w.article_type_id  FROM article_type w WHERE w.domain_id= ? )	     ");
+            sql.append("  	AND c.article_type_id IN (SELECT w.article_type_id  FROM article_type w WHERE w.domain_id= ? )	     ");
             parameterList.add(parentid);
             sql.append("  	AND c.del_type=0 	     ");
             if(statisticsType!=null&&!"".equals(statisticsType)){
@@ -199,10 +198,10 @@ public class StatisticsDaoIml implements StatisticsDao {
             parameterList.add(articleType);
         }
 
-        if(hour!=null&&!"".equals(hour)){
+       /* if(hour!=null&&!"".equals(hour)){
             sql.append("  and DATE_FORMAT (b.dispose_time,'%k') = ?  	 ");
             parameterList.add(hour);
-        }
+        }*/
         sql.append(" 	GROUP BY a.article_id,b.statistics_type	  ");
 
 
