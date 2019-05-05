@@ -163,9 +163,9 @@ public class StatisticsDaoIml implements StatisticsDao {
         sql.append(" 	b.statistics_type statisticsType,	  ");
 //        sql.append(" 	a.source source,	  ");
 //        sql.append(" 	SUM(b.count_num) num	  ");
-        sql.append(" 	SUM((CASE WHEN statistics_type=1 THEN statistics_type ELSE 0 END)) num1,	  ");
-        sql.append(" 	SUM((CASE WHEN statistics_type=2 THEN statistics_type ELSE 0 END)) num2,	  ");
-        sql.append(" 	SUM((CASE WHEN statistics_type=3 THEN statistics_type ELSE 0 END)) num3 	  ");
+        sql.append(" 	SUM((CASE WHEN b.statistics_type=1 THEN b.count_num ELSE 0 END)) num1,	  ");
+        sql.append(" 	SUM((CASE WHEN b.statistics_type=2 THEN b.count_num ELSE 0 END)) num2,	  ");
+        sql.append(" 	SUM((CASE WHEN b.statistics_type=3 THEN b.count_num ELSE 0 END)) num3 	  ");
         sql.append(" 	FROM article a , statistics_info b,article_type c	  ");
         sql.append(" 	WHERE a.article_id = b.article_id and a.article_type_id = c.article_type_id	  ");
         sql.append(" AND c.del_type = 0 and c.issue=1  ");
