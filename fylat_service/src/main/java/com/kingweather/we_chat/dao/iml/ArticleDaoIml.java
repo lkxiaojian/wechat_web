@@ -546,9 +546,9 @@ public class ArticleDaoIml implements ArticleDao {
             return getErrorMap();
         }
 
-        if (message != null) {
-            message = message.replaceAll(" ", "").trim();
-        }
+//        if (message != null) {
+//            message = message.replaceAll(" ", "").trim();
+//        }
         String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
@@ -621,8 +621,19 @@ public class ArticleDaoIml implements ArticleDao {
 
 //        if (count > 0 && pageSize * page <= count || count < 10) {
 
-        String gzArticleSql = "SELECT article_id,article_type_id,article_title,article_keyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
-                "FROM zz_wechat.article WHERE del_type !=1  " +
+        String gzArticleSql = "SELECT article_id,article_type_id,\n" +
+                "CASE article_title WHEN  '' THEN article_title_e ELSE article_title  END article_title ,\n" +
+                "CASE article_Keyword WHEN  '' THEN article_Keyword_e ELSE article_Keyword  END articleKeyword,\n" +
+                "CASE content_excerpt WHEN  '' THEN content_excerpt_e ELSE content_excerpt  END content_excerpt,\n" +
+                "CASE create_time WHEN  '' THEN paper_create_time ELSE create_time  END create_time,\n" +
+                "CASE source WHEN  '' THEN publication_date ELSE source  END source,\n" +
+                "CASE author WHEN  '' THEN author_e ELSE author  END author,\n" +
+                "state,content_type,article_title_e,content_excerpt_e,\n" +
+                "pdf_path,article_keyword_e,author_e,publication_date,paper_create_time \n" +
+                "FROM zz_wechat.article WHERE del_type !=1 "+
+
+//        String gzArticleSql = "SELECT article_id,article_type_id,case article_title when  '' then article_title_e else article_title  end article_title ,case article_Keyword when  '' then article_Keyword_e else article_Keyword  end articleKeyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
+//                "FROM zz_wechat.article WHERE del_type !=1  " +
 //                    "and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
 //                    user_id +
 //                    "' ) " +
