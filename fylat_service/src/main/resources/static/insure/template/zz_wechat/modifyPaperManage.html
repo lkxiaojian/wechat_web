@@ -23,16 +23,14 @@
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>标题</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input type="text" class="form-control"
-                           ng-model="listObj.integrationQuery.article_title" value="请输入标题"
-                           ng-maxlength="50" id="article_title"/>
+                           ng-model="listObj.integrationQuery.article_title" value="请输入标题" id="article_title"/>
                 </div>
             </div>
             <div class="form-group" ng-show="listObj.type == '1' && listObj.integrationQuery.article_title_e!=''">
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>英文标题</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input type="text" class="form-control"
-                           ng-model="listObj.integrationQuery.article_title_e" value="请输入英文标题"
-                           ng-maxlength="50" id="article_title_e"/>
+                           ng-model="listObj.integrationQuery.article_title_e" value="请输入英文标题" id="article_title_e"/>
                 </div>
             </div>
             <div class="form-group" ng-show="listObj.type == '1'">
@@ -40,8 +38,7 @@
                         class="text-danger m-r-xs font-bold as-star"></span>期刊名称</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input type="text" class="form-control"
-                           ng-model="listObj.integrationQuery.posting_name" ng-disabled="1==1"
-                           ng-maxlength="50" id="posting_name"/>
+                           ng-model="listObj.integrationQuery.posting_name" ng-disabled="1==1" id="posting_name"/>
                 </div>
             </div>
             <div class="form-group">
@@ -111,14 +108,14 @@
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>关键词</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
                     <input type="text" class="form-control" id="article_keyword"
-                           ng-maxlength="50" id="policy_code" value="请输入关键词"
+                           id="policy_code" value="请输入关键词"
                            ng-model="listObj.integrationQuery.article_keyword" required/>
                 </div>
             </div>
             <div class="form-group"  ng-show="listObj.type == '1' && listObj.integrationQuery.article_keyword_e!=''">
                 <label class="col-lg-2 col-md-2 col-sm-2 control-label padder-l-0"><span class="text-danger m-r-xs font-bold as-star">*</span>英文关键词</label>
                 <div class="col-lg-10 col-md-10 col-sm-10">
-                    <input type="text" class="form-control" id="article_keyword_e" ng-maxlength="50" value="请输入关键词"
+                    <input type="text" class="form-control" id="article_keyword_e" value="请输入关键词"
                            ng-model="listObj.integrationQuery.article_keyword_e"/>
                 </div>
             </div>
