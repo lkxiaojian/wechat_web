@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.mail.FetchProfile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -379,7 +380,12 @@ public class ReleaseManagementController extends BaseController {
     @Transactional
     public Map<String, Object> delArticleTypeById(String article_type_id,String type) {
         try {
-            return releaseManagementService.delArticleTypeById(article_type_id,type);
+            String[] ids = article_type_id.split(",");
+            Map map = null;
+            for (String id :ids){
+                map = releaseManagementService.delArticleTypeById(id,type);
+            }
+            return map;
         } catch (Exception e) {
             return getErrorMapService();
         }
