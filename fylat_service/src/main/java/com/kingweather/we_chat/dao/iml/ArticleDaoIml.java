@@ -1191,7 +1191,7 @@ public class ArticleDaoIml implements ArticleDao {
 
         //获取文章的详细信息 content_manual
         String messageSql = "SELECT a.article_id,a.article_type_id,a.article_title,a.article_keyword,a.author,a.source,a.create_time ,a.collect_initcount,a.share_initcount ,a.collect_initcount ,a.content_type,a.content_crawl,a.details_div,a.content_manual,a.content_excerpt,b.article_type_id,b.article_type_name ," +
-                " a.posting_name,a.article_title_e,a.content_excerpt_e,a.pdf_path,a.article_keyword_e,a.author_e,a.reference,a.site_number,a.publication_date,a.article_score,a.paper_create_time ,a.word_count,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time   FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
+                "a.image_path, a.posting_name,a.article_title_e,a.content_excerpt_e,a.pdf_path,a.article_keyword_e,a.author_e,a.reference,a.site_number,a.publication_date,a.article_score,a.paper_create_time ,a.word_count,DATE_ADD( a.update_time,INTERVAL -8 HOUR) AS update_time   FROM  article a ,article_type b where a.article_type_id=b.article_type_id AND article_id=? ";
         Map<String, Object> messageMap = jdbcTemplate.queryForMap(messageSql, new Object[]{article_id});
         Object details_div = messageMap.get("details_div");
 
