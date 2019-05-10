@@ -437,7 +437,7 @@ public class UserDaoIml implements userDao {
                 " where a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=?";*/
 
 
-            String attentionSql = "SELECT 1 as type, c.article_type_name,c.pdf_path,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c.parentid" +
+            String attentionSql = "SELECT 1 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c.parentid" +
                     " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
                     " where c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=? AND c.parentid !=? AND c.issue =?" +
                     " AND b.article_type_id IN (SELECT article_type_id FROM zz_wechat.article where " +
@@ -455,7 +455,7 @@ public class UserDaoIml implements userDao {
             });
 
 
-            String attentionSqla = "SELECT 2 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.pdf_path,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
+            String attentionSqla = "SELECT 2 as type, c.article_type_name,c.article_type_id,c.article_type_keyword,c.create_time,c.iamge_icon,c.iamge_back,c. parentid" +
                     " FROM zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article_type c" +
                     " where c.del_type != ? AND  a.user_id=b.user_id AND b.article_type_id=c.article_type_id AND a.wechat_id=? AND c.parentid !=? AND c.parentid !=? AND c.issue =?";
 
