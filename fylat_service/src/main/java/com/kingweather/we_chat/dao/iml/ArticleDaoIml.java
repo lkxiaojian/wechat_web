@@ -482,7 +482,7 @@ public class ArticleDaoIml implements ArticleDao {
             if (num < 0) {
                 num = 0;
             }
-            if(page==0){
+            if (page == 0) {
                 num = 0;
             }
 
@@ -552,7 +552,7 @@ public class ArticleDaoIml implements ArticleDao {
         String user_id = objId.toString();
         List list = new ArrayList();
         //关注的类型sql
-        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=100 AND  parentid !=-1 and issue =1 AND (binary article_type_name LIKE '%" +
+     /*   String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id from zz_wechat.article_type WHERE del_type !=1 and parentid !=100 AND  parentid !=-1 and issue =1 AND (binary article_type_name LIKE '%" +
                 message +
                 "%' or binary article_type_keyword  LIKE '%" +
                 message +
@@ -572,7 +572,30 @@ public class ArticleDaoIml implements ArticleDao {
 
         List<Map<String, Object>> nogzmapList = jdbcTemplate.queryForList(nogzSeachSql);
         list.addAll(gzMapList);
-        list.addAll(nogzmapList);
+        list.addAll(nogzmapList);*/
+
+        List<Map<String, Object>> tmpList = new ArrayList();
+        String gzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,1 as type_id,lower(REPLACE(article_type_name ,',','')) as name ,lower(REPLACE(article_type_keyword ,',','')) as keyword  from zz_wechat.article_type WHERE del_type !=1 and parentid !=100 AND  parentid !=-1 and issue =1  AND article_type_id in (SELECT article_type_id FROM user_articletype WHERE user_id='" +
+                user_id +
+                "')";
+        List<Map<String, Object>> gzMapList = jdbcTemplate.queryForList(gzSeachSql);
+        String lowerMessage = message.toLowerCase();
+        tmpList.addAll(gzMapList);
+        String nogzSeachSql = "SELECT article_type_id,article_type_name,article_type_keyword ,create_time,iamge_icon,iamge_back ,2 as type_id ,lower(REPLACE(article_type_name ,',','')) as name ,lower(REPLACE(article_type_keyword ,',','')) as keyword from zz_wechat.article_type WHERE del_type !=1 and  parentid !=100 AND  parentid !=-1 and issue =1  AND article_type_id not in (SELECT article_type_id FROM user_articletype WHERE user_id='" +
+                user_id +
+                "')";
+        List<Map<String, Object>> nogzmapList = jdbcTemplate.queryForList(nogzSeachSql);
+        tmpList.addAll(nogzmapList);
+        for (Map<String, Object> data : tmpList) {
+            if (data.get("name") != null && data.get("name").toString().contains(lowerMessage)) {
+                list.add(data);
+                continue;
+            }
+            if (data.get("keyword") != null && data.get("keyword").toString().contains(lowerMessage)) {
+                list.add(data);
+            }
+        }
+
 
         resultMap.put("articleType", list);
 //        String gzArticleSqlCount = "SELECT COUNT(*) as count FROM zz_wechat.article WHERE del_type !=1 and  article_type_id in(SELECT article_type_id FROM user_articletype WHERE user_id='" +
@@ -630,7 +653,7 @@ public class ArticleDaoIml implements ArticleDao {
                 "CASE author WHEN  '' THEN author_e ELSE author  END author,\n" +
                 "state,content_type,article_title_e,content_excerpt_e,\n" +
                 "pdf_path,article_keyword_e,author_e,publication_date,paper_create_time \n" +
-                "FROM zz_wechat.article WHERE del_type !=1 "+
+                "FROM zz_wechat.article WHERE del_type !=1 " +
 
 //        String gzArticleSql = "SELECT article_id,article_type_id,case article_title when  '' then article_title_e else article_title  end article_title ,case article_Keyword when  '' then article_Keyword_e else article_Keyword  end articleKeyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
 //                "FROM zz_wechat.article WHERE del_type !=1  " +
@@ -849,14 +872,14 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         String doNameSql = "select count(*) as count from zz_wechat.article_type where article_type_name=? and parentid=?";
-        Map<String, Object> countMap=null;
-        String typeId=UuidUtils.getUUid();
+        Map<String, Object> countMap = null;
+        String typeId = UuidUtils.getUUid();
         try {
             countMap = jdbcTemplate.queryForMap(doNameSql, new Object[]{
                     name.toString(),
                     typeId
             });
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -866,7 +889,7 @@ public class ArticleDaoIml implements ArticleDao {
             String sysTime = DateUtil.getCurrentTimeString();
 
 
-            String fafterSql="SELECT T2.article_type_id \n" +
+            String fafterSql = "SELECT T2.article_type_id \n" +
                     "FROM ( \n" +
                     "    SELECT \n" +
                     "        @r AS _article_type_id, \n" +
@@ -883,15 +906,15 @@ public class ArticleDaoIml implements ArticleDao {
                     "ORDER BY T1.lvl DESC \n";
             List<Map<String, Object>> maps = jdbcTemplate.queryForList(fafterSql);
 
-            String domian_id="";
-            if(maps.size()==1){
-                domian_id=maps.get(0).get("article_type_id").toString();
-            }else if (maps.size()>1){
-                domian_id=maps.get(1).get("article_type_id").toString();
+            String domian_id = "";
+            if (maps.size() == 1) {
+                domian_id = maps.get(0).get("article_type_id").toString();
+            } else if (maps.size() > 1) {
+                domian_id = maps.get(1).get("article_type_id").toString();
             }
 
-            if("".equals(domian_id)){
-                domian_id=artcicle_type_id;
+            if ("".equals(domian_id)) {
+                domian_id = artcicle_type_id;
             }
 
 
@@ -911,7 +934,7 @@ public class ArticleDaoIml implements ArticleDao {
 
             //插入
             String sqlTmp = "insert into zz_wechat.article_type_tmp (article_type_name,article_type_keyword,create_time,iamge_icon,parentid,iamge_back,del_type,issue,domain_id,type_state,article_type_id) values (?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?,?,?,1,?,2,?)";
-              jdbcTemplate.update(sqlTmp, new Object[]{
+            jdbcTemplate.update(sqlTmp, new Object[]{
                     name,
                     keyword,
                     sysTime,
@@ -920,7 +943,7 @@ public class ArticleDaoIml implements ArticleDao {
                     pathback,
                     0,
                     domian_id,
-                      typeId
+                    typeId
             });
             if (update == 1) {
                 return true;
@@ -1045,8 +1068,8 @@ public class ArticleDaoIml implements ArticleDao {
             countSql = countSql + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
         }
         String sql = "select article_id,article_type_id,article_title," +
-                "case source when '' then publication_date else source end  source,"+
-                "case create_time when null then paper_create_time else create_time end  create_time,"+
+                "case source when '' then publication_date else source end  source," +
+                "case create_time when null then paper_create_time else create_time end  create_time," +
                 "article_title_e,author,author_e, word_count,article_keyword,article_keyword_e,state,content_type from zz_wechat.article where del_type !='1' ";
         if (message != null && !"".equals(message.toString())) {
             sql = sql + " and (article_title like '%" + message.toString() + "%' or author like '%" + message.toString() + "%' or source like '%" + message.toString() + "%' )";
@@ -1529,15 +1552,15 @@ public class ArticleDaoIml implements ArticleDao {
                 idString = idString.substring(0, idString.length() - 1);
             }*/
 
-             String  idString =getChildList(id,"0");
+        String idString = getChildList(id, "0");
 
-            //改变 子节点 del_type 的值
-            String ChildSql = "update zz_wechat.article_type set del_type=1 where article_type_id in( " + idString + " )";
-            jdbcTemplate.update(ChildSql);
+        //改变 子节点 del_type 的值
+        String ChildSql = "update zz_wechat.article_type set del_type=1 where article_type_id in( " + idString + " )";
+        jdbcTemplate.update(ChildSql);
 
-            //改变 文章的 del_type 的值
-            String ArticleSql = "update zz_wechat.article set del_type=1 where article_type_id in( " + idString + " )";
-            jdbcTemplate.update(ArticleSql);
+        //改变 文章的 del_type 的值
+        String ArticleSql = "update zz_wechat.article set del_type=1 where article_type_id in( " + idString + " )";
+        jdbcTemplate.update(ArticleSql);
 
 //        }
         HashMap<String, Object> map = new HashMap<>();
@@ -1636,20 +1659,20 @@ public class ArticleDaoIml implements ArticleDao {
                 -1
         });
         //获取全部类型不包含领域
-        String typeSql="SELECT article_type_id,article_type_name,article_type_keyword,type_state,domain_id,parentid, 'false' as sureid  \n" +
+        String typeSql = "SELECT article_type_id,article_type_name,article_type_keyword,type_state,domain_id,parentid, 'false' as sureid  \n" +
                 " from zz_wechat.article_type where del_type!=1 and issue=1 and (type_state=0 or type_state=1) AND parentid!=100  AND parentid !=-1 ORDER BY create_time DESC";
 
         List<Map<String, Object>> typeList = jdbcTemplate.queryForList(typeSql);
-        for (int i=0;i<doMainList.size();i++){
-            List<Map<String, Object>> dataMap=new ArrayList<>();
+        for (int i = 0; i < doMainList.size(); i++) {
+            List<Map<String, Object>> dataMap = new ArrayList<>();
             Map<String, Object> doMainMap = doMainList.get(i);
-            for (int j=0;j<typeList.size();j++){
+            for (int j = 0; j < typeList.size(); j++) {
                 Map<String, Object> typeMap = typeList.get(j);
-                if(doMainMap.get("id").toString().equals(typeMap.get("domain_id").toString())){
+                if (doMainMap.get("id").toString().equals(typeMap.get("domain_id").toString())) {
                     dataMap.add(typeMap);
                 }
             }
-            doMainMap.put("item",dataMap);
+            doMainMap.put("item", dataMap);
         }
 
         HashMap<String, Object> map = new HashMap<>();
@@ -1714,51 +1737,52 @@ public class ArticleDaoIml implements ArticleDao {
 
     /**
      * 根据id获取所有下级id
+     *
      * @param id
      * @return
      */
-    private String getChildList(String id,String type) {
+    private String getChildList(String id, String type) {
         String idString = "'" +
                 id +
                 "',";
-        String table=" zz_wechat.article_type";
-        if("1".equals(type)){
-            table=" zz_wechat.article_type_tmp";
+        String table = " zz_wechat.article_type";
+        if ("1".equals(type)) {
+            table = " zz_wechat.article_type_tmp";
         }
 
-        String sql="select article_type_id from "+table+" where parentid=?";
-        List<Map<String, Object>> result=new ArrayList<>();
+        String sql = "select article_type_id from " + table + " where parentid=?";
+        List<Map<String, Object>> result = new ArrayList<>();
 
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
                 id
         });
         result.addAll(maps);
-        for (Map<String, Object> map:maps){
+        for (Map<String, Object> map : maps) {
 
-            if(map.get("article_type_id")!=null){
+            if (map.get("article_type_id") != null) {
                 List<Map<String, Object>> article_id = getlist(sql, map.get("article_type_id").toString());
                 result.addAll(article_id);
             }
 
         }
-        for (Map<String, Object> map:result){
-            idString=idString+"'"+map.get("article_type_id")+"',";
+        for (Map<String, Object> map : result) {
+            idString = idString + "'" + map.get("article_type_id") + "',";
         }
-        return idString.substring(0,idString.length()-1);
+        return idString.substring(0, idString.length() - 1);
     }
 
 
-    private List<Map<String, Object>> getlist(String sql,String id ){
-        List<Map<String, Object>> result=new ArrayList<>();
+    private List<Map<String, Object>> getlist(String sql, String id) {
+        List<Map<String, Object>> result = new ArrayList<>();
 
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql, new Object[]{
                 id
         });
         result.addAll(maps);
-        for (Map<String, Object> map:maps){
+        for (Map<String, Object> map : maps) {
 
-            if(map.get("article_type_id")!=null){
-                result.addAll(  getlist(sql,map.get("article_type_id").toString()));
+            if (map.get("article_type_id") != null) {
+                result.addAll(getlist(sql, map.get("article_type_id").toString()));
             }
 
         }
