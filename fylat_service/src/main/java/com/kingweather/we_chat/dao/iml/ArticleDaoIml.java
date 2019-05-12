@@ -629,8 +629,9 @@ public class ArticleDaoIml implements ArticleDao {
                 "CASE source WHEN  '' THEN publication_date ELSE source  END source,\n" +
                 "CASE author WHEN  '' THEN author_e ELSE author  END author,\n" +
                 "state,content_type,article_title_e,content_excerpt_e,\n" +
+                "case WHEN image_path  is null then (select image_path from posting_paper c where a.posting_name=c.posting_name ) else image_path end image_path, \n"+
                 "pdf_path,article_keyword_e,author_e,publication_date,paper_create_time \n" +
-                "FROM zz_wechat.article WHERE del_type !=1 "+
+                "FROM zz_wechat.article a WHERE del_type !=1 "+
 
 //        String gzArticleSql = "SELECT article_id,article_type_id,case article_title when  '' then article_title_e else article_title  end article_title ,case article_Keyword when  '' then article_Keyword_e else article_Keyword  end articleKeyword,create_time,content_excerpt,state,content_type,article_title_e,content_excerpt_e,pdf_path,article_keyword_e,author_e,publication_date,paper_create_time " +
 //                "FROM zz_wechat.article WHERE del_type !=1  " +
