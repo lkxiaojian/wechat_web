@@ -238,11 +238,11 @@ public class AlgorithmDataController extends BaseController {
                 String simhash1 = result.get("simhash").toString();
                 int i = twoStringXor(simhash1, simhash);
                 if (i <= 13) {
-                    String sql="INSERT INTO tmp_id (id1,id2) values (?,?)";
+                /*    String sql="INSERT INTO tmp_id (id1,id2) values (?,?)";
                     jdbcTemplate.update(sql,new Object[]{
                             result.get("article_id").toString(),
                             data.get("article_id").toString()
-                    });
+                    });*/
 
                     isExit = true;
                     break;
