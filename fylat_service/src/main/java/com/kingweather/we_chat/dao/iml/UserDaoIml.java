@@ -505,7 +505,7 @@ public class UserDaoIml implements userDao {
             //有关注的文章且 查询的都是关注的文章
 //        if (count > 0 && pageSize * page < count || count < 10) {
             if (page == 0) {
-                String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.content_type,c.state, c.article_type_id,c.article_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt ,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,d.iamge_icon,d.article_type_name \n" +
+                String hoursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.content_type,c.state, c.article_type_id,c.article_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt ,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,c.image_path,d.iamge_icon,d.article_type_name \n" +
                         "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.del_type !=1 and d.issue=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                         " AND c.update_time>date_format('" +
@@ -526,7 +526,7 @@ public class UserDaoIml implements userDao {
                         "ORDER BY update_time DESC ";
                 List<Map<String, Object>> hoursDay = jdbcTemplate.queryForList(hoursSql);
                 list.addAll(hoursDay);
-                String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.content_type,c.state, c.article_type_id,c.article_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt ,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title ,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,d.iamge_icon,d.article_type_name \n" +
+                String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.content_type,c.state, c.article_type_id,c.article_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt ,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title ,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,c.image_path,d.iamge_icon,d.article_type_name \n" +
                         "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.del_type !=1 and d.issue=1 and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                         " AND c.update_time<=date_format('" +
@@ -546,7 +546,7 @@ public class UserDaoIml implements userDao {
                 list.addAll(oneDayList);
             }
             if (page >= 0 && count > 0 && pageSize * (page + 1) < count) {
-                String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT  c.content_type, c.state,c.article_type_id,c.article_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt ,case c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,d.iamge_icon,d.article_type_name \n" +
+                String oneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT  c.content_type, c.state,c.article_type_id,c.article_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt ,case c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,c.image_path,d.iamge_icon,d.article_type_name \n" +
                         "from zz_wechat.sys_user a,zz_wechat.user_articletype b,zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.del_type !=1 and d.issue=1  and c.del_type !=1 and a.user_id=b.user_id AND b.article_type_id=d.article_type_id AND c.article_type_id=d.article_type_id \n" +
                         " AND c.update_time<=date_format('" +
@@ -573,7 +573,7 @@ public class UserDaoIml implements userDao {
             if (list == null || list.size() < pageSize || pageSize * (page + 1) >= count) {
 
 
-                String noCount = "SELECT  count(*) as noCount from ( SELECT 2 as  type from (SELECT c.content_type,c.state,c.article_id,c.article_type_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,d.iamge_icon,d.article_type_name FROM \n" +
+                String noCount = "SELECT  count(*) as noCount from ( SELECT 2 as  type from (SELECT c.content_type,c.state,c.article_id,c.article_type_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,c.image_path,d.iamge_icon,d.article_type_name FROM \n" +
                         "zz_wechat.article c,zz_wechat.article_type d \n" +
                         "WHERE d.del_type !=1 and d.issue=1 and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                         "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -603,7 +603,7 @@ public class UserDaoIml implements userDao {
                 }
                 if (num == 0||page==0) {
                     //小时分类
-                    String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.content_type,c.state,c.article_id,c.article_type_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,d.iamge_icon,d.article_type_name FROM \n" +
+                    String noHosursSql = "SELECT * ,COUNT(*) - 1 AS num_prods,1 as  type from (SELECT c.content_type,c.state,c.article_id,c.article_type_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword   end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,c.image_path,d.iamge_icon,d.article_type_name FROM \n" +
                             "zz_wechat.article c,zz_wechat.article_type d \n" +
                             "WHERE d.del_type !=1 and d.issue=1  and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                             "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -630,7 +630,7 @@ public class UserDaoIml implements userDao {
 
                 if (page >=0  && noLoveCount > 0 && pageSize * num < noLoveCount) {
 
-                    String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.content_type,c.state, c.article_id,c.article_type_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword  end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,d.iamge_icon,d.article_type_name FROM \n" +
+                    String noOneDaySql = "SELECT * ,COUNT(*) - 1 AS num_prods,2 as  type from (SELECT c.content_type,c.state, c.article_id,c.article_type_id,case c.article_keyword when '' then c.article_keyword_e else c.article_keyword  end as article_keyword ,c.create_time,case c.content_excerpt when '' then c.content_excerpt_e else c.content_excerpt  end as content_excerpt,case  c.article_title when '' then c.article_title_e else c.article_title end as article_title,DATE_ADD(c.update_time,INTERVAL -8 HOUR) AS update_time,c.pdf_path,c.image_path,d.iamge_icon,d.article_type_name FROM \n" +
                             "zz_wechat.article c,zz_wechat.article_type d \n" +
                             "WHERE d.del_type !=1 and d.issue=1  and c.del_type !=1 and d.article_type_id=c.article_type_id  \n" +
                             "AND  d.article_type_id NOT IN(SELECT article_type_id FROM user_articletype \n" +
@@ -896,7 +896,7 @@ public class UserDaoIml implements userDao {
                     }
                 }
 
-                String sql = "SELECT a.article_type_id,a.pdf_path,a.iamge_icon,b.state,b.content_type,a.article_type_name,b.article_id,case  b.article_title when '' then b.article_title_e else b.article_title end as article_title ,case b.article_keyword when '' then b.article_keyword_e else b.article_keyword   end as article_keyword,b.create_time,case b.content_excerpt when '' then b.content_excerpt_e else b.content_excerpt  end as content_excerpt FROM " +
+                String sql = "SELECT a.article_type_id,b.pdf_path,b.image_path,a.iamge_icon,b.state,b.content_type,a.article_type_name,b.article_id,case  b.article_title when '' then b.article_title_e else b.article_title end as article_title ,case b.article_keyword when '' then b.article_keyword_e else b.article_keyword   end as article_keyword,b.create_time,case b.content_excerpt when '' then b.content_excerpt_e else b.content_excerpt  end as content_excerpt FROM " +
                         " zz_wechat.article_type a,zz_wechat.article b WHERE b.del_type !=1 and a.del_type !=1 and a.parentid !='0' AND a.parentid !='-1' AND a.article_type_id=b.article_type_id  " +
                         " AND b.article_type_id='" +
                         article_type_id +

@@ -220,7 +220,7 @@ public class AlgorithmDataController extends BaseController {
 
 
         //查重根据simhash
-        String simhashSql = "select simhash from zz_wechat.article_tmp where article_type_id=?";
+        String simhashSql = "select simhash,article_id from zz_wechat.article_tmp where article_type_id=?";
         List<Map<String, Object>> simhashList = new ArrayList<>();
         try {
             simhashList = jdbcTemplate.queryForList(simhashSql, new Object[]{
@@ -238,6 +238,12 @@ public class AlgorithmDataController extends BaseController {
                 String simhash1 = result.get("simhash").toString();
                 int i = twoStringXor(simhash1, simhash);
                 if (i <= 13) {
+                    String sql="INSERT INTO tmp_id (id1,id2) values (?,?)";
+                    jdbcTemplate.update(sql,new Object[]{
+                            result.get("article_id").toString(),
+                            data.get("article_id").toString()
+                    });
+
                     isExit = true;
                     break;
                 }
@@ -245,7 +251,7 @@ public class AlgorithmDataController extends BaseController {
 
             }
         }
-        //文章重复了
+        //文章相识度过大
         if (isExit) {
             return 3;
         }
