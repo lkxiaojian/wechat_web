@@ -307,7 +307,11 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
             $scope.tableInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
-            $.each($("#queryForm select,#queryForm input"),
+            // $.each($("#queryForm select,#queryForm input"),
+            //     function(i, n) {
+            //         $(n).val('');
+            //     });
+            $.each($("#queryForm [name=article_type],#queryForm [name=articleTitle]"),
                 function(i, n) {
                     $(n).val('');
                 });

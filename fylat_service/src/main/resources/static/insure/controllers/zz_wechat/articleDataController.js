@@ -306,7 +306,7 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
             $scope.tableInstance.bootstrapTable('refresh');
         }
         $scope.reset = function(){
-            $.each($("#queryForm select,#queryForm input"),
+            $.each($("#queryForm [name=article_type],#queryForm [name=articleTitle]"),
                 function(i, n) {
                     $(n).val('');
                 });
