@@ -72,7 +72,7 @@ app.controller('paperDataController', ['$scope', '$modal', '$http', 'fylatServic
                 },  {
                     title: '入库时间',
                     class: 'col-md-1',
-                    field: 'createTime',
+                    field: 'updateTime',
                     align: 'center',
                     width: "150px",
                     formatter: function (value, row, index) {
