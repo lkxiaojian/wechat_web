@@ -74,26 +74,13 @@ app.controller('articleDataController', ['$scope', '$modal', '$http', 'fylatServ
                     class: 'col-md-1',
                     field: 'updateTime',
                     align: 'center',
-                    width: "150px",
-                    formatter: function (value, row, index) {
-                        if (value) {
-                            return insureUtil.dateToString(new Date(value), "yyyy-MM-dd hh:mm:ss");
-                        }
-                        return '';
-                    }
-
+                    width: "150px"
                 }, {
                         title: '发表时间',
                         class: 'col-md-1',
                         field: 'createTime',
                         align: 'center',
-                        width: "150px",
-                        formatter: function (value, row, index) {
-                            if (value) {
-                                return insureUtil.dateToString(new Date(value), "yyyy-MM-dd");
-                            }
-                            return '';
-                        }
+                        width: "150px"
                     },{
                         title: '来源',
                         class: 'col-md-1',
