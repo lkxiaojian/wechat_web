@@ -122,12 +122,16 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         //插入数据，代表文章已读
+        Map<String, Object> userMap =new HashMap<>();
+        try {
+            String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
+            userMap = jdbcTemplate.queryForMap(selectSql);
+        }catch (Exception e){
 
-        String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
-        Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
+        }
         Object objId = userMap.get("user_id");
         if (objId == null) {
-            return getErrorMap();
+            objId="1";
         }
         String user_id = objId.toString();
 
@@ -226,12 +230,18 @@ public class ArticleDaoIml implements ArticleDao {
 
 
         //插入数据，代表文章已读
+        Map<String, Object> userMap=new HashMap<>();
+        try {
+            String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
+            userMap = jdbcTemplate.queryForMap(selectSql);
+        }catch (Exception e){
 
-        String selectSql = "select user_id from zz_wechat.sys_user where wechat_id='" + wechatid + "'";
-        Map<String, Object> userMap = jdbcTemplate.queryForMap(selectSql);
+        }
+
+
         Object objId = userMap.get("user_id");
         if (objId == null) {
-            return getErrorMap();
+            objId="1";
         }
         String user_id = objId.toString();
 
