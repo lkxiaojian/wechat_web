@@ -1546,12 +1546,12 @@ public class ArticleDaoIml implements ArticleDao {
         List<Map<String, Object>> doMainList = jdbcTemplate.queryForList(doMainSql, new Object[]{
                 1,
                 1,
-                100,
-                -1
+                "100",
+                "-1"
         });
         //获取全部类型不包含领域
         String typeSql="SELECT article_type_id,article_type_name,article_type_keyword,type_state,domain_id,parentid, 'false' as sureid  \n" +
-                " from zz_wechat.article_type where del_type!=1 and issue=1 and (type_state=0 or type_state=1) AND parentid!=100  AND parentid !=-1 ORDER BY create_time DESC";
+                " from zz_wechat.article_type where del_type!=1 and issue=1 and (type_state=0 or type_state=1) AND parentid!='100'  AND parentid !='-1' ORDER BY create_time DESC";
 
         List<Map<String, Object>> typeList = jdbcTemplate.queryForList(typeSql);
         for (int i=0;i<doMainList.size();i++){
