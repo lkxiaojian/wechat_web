@@ -5,6 +5,7 @@ import com.kingweather.common.controller.BaseController;
 import com.kingweather.fylat_service.controller.other.DataManageController;
 import com.kingweather.we_chat.constants.AesCbcUtil;
 import com.kingweather.we_chat.constants.HttpRequest;
+import com.kingweather.we_chat.constants.HttpUtils;
 import com.kingweather.we_chat.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,7 +131,8 @@ public class UserManageController extends BaseController {
         //请求参数
         String params = "appid=" + wxspAppid + "&secret=" + wxspSecret.toString() + "&js_code=" + code.toString() + "&grant_type=" + grant_type;
         //发送请求
-        String sr = HttpRequest.sendGet("https://api.weixin.qq.com/sns/jscode2session", params);
+//        String sr = HttpRequest.sendGet("https://api.weixin.qq.com/sns/jscode2session", params);
+        String sr =   HttpUtils.sendGet("https://api.weixin.qq.com/sns/jscode2session", params);
         //解析相应内容（转换成json对象）
         JSONObject json = JSONObject.parseObject(sr);
 
