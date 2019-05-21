@@ -446,8 +446,8 @@ public class UserDaoIml implements userDao {
 
             List<Map<String, Object>> attentionList = jdbcTemplate.queryForList(attentionSql, new Object[]{
                     wechatid,
-                    100,
-                    -1,
+                    "100",
+                    "-1",
                     1,
                     currentTimeString,
                     oneStartTime,
@@ -462,8 +462,8 @@ public class UserDaoIml implements userDao {
             List<Map<String, Object>> maps = jdbcTemplate.queryForList(attentionSqla, new Object[]{
                     1,
                     wechatid,
-                    100,
-                    -1,
+                    "100",
+                    "-1",
                     1
             });
 

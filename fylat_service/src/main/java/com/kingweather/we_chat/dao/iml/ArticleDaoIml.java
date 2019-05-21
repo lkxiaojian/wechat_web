@@ -435,9 +435,9 @@ public class ArticleDaoIml implements ArticleDao {
             gzCountMap = jdbcTemplate.queryForMap(gzCountSql, new Object[]{
                     1,
                     wechatid,
-                    100,
-                    -1,
-                    -2,
+                    "100",
+                    "-1",
+                    "-2",
                     0
             });
 
@@ -457,9 +457,9 @@ public class ArticleDaoIml implements ArticleDao {
         try {
             allCountMap = jdbcTemplate.queryForMap(allCountSql, new Object[]{
                     1,
-                    100,
-                    -1,
-                    -2,
+                    "100",
+                    "-1",
+                    "-2",
                     0
             });
 
@@ -479,9 +479,9 @@ public class ArticleDaoIml implements ArticleDao {
         List<Map<String, Object>> gzList = jdbcTemplate.queryForList(gzSql, new Object[]{
                 1,
                 wechatid,
-                100,
-                -1,
-                -2,
+                "100",
+                "-1",
+                "-2",
                 0,
                 page * pageSize,
                 pageSize
@@ -515,9 +515,9 @@ public class ArticleDaoIml implements ArticleDao {
                     user_id,
                     wechatid,
                     1,
-                    100,
-                    -1,
-                    -2,
+                    "100",
+                    "-1",
+                    "-2",
                     0,
                     num * pageSize,
                     pageSize

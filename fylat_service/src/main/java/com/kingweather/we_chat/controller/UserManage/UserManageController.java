@@ -23,6 +23,8 @@ public class UserManageController extends BaseController {
     Logger log = LoggerFactory.getLogger(DataManageController.class);
     @Resource
     private UserService userService;
+    @Resource
+    private JdbcTemplate jdbcTemplate;
 
 
     /**
@@ -141,9 +143,25 @@ public class UserManageController extends BaseController {
             String session_key = json.get("session_key").toString();
             //用户的唯一标识（openid）
             String openid = (String) json.get("openid");
+             int count=0;
+            Map<String, Object> countMap =new HashMap<>();
+            try {
+                 String sql="select count(*) as count from zz_wechat.sys_user where wechat_id=?";
+             countMap = jdbcTemplate.queryForMap(sql, new Object[]{
+                         openid
+                 });
+             }catch (Exception e){
+
+             }
+
+             if(countMap!=null&&countMap.get("count")!=null){
+                 count=Integer.parseInt(countMap.get("count").toString());
+             }
+
             map.put("code", 0);
             map.put("session_key", session_key);
             map.put("openid", openid);
+            map.put("count", count);
             return map;
 
         }
