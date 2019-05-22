@@ -1,9 +1,12 @@
 package com.kingweather.we_chat.dao.iml;
 
 import com.kingweather.common.util.DateUtil;
+import com.kingweather.fylat_service.controller.other.DataManageController;
 import com.kingweather.we_chat.constants.UuidUtils;
 import com.kingweather.we_chat.dao.userDao;
 import com.vdurmont.emoji.EmojiParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +19,7 @@ import java.util.*;
 public class UserDaoIml implements userDao {
     @Resource
     private JdbcTemplate jdbcTemplate;
-
+    Logger log = LoggerFactory.getLogger(DataManageController.class);
     @Override
     public Map<String, Object> registerUser(Map<String, Object> userData) {
         HashMap<String, Object> map = new HashMap<>();
@@ -49,19 +52,40 @@ public class UserDaoIml implements userDao {
             String sysTime = DateUtil.getCurrentTimeString();
             Object icon_path = userData.get("icon_path") == null ? "" : userData.get("icon_path").toString();
             String user_id = UuidUtils.getUUid();
-            nick_name= EmojiParser.removeAllEmojis(nick_name.toString());
-            String inserSql = "insert into zz_wechat.sys_user (user_id,tel_phone,nick_name,true_name,user_sex,create_time,icon_path,wechat_id) " +
-                    "values(?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?)";
-            int update = jdbcTemplate.update(inserSql, new Object[]{
-                    user_id,
-                    tel_phone,
-                    nick_name,
-                    true_name,
-                    user_sex,
-                    sysTime,
-                    icon_path,
-                    wechat_id.toString()
-            });
+            int update =0;
+            try {
+                log.info("nick_name1-->"+nick_name);
+                nick_name= EmojiParser.removeAllEmojis(nick_name.toString());
+                log.info("nick_name2-->"+nick_name);
+                String inserSql = "insert into zz_wechat.sys_user (user_id,tel_phone,nick_name,true_name,user_sex,create_time,icon_path,wechat_id) " +
+                        "values(?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?)";
+               jdbcTemplate.update(inserSql, new Object[]{
+                        user_id,
+                        tel_phone,
+                        nick_name,
+                        true_name,
+                        user_sex,
+                        sysTime,
+                        icon_path,
+                        wechat_id.toString()
+                });
+
+            }catch (Exception e){
+                String inserSql = "insert into zz_wechat.sys_user (user_id,tel_phone,true_name,user_sex,create_time,icon_path,wechat_id) " +
+                        "values(?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?)";
+                 update = jdbcTemplate.update(inserSql, new Object[]{
+                        user_id,
+                        tel_phone,
+
+                        true_name,
+                        user_sex,
+                        sysTime,
+                        icon_path,
+                        wechat_id.toString()
+                });
+
+            }
+
 
             if (update == 1) {
                 map.put("code", 0);
