@@ -3,6 +3,7 @@ package com.kingweather.we_chat.dao.iml;
 import com.kingweather.common.util.DateUtil;
 import com.kingweather.we_chat.constants.UuidUtils;
 import com.kingweather.we_chat.dao.userDao;
+import com.vdurmont.emoji.EmojiParser;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -48,7 +49,7 @@ public class UserDaoIml implements userDao {
             String sysTime = DateUtil.getCurrentTimeString();
             Object icon_path = userData.get("icon_path") == null ? "" : userData.get("icon_path").toString();
             String user_id = UuidUtils.getUUid();
-
+            nick_name= EmojiParser.removeAllEmojis(nick_name.toString());
             String inserSql = "insert into zz_wechat.sys_user (user_id,tel_phone,nick_name,true_name,user_sex,create_time,icon_path,wechat_id) " +
                     "values(?,?,?,?,?,date_format(?,'%Y-%m-%d %H:%i:%s'),?,?)";
             int update = jdbcTemplate.update(inserSql, new Object[]{
