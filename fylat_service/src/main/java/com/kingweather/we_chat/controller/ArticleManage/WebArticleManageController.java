@@ -82,6 +82,11 @@ public class WebArticleManageController extends BaseController {
         return articleService.getAllDomain();
     }
 
+    /**
+     * 根据类型ID获取全部子集ID
+     * @param article_type_id
+     * @return
+     */
 
     @RequestMapping(value = "article/getAllAricleType")
     public List<Map<String, Object>> getAllAricleType(String article_type_id) {
@@ -92,7 +97,7 @@ public class WebArticleManageController extends BaseController {
 
     /**
      * 上传图片-类型信息
-     *
+     *添加文章
      * @param file1
      * @param req
      * @return

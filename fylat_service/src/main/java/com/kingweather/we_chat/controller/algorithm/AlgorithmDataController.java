@@ -42,6 +42,11 @@ public class AlgorithmDataController extends BaseController {
     private String articlePath;
     Logger log = LoggerFactory.getLogger(DataManageController.class);
 
+    /**
+     * 文章入库
+     * @param data
+     * @return
+     */
     @RequestMapping(value = "/algorithm/wxdata", method = RequestMethod.POST)
     public int collectingAndShare(@RequestBody Map<String, Object> data) {
         String article_id = data.get("article_id").toString();
@@ -302,7 +307,12 @@ public class AlgorithmDataController extends BaseController {
 
     }
 
-
+    /**
+     * 论文入库
+     * @param file
+     * @param req
+     * @return
+     */
     @RequestMapping(value = "/weatherData/fileUpload", method = RequestMethod.POST)
     public int copyFiletoDB(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest req) {
 

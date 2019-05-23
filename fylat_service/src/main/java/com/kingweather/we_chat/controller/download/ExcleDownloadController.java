@@ -29,6 +29,13 @@ public class ExcleDownloadController {
     @Resource
     private ExcleDownloadService excleDownloadService;
 
+    /**
+     * 文章下载
+     * @param request
+     * @param response
+     * @param info
+     * @throws Exception
+     */
     @GetMapping("/article/rest")
     public void selArticle(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> info ) throws Exception{
         OutputStream out = null;
@@ -102,7 +109,13 @@ public class ExcleDownloadController {
 
     }
 
-
+    /**
+     * 文章临时表下载
+     * @param request
+     * @param response
+     * @param info
+     * @throws Exception
+     */
     @GetMapping("/articleTmp/rest")
     public void selArticleTmp(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> info ) throws Exception{
         OutputStream out = null;
@@ -173,6 +186,13 @@ public class ExcleDownloadController {
         return head;
     }
 
+    /**
+     * 论文下载
+     * @param request
+     * @param response
+     * @param info
+     * @throws Exception
+     */
     @GetMapping("/academicPaper/rest")
     public void selAcademicPaper(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> info) throws Exception{
         OutputStream out = null;
